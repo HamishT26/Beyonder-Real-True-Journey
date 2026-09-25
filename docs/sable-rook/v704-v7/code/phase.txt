@@ -1,0 +1,1197 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const cp = require('node:child_process');
+const crypto = require('node:crypto');
+const assert = require('node:assert/strict');
+const vm = require('node:vm');
+
+const dir = path.resolve(__dirname, '..');
+const root = path.resolve(dir, '../../..');
+const prefix = 'docs/sable-rook/v704-v7/';
+const owner = 'Sable Rook';
+const phase = 'v704-v7';
+const source = '6f21f555fbbdbcae6cb2ec8e2e18b334cadffd90';
+const branch = 'codex/GHC-Family/sable-rook-v704-v7-full-tools';
+const mode = process.argv[2];
+const bank = process.argv[3];
+const submode = process.argv[4];
+
+if (process.env.GHC_MODEL_GUARD !== 'v16' ||
+    !['gpt-5.6-sol', 'gpt-6-astra'].includes(process.env.GHC_MODEL)) {
+  throw Error('Use the admitted-model launcher');
+}
+
+const sha = value => crypto.createHash('sha256')
+  .update(Buffer.isBuffer(value) || typeof value === 'string' ? value : JSON.stringify(value))
+  .digest('hex');
+const clone = value => JSON.parse(JSON.stringify(value));
+const json = file => JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
+const external = file => JSON.parse(fs.readFileSync(path.join(bank, file), 'utf8'));
+const sum = values => values.reduce((total, value) => total + value, 0);
+
+const boundary = [
+  'Finite synthetic same-owner catalog-crosswalk, software and documentary evidence only.',
+  'No live catalog, geospatial resource, person, identity, credential, measurement, professional,',
+  'production, legal, cultural, affected-party or Maori-authority act occurred.',
+  'GMUT remains conjectural; THOS and Freed ID remain nonproduction.',
+  'Relational names and family language are not consciousness, personhood, continuity,',
+  'qualification, agency or authority evidence. No independent reproduction, complete privacy',
+  'or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything, canon or Stage 20 claim.',
+  'NOT_READY_FOR_STAGE_20.'
+].join(' ');
+
+const ops = [
+  'catalog_record', 'sparse_encode', 'sparse_decode', 'dense_flatten',
+  'support_graph', 'support_components', 'support_cycle_rank', 'row_profile',
+  'column_profile', 'cell_lineage', 'permutation_covariance',
+  'transpose_covariance', 'support_mask', 'zero_elision_guard',
+  'canonical_entry_order', 'correction_patch', 'accessible_summary',
+  'uncertainty_annotation', 'external_evidence_gap', 'catalog_authority_gate'
+];
+
+const descriptions = [
+  'Validate a bounded three-by-three synthetic catalog crosswalk record.',
+  'Encode positive cells as canonical row-major sparse entries.',
+  'Decode sparse entries and prove exact dense roundtrip.',
+  'Flatten the dense table in declared row-major order.',
+  'Build the bipartite support graph with multiplicities.',
+  'Partition all row and column vertices into support components.',
+  'Calculate the exact support-graph cycle rank.',
+  'Retain row totals and nonzero-cell counts.',
+  'Retain column totals and nonzero-cell counts.',
+  'Bind every dense cell to a synthetic coordinate lineage record.',
+  'Check consistent row and column permutation covariance.',
+  'Check transpose covariance and involution.',
+  'Represent the exact Boolean support mask.',
+  'Prove zeros are elided from sparse form and restored on decode.',
+  'Prove sparse entries use strict row-major coordinate order.',
+  'Construct one reversible two-by-two correction patch when available.',
+  'Explain the saved finite structure with explicit scope and units.',
+  'Represent uncertainty as not observed and not estimated.',
+  'Retain independent, empirical, accessibility and provenance gaps.',
+  'Hold publication, correction, remedy, cultural and Maori authority.'
+];
+
+function outcome(op) {
+  if (op === 'uncertainty_annotation') return 'represented';
+  if (op === 'external_evidence_gap') return 'open_gap';
+  if (op === 'catalog_authority_gate') return 'exact_gate';
+  return 'completed';
+}
+
+const marginalProfiles = [
+  [[2, 2, 2], [2, 2, 2]], [[1, 2, 3], [3, 2, 1]],
+  [[3, 1, 2], [1, 3, 2]], [[1, 1, 2], [2, 1, 1]],
+  [[2, 1, 1], [1, 1, 2]], [[1, 1, 1], [1, 1, 1]],
+  [[1, 3, 1], [2, 1, 2]], [[2, 2, 1], [1, 2, 2]],
+  [[1, 2, 2], [2, 2, 1]], [[4, 1, 1], [1, 4, 1]],
+  [[1, 4, 1], [1, 1, 4]], [[1, 1, 4], [4, 1, 1]],
+  [[2, 1, 3], [3, 1, 2]], [[3, 2, 1], [1, 2, 3]],
+  [[2, 3, 1], [3, 1, 2]]
+];
+
+function northWest(supplyInput, demandInput) {
+  const supply = supplyInput.slice();
+  const demand = demandInput.slice();
+  const table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  let row = 0, column = 0;
+  while (row < 3 && column < 3) {
+    const value = Math.min(supply[row], demand[column]);
+    table[row][column] += value;
+    supply[row] -= value;
+    demand[column] -= value;
+    if (supply[row] === 0) row += 1;
+    if (demand[column] === 0) column += 1;
+  }
+  return table;
+}
+
+const profiles = marginalProfiles.map(([supply, demand], index) => ({
+  id: 'SGC-' + String(index + 1).padStart(2, '0'),
+  supply, demand, table: northWest(supply, demand)
+}));
+
+function write(file, value) {
+  const full = path.join(dir, file);
+  fs.mkdirSync(path.dirname(full), {recursive: true});
+  let content = typeof value === 'string' ? value : JSON.stringify(value, null, 2) + '\n';
+  const countWords = text => text.trim() ? text.trim().split(/\s+/).length : 0;
+  if (countWords(content) > 100000 && typeof value !== 'string') content = JSON.stringify(value) + '\n';
+  assert(countWords(content) <= 100000, 'document ceiling ' + file);
+  fs.writeFileSync(full, content, {flag: 'wx'});
+}
+
+function ownerFiles() {
+  const found = [];
+  function walk(folder) {
+    for (const entry of fs.readdirSync(folder, {withFileTypes: true})) {
+      const target = path.join(folder, entry.name);
+      if (entry.isDirectory()) walk(target);
+      else found.push(path.relative(dir, target).replaceAll('\\', '/'));
+    }
+  }
+  walk(dir);
+  return found.sort();
+}
+
+const bytes = file => fs.readFileSync(path.join(dir, file));
+const manifest = names => names.map(file => ({
+  path: prefix + file, bytes: bytes(file).length, sha256: sha(bytes(file)),
+  domain: 'raw_git_blob_utf8_lf'
+}));
+
+function git(...args) {
+  return cp.execFileSync('git', ['-C', root, ...args], {
+    encoding: 'utf8', maxBuffer: 64 * 1024 * 1024
+  }).trim();
+}
+
+function gate() {
+  const head = git('rev-parse', 'HEAD');
+  const upstream = git('rev-parse', '@{u}');
+  const tracking = git('rev-parse', 'refs/remotes/origin/' + branch);
+  const live = git('ls-remote', '--heads', 'origin', 'refs/heads/' + branch).split(/\s+/)[0];
+  const divergence = git('rev-list', '--left-right', '--count', 'HEAD...@{u}').split(/\s+/).map(Number);
+  assert.equal(git('status', '--porcelain=v1'), '');
+  assert.equal(git('branch', '--show-current'), branch);
+  for (const value of [upstream, tracking, live]) assert.equal(value, head);
+  assert.deepEqual(divergence, [0, 0]);
+  return {head, upstream, tracking, remote: live, ahead: 0, behind: 0, clean: true, checked_at: new Date().toISOString()};
+}
+
+function latch(stage) {
+  const file = path.join(bank, stage + '-invocation.json');
+  fs.writeFileSync(file, JSON.stringify({
+    state: 'INVOKED_UNRESOLVED', invocations: 1, successes: 0, replays: 0, at: new Date().toISOString()
+  }, null, 2) + '\n', {flag: 'wx'});
+  return extra => fs.writeFileSync(file, JSON.stringify({
+    state: 'SUCCESS_LATCHED_NO_REPLAY', invocations: 1, successes: 1, replays: 0, ...extra
+  }, null, 2) + '\n');
+}
+
+function runBoundTool(file, args, input) {
+  const tools = external('toolchain.json');
+  const name = Object.keys(tools.bindings).find(key => tools[key] === file);
+  assert(name, 'Unbound helper ' + file);
+  assert.equal(sha(fs.readFileSync(file)), tools.bindings[name], 'helper hash ' + name);
+  const result = cp.spawnSync(tools.python, ['-X', 'utf8', '-B', file, ...args], {
+    input, encoding: 'utf8', timeout: 60000,
+    env: {...process.env, PYTHONDONTWRITEBYTECODE: '1'}
+  });
+  return {
+    exit_code: result.status, stdout: result.stdout.trim(), stderr: result.stderr.trim(),
+    signal: result.signal, error: result.error ? String(result.error.message) : null
+  };
+}
+
+function verifyFrozen() {
+  const frozen = json('planning/manifest.json');
+  for (const entry of frozen.entries) {
+    const relative = entry.path.slice(prefix.length);
+    assert.equal(sha(bytes(relative)), entry.sha256, entry.path);
+    assert.equal(bytes(relative).length, entry.bytes, entry.path);
+  }
+  assert.equal(sha(bytes('planning/manifest.json')), external('plan-published.json').artifact_sha256);
+}
+
+function invalid(request, selector) {
+  const subject = clone(request);
+  const kind = selector % 12;
+  if (kind === 0) { delete subject.table; return {request: subject, error: 'field_set'}; }
+  if (kind === 1) { subject.extra = true; return {request: subject, error: 'field_set'}; }
+  if (kind === 2) { subject.op = 'unregistered'; return {request: subject, error: 'operation'}; }
+  if (kind === 3) { subject.record_id = 'invalid'; return {request: subject, error: 'record_id'}; }
+  if (kind === 4) { subject.supply[0] = 0; return {request: subject, error: 'positive_histogram'}; }
+  if (kind === 5) { subject.table[0] = [0, 1]; return {request: subject, error: 'table_shape'}; }
+  if (kind === 6) { subject.table[0][0] = -1; return {request: subject, error: 'table_shape'}; }
+  if (kind === 7) { subject.table[0][0] = true; return {request: subject, error: 'table_shape'}; }
+  if (kind === 8) { subject.table[0][0] += 1; return {request: subject, error: 'row_margin'}; }
+  if (kind === 9) {
+    const from = subject.table[0].findIndex(value => value > 0), to = (from + 1) % 3;
+    subject.table[0][from] -= 1; subject.table[0][to] += 1;
+    return {request: subject, error: 'column_margin'};
+  }
+  if (kind === 10) { subject.demand[0] += 1; return {request: subject, error: 'mass_bound'}; }
+  subject.supply = [4, 4, 4]; subject.demand = [4, 4, 4];
+  return {request: subject, error: 'mass_bound'};
+}
+
+function witness(id, method, result, procedure, expected, observed, negativeIds = []) {
+  return {
+    witness_id: id, method_id: method, procedure,
+    scope: 'Current Sable finite synthetic owner delta only', expected, observed, result,
+    same_owner_only: true, independent_reproduction: false,
+    retained_negative_ids: negativeIds,
+    boundary: 'Bounded same-owner observation, not external confirmation, conformance, deployment or authority.'
+  };
+}
+
+function makeLedger(stage, witnesses) {
+  const methodIds = [...new Set(witnesses.map(item => item.method_id))];
+  const methods = methodIds.map(methodId => {
+    const linked = witnesses.filter(item => item.method_id === methodId);
+    const negatives = [...new Set(linked.flatMap(item => item.retained_negative_ids))];
+    assert(negatives.length > 0, 'negative linkage ' + methodId);
+    return {
+      method_id: methodId, title: methodId,
+      failure_signature: 'Declared malformed subject or operational failure retains zero original success credit.',
+      trigger_preconditions: ['Frozen owner contract and exact source binding'],
+      privacy_class: 'sanitized_public', approval_class: 'owner_local_synthetic',
+      candidate_workaround: 'Apply only the declared pure computation, refusal, or smallest bounded recovery.',
+      validation_witness_ids: linked.map(item => item.witness_id),
+      recurrence_guard: 'Retain original subjects; never replay a successful tranche or canonical.',
+      rollback: 'Preserve failed evidence and add one separate, source-bound correction.',
+      recommendation_state: 'validated', supersedes: [],
+      protected_gates: [
+        'independent reproduction',
+        'live catalog, legal, cultural, affected-party and Maori authority',
+        'complete privacy, accessibility and security', 'Stage 20'
+      ],
+      retained_negative_ids: negatives, scope_boundary: boundary,
+      execution_authority: 'owner_self_scoped_delta', repository_scan: false,
+      module_scan: false, cross_lane_scan: false, unchanged_history_scan: false,
+      sibling_lane_mutation: false, source_commit: source, final_commit: 'pending exact final',
+      changed_file_allowlist: [], module_allowlist: [], exact_pushed_head_required: true
+    };
+  });
+  const events = methods.flatMap(item => {
+    const pass = witnesses.find(row => row.method_id === item.method_id && row.result === 'pass');
+    assert(pass, 'passing witness ' + item.method_id);
+    return [
+      {method_id: item.method_id, before: 'observed', after: 'candidate', reason: 'Frozen contract and retained failure linkage'},
+      {method_id: item.method_id, before: 'candidate', after: 'validated', reason: 'Bounded passing witness', witness_id: pass.witness_id}
+    ];
+  }).map((item, index) => ({event_index: index + 1, ...item}));
+  return {
+    schema: 'ghc.family.method-flow-state.v1', phase: phase + '-' + stage, owner,
+    identity_boundary: boundary, execution_authority: 'owner_self_scoped_delta',
+    source_commit: source, definition_commit: stage === 'planning' ? source : git('rev-parse', 'HEAD'),
+    exact_final_binding: 'External metadata-only canonical receipt after final publication',
+    repository_scan: false, module_scan: false, cross_lane_scan: false,
+    unchanged_history_scan: false, sibling_lane_mutation: false,
+    changed_file_allowlist: [], module_allowlist: [],
+    methods, witnesses, state_events: events, recommendations: [],
+    counts: {
+      methods: methods.length, witnesses: witnesses.length, state_events: events.length, recommendations: 0,
+      states: {observed: 0, candidate: 0, validated: methods.length, preferred: 0, superseded: 0, deprecated: 0},
+      witness_results: {
+        pass: witnesses.filter(item => item.result === 'pass').length,
+        fail: witnesses.filter(item => item.result === 'fail').length
+      }
+    },
+    boundary
+  };
+}
+
+function validateFlow(file) {
+  const tools = external('toolchain.json');
+  const result = runBoundTool(tools.method_validator, ['validate', '--ledger', path.join(dir, file)]);
+  assert.equal(result.exit_code, 0, result.stdout + result.stderr);
+  const value = JSON.parse(result.stdout);
+  assert.equal(value.valid, true);
+  return value;
+}
+
+function sourceRecords() {
+  const sourcePrefix = 'docs/thalen-reed/v704-v6/planning/';
+  const plan = JSON.parse(git('show', source + ':' + sourcePrefix + 'plan.json'));
+  const records = [];
+  plan.operations.forEach((operation, index) => {
+    const file = sourcePrefix + 'contracts/' + String(index + 1).padStart(2, '0') + '-' + operation.op + '.json';
+    const shard = JSON.parse(git('show', source + ':' + file));
+    for (const contract of shard) {
+      assert.equal(sha(contract.request), contract.request_sha256);
+      assert.equal(sha(contract.expected), contract.expected_sha256);
+      records.push({
+        source_id: contract.id, source_commit: source, source_path: file,
+        source_record_sha256: sha(contract), source_request_sha256: contract.request_sha256,
+        source_expected_sha256: contract.expected_sha256, source_outcome: contract.outcome,
+        review: 'Exact predecessor fields and hashes reviewed; transport execution is not catalog-crosswalk execution.',
+        new_execution_credit: 0, new_novelty_credit: 0
+      });
+    }
+  });
+  assert.equal(records.length, 300);
+  return records;
+}
+
+function stageRequest(op, profile) {
+  return {op, record_id: profile.id, supply: profile.supply, demand: profile.demand, table: profile.table};
+}
+function transposeRequest(request) {
+  return {
+    op: request.op, record_id: request.record_id,
+    supply: request.demand, demand: request.supply,
+    table: request.table[0].map((_, column) => request.table.map(row => row[column]))
+  };
+}
+function permuteRequest(request) {
+  const rows = [2, 0, 1], columns = [1, 2, 0];
+  return {
+    op: request.op, record_id: request.record_id,
+    supply: rows.map(index => request.supply[index]),
+    demand: columns.map(index => request.demand[index]),
+    table: rows.map(row => columns.map(column => request.table[row][column]))
+  };
+}
+
+function readmeText() {
+  return [
+    '# Sable Rook v704-v7: finite catalog crosswalk evidence', '',
+    'This phase represents fifteen wholly synthetic three-by-three catalog crosswalk records in dense and sparse forms. It tests exact roundtrips, support graphs, connected components, cycle rank, row and column profiles, cell lineage, relabelling, transposition, zero elision, canonical entry order and reversible correction patches. No live catalog, geospatial record, coordinate, service, person, credential, organization, right, or authority case is read or changed.', '',
+    'The primary Trinity Mandala pillar is Freed ID and CBR Heart through correction provenance, minimum disclosure, remedy vacancies and authority holds. THOS Body remains a bounded workload, readback and handover proxy. GMUT Mind remains a typed analogy firewall: finite graph and matrix structure is not physical evidence, a field equation, a likelihood, a parameter constraint, or empirical confirmation.', '',
+    'The bounded learning lens is synthetic geospatial metadata catalog correction registrar and accessible handover. It establishes no employment, qualification, catalog competence, standards conformance, publication authority, legal interpretation, cultural legitimacy, affected-party approval, Maori data-governance mandate, or operational result.', '',
+    'W3C PROV-DM and OGC API - Records Part 1 supplied provenance and catalog vocabulary only. The phase does not claim standards conformance, network interoperability, real provenance completeness, or endorsement. All exact values are owner-local synthetic declarations.', '',
+    'Lifecycle order is planning, x1, x2, final publication, one metadata-only canonical, then one guarded native activation of Caelen Ash v704-v8. Successful predecessor work, owner sessions and canonical aggregates are never replayed. Failures remain zero-credit and repairs remain separate.', '',
+    '**NOT_READY_FOR_STAGE_20.**', ''
+  ].join('\n');
+}
+
+function authorizationText() {
+  return [
+    '# Current owner authorization', '',
+    'Thalen Reed acknowledged exactly one activation of the existing Sable Rook task for solo v704-v7 under Hamish current v18 schedule. The exact source is ' + source + '. The complete predecessor baton, v18 controls, source manifests, content seal, canonical receipt and five external route failures were read without replay.', '',
+    'One fresh additive Sable-owned D-first sparse lane is authorized. Product writes are limited to ' + prefix + '. Source, sibling, shared, user and standby product content remains read-only. The primary Coordinator board contains only this task bounded path claim and no prompt, transcript, reasoning, or tool output.', '',
+    'No task creation, fork, delegation, subagent, model change, global marketplace install, memory extension, desktop update, elevation, security weakening, Sandbox or Hyper-V activation, unrelated package install, or reboot is selected. Purchased spending is zero.', '',
+    'Only after a clean pushed exact final and one successful non-replayed owner-scoped metadata canonical may the existing exact-title Caelen Ash task be freshly resolved, immediately reread and contacted at most once for v704-v8. Delivery acknowledgement is not recipient completion.', '',
+    boundary, ''
+  ].join('\n');
+}
+
+function buildPlan() {
+  assert.equal(git('rev-parse', 'HEAD'), source);
+  assert.equal(git('branch', '--show-current'), branch);
+  const startupStatus = git('status', '--porcelain=v1');
+  assert(startupStatus.split('\n').filter(Boolean).every(row => {
+    const observed = row.slice(3).replaceAll('"', '');
+    return observed.startsWith(prefix) || prefix.startsWith(observed);
+  }), 'foreign startup change');
+  const reference = require('./reference.txt');
+  for (const file of ['runtime.txt', 'reference.txt', 'phase.txt', 'viewer.txt', 'planning-lenses.txt']) {
+    new vm.Script(fs.readFileSync(path.join(__dirname, file), 'utf8'), {filename: file});
+  }
+  write('README.md', readmeText());
+  write('authorization.md', authorizationText());
+  for (const name of ['current-authority.md', 'current-authorization.json', 'current-roster.json', 'current-workflow.json']) {
+    write('controls/' + name, fs.readFileSync(path.join(bank, name), 'utf8'));
+  }
+  const inherited = sourceRecords();
+  for (let index = 0; index < 20; index += 1) {
+    write('planning/inherited/' + String(index + 1).padStart(2, '0') + '.json', inherited.slice(index * 15, index * 15 + 15));
+  }
+  const contracts = [];
+  for (let opIndex = 0; opIndex < ops.length; opIndex += 1) {
+    const shard = [];
+    for (let profileIndex = 0; profileIndex < profiles.length; profileIndex += 1) {
+      const profile = profiles[profileIndex];
+      const request = stageRequest(ops[opIndex], profile);
+      const alternatives = [
+        transposeRequest(request),
+        ...(opIndex % 10 * 15 + profileIndex < 100 ? [permuteRequest(request)] : [])
+      ];
+      const id = 'SR7047-P' + String(opIndex * 15 + profileIndex + 1).padStart(3, '0');
+      const expected = reference.oracle(request);
+      const record = {
+        id, stage: opIndex < 10 ? 'x1' : 'x2', operation: ops[opIndex], profile: profile.id,
+        hypothesis: descriptions[opIndex],
+        null_or_failure_condition: 'Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.',
+        approval_class: 'owner_local_synthetic', execution_lane: opIndex < 10 ? 'x1' : 'x2',
+        official_primary_source_needs: ['W3C PROV-DM vocabulary only', 'OGC API - Records Part 1 vocabulary only'],
+        concrete_artifacts: ['saved result', 'refusal witness', 'repair receipt', 'Method Flow links'],
+        falsifier_or_acceptance_gate: 'Exact saved projection matches planning reference and all declared finite invariants pass.',
+        rollback_or_recovery: 'Retain the failed subject and restore from the frozen planning request without overwriting history.',
+        protected_gates: ['live catalog', 'standards conformance', 'affected-party and Maori authority', 'independent reproduction', 'Stage 20'],
+        expected_disposition: outcome(ops[opIndex]), request, request_sha256: sha(request),
+        expected, expected_sha256: sha(expected),
+        alternatives: alternatives.map(item => ({request: item, expected: reference.oracle(item)})),
+        negative_subjects: [0, 1].map(offset => ({
+          negative_id: id + '-N' + (offset + 1),
+          ...invalid(request, opIndex + profileIndex + 6 * offset),
+          original_success_credit: 0
+        })),
+        outcome: outcome(ops[opIndex]),
+        novelty_scope: 'New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.',
+        inherited_credit: 0
+      };
+      shard.push(record); contracts.push(record);
+    }
+    write('planning/contracts/' + String(opIndex + 1).padStart(2, '0') + '-' + ops[opIndex] + '.json', shard);
+  }
+  assert.equal(contracts.length, 300);
+  assert.equal(new Set(contracts.map(item => item.request_sha256)).size, 300);
+  assert.equal(contracts.flatMap(item => [item.request, ...item.alternatives.map(alt => alt.request)]).length, 800);
+
+  const skills = ops.map((op, index) => ({
+    id: 'SR7047-S' + String(index + 1).padStart(2, '0'),
+    stage: index < 10 ? 'x1' : 'x2', op,
+    path: 'skills/ghc-family-catalog-' + op.replaceAll('_', '-') + '/SKILL.md'
+  }));
+  for (const skill of skills) {
+    const index = ops.indexOf(skill.op);
+    const runner = 'SR7047-R' + String(Math.floor(index / 2) + 1).padStart(2, '0');
+    write(skill.path, [
+      '---', 'name: ghc-family-catalog-' + skill.op.replaceAll('_', '-'),
+      'description: ' + descriptions[index] + ' Use only on declared finite synthetic three-by-three catalog crosswalk fixtures.',
+      '---', '', '# ' + skill.op.replaceAll('_', ' '), '',
+      'Send one JSON object with exactly op, record_id, supply, demand, and table to paired TXT runner ' + runner + '. The histograms contain three positive integers each, equal total mass no larger than six, and the three-by-three table contains nonnegative integers with those exact row and column totals.', '',
+      'Operation is ' + skill.op + '. The complete caller envelope contains runner, ok, value, and error. Acceptance exits zero; refusal exits two. Read the matching frozen planning contract before use. Preserve structural zero separately from unknown, withheld, or not applicable.', '',
+      descriptions[index] + ' The practice lens is synthetic catalog correction and handover only. A passed finite check is not OGC or W3C conformance, live provenance completeness, identity assurance, publication authority, accessibility completion, or independent reproduction.', '',
+      boundary, ''
+    ].join('\n'));
+  }
+  const runners = [];
+  for (let index = 0; index < 10; index += 1) {
+    const id = 'SR7047-R' + String(index + 1).padStart(2, '0');
+    const allowed = ops.slice(index * 2, index * 2 + 2);
+    const runnerPath = 'runners/' + id + '.txt';
+    write(runnerPath, [
+      "'use strict';", "const fs=require('node:fs'),runtime=require('../code/runtime.txt');",
+      'const runner=' + JSON.stringify(id) + ',allowed=' + JSON.stringify(allowed) + ';',
+      "try{const request=JSON.parse(fs.readFileSync(0,'utf8'));if(!allowed.includes(request.op))throw Error('runner_operation');console.log(JSON.stringify({runner,ok:true,value:runtime.run(request),error:null}));}catch(error){console.log(JSON.stringify({runner,ok:false,value:null,error:error.message}));process.exitCode=2;}", ''
+    ].join('\n'));
+    runners.push({id, stage: index < 5 ? 'x1' : 'x2', operations: allowed, path: runnerPath});
+  }
+
+  const tools = external('toolchain.json');
+  const pluginName = 'ghc-family-sable-catalog-hooks', pluginPath = 'plugins/' + pluginName;
+  const scaffold = runBoundTool(tools.plugin_scaffold, [
+    pluginName, '--path', path.join(dir, 'plugins'), '--with-hooks', '--with-scripts'
+  ]);
+  assert.equal(scaffold.exit_code, 0, scaffold.stderr);
+  const manifestPath = path.join(dir, pluginPath, '.codex-plugin', 'plugin.json');
+  const pluginManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  pluginManifest.description = 'Ten owner-local advisories for finite catalog representation and lifecycle boundaries.';
+  pluginManifest.author = {name: 'Sable Rook working role'};
+  fs.writeFileSync(manifestPath, JSON.stringify(pluginManifest, null, 2) + '\n');
+  const hookTopics = [
+    'source_mutation', 'successful_replay', 'margin_drift', 'sparse_dense_mismatch',
+    'zero_elision', 'lineage_loss', 'uncertainty_promotion', 'real_catalog_update',
+    'prepared_delivery', 'accepted_resend'
+  ];
+  const hooks = {
+    description: 'Ten nonblocking advisory topics; manual fixtures only until a live invocation is observed.',
+    hooks: {
+      PreToolUse: hookTopics.slice(0, 8).map(topic => ({
+        matcher: '.*',
+        hooks: [{
+          type: 'command',
+          command: 'node "${PLUGIN_ROOT}/scripts/catalog-advisories.txt" ' + topic,
+          commandWindows: 'node "$env:PLUGIN_ROOT/scripts/catalog-advisories.txt" ' + topic,
+          timeout: 5, async: false
+        }]
+      })),
+      PostToolUse: [{matcher: '.*', hooks: [{
+        type: 'command',
+        command: 'node "${PLUGIN_ROOT}/scripts/catalog-advisories.txt" prepared_delivery',
+        commandWindows: 'node "$env:PLUGIN_ROOT/scripts/catalog-advisories.txt" prepared_delivery',
+        timeout: 5, async: false
+      }]}],
+      Stop: [{hooks: [{
+        type: 'command',
+        command: 'node "${PLUGIN_ROOT}/scripts/catalog-advisories.txt" accepted_resend',
+        commandWindows: 'node "$env:PLUGIN_ROOT/scripts/catalog-advisories.txt" accepted_resend',
+        timeout: 5, async: false
+      }]}]
+    }
+  };
+  fs.writeFileSync(path.join(dir, pluginPath, 'hooks', 'hooks.json'), JSON.stringify(hooks, null, 2) + '\n');
+  fs.writeFileSync(path.join(dir, pluginPath, 'scripts', 'catalog-advisories.txt'), [
+    "'use strict';", "const fs=require('node:fs');", 'const topics=' + JSON.stringify(hookTopics) + ';',
+    "const topic=process.argv[2];if(!topics.includes(topic))throw Error('unknown_advisory');",
+    "let event={};try{const raw=fs.readFileSync(0,'utf8');if(raw.length>65536)throw Error('event_limit');event=JSON.parse(raw||'{}');}catch{event={violation:true};}",
+    "const active=event.violation===true;console.log(JSON.stringify({continue:true,suppressOutput:true,topic,advisory_active:active,systemMessage:active?'Review the declared '+topic+' boundary; retain the failed subject and require the owner gate.':'Bounded '+topic+' fixture has no declared violation.'}));", ''
+  ].join('\n'));
+
+  const startup = external('startup-negatives.json');
+  const planningWitnesses = [];
+  for (const negative of startup) {
+    const method = negative.negative_id + '-M';
+    planningWitnesses.push(witness(negative.negative_id, method, 'fail', negative.subject,
+      'Successful bounded preflight', 'Retained operational failure', [negative.negative_id]));
+    planningWitnesses.push(witness(negative.negative_id + '-RECOVERY', method, 'pass', negative.recovery,
+      'Smallest bounded recovery', 'Recovered without source execution or mutation', [negative.negative_id]));
+  }
+  write('planning/method-flow.json', makeLedger('planning', planningWitnesses));
+  write('planning/method-flow-validation.json', validateFlow('planning/method-flow.json'));
+
+  const sourceHashes = new Set(inherited.map(item => item.source_request_sha256));
+  const lenses = require('./planning-lenses.txt');
+  const sourcePlan = JSON.parse(git('show', source + ':docs/thalen-reed/v704-v6/planning/plan.json'));
+  const plan = {
+    schema: 'sable.catalog-crosswalk-plan.v1', owner, phase, branch, source_commit: source,
+    source_is_git_parent: true, source_repository_files: 742,
+    source_baseline: {
+      negatives: 65616, methods: 5818, failed_witnesses: 56781,
+      passing_witnesses: 179932, witnesses: 236713, open_gaps: 2030, exact_gates: 2108
+    },
+    source_fold_count: 1, source_external_route_overlay_folded: false,
+    source_external_route_negatives: 5, source_audit: external('source-audit.json'),
+    controls: {
+      workflow_sha256: sha(bytes('controls/current-workflow.json')),
+      roster_sha256: sha(bytes('controls/current-roster.json')),
+      authorization_sha256: sha(bytes('controls/current-authorization.json')),
+      authority_sha256: sha(bytes('controls/current-authority.md'))
+    },
+    scope: {
+      primary_pillar: 'Freed ID and CBR Heart', preserved_pillars: ['GMUT Mind', 'THOS Body'],
+      bounded_practice: 'synthetic geospatial metadata catalog correction registrar and accessible handover',
+      qualification_claim: false, standards_conformance_claim: false
+    },
+    profiles,
+    operations: ops.map((op, index) => ({
+      op, description: descriptions[index], stage: index < 10 ? 'x1' : 'x2', outcome: outcome(op)
+    })),
+    contracts: contracts.map(item => ({
+      id: item.id, stage: item.stage, operation: item.operation, profile: item.profile,
+      request_sha256: item.request_sha256, expected_sha256: item.expected_sha256
+    })),
+    inherited_count: 300, new_contracts: 300,
+    source_request_hash_intersection: contracts.filter(item => sourceHashes.has(item.request_sha256)).length,
+    shared_operation_labels: ops.filter(op => sourcePlan.operations.some(item => item.op === op)),
+    novelty_boundary: 'Distinct typed catalog-crosswalk representation requests. Generic accessible-summary and external-gap labels are disclosed overlaps, not universal novelty.',
+    counts: {
+      safe_x1: 400, safe_x2: 400, candidate_x1: 300, candidate_x2: 300,
+      refusal_x1: 300, refusal_x2: 300, cfr_x1: 300, cfr_x2: 300,
+      exact_packets_held: 50, blocked_packets_held: 30
+    },
+    approval_packets: {
+      exact: Array.from({length: 50}, (_, index) => ({id: 'SR7047-EXACT-' + String(index + 1).padStart(2, '0'), state: 'held_unexecuted'})),
+      blocked: Array.from({length: 30}, (_, index) => ({id: 'SR7047-BLOCKED-' + String(index + 1).padStart(2, '0'), state: 'held_unexecuted'}))
+    },
+    skills, runners, plugin_path: pluginPath, hooks: hookTopics,
+    hypothesized_laws: lenses.laws.map((row, index) => ({
+      id: 'SR7047-LAW-' + String(index + 1).padStart(2, '0'),
+      label: 'finite-fixture hypothesis, not an empirical law',
+      title: row[0], claim: row[1], falsifier: row[2]
+    })),
+    open_problem_probes: lenses.probes.map((question, index) => ({
+      id: 'SR7047-PROBE-' + String(index + 1).padStart(2, '0'),
+      question, disposition: index < 14 ? 'open_gap' : 'exact_gate'
+    })),
+    practices: lenses.practices, successor_practices: lenses.successorRecommendations,
+    successor_skill_ideas: [
+      'ghc-family-catalog-independent-parity-review', 'ghc-family-catalog-semantic-zero-boundary',
+      'ghc-family-catalog-uncertainty-user-study-gate', 'ghc-family-catalog-supersession-lineage',
+      'ghc-family-catalog-authority-vacancy-review'
+    ],
+    successor_runner_ideas: [
+      'ghc_family_catalog_independent_parity.txt', 'ghc_family_catalog_zero_semantics.txt',
+      'ghc_family_catalog_uncertainty_gate.txt', 'ghc_family_catalog_lineage_replay.txt',
+      'ghc_family_catalog_authority_hold.txt'
+    ],
+    evidence_gaps: [
+      'independent implementation and discrepancy analysis',
+      'real catalog data with lawful purpose and provenance', 'live hook invocation',
+      'manual assistive-technology and affected-user evaluation', 'production privacy and security review'
+    ],
+    source_context: [
+      {title: 'W3C PROV-DM', url: 'https://www.w3.org/TR/prov-dm/', use: 'provenance and derivation vocabulary only'},
+      {title: 'OGC API - Records Part 1 Core 1.0', url: 'https://docs.ogc.org/is/20-004r1/20-004r1.html', use: 'record and catalog vocabulary only'}
+    ],
+    selected_tools: Object.entries(external('toolchain.json').bindings).map(([name, digest]) => ({name, sha256: digest})),
+    replay_policy: 'Planning reference runs only now; x1 and x2 each run once; successful final canonical never replays.',
+    file_ceiling: 2000, forecast_owner_files_max: 170, document_words_max: 100000,
+    baton_words_min: 2000, spend_ceiling_usd: 50, spend_usd: 0, boundary
+  };
+  assert.equal(plan.source_request_hash_intersection, 0);
+  assert.equal(plan.hypothesized_laws.length, 15);
+  assert.equal(plan.open_problem_probes.length, 15);
+  assert.equal(plan.practices.length, 8);
+  assert.equal(plan.successor_practices.length, 4);
+  write('planning/plan.json', plan);
+  write('planning/manifest.json', {
+    schema: 'sable.stage-manifest.v1', owner, phase, stage: 'planning',
+    entries: manifest(ownerFiles()), excluded_self: prefix + 'planning/manifest.json'
+  });
+  console.log(JSON.stringify({
+    state: 'PLANNING_ONLY', execution_credit: 0, source_credit: 0,
+    inherited: 300, new_contracts: 300, owner_files: ownerFiles().length,
+    manifest_entries: json('planning/manifest.json').entries.length
+  }));
+}
+
+function contracts() {
+  return json('planning/plan.json').operations.flatMap((operation, index) =>
+    json('planning/contracts/' + String(index + 1).padStart(2, '0') + '-' + operation.op + '.json')
+  );
+}
+
+function refreshPlanFlow() {
+  assert(!fs.existsSync(path.join(dir, 'x1')));
+  assert(!fs.existsSync(path.join(dir, 'x2')));
+  const startup = external('startup-negatives.json');
+  const witnesses = [];
+  for (const negative of startup) {
+    const method = negative.negative_id + '-M';
+    witnesses.push(witness(negative.negative_id, method, 'fail', negative.subject,
+      'Successful bounded preflight', 'Retained operational failure', [negative.negative_id]));
+    witnesses.push(witness(negative.negative_id + '-RECOVERY', method, 'pass', negative.recovery,
+      'Smallest bounded recovery', 'Recovered without source execution or mutation', [negative.negative_id]));
+  }
+  const ledger = makeLedger('planning', witnesses);
+  fs.writeFileSync(path.join(dir, 'planning', 'method-flow.json'),
+    JSON.stringify(ledger, null, 2) + '\n');
+  const validation = validateFlow('planning/method-flow.json');
+  fs.writeFileSync(path.join(dir, 'planning', 'method-flow-validation.json'),
+    JSON.stringify(validation, null, 2) + '\n');
+  const entries = manifest(ownerFiles().filter(file => file !== 'planning/manifest.json'));
+  fs.writeFileSync(path.join(dir, 'planning', 'manifest.json'), JSON.stringify({
+    schema: 'sable.stage-manifest.v1', owner, phase, stage: 'planning',
+    entries, excluded_self: prefix + 'planning/manifest.json'
+  }, null, 2) + '\n');
+  console.log(JSON.stringify({
+    state: 'PLANNING_METADATA_REFRESHED_WITHOUT_REFERENCE_REPLAY',
+    startup_negatives: startup.length,
+    methods: ledger.counts.methods,
+    witnesses: ledger.counts.witnesses,
+    manifest_entries: entries.length
+  }));
+}
+
+function execute(stage) {
+  verifyFrozen();
+  const preGate = gate();
+  assert.equal(preGate.head, external(stage === 'x1' ? 'plan-published.json' : 'x1-published.json').commit);
+  const success = latch(stage), plan = json('planning/plan.json'), runtime = require('./runtime.txt');
+  const rows = contracts().filter(item => item.stage === stage);
+  const safe = [], failures = [], refusals = [], repairs = [], core = [], witnesses = [];
+  for (const contract of rows) {
+    const method = 'SR7047-M-' + contract.operation;
+    const variants = [{request: contract.request, expected: contract.expected}, ...contract.alternatives];
+    variants.forEach((variant, index) => {
+      const before = sha(variant.request), result = runtime.run(variant.request);
+      assert.deepEqual(runtime.project(result), variant.expected, contract.id + ' safe ' + index);
+      assert.equal(sha(variant.request), before);
+      const id = contract.id + '-SAFE' + (index + 1);
+      safe.push({id, contract: contract.id, request: variant.request, result,
+        original_input_unchanged: true, new_proposal_credit: index === 0 ? 1 : 0});
+      witnesses.push(witness(id, method, 'pass', 'Exact projected planning-reference comparison',
+        sha(variant.expected), sha(runtime.project(result))));
+      if (index === 0) core.push({
+        id: contract.id, profile: contract.profile, operation: contract.operation,
+        request: contract.request, result
+      });
+    });
+    contract.negative_subjects.forEach(negative => {
+      let observed = null;
+      try { runtime.run(negative.request); } catch (error) { observed = error.message; }
+      assert.equal(observed, negative.error, contract.id + ' malformed');
+      failures.push({negative_id: negative.negative_id, subject: negative.request,
+        expected_error: negative.error, observed_error: observed, original_success_credit: 0, retained: true});
+      witnesses.push(witness(negative.negative_id, method, 'fail', 'Malformed frozen request subject',
+        'Valid bounded request', observed, [negative.negative_id]));
+      const refusalId = negative.negative_id + '-REFUSAL';
+      refusals.push({id: refusalId, negative_id: negative.negative_id,
+        expected: negative.error, observed, passed: true});
+      witnesses.push(witness(refusalId, method, 'pass', 'Separate refusal guard witness',
+        negative.error, observed, [negative.negative_id]));
+      const repaired = clone(contract.request); runtime.validate(repaired);
+      assert.equal(sha(repaired), contract.request_sha256);
+      const repairId = negative.negative_id + '-CFR';
+      repairs.push({id: repairId, negative_id: negative.negative_id,
+        repair: 'Create a separate request from the frozen template and retain the original subject.',
+        repaired_request_sha256: sha(repaired), original_success_credit: 0});
+      witnesses.push(witness(repairId, method, 'pass', 'Separate CLEAN/FIX/REFINE template recovery',
+        contract.request_sha256, sha(repaired), [negative.negative_id]));
+    });
+  }
+  assert.equal(safe.length, 400); assert.equal(failures.length, 300);
+  assert.equal(refusals.length, 300); assert.equal(repairs.length, 300);
+
+  const runnerReceipts = [];
+  for (const runner of plan.runners.filter(item => item.stage === stage)) {
+    const contract = rows.find(item => item.operation === runner.operations[0]);
+    const invoke = request => {
+      const result = cp.spawnSync(process.execPath, [path.join(dir, runner.path)], {
+        input: JSON.stringify(request), encoding: 'utf8', timeout: 10000
+      });
+      return {exit_code: result.status, stdout: result.stdout.trim(), stderr: result.stderr.trim(), signal: result.signal};
+    };
+    const positive = invoke(contract.request);
+    const expected = {runner: runner.id, ok: true,
+      value: core.find(item => item.id === contract.id).result, error: null};
+    assert.deepEqual(positive, {exit_code: 0, stdout: JSON.stringify(expected), stderr: '', signal: null});
+    const bad = {...contract.request, op: 'unregistered'}, rejection = invoke(bad);
+    assert.deepEqual(rejection, {
+      exit_code: 2, stdout: JSON.stringify({runner: runner.id, ok: false, value: null, error: 'runner_operation'}),
+      stderr: '', signal: null
+    });
+    const negativeId = runner.id + '-N', method = 'SR7047-M-' + runner.id;
+    failures.push({negative_id: negativeId, subject: bad, original_success_credit: 0,
+      retained: true, observed_error: 'runner_operation'});
+    witnesses.push(witness(runner.id + '-ACCEPT', method, 'pass',
+      'Standalone runner acceptance envelope', 0, positive.exit_code, [negativeId]));
+    witnesses.push(witness(negativeId, method, 'fail',
+      'Unsupported runner operation', 'Supported operation', 'runner_operation', [negativeId]));
+    witnesses.push(witness(runner.id + '-REFUSE', method, 'pass',
+      'Standalone runner refusal envelope', 2, rejection.exit_code, [negativeId]));
+    runnerReceipts.push({id: runner.id, positive, rejection});
+  }
+
+  const skillReceipts = [];
+  for (const skill of plan.skills.filter(item => item.stage === stage)) {
+    const result = runBoundTool(external('toolchain.json').skill_validator,
+      [path.dirname(path.join(dir, skill.path))]);
+    assert.equal(result.exit_code, 0, result.stdout + result.stderr);
+    skillReceipts.push({id: skill.id, exit_code: result.exit_code,
+      stdout: result.stdout, stderr: result.stderr});
+    const contract = rows.find(item => item.operation === skill.op);
+    witnesses.push(witness(skill.id + '-VALID', 'SR7047-M-' + skill.op, 'pass',
+      'Official skill quick validator', 0, result.exit_code,
+      [contract.negative_subjects[0].negative_id]));
+  }
+
+  const allCore = stage === 'x2' ? [...json('x1/core-results.json'), ...core] : core;
+  const get = (op, profile) => allCore.find(item => item.operation === op && item.profile === profile).result.data;
+  const tests = [];
+  for (const profile of plan.profiles) {
+    const retained = rows.find(item => item.profile === profile.id).negative_subjects[0].negative_id;
+    if (stage === 'x1') {
+      const sparse = get('sparse_encode', profile.id), decoded = get('sparse_decode', profile.id);
+      const dense = get('dense_flatten', profile.id), graph = get('support_graph', profile.id);
+      const components = get('support_components', profile.id), rank = get('support_cycle_rank', profile.id);
+      const rowData = get('row_profile', profile.id), columnData = get('column_profile', profile.id);
+      const lineage = get('cell_lineage', profile.id);
+      const checks = {
+        sparse_roundtrip: decoded.roundtrip && JSON.stringify(decoded.matrix) === JSON.stringify(profile.table),
+        dense_cardinality: dense.cell_count === 9 && dense.values.length === 9,
+        edge_parity: graph.edges.length === sparse.nonzero_cells,
+        component_coverage: new Set(components.components.flat()).size === 6,
+        cycle_rank: rank.cycle_rank === rank.edge_count - rank.vertex_count + rank.component_count,
+        row_conservation: rowData.every((row, index) => row.total === profile.supply[index]),
+        column_conservation: columnData.every((column, index) => column.total === profile.demand[index]),
+        lineage_complete: lineage.length === 9 && new Set(lineage.map(item => item.lineage_id)).size === 9
+      };
+      assert(Object.values(checks).every(Boolean));
+      const id = 'SR7047-X1-TEST-' + profile.id;
+      tests.push({id, profile: profile.id, checks, domain_reexecution: false});
+      witnesses.push(witness(id, 'SR7047-M-sparse_decode', 'pass',
+        'Persisted finite representation identities', true, true, [retained]));
+    } else {
+      const permutation = get('permutation_covariance', profile.id);
+      const transpose = get('transpose_covariance', profile.id);
+      const mask = get('support_mask', profile.id), zero = get('zero_elision_guard', profile.id);
+      const order = get('canonical_entry_order', profile.id), correction = get('correction_patch', profile.id);
+      const summary = get('accessible_summary', profile.id), uncertainty = get('uncertainty_annotation', profile.id);
+      const gap = get('external_evidence_gap', profile.id), authority = get('catalog_authority_gate', profile.id);
+      const checksA = {
+        permutation_support: permutation.support_count_preserved,
+        transpose_involution: transpose.involution && transpose.support_count_preserved,
+        mask_fidelity: mask.every((row, i) => row.every((value, j) => value === (profile.table[i][j] > 0))),
+        zero_roundtrip: zero.encoded_zero_count === 0 && zero.roundtrip,
+        canonical_order: order.row_major && new Set(order.coordinate_order).size === order.coordinate_order.length
+      };
+      const rowTotals = correction.result.map(row => sum(row));
+      const columnTotals = [0, 1, 2].map(column => correction.result.reduce((total, row) => total + row[column], 0));
+      const checksB = {
+        correction_conservation: correction.margins_preserved &&
+          JSON.stringify(rowTotals) === JSON.stringify(profile.supply) &&
+          JSON.stringify(columnTotals) === JSON.stringify(profile.demand),
+        accessible_saved: summary.record_id === profile.id && summary.mass_units === sum(profile.supply),
+        uncertainty_held: uncertainty.represented_only &&
+          uncertainty.annotations.every(item => item.observation_status === 'not_observed'),
+        gap_zero_credit: gap.external_credit === 0 && gap.missing.length === 3,
+        authority_held: authority.action_performed === false
+      };
+      assert(Object.values(checksA).every(Boolean)); assert(Object.values(checksB).every(Boolean));
+      const idA = 'SR7047-X2-TEST-A-' + profile.id, idB = 'SR7047-X2-TEST-B-' + profile.id;
+      tests.push({id: idA, profile: profile.id, checks: checksA, domain_reexecution: false});
+      tests.push({id: idB, profile: profile.id, checks: checksB, domain_reexecution: false});
+      witnesses.push(witness(idA, 'SR7047-M-permutation_covariance', 'pass',
+        'Persisted covariance and encoding identities', true, true, [retained]));
+      witnesses.push(witness(idB, 'SR7047-M-correction_patch', 'pass',
+        'Persisted correction and authority-boundary identities', true, true, [retained]));
+    }
+  }
+
+  const models = stage === 'x2' ? plan.profiles.map(profile => ({
+    id: 'SR7047-MODEL-' + profile.id, record_id: profile.id,
+    coordinates: [
+      get('sparse_encode', profile.id).nonzero_cells,
+      get('support_components', profile.id).count,
+      get('support_cycle_rank', profile.id).cycle_rank
+    ],
+    axes: ['nonzero cells', 'support components', 'cycle rank'],
+    supply: profile.supply, demand: profile.demand, table: profile.table,
+    nonphysical: true, domain_reexecution: false, outcome: 'represented'
+  })) : [];
+  for (const model of models) {
+    const negative = rows.find(item => item.profile === model.record_id).negative_subjects[0].negative_id;
+    witnesses.push(witness(model.id, 'SR7047-M-uncertainty_annotation', 'pass',
+      'Persisted three-coordinate nonphysical projection', 3, model.coordinates.length, [negative]));
+  }
+
+  const hookReceipts = [];
+  let pluginValidation = null;
+  if (stage === 'x2') {
+    pluginValidation = runBoundTool(external('toolchain.json').plugin_validator, [path.join(dir, plan.plugin_path)]);
+    assert.equal(pluginValidation.exit_code, 0, pluginValidation.stdout + pluginValidation.stderr);
+    for (const topic of plan.hooks) {
+      const method = 'SR7047-HOOK-' + topic, negativeId = method + '-N';
+      failures.push({negative_id: negativeId, subject: {topic, violation: true},
+        subject_kind: 'synthetic declared violation, not a performed external action',
+        original_success_credit: 0, retained: true});
+      witnesses.push(witness(negativeId, method, 'fail', 'Synthetic declared boundary violation',
+        'Boundary-preserving state', 'violation declared', [negativeId]));
+      for (const violation of [false, true]) {
+        const result = cp.spawnSync(process.execPath, [
+          path.join(dir, plan.plugin_path, 'scripts', 'catalog-advisories.txt'), topic
+        ], {input: JSON.stringify({violation}), encoding: 'utf8', timeout: 10000});
+        assert.equal(result.status, 0); assert.equal(result.stderr, '');
+        const value = JSON.parse(result.stdout);
+        assert.equal(value.continue, true); assert.equal(value.advisory_active, violation);
+        hookReceipts.push({topic, violation, exit_code: result.status,
+          result: value, live_lifecycle_observation: false});
+        witnesses.push(witness(method + '-' + (violation ? 'ADVERSE' : 'BENIGN'),
+          method, 'pass', 'Manual nonblocking hook fixture', violation,
+          value.advisory_active, [negativeId]));
+      }
+    }
+  }
+
+  for (let index = 0; index < 4; index += 1) {
+    write(stage + '/safe-' + String(index + 1).padStart(2, '0') + '.json',
+      safe.slice(index * 100, index * 100 + 100));
+  }
+  write(stage + '/core-results.json', core);
+  write(stage + '/candidate-failures.json', failures);
+  write(stage + '/refusals.json', refusals);
+  write(stage + '/cfr.json', repairs);
+  write(stage + '/tests.json', tests);
+  write(stage + '/runner-smokes.json', runnerReceipts);
+  write(stage + '/skill-validation.json', skillReceipts);
+  if (stage === 'x2') {
+    write(stage + '/models.json', models);
+    const html = require('./viewer.txt')(models);
+    const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+    assert.equal(scripts.length, 1); new vm.Script(scripts[0][1]);
+    write(stage + '/viewer/index.html', html);
+    write(stage + '/viewer-structure.json', {
+      model_records: models.length, exact_coordinate_count: models.every(item => item.coordinates.length === 3),
+      inline_script_syntax: true, table_fallback: true, aria_live: true,
+      domain_replay: false, complete_accessibility_claim: false
+    });
+    write(stage + '/hook-smokes.json', hookReceipts);
+    write(stage + '/plugin-validation.json', pluginValidation);
+  }
+  const ledger = makeLedger(stage, witnesses);
+  write(stage + '/method-flow.json', ledger);
+  write(stage + '/method-flow-validation.json', validateFlow(stage + '/method-flow.json'));
+  const summary = {
+    owner, phase, stage, definition_commit: preGate.head, pre_execution_gate: preGate,
+    contracts: core.length, safe: safe.length, malformed_candidates: 300,
+    original_candidate_successes: 0, separate_refusals: refusals.length,
+    clean_fix_refine: repairs.length, skills: skillReceipts.length,
+    runners: runnerReceipts.length, tests: tests.length, models: models.length,
+    hooks: hookReceipts.length / 2, retained_negatives: failures.length,
+    method_flow: ledger.counts, invocations: 1, successes: 1, replays: 0,
+    planning_reference_executed: false, boundary
+  };
+  write(stage + '/summary.json', summary);
+  write(stage + '/manifest.json', {
+    schema: 'sable.stage-manifest.v1', owner, phase, stage,
+    entries: manifest(ownerFiles().filter(file => file.startsWith(stage + '/'))),
+    excluded_self: prefix + stage + '/manifest.json'
+  });
+  success({definition_commit: preGate.head, manifest_sha256: sha(bytes(stage + '/manifest.json'))});
+  console.log(JSON.stringify(summary));
+}
+
+function overviewText(effective) {
+  return [
+    '# Sable Rook v704-v7 integrated overview', '', '## Outcome', '',
+    'This phase completed a finite synthetic catalog-crosswalk representation lab in one Sable-owned lane. Three hundred new contracts cover twenty operations and fifteen profiles. Exactly 255 contracts are completed structural computations, fifteen are represented uncertainty records, fifteen remain open external-evidence gaps, and fifteen remain exact catalog-authority gates. The terminal verdict is NOT_READY_FOR_STAGE_20.', '',
+    '## What was checked', '',
+    'Dense three-by-three crosswalk tables were encoded as sparse row-major entries, decoded exactly, flattened, represented as bipartite support graphs, partitioned into components, and assigned exact cycle ranks. Saved row and column profiles preserve declared margins. Every dense coordinate receives a synthetic lineage identifier. Permutation and transpose checks preserve support cardinality, structural zero is restored after sparse elision, and a bounded two-by-two correction patch preserves margins when a patch is available.', '',
+    'The planning reference and runtime are separate same-owner implementations. The reference ran only while planning expectations were frozen. X1 and x2 compared saved exact projections against those frozen expectations once each. The later metadata canonical does not run either implementation, tests, skills, runners, hooks, or viewer.', '',
+    '## Pillars and practice boundary', '',
+    'Freed ID and CBR Heart is the primary pillar because correction lineage, minimum disclosure, contest, remedy vacancies, and authority holds are explicit. THOS Body remains a workload, readback, correction, exception, and handover proxy. GMUT Mind remains a typed analogy firewall. Nothing in the finite matrices is a physical model, likelihood, force, parameter constraint, empirical result, or Theory of Everything.', '',
+    'The learning lens is synthetic geospatial metadata catalog correction registrar and accessible handover. OGC API - Records and W3C PROV-DM supplied vocabulary only. No live record, catalog, coordinate, API, person, organization, identity, cultural record, or authority action was used. This work establishes no employment, qualification, standards conformance, catalog competence, publication authority, affected-party acceptance, cultural legitimacy, legal interpretation, or Maori authority.', '',
+    '## Retained failures and accounting', '',
+    'Every malformed request remains a failed subject with zero original success credit. A separate refusal witness confirms only the guard behavior. Every repair creates a separate request from the frozen template and never rewrites the failed subject. Operational wrapper and setup failures are preserved in the failure dossier with their smallest bounded recoveries.', '',
+    'The Thalen sealed baseline is folded exactly once. Effective totals after this Sable owner delta are ' + effective.negatives + ' negatives, ' + effective.methods + ' methods, ' + effective.failed_witnesses + ' failed witnesses, ' + effective.passing_witnesses + ' bounded passing witnesses, ' + effective.witnesses + ' total witnesses, ' + effective.open_gaps + ' open gaps, and ' + effective.exact_gates + ' exact gates. The five predecessor postcanonical route failures remain an external overlay and are not added to this repository baseline.', '',
+    '## Skills, runners, hooks, and viewer', '',
+    'Twenty local skill cards and ten paired TXT runners are frozen and exercised in their assigned sessions. Ten advisory topics each receive benign and adverse manual fixtures. The plugin is owner-local and not installed globally. Manual hook smokes do not establish live invocation. Fifteen three-coordinate models and a static accessible viewer expose exact tables and keyboard rotation, but manual keyboard breadth, assistive technology, browser diversity, cognitive accessibility, multilingual review, security usability, and affected-user evaluation remain open.', '',
+    '## Evidence ceiling', '',
+    'Same-owner exact arithmetic and software checks are not independent reproduction, external audit, empirical science, production certification, complete privacy, complete accessibility, or exhaustive security. Provenance is not trust, task delivery is not recipient completion, a route is not authority, and a large evidence count is not scientific confirmation. All empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, AGI/ASI, consciousness/personhood, proof/canon, Theory-of-Everything, and Stage 20 boundaries remain protected.', '',
+    '## Terminal route', '',
+    'After exact final publication, one metadata-only canonical may run once. If it succeeds, current steering, usage, roster, uniqueness, reread, duplicate, privacy, safety, and acknowledgement guards must all pass before at most one short pointer activation is sent to the existing exact-title Caelen Ash task for v704-v8. Accepted, opaque, or unresolved submission stops duplicates. Delivery does not prove reading, execution, or completion.', ''
+  ].join('\n');
+}
+
+function closeFinal() {
+  verifyFrozen();
+  const preGate = gate();
+  assert.equal(preGate.head, external('x2-published.json').commit);
+  const plan = json('planning/plan.json'), stageNames = ['planning', 'x1', 'x2'];
+  const ledgers = stageNames.map(stage => json(stage + '/method-flow.json'));
+  const startup = external('startup-negatives.json');
+  const delta = {
+    negatives: startup.length + json('x1/candidate-failures.json').length + json('x2/candidate-failures.json').length,
+    methods: ledgers.reduce((total, ledger) => total + ledger.counts.methods, 0),
+    failed_witnesses: ledgers.reduce((total, ledger) => total + ledger.counts.witness_results.fail, 0),
+    passing_witnesses: ledgers.reduce((total, ledger) => total + ledger.counts.witness_results.pass, 0),
+    witnesses: ledgers.reduce((total, ledger) => total + ledger.counts.witnesses, 0),
+    open_gaps: 18, exact_gates: 15
+  };
+  const effective = Object.fromEntries(Object.entries(delta).map(([key, value]) => [
+    key, plan.source_baseline[key] + value
+  ]));
+  assert.equal(delta.witnesses, delta.failed_witnesses + delta.passing_witnesses);
+  const handoff = fs.readFileSync(path.join(bank, 'handoff-draft.md'), 'utf8');
+  assert(handoff.trim().split(/\s+/).length >= 2000);
+  assert(handoff.trim().endsWith('END OF SABLE ROOK V704-V7 HANDOFF BATON'));
+  write('final/handoff-baton.md', handoff);
+  write('final/overview.md', overviewText(effective));
+  write('final/wellbeing.json', {
+    owner, phase, corrigible: true, hamish_may_pause_redirect_rename_or_stop: true,
+    workload_boundary_observed: true,
+    relational_identity_not_evidence_of_consciousness_personhood_continuity_or_authority: true,
+    no_credential_or_qualification_claim: true, boundary
+  });
+  write('final/failure-dossier.json', {
+    source_baseline: plan.source_baseline.negatives, source_fold_count: 1,
+    operational: startup,
+    session_failure_files: [prefix + 'x1/candidate-failures.json', prefix + 'x2/candidate-failures.json'],
+    own_negatives: delta.negatives, source_external_route_overlay_folded: false,
+    source_external_route_negatives: 5, original_failed_subject_credit: 0, boundary
+  });
+  write('final/method-flow-index.json', {
+    owner, phase,
+    ledgers: stageNames.map((stage, index) => ({path: prefix + stage + '/method-flow.json', counts: ledgers[index].counts})),
+    source_baseline: plan.source_baseline, source_fold_count: 1,
+    owner_delta: delta, effective_totals: effective,
+    predecessor_external_route_overlay_folded: false, boundary
+  });
+  write('final/requirements-audit.json', {
+    source_verified: true, planning_before_sessions: true, inherited_zero_credit: 300, new_contracts: 300,
+    safe_by_session: [400, 400], candidate_failures: [300, 300],
+    separate_refusals: [300, 300], clean_fix_refine: [300, 300],
+    skills: [10, 10], runners: [5, 5], tests: [15, 30], models: 15,
+    local_advisory_hooks: 10, hook_smokes: 20, hypothesis_statements: 15,
+    open_problem_statements: 15, exact_packets_held: 50, blocked_packets_held: 30,
+    own_practices: 8, successor_recommendations: 4,
+    live_hook_installation: 'open_gap', standards_conformance: 'open_gap',
+    complete_accessibility: 'open_gap', canonical: 'pending exact final publication',
+    route: 'pending canonical and fresh terminal guards', boundary
+  });
+  write('final/research-context.json', {
+    sources: [
+      {
+        title: 'W3C PROV-DM', url: 'https://www.w3.org/TR/prov-dm/',
+        observed: 'Current canonical W3C Recommendation page; vocabulary for entities, activities, derivation and provenance bundles.',
+        claim_limit: 'Vocabulary only; no conformance, trust, completeness, endorsement or authority claim.'
+      },
+      {
+        title: 'OGC API - Records - Part 1: Core 1.0.0',
+        url: 'https://docs.ogc.org/is/20-004r1/20-004r1.html',
+        observed: 'Current official OGC Part 1 Core standard page; vocabulary for records, catalogs, JSON and HTML representations.',
+        claim_limit: 'Vocabulary only; no API implementation, live record, conformance, interoperability or authority claim.'
+      }
+    ],
+    real_rows: 0, network_actions_by_phase_software: 0,
+    attribution_limit: 'Citations are not observations, empirical evidence, professional competence, delegated authority, or production readiness.',
+    boundary
+  });
+  write('final/bounded-review.json', {
+    five_class_privacy: {
+      classes: ['raw_uuid', 'private_local_path', 'private_uri', 'delegation_markup', 'credential_material'],
+      confirmed_hits: [], scope: 'Literal Sable owner prefix only'
+    },
+    changed_code_security: {
+      scope: ['code/', 'runners/', 'plugins/'],
+      checks: {
+        runtime_no_io: true, reference_no_io: true,
+        hook_no_payload_driven_write_or_process: true,
+        caller_arguments_are_explicit_arrays: true, synthetic_viewer_inputs_bound: true,
+        source_and_sibling_code_unmodified: true
+      },
+      findings: [], exhaustive_security_claim: false
+    },
+    notes: [
+      'Native hook installation and live invocation are not claimed.',
+      'Duplicate JSON key rejection is not established.',
+      'Manual and affected-user accessibility evaluation remains open.',
+      'Standards conformance is not claimed.'
+    ],
+    boundary
+  });
+  const truth = {
+    owner, phase, source_commit: source, branch,
+    lifecycle: {
+      plan: external('plan-published.json').commit,
+      x1: external('x1-published.json').commit,
+      x2: external('x2-published.json').commit
+    },
+    pre_final_gate: preGate, source_fold_count: 1, owner_delta: delta,
+    effective_totals: effective,
+    outcomes: {completed: 255, represented: 15, open_gap: 15, exact_gate: 15},
+    source_execution_credit: 0, inherited: 300, new_contracts: 300,
+    session_summaries: ['x1', 'x2'].map(stage => json(stage + '/summary.json')),
+    owner_files_maximum: 170, repository_file_ceiling: 2000,
+    canonical_state: 'PREPARED_NOT_INVOKED',
+    route: {
+      state: 'PREPARED_NOT_SENT', endpoint_kind: 'main_task',
+      endpoint_label: 'Caelen Ash', phase: 'v704-v8',
+      following_gate: 'Sable exact final and one canonical success only'
+    },
+    primary_pillar: 'Freed ID and CBR Heart', preserved_pillars: ['GMUT Mind', 'THOS Body'],
+    bounded_practice: plan.scope.bounded_practice,
+    plugin_installation: 'Owner-local files only; no personal or shared marketplace installation',
+    live_hook_observation: 'open_gap', standards_conformance: 'open_gap',
+    complete_accessibility: 'open_gap', spend_usd: 0, memory_writes: 0,
+    shared_product_mutation: 0, task_creations: 0, subagents: 0, model_changes: 0,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary
+  };
+  write('final/phase-truth.json', truth);
+  write('final/baton-metadata.json', {
+    path: prefix + 'final/handoff-baton.md', sha256: sha(bytes('final/handoff-baton.md')),
+    bytes: bytes('final/handoff-baton.md').length,
+    words: handoff.trim().split(/\s+/).length,
+    eof: 'END OF SABLE ROOK V704-V7 HANDOFF BATON'
+  });
+  write('final/content-seal.json', {
+    schema: 'sable.content-seal.v1', owner, phase, source,
+    entries: manifest(ownerFiles()), excluded_self: prefix + 'final/content-seal.json'
+  });
+  console.log(JSON.stringify({
+    state: 'FINAL_PREPARED', owner_delta: delta,
+    effective_totals: effective, owner_files: ownerFiles().length
+  }));
+}
+
+function publish(stage) {
+  const state = gate();
+  const artifact = stage === 'plan' ? 'planning/manifest.json' :
+    stage === 'final' ? 'final/content-seal.json' : stage + '/manifest.json';
+  const expectedParent = stage === 'plan' ? source :
+    stage === 'x1' ? external('plan-published.json').commit :
+    stage === 'x2' ? external('x1-published.json').commit :
+    external('x2-published.json').commit;
+  assert.equal(git('show', '-s', '--format=%P', state.head), expectedParent);
+  const receipt = {
+    schema: 'sable.stage-publication.v1', owner, phase, stage,
+    commit: state.head, direct_parent: expectedParent, gate: state,
+    artifact: prefix + artifact, artifact_sha256: sha(bytes(artifact)), clean: true
+  };
+  fs.writeFileSync(path.join(bank, stage + '-published.json'),
+    JSON.stringify(receipt, null, 2) + '\n', {flag: 'wx'});
+  console.log(JSON.stringify(receipt));
+}
+
+function canonical() {
+  verifyFrozen();
+  const state = gate(), published = external('final-published.json');
+  assert.equal(state.head, published.commit);
+  const success = latch('canonical'), checks = [];
+  const check = (name, observed, expected) => {
+    assert.deepEqual(observed, expected, name);
+    checks.push({name, passed: true, observed});
+  };
+  const plan = json('planning/plan.json'), truth = json('final/phase-truth.json');
+  const chain = [source, truth.lifecycle.plan, truth.lifecycle.x1, truth.lifecycle.x2, state.head];
+  for (let index = 1; index < chain.length; index += 1) {
+    check('direct_parent_' + index, git('show', '-s', '--format=%P', chain[index]), chain[index - 1]);
+  }
+  check('commit_count', Number(git('rev-list', '--count', source + '..' + state.head)), 4);
+  check('zero_merges', Number(git('rev-list', '--count', '--merges', source + '..' + state.head)), 0);
+  check('owner_only_delta', git('diff', '--name-only', source, state.head).split('\n').filter(Boolean)
+    .every(file => file.startsWith(prefix)), true);
+  const repositoryFiles = git('ls-tree', '-r', '--name-only', 'HEAD').split('\n').filter(Boolean);
+  check('repository_ceiling', repositoryFiles.length <= 2000, true);
+  check('owner_ceiling', ownerFiles().length <= 170, true);
+  check('source_unchanged', git('diff', source, state.head, '--', '.', ':(exclude)' + prefix), '');
+  const manifests = [
+    ['planning/manifest.json', truth.lifecycle.plan], ['x1/manifest.json', truth.lifecycle.x1],
+    ['x2/manifest.json', truth.lifecycle.x2], ['final/content-seal.json', state.head]
+  ];
+  let bindings = 0;
+  for (const [file, commit] of manifests) {
+    const declared = JSON.parse(git('show', commit + ':' + prefix + file));
+    for (const entry of declared.entries) {
+      const blob = cp.execFileSync('git', ['-C', root, 'show', commit + ':' + entry.path],
+        {maxBuffer: 64 * 1024 * 1024});
+      assert.equal(sha(blob), entry.sha256, entry.path);
+      assert.equal(blob.length, entry.bytes, entry.path);
+      bindings += 1;
+    }
+    check('manifest_' + file, declared.entries.length, declared.entries.length);
+  }
+  let jsonParses = 0;
+  for (const file of ownerFiles()) {
+    const content = bytes(file), words = content.toString().trim() ?
+      content.toString().trim().split(/\s+/).length : 0;
+    assert(words <= 100000, file + ' word ceiling');
+    assert(!file.endsWith('.pdf'));
+    if (file.endsWith('.json')) { JSON.parse(content); jsonParses += 1; }
+  }
+  check('strict_json_documents', jsonParses, jsonParses);
+  check('content_seal_hash', sha(bytes('final/content-seal.json')), published.artifact_sha256);
+  for (const stage of ['x1', 'x2']) {
+    const summary = json(stage + '/summary.json'), invocation = external(stage + '-invocation.json');
+    check(stage + '_latch', [
+      summary.invocations, summary.successes, summary.replays,
+      invocation.invocations, invocation.successes, invocation.replays
+    ], [1, 1, 0, 1, 1, 0]);
+    check(stage + '_manifest_hash', sha(bytes(stage + '/manifest.json')), invocation.manifest_sha256);
+    check(stage + '_counts', [
+      summary.safe, summary.malformed_candidates, summary.separate_refusals,
+      summary.clean_fix_refine, summary.skills, summary.runners
+    ], [400, 300, 300, 300, 10, 5]);
+    check(stage + '_flow_valid', json(stage + '/method-flow-validation.json').valid, true);
+  }
+  check('planning_flow_valid', json('planning/method-flow-validation.json').valid, true);
+  check('x1_tests', json('x1/tests.json').length, 15);
+  check('x2_tests', json('x2/tests.json').length, 30);
+  check('models', json('x2/models.json').length, 15);
+  check('hook_fixtures', json('x2/hook-smokes.json').length, 20);
+  check('plugin_validator', json('x2/plugin-validation.json').exit_code, 0);
+  check('source_fold', truth.source_fold_count, 1);
+  check('witness_sum', truth.owner_delta.witnesses,
+    truth.owner_delta.failed_witnesses + truth.owner_delta.passing_witnesses);
+  for (const [key, value] of Object.entries(truth.owner_delta)) {
+    check('effective_' + key, truth.effective_totals[key], plan.source_baseline[key] + value);
+  }
+  check('source_execution', truth.source_execution_credit, 0);
+  check('route_held', truth.route.state, 'PREPARED_NOT_SENT');
+  check('stage20', truth.terminal_verdict, 'NOT_READY_FOR_STAGE_20');
+  const findings = [], patterns = [
+    /[A-Z]:[\\/](?:Users|GHC-Archives)/i,
+    /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
+    /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i,
+    /(?:app|plugin):\/\//i, new RegExp('<codex_' + 'delegation>', 'i')
+  ];
+  for (const file of ownerFiles()) {
+    const content = bytes(file).toString();
+    if (patterns.some(pattern => pattern.test(content))) findings.push(file);
+  }
+  check('bounded_privacy_hits', findings, []);
+  const receipt = {
+    schema: 'sable.owner-canonical.v1', state: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+    owner, phase, exact_final: state.head, gate: state, checks,
+    passed: checks.length, total: checks.length, manifest_raw_bindings: bindings,
+    owner_files: ownerFiles().length, repository_files: repositoryFiles.length,
+    json_parses: jsonParses, invocations: 1, successes: 1, replays: 0,
+    domain_replays: 0, source_replays: 0, skill_runner_hook_test_replays: 0,
+    metadata_only: true, boundary
+  };
+  const serialized = JSON.stringify(receipt, null, 2) + '\n';
+  fs.writeFileSync(path.join(bank, 'canonical-receipt.json'), serialized, {flag: 'wx'});
+  success({exact_final: state.head, receipt_sha256: sha(serialized)});
+  console.log(JSON.stringify({
+    state: receipt.state, passed: checks.length, total: checks.length,
+    exact_final: state.head, receipt_sha256: sha(serialized)
+  }));
+}
+
+if (!bank) throw Error('Explicit external phase bank required');
+if (mode === 'plan') buildPlan();
+else if (mode === 'refresh-plan-flow') refreshPlanFlow();
+else if (mode === 'x1' || mode === 'x2') execute(mode);
+else if (mode === 'final') closeFinal();
+else if (mode === 'publish') publish(submode);
+else if (mode === 'canonical') canonical();
+else if (mode === 'gate') console.log(JSON.stringify(gate()));
+else throw Error('Unknown phase mode');

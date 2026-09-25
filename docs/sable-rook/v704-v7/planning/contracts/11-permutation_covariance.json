@@ -1,0 +1,5590 @@
+[
+  {
+    "id": "SR7047-P151",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-01",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-01",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "ccde35f6c33d012f72632583bf6bed06a184a91694d0fa8c629f5e3914a369cd",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            2,
+            0,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 2
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "2c598c41afde5b1d7702ebfbecdff8aa30616b9cad021e1207499a525e3b7aea",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ],
+              [
+                2,
+                0,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                2
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P151-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            3,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P151-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            0,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P152",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-02",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-02",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "678b8d66ca3f90a70fa9856ae9a739335319947d1bec0ad22d334ac582006829",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 2
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "8d8ea8c9297f62293181b29b563f638ef0d7bfe4a0edb01a294182080be910fa",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                0,
+                2,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P152-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P152-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P153",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-03",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-03",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "d80dd3da6baf510a56818f4e813211d9ac7c2d5b74fa5f69073bc13bb77af4e0",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "260f600cf78aed4ce9fbd60a20f464793c380ac22f61a713f5da14664b01b439",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                2
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P153-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P153-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "table": [
+            [
+              -1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P154",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-04",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-04",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "5e1540fded59dfdab9bcde1aae0c3149238e7a337de382ada6419b7f26d20042",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "c6b4c87427ace5f19c73c73bc1c90558166543e83d9206f7804b0d746028c145",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P154-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P154-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P155",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-05",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-05",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "aad6ccf7b808169fe89ab67f1524422fb0a604db1a5cbdc79eeeaa93b0373209",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "e8fa63623cf28cc454c3ec15eeb7e403aca7e176e0c563c943617707c592e93f",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P155-N1",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P155-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P156",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-06",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-06",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "2228e41b9ad589b8f74073ef0bfb39969b9f7f3b2a5f2848360e03ec00a5b1c0",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "e4b42562767017be9fb879cd21ba20b6873ce2d0488a024d64bc1574f0494265",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P156-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "invalid",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P156-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P157",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-07",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-07",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "f1155b7bd2c13ef9fbee5b0d767ca2a69e6818debd1788ccf3af9d36252a5624",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "ad0f6c1009ead74ee9d0792f80fe920a18ffbde9f2199dc66578e95ce4a6afce",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            1
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P157-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            0,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P157-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P158",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-08",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-08",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "bb879ebcd6794fedb9932c61e4aa5e12a4a6ef25faa08a6de990ca5ce826dfb8",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "e5849efb9200d04d491829a6d88e01ea997caaebc246d0b85d7ff7e1756218f2",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P158-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P158-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P159",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-09",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-09",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "058fce6ae4322ba2d901d823e9c3bddf0186dd6d6d799865cc7f56905d7c0678",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "251a5e2e4944e0716dfd296c57f0dbc5629bca7b49e8832fd52ac8ca691c6905",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P159-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P159-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P160",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-10",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-10",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "table": [
+        [
+          1,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "460b440f4ff8329935d4cf67a006d51eb7132b38e1a113b3abcacc633dfcc64f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 3
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "a17ccb76a4f464f1db9132bdd16e870cab1c49cba6fedd7d4ae8a0d852b5e67a",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                3
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 3
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                3
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 3
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P160-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              true,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P160-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P161",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-11",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-11",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "28ad5fa31c9eed22094453aa7b75320c67c74ac99ec98701e9d91c6f3a6ce527",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            3,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 3
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "403f882d94d66c37b0e775c70cfba59ac5dd34d6892232a705b791b025ea7e57",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 3
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 3
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P161-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P161-N2",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P162",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-12",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-12",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "4efad9a785fe017f742d05f348ce7204971d9043ecf8107b9a9c611c4d68ac6b",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 2,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "2f62cf68cb1da8d5fcbab9004fac4d89c6ae6d2ecb6e3146281c148472d1f20f",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                2,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                2,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P162-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-12",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P162-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "invalid",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P163",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-13",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-13",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "563e29cc40f515b46e867dd93f8c5a5796ee0194b10d1291b4ee6b0817e7676f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "d696b4204a57d8db0824c19544999d8ed84ba42a7c718c79d9f2146c4673b238",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                0,
+                2,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P163-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            4,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P163-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            0,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P164",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-14",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-14",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "447a29eac84abc5d1704d77ac77c5d1821e5c02a978194d850f6fbe6918cf745",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            0,
+            2,
+            0
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 2
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "567093c057847ea1355733dc4e47a1ff1868b6eefc66bd9b8603d6d19967f25a",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                2
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              0,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P164-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P164-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P165",
+    "stage": "x2",
+    "operation": "permutation_covariance",
+    "profile": "SGC-15",
+    "hypothesis": "Check consistent row and column permutation covariance.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "permutation_covariance",
+      "record_id": "SGC-15",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "acc3986f9f7e0b553b55f6ea0fe39ea5c54fe0e74303fe347b21f0691b48e414",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "row_permutation": [
+          2,
+          0,
+          1
+        ],
+        "column_permutation": [
+          1,
+          2,
+          0
+        ],
+        "matrix": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "sparse_entries": [
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "7a9b17e0a8e7c5f7e127aa73c3a25d32fccd7518337d4fe15c924d6ca8492310",
+    "alternatives": [
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                2
+              ],
+              [
+                1,
+                0,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "row_permutation": [
+              2,
+              0,
+              1
+            ],
+            "column_permutation": [
+              1,
+              2,
+              0
+            ],
+            "matrix": [
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ]
+            ],
+            "sparse_entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 2
+              }
+            ],
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P165-N1",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P165-N2",
+        "request": {
+          "op": "permutation_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  }
+]

@@ -1,0 +1,4394 @@
+[
+  {
+    "id": "SR7047-P016",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-01",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-01",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "36d23b1c00b0bf2d769398c6e9a2e04e000c17e3e8942afa2eca1d76756190de",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 2
+          }
+        ],
+        "nonzero_cells": 3
+      }
+    },
+    "expected_sha256": "8a642f501a36226a37b06a038c4b0513a6f81b166694c5fc094ef2443df7146d",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "nonzero_cells": 3
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 2
+              }
+            ],
+            "nonzero_cells": 3
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P016-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P016-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P017",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-02",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-02",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "3206a5120282e4cd3f33d73b7685e2d209eb3e6a0d0c435425c464cae9319254",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "a627b0c9a3d2fcd24faa81a4ec387c5abf7460608b57317891cf4bcf1463b740",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P017-N1",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-02",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P017-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-02",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P018",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-03",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-03",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "a97fbd0ddb1b75289d4cd8f623b0805cf5e40166e685ad101acdeb5f23509e70",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 2
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "4dc69f4ad6ca9e2fc81d90ee3d594dbb24e0917e65841b6d185b86baa30c4f7f",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-03",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-03",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P018-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "invalid",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P018-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "table": [
+            [
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P019",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-04",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-04",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "eff8c3e63764d16ef6ba97452a6dd4494575a15c53d1c79922fabe79c83f3b1b",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "3c4e60c804422d7619ad4f7d4f4854ac1d69d0cc9cc5ac018bd2356966b0ae54",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P019-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-04",
+          "supply": [
+            0,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P019-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            3,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P020",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-05",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-05",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "aa08836a269d3ac93b1452645db3dc4e60cc10a121e161b0af9f507e0f511a03",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "b4e2ab47f10a69f84b9c12a25867f03943359f2de56f9c3c02d391be40d60799",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P020-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P020-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-05",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P021",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-06",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-06",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "a5e17e2047ffced63022fb4ca3a98bbbf83f027ff72d1e48f878da0306ddd7ba",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 3
+      }
+    },
+    "expected_sha256": "3ca166fd3ccbcdb871572132279ad6198646d0c2b2eb39bf739cd36ff9ce939a",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 3
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 3
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P021-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P021-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P022",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-07",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-07",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "1bce6d41f06667c2c34c7713a8a4cc7f0f6beb899789aaec2093c72516f4a277",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 5
+      }
+    },
+    "expected_sha256": "7c1254bd9d1de123ee2cff13faebb1392a0235b9dd428e52910a0395eee91206",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-07",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            1
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P022-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P022-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P023",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-08",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-08",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "bf6f23ea16e1b658ddefb4be0ae7192b01d0de7f8671389f1a7674ed3844310e",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 5
+      }
+    },
+    "expected_sha256": "fe7d2c6307d96922c61e82f2396bc441a219a7320be130162f6ad5aa4002deb6",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P023-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-08",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P023-N2",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-08",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P024",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-09",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-09",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "88dc8fd6a3ccbdb1356fac9760b945430c9b1479dbfe1c4564adbef9c2bad9ce",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 5
+      }
+    },
+    "expected_sha256": "d437b7dd0b3904cf772aa6bc628175e84164d6be58451290335854174039706f",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P024-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P024-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "invalid",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P025",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-10",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-10",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "table": [
+        [
+          1,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "2ebbedc6e76460f86090b58e3e11e7496ff1e75f0b721e880ee06d686be72273",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 3
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "493dea77f604beead280c79ffa4dd11ed4abbd9422880e91b6b07fda7c4c56a4",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 3
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 3
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P025-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            2,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P025-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-10",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P026",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-11",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-11",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "468b0fcc6deae03b59a3022b38887927f281d9cf34888623df7b8dedbcffc480",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 3
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "dfa9bdc231b0de24949720638781010f994bfc155ba5bcc6a9e6dfd936765633",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 3
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 3
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P026-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-11",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P026-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P027",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-12",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-12",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "596268f79ba17e2935ed2444cfb9903186b16a323f6e7ee1952dfaced86ef304",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 5
+      }
+    },
+    "expected_sha256": "3afc1e6a3bf4722abcd5e291a8b85853e359ca03148a15e4cdf9d481293bc56f",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P027-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-12",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P027-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-12",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P028",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-13",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-13",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "5fecc25b2692bb81e55bc0b95a83106b90741ea336d81d4f9b28c9a13ceba1c5",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 2
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "534506fa36f02f451fa2605144deea1e904769d4074b1cfe5afac5e352b95af1",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 2
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P028-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-13",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P028-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-13",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P029",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-14",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-14",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "e19650ce9e624da06b8b6aa3ce0824c77dd6bd86907e10b21ae079ed3d7da806",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 2
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 4
+      }
+    },
+    "expected_sha256": "eced2ef03c88bb16fed244368c8b242a7363cf49345f62e61e9b5033f681939d",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              0,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 2
+              }
+            ],
+            "nonzero_cells": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P029-N1",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-14",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P029-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-14",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P030",
+    "stage": "x1",
+    "operation": "sparse_encode",
+    "profile": "SGC-15",
+    "hypothesis": "Encode positive cells as canonical row-major sparse entries.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "sparse_encode",
+      "record_id": "SGC-15",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "b1f4714e007590594c0caa7a440748d219477efbe4ed98095b7c8425e15f8768",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "entries": [
+          {
+            "row": 0,
+            "column": 0,
+            "value": 2
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "value": 1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "value": 1
+          },
+          {
+            "row": 2,
+            "column": 2,
+            "value": 1
+          }
+        ],
+        "nonzero_cells": 5
+      }
+    },
+    "expected_sha256": "bc41815de9a21229b817bfabab77d59aa9d2a520dfd3bcfee8c9e25b28139d29",
+    "alternatives": [
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-15",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 0,
+                "value": 2
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-15",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "entries": [
+              {
+                "row": 0,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "value": 2
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "value": 1
+              },
+              {
+                "row": 2,
+                "column": 2,
+                "value": 1
+              }
+            ],
+            "nonzero_cells": 5
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P030-N1",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "invalid",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P030-N2",
+        "request": {
+          "op": "sparse_encode",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  }
+]

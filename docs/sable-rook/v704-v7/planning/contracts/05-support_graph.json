@@ -1,0 +1,4879 @@
+[
+  {
+    "id": "SR7047-P061",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-01",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-01",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "9f40567d3de7c921fdec4f313de3f81318f679e5a6bffc2323af5839c2822885",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 2
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 2
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 2
+          }
+        ]
+      }
+    },
+    "expected_sha256": "99fec85f4302864b504365bf62d530e38f86257a796d86546ec8611230ab26b0",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 2
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 2
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 2
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P061-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-01",
+          "supply": [
+            0,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P061-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            3,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P062",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-02",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-02",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "590429f12c35ddfb0eb2ac40f5183947022b0d4761ce7b695c8f3f719db7f8dd",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c0",
+            "from": "r1",
+            "to": "c0",
+            "multiplicity": 2
+          },
+          {
+            "id": "r2-c1",
+            "from": "r2",
+            "to": "c1",
+            "multiplicity": 2
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "2d796d6927470886468b0f9805ff799ddb2ec0a5cc200c14ca93c171c1c925ad",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 2
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 2
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P062-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-02",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P062-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-02",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P063",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-03",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-03",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "c116ee1ec16b84d6e47961bc0ac5e6d6bcc4f8f4f54a129b80bec74486ab2886",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r0-c1",
+            "from": "r0",
+            "to": "c1",
+            "multiplicity": 2
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 2
+          }
+        ]
+      }
+    },
+    "expected_sha256": "14ba4c2cf5ff0b1fad2ee967e8b83b521948ed56200ccf56598aa758e771d8f9",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-03",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-03",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P063-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "table": [
+            [
+              -1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P063-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P064",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-04",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-04",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "4f6af4848e4c3f7576e4d571267494e6ad98f6d5017844c3d7236feb81cdb21d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c0",
+            "from": "r1",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c1",
+            "from": "r2",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "f64ea9d7ac93c2f095b61cca2bed894603209e5c26d2ce604f540c2706b0c7d2",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P064-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P064-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P065",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-05",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-05",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "e583e6625821a01eafa7a8a9867f406d241e8be54bdfdc4448ab7eb49b25a389",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r0-c1",
+            "from": "r0",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c2",
+            "from": "r1",
+            "to": "c2",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "4edf18dadc5d428ceb36187482005bdc475542fab8348e2b3339b21a8e7690ad",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P065-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P065-N2",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P066",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-06",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-06",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "98f2c47d070d74e34a3eb40bb987c0c5608b4912abbcb9969dd238b5695f1ffc",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "9d3c5bba63d68aa4da877d87085b05106b2c1e1158cfc76be0bf62ca4496f5a9",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P066-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P066-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "invalid",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P067",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-07",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-07",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "3bfb66ea5b6be781414dcb8ba6db544848fede639091b51c8a5b77529235a318",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c0",
+            "from": "r1",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c2",
+            "from": "r1",
+            "to": "c2",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "698c5315854c07ed057b00470ff291a3bb7122695c7e4807c573220728b3aa26",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-07",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            1
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P067-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P067-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-07",
+          "supply": [
+            0,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P068",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-08",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-08",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "d3b93595a6bd9f7b450ae2c62dd059b8296faee035cce854c275c79e19004f31",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r0-c1",
+            "from": "r0",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c2",
+            "from": "r1",
+            "to": "c2",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "30302f77583d8b4355966ce7608b1df23fc4e84a136765b190e2a2cad775c3c0",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P068-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-08",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P068-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-08",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P069",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-09",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-09",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "fc417d0f6d95d0ada34943e2965aaf7bf1a437403f4a8f212bf2412e9b35c957",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c0",
+            "from": "r1",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c1",
+            "from": "r2",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "53740c9a1b02f4e805710e58dad530842e8a89a05331531e58d18e1a47231821",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P069-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P069-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P070",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-10",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-10",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "table": [
+        [
+          1,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "b7df5d00bc54480474257a7cc89a0a83ac1fb74dbe2d7ee06c45be17a9ad28ef",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r0-c1",
+            "from": "r0",
+            "to": "c1",
+            "multiplicity": 3
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "14fd5f2c7d6e42e9ff165eb0ec487d0563b97e6dc693c45435709832c10712fe",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 3
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 3
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P070-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P070-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              true,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P071",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-11",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-11",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "a6f96407b1c877bba21a7a897878554d23502f092a9d3a7fe31b6b0e6e2da136",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c2",
+            "from": "r1",
+            "to": "c2",
+            "multiplicity": 3
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "c9a66c0b1b8486352e340458b2809d85f2743f180f20e7f8e5e44ef8e79f8cd2",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 3
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P071-N1",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P071-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P072",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-12",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-12",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "320d5b66a74dce8e69c98f57f8a63a3e07582d92ade4fdd61c89593bc0f324d2",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c0",
+            "from": "r1",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c0",
+            "from": "r2",
+            "to": "c0",
+            "multiplicity": 2
+          },
+          {
+            "id": "r2-c1",
+            "from": "r2",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "c473b04502e4d6bc8850d2260c77180b2353656a15c30f591ce5e8947a574fc3",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c2",
+                "from": "r0",
+                "to": "c2",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c2",
+                "from": "r0",
+                "to": "c2",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P072-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "invalid",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P072-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-12",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P073",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-13",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-13",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "5b43e6436429d7f45adb023e68367f15cbee6de4120e7b24b4048f566deb42fe",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 2
+          },
+          {
+            "id": "r1-c0",
+            "from": "r1",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c1",
+            "from": "r2",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 2
+          }
+        ]
+      }
+    },
+    "expected_sha256": "fc0d78c0e17d33fa79bede445bc7d6f933b3d7a5d6081d2ac877669d07cc7b2a",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 2
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P073-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-13",
+          "supply": [
+            0,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P073-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-13",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            4,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P074",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-14",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-14",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "f2956384b7975adbbaebda329aa0ce8ad6ddad1610e8304edd70f8919cfab7d4",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r0-c1",
+            "from": "r0",
+            "to": "c1",
+            "multiplicity": 2
+          },
+          {
+            "id": "r1-c2",
+            "from": "r1",
+            "to": "c2",
+            "multiplicity": 2
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "d0cd358cea14cf96feb73d7c3781873407a41abaabbf7a7570727079f16b9042",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 2
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              0,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c0",
+                "from": "r1",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 2
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P074-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-14",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P074-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-14",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P075",
+    "stage": "x1",
+    "operation": "support_graph",
+    "profile": "SGC-15",
+    "hypothesis": "Build the bipartite support graph with multiplicities.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x1",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "support_graph",
+      "record_id": "SGC-15",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "adf6779a8b728566918e99eca3004168e266e5a004056ae87d0987b3a8f0b1f4",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "nodes": [
+          "r0",
+          "r1",
+          "r2",
+          "c0",
+          "c1",
+          "c2"
+        ],
+        "edges": [
+          {
+            "id": "r0-c0",
+            "from": "r0",
+            "to": "c0",
+            "multiplicity": 2
+          },
+          {
+            "id": "r1-c0",
+            "from": "r1",
+            "to": "c0",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c1",
+            "from": "r1",
+            "to": "c1",
+            "multiplicity": 1
+          },
+          {
+            "id": "r1-c2",
+            "from": "r1",
+            "to": "c2",
+            "multiplicity": 1
+          },
+          {
+            "id": "r2-c2",
+            "from": "r2",
+            "to": "c2",
+            "multiplicity": 1
+          }
+        ]
+      }
+    },
+    "expected_sha256": "4bb190d43250d12bffa21f540072c1d544bd5f0191a02e9c1329f61f541529a8",
+    "alternatives": [
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-15",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c0",
+                "from": "r0",
+                "to": "c0",
+                "multiplicity": 2
+              },
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c1",
+                "from": "r1",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-15",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "nodes": [
+              "r0",
+              "r1",
+              "r2",
+              "c0",
+              "c1",
+              "c2"
+            ],
+            "edges": [
+              {
+                "id": "r0-c1",
+                "from": "r0",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r1-c2",
+                "from": "r1",
+                "to": "c2",
+                "multiplicity": 2
+              },
+              {
+                "id": "r2-c0",
+                "from": "r2",
+                "to": "c0",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c1",
+                "from": "r2",
+                "to": "c1",
+                "multiplicity": 1
+              },
+              {
+                "id": "r2-c2",
+                "from": "r2",
+                "to": "c2",
+                "multiplicity": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P075-N1",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P075-N2",
+        "request": {
+          "op": "support_graph",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  }
+]

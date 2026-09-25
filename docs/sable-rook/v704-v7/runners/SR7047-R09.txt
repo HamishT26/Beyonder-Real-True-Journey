@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('node:fs'),runtime=require('../code/runtime.txt');
+const runner="SR7047-R09",allowed=["accessible_summary","uncertainty_annotation"];
+try{const request=JSON.parse(fs.readFileSync(0,'utf8'));if(!allowed.includes(request.op))throw Error('runner_operation');console.log(JSON.stringify({runner,ok:true,value:runtime.run(request),error:null}));}catch(error){console.log(JSON.stringify({runner,ok:false,value:null,error:error.message}));process.exitCode=2;}

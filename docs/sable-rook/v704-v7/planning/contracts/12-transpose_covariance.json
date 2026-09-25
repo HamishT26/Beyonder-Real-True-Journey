@@ -1,0 +1,4601 @@
+[
+  {
+    "id": "SR7047-P166",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-01",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-01",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "55b316c053e6d639bf3bea99ec1bf31e6b2dc671242ec2939a61b7c6335cec00",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        "supply": [
+          2,
+          2,
+          2
+        ],
+        "demand": [
+          2,
+          2,
+          2
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "72c82738d81c81c5766d8248c855235ab3807354a71fe670b8f3ea3a1e64ee29",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ]
+            ],
+            "supply": [
+              2,
+              2,
+              2
+            ],
+            "demand": [
+              2,
+              2,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                0,
+                2
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ]
+            ],
+            "supply": [
+              2,
+              2,
+              2
+            ],
+            "demand": [
+              2,
+              2,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P166-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P166-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P167",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-02",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-02",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "6d11f1c327eb7b71c9b87fec9a9648c7dd378f881eb1c11c142d3fa4a3e29d88",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "supply": [
+          3,
+          2,
+          1
+        ],
+        "demand": [
+          1,
+          2,
+          3
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "7345c93fa316b58334f061dbfd3b27fe6ece145461ed33b034e4f2906072bd15",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              2,
+              3
+            ],
+            "demand": [
+              3,
+              2,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "supply": [
+              2,
+              1,
+              3
+            ],
+            "demand": [
+              3,
+              1,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P167-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P167-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-02",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P168",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-03",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-03",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "f9986a98c7b888a6f7c876a35fe3b06e669a8cfcab72b9ac4200ade84eb943b2",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        "supply": [
+          1,
+          3,
+          2
+        ],
+        "demand": [
+          3,
+          1,
+          2
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "45d12c84d64e936e3441bf463d2ad7f33ab24cb48fd2d8ffe9218ece5f8050e6",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                2,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ]
+            ],
+            "supply": [
+              3,
+              1,
+              2
+            ],
+            "demand": [
+              1,
+              3,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                2,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "supply": [
+              3,
+              2,
+              1
+            ],
+            "demand": [
+              2,
+              3,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P168-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P168-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "table": [
+            [
+              true,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P169",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-04",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-04",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "d0375eb85c89000fc6d4e938130928e5d6b7c931b3eb8d2dbdbeff711001e410",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "supply": [
+          2,
+          1,
+          1
+        ],
+        "demand": [
+          1,
+          1,
+          2
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "b249b808dcbd1fbbe06257d10d1900ed7d64df36090a0b5e0b05fdde702ca4ab",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              1,
+              2
+            ],
+            "demand": [
+              2,
+              1,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              1,
+              2
+            ],
+            "demand": [
+              2,
+              1,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P169-N1",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P169-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P170",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-05",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-05",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "ee9273415694e86aaeb02dc497eb8c1d69a708112922b915190f97f9ac64dba6",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ],
+        "supply": [
+          1,
+          1,
+          2
+        ],
+        "demand": [
+          2,
+          1,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "f240cd5acd947e97fb862310827795439c60547c01dfce8d65dafdec11ac966e",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              2,
+              1,
+              1
+            ],
+            "demand": [
+              1,
+              1,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "supply": [
+              1,
+              2,
+              1
+            ],
+            "demand": [
+              1,
+              2,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P170-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "invalid",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P170-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P171",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-06",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-06",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "2e34295bb6fff6fab3b6b613406b023d0ee1fbc08b8f3c0a6401b372e5653bb2",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "supply": [
+          1,
+          1,
+          1
+        ],
+        "demand": [
+          1,
+          1,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "50a848ab2a0aff4b9fc1a97144dccc6e767617ccdc23762b4f87e7f616796c6b",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              1,
+              1
+            ],
+            "demand": [
+              1,
+              1,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "supply": [
+              1,
+              1,
+              1
+            ],
+            "demand": [
+              1,
+              1,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P171-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-06",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P171-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P172",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-07",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-07",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "df8bb3ced4708d87d2e043c039f6264aa8737b89ac9dedc046f000ca5a455e5c",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ],
+        "supply": [
+          2,
+          1,
+          2
+        ],
+        "demand": [
+          1,
+          3,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "4d608028ba18271cca3e3ba72cf6d80990ba27cc03d423fd0170a7e26362bff6",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            1
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              3,
+              1
+            ],
+            "demand": [
+              2,
+              1,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              2,
+              2
+            ],
+            "demand": [
+              1,
+              1,
+              3
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P172-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P172-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-07",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P173",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-08",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-08",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "a7fd1f6e8f1f5b29559e5753d37d6384de4320bdb3e867d8af6beeb5ebf02ea9",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ],
+        "supply": [
+          1,
+          2,
+          2
+        ],
+        "demand": [
+          2,
+          2,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "0af08c6dd69f84a9e99e926efa4b1fca4c26286a7def7e4089aedf716a0db3b7",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              2,
+              2,
+              1
+            ],
+            "demand": [
+              1,
+              2,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "supply": [
+              2,
+              2,
+              1
+            ],
+            "demand": [
+              1,
+              2,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P173-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              -1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P173-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-08",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P174",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-09",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-09",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "5a52214d812f8185e2988308de70206b2f6a66f685cd87731ada6113c687be4f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "supply": [
+          2,
+          2,
+          1
+        ],
+        "demand": [
+          1,
+          2,
+          2
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "9271c9ca89575059d2abdafec141c36e4b1b5e184ea85c1bcfabc1f3b0bb8c5d",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              2,
+              2
+            ],
+            "demand": [
+              2,
+              2,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "supply": [
+              2,
+              1,
+              2
+            ],
+            "demand": [
+              2,
+              1,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P174-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P174-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P175",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-10",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-10",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "table": [
+        [
+          1,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "a2b1488671bfa18b6d2474b56b088a3f4cfaff16ae2b876cfff5f1444f60bece",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "supply": [
+          1,
+          4,
+          1
+        ],
+        "demand": [
+          4,
+          1,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "1c5c859cc33b40099d2ad193a8de9be7158fcd2e12cd8ac36defd7898c94a7c5",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                3,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              4,
+              1,
+              1
+            ],
+            "demand": [
+              1,
+              4,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                3,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "supply": [
+              4,
+              1,
+              1
+            ],
+            "demand": [
+              1,
+              4,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P175-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              2,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P175-N2",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P176",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-11",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-11",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "9c6ee49236e7c85be62bf6d09ee8edd6e3ddb155566bbe02efe513e1631c799d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            3,
+            1
+          ]
+        ],
+        "supply": [
+          1,
+          1,
+          4
+        ],
+        "demand": [
+          1,
+          4,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "ec961ae3661b185c4d52b3d9ade9d81a0f4e3398cfa47d96f9df0b3530d2177a",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                3
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              4,
+              1
+            ],
+            "demand": [
+              1,
+              1,
+              4
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                3
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "supply": [
+              1,
+              4,
+              1
+            ],
+            "demand": [
+              1,
+              1,
+              4
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P176-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P176-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "invalid",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P177",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-12",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-12",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "7c79d13137bd88e95ccf1572100074560524d188206b5298e4402ed4e08e6bcd",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "supply": [
+          4,
+          1,
+          1
+        ],
+        "demand": [
+          1,
+          1,
+          4
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "2e4dcc5f8881cf1f54b282256ff6b72f8e96330633fd2d14d75bef0417279d11",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              1,
+              4
+            ],
+            "demand": [
+              4,
+              1,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              1,
+              4
+            ],
+            "demand": [
+              4,
+              1,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P177-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-12",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            5,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P177-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-12",
+          "supply": [
+            0,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P178",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-13",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-13",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "0981779c809145b57692c17e750781ac0d55694e38b9231881e929d60c79eac3",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        "supply": [
+          3,
+          1,
+          2
+        ],
+        "demand": [
+          2,
+          1,
+          3
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "433a46db4775c2fa9798cc6b5751c669b8645c144dc5b97fccec64f39ae61495",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "supply": [
+              2,
+              1,
+              3
+            ],
+            "demand": [
+              3,
+              1,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              2,
+              3
+            ],
+            "demand": [
+              3,
+              2,
+              1
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P178-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P178-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-13",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P179",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-14",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-14",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "4d1db1811cecdb0d412db807cd326f4f9608d1dbaeaac5c437fc6f43664043a1",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            1
+          ]
+        ],
+        "supply": [
+          1,
+          2,
+          3
+        ],
+        "demand": [
+          3,
+          2,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "c65cee6e1d0d0fc99b1c1967995fa34ea55b0a613cc9da667714e542ffbdf8cd",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                1,
+                2,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              3,
+              2,
+              1
+            ],
+            "demand": [
+              1,
+              2,
+              3
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              0,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "supply": [
+              2,
+              3,
+              1
+            ],
+            "demand": [
+              1,
+              3,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P179-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P179-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-14",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              -1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P180",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "SGC-15",
+    "hypothesis": "Check transpose covariance and involution.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "transpose_covariance",
+      "record_id": "SGC-15",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "a074024ed9f0afd92933919263e960f2986577137dc1ec44454828848ea787b0",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "matrix": [
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ],
+        "supply": [
+          3,
+          1,
+          2
+        ],
+        "demand": [
+          2,
+          3,
+          1
+        ],
+        "involution": true,
+        "support_count_preserved": true
+      }
+    },
+    "expected_sha256": "4ece5630d32ab3c04c1e34006d21971e40271ac9b47c2f4fd20fb44319fd0db1",
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "supply": [
+              2,
+              3,
+              1
+            ],
+            "demand": [
+              3,
+              1,
+              2
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "matrix": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                2,
+                1
+              ]
+            ],
+            "supply": [
+              1,
+              2,
+              3
+            ],
+            "demand": [
+              1,
+              2,
+              3
+            ],
+            "involution": true,
+            "support_count_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P180-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P180-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  }
+]

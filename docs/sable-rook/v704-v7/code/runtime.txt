@@ -1,0 +1,337 @@
+'use strict';
+
+// Pure finite three-by-three catalog crosswalk records. No I/O, network,
+// participant, catalog, account, credential, or authority action occurs here.
+const OPS = [
+  'catalog_record',
+  'sparse_encode',
+  'sparse_decode',
+  'dense_flatten',
+  'support_graph',
+  'support_components',
+  'support_cycle_rank',
+  'row_profile',
+  'column_profile',
+  'cell_lineage',
+  'permutation_covariance',
+  'transpose_covariance',
+  'support_mask',
+  'zero_elision_guard',
+  'canonical_entry_order',
+  'correction_patch',
+  'accessible_summary',
+  'uncertainty_annotation',
+  'external_evidence_gap',
+  'catalog_authority_gate'
+];
+
+const clone = value => JSON.parse(JSON.stringify(value));
+const key = value => JSON.stringify(value);
+const sum = values => values.reduce((total, value) => total + value, 0);
+
+function validate(request) {
+  if (!request || typeof request !== 'object' || Array.isArray(request)) {
+    throw Error('request_object');
+  }
+  const expected = ['demand', 'op', 'record_id', 'supply', 'table'];
+  if (key(Object.keys(request).sort()) !== key(expected)) {
+    throw Error('field_set');
+  }
+  if (!OPS.includes(request.op)) {
+    throw Error('operation');
+  }
+  if (!/^SGC-[0-9]{2}$/.test(request.record_id)) {
+    throw Error('record_id');
+  }
+  for (const field of ['supply', 'demand']) {
+    if (!Array.isArray(request[field]) || request[field].length !== 3 ||
+        request[field].some(value => !Number.isInteger(value) || value < 1 || value > 4)) {
+      throw Error('positive_histogram');
+    }
+  }
+  const mass = sum(request.supply);
+  if (mass !== sum(request.demand) || mass > 6) {
+    throw Error('mass_bound');
+  }
+  if (!Array.isArray(request.table) || request.table.length !== 3 ||
+      request.table.some(row => !Array.isArray(row) || row.length !== 3 ||
+        row.some(value => !Number.isInteger(value) || value < 0 || value > 4))) {
+    throw Error('table_shape');
+  }
+  if (request.table.some((row, index) => sum(row) !== request.supply[index])) {
+    throw Error('row_margin');
+  }
+  if (request.demand.some((value, column) =>
+    request.table.reduce((total, row) => total + row[column], 0) !== value)) {
+    throw Error('column_margin');
+  }
+  return mass;
+}
+
+function sparse(table) {
+  const entries = [];
+  for (let row = 0; row < 3; row += 1) {
+    for (let column = 0; column < 3; column += 1) {
+      if (table[row][column] !== 0) {
+        entries.push({row, column, value: table[row][column]});
+      }
+    }
+  }
+  return entries;
+}
+
+function decode(entries) {
+  const table = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (const entry of entries) {
+    table[entry.row][entry.column] = entry.value;
+  }
+  return table;
+}
+
+function graph(table) {
+  const nodes = ['r0', 'r1', 'r2', 'c0', 'c1', 'c2'];
+  const edges = sparse(table).map(entry => ({
+    id: 'r' + entry.row + '-c' + entry.column,
+    from: 'r' + entry.row,
+    to: 'c' + entry.column,
+    multiplicity: entry.value
+  }));
+  return {nodes, edges};
+}
+
+function components(table) {
+  const support = graph(table);
+  const adjacent = new Map(support.nodes.map(node => [node, []]));
+  for (const edge of support.edges) {
+    adjacent.get(edge.from).push(edge.to);
+    adjacent.get(edge.to).push(edge.from);
+  }
+  const seen = new Set();
+  const result = [];
+  for (const start of support.nodes) {
+    if (seen.has(start)) continue;
+    const queue = [start];
+    const member = [];
+    seen.add(start);
+    while (queue.length) {
+      const node = queue.shift();
+      member.push(node);
+      for (const next of adjacent.get(node).slice().sort()) {
+        if (!seen.has(next)) {
+          seen.add(next);
+          queue.push(next);
+        }
+      }
+    }
+    result.push(member.sort());
+  }
+  return result.sort((a, b) => key(a).localeCompare(key(b), 'en'));
+}
+
+function transpose(table) {
+  return table[0].map((_, column) => table.map(row => row[column]));
+}
+
+function permute(table, rows, columns) {
+  return rows.map(row => columns.map(column => table[row][column]));
+}
+
+function correction(table) {
+  for (let r1 = 0; r1 < 3; r1 += 1) {
+    for (let r2 = r1 + 1; r2 < 3; r2 += 1) {
+      for (let c1 = 0; c1 < 3; c1 += 1) {
+        for (let c2 = c1 + 1; c2 < 3; c2 += 1) {
+          const options = [
+            [[r1, c1], [r2, c2], [r1, c2], [r2, c1]],
+            [[r1, c2], [r2, c1], [r1, c1], [r2, c2]]
+          ];
+          for (const option of options) {
+            const [minusA, minusB, plusA, plusB] = option;
+            if (table[minusA[0]][minusA[1]] > 0 && table[minusB[0]][minusB[1]] > 0) {
+              const result = clone(table);
+              result[minusA[0]][minusA[1]] -= 1;
+              result[minusB[0]][minusB[1]] -= 1;
+              result[plusA[0]][plusA[1]] += 1;
+              result[plusB[0]][plusB[1]] += 1;
+              return {
+                available: true,
+                patch: [
+                  {row: minusA[0], column: minusA[1], delta: -1},
+                  {row: minusB[0], column: minusB[1], delta: -1},
+                  {row: plusA[0], column: plusA[1], delta: 1},
+                  {row: plusB[0], column: plusB[1], delta: 1}
+                ],
+                result,
+                margins_preserved: true
+              };
+            }
+          }
+        }
+      }
+    }
+  }
+  return {available: false, patch: [], result: clone(table), margins_preserved: true};
+}
+
+function outcome(op) {
+  if (op === 'uncertainty_annotation') return 'represented';
+  if (op === 'external_evidence_gap') return 'open_gap';
+  if (op === 'catalog_authority_gate') return 'exact_gate';
+  return 'completed';
+}
+
+function run(request) {
+  const mass = validate(request);
+  const table = request.table;
+  const entries = sparse(table);
+  const support = graph(table);
+  const groups = components(table);
+  let data;
+  switch (request.op) {
+    case 'catalog_record':
+      data = {record_id: request.record_id, bins: 3, mass, valid_margins: true};
+      break;
+    case 'sparse_encode':
+      data = {entries, nonzero_cells: entries.length};
+      break;
+    case 'sparse_decode':
+      data = {matrix: decode(entries), roundtrip: key(decode(entries)) === key(table)};
+      break;
+    case 'dense_flatten':
+      data = {order: 'row_major', values: table.flat(), cell_count: 9};
+      break;
+    case 'support_graph':
+      data = support;
+      break;
+    case 'support_components':
+      data = {components: groups, count: groups.length};
+      break;
+    case 'support_cycle_rank':
+      data = {
+        edge_count: support.edges.length,
+        vertex_count: support.nodes.length,
+        component_count: groups.length,
+        cycle_rank: support.edges.length - support.nodes.length + groups.length
+      };
+      break;
+    case 'row_profile':
+      data = table.map((row, index) => ({
+        row: index,
+        total: sum(row),
+        nonzero_cells: row.filter(value => value > 0).length
+      }));
+      break;
+    case 'column_profile':
+      data = transpose(table).map((column, index) => ({
+        column: index,
+        total: sum(column),
+        nonzero_cells: column.filter(value => value > 0).length
+      }));
+      break;
+    case 'cell_lineage':
+      data = table.flatMap((row, i) => row.map((value, j) => ({
+        lineage_id: request.record_id + ':r' + i + 'c' + j,
+        row: i,
+        column: j,
+        value,
+        source_status: 'declared_synthetic'
+      })));
+      break;
+    case 'permutation_covariance': {
+      const rows = [2, 0, 1];
+      const columns = [1, 2, 0];
+      const matrix = permute(table, rows, columns);
+      data = {
+        row_permutation: rows,
+        column_permutation: columns,
+        matrix,
+        sparse_entries: sparse(matrix),
+        support_count_preserved: sparse(matrix).length === entries.length
+      };
+      break;
+    }
+    case 'transpose_covariance': {
+      const matrix = transpose(table);
+      data = {
+        matrix,
+        supply: request.demand,
+        demand: request.supply,
+        involution: key(transpose(matrix)) === key(table),
+        support_count_preserved: sparse(matrix).length === entries.length
+      };
+      break;
+    }
+    case 'support_mask':
+      data = table.map(row => row.map(value => value > 0));
+      break;
+    case 'zero_elision_guard':
+      data = {
+        encoded_zero_count: entries.filter(entry => entry.value === 0).length,
+        restored_zero_count: decode(entries).flat().filter(value => value === 0).length,
+        roundtrip: key(decode(entries)) === key(table)
+      };
+      break;
+    case 'canonical_entry_order':
+      data = {
+        entries,
+        coordinate_order: entries.map(entry => 'r' + entry.row + 'c' + entry.column),
+        row_major: entries.every((entry, index) => index === 0 ||
+          entries[index - 1].row < entry.row ||
+          (entries[index - 1].row === entry.row && entries[index - 1].column < entry.column))
+      };
+      break;
+    case 'correction_patch':
+      data = correction(table);
+      break;
+    case 'accessible_summary':
+      data = {
+        record_id: request.record_id,
+        mass_units: mass,
+        nonzero_cells: entries.length,
+        support_components: groups.length,
+        cycle_rank: support.edges.length - support.nodes.length + groups.length,
+        statement: 'Synthetic catalog crosswalk record; no live catalog or resource update.'
+      };
+      break;
+    case 'uncertainty_annotation':
+      data = {
+        record_id: request.record_id,
+        represented_only: true,
+        annotations: entries.map(entry => ({
+          row: entry.row,
+          column: entry.column,
+          declared_value: entry.value,
+          observation_status: 'not_observed',
+          uncertainty_status: 'not_estimated'
+        }))
+      };
+      break;
+    case 'external_evidence_gap':
+      data = {
+        record_id: request.record_id,
+        missing: [
+          'independent implementation and discrepancy review',
+          'real catalog records with lawful purpose and provenance',
+          'manual and affected-user accessibility evaluation'
+        ],
+        external_credit: 0
+      };
+      break;
+    case 'catalog_authority_gate':
+      data = {
+        record_id: request.record_id,
+        gate: 'Publication, correction, deletion, rights, remedy, cultural meaning and Maori authority remain outside repository authority.',
+        action_performed: false
+      };
+      break;
+    default:
+      throw Error('operation');
+  }
+  return {outcome: outcome(request.op), data};
+}
+
+function project(result) {
+  return clone(result);
+}
+
+module.exports = {OPS, validate, run, project, sparse, decode, components, correction};

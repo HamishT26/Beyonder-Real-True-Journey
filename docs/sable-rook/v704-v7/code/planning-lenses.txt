@@ -1,0 +1,54 @@
+'use strict';
+
+module.exports = {
+  laws: [
+    ['Sparse roundtrip', 'Row-major nonzero entries decode to the declared dense table.', 'Decoded cells differ from the declared table.'],
+    ['Dense cardinality', 'A three-by-three dense record has exactly nine ordered cells.', 'The flattened record has a different cardinality or order.'],
+    ['Support parity', 'Sparse entry count equals support-graph edge count.', 'An edge is missing, duplicated, or attached to a zero cell.'],
+    ['Component coverage', 'Support components partition all three row and three column vertices.', 'A vertex is lost or appears in two components.'],
+    ['Cycle-rank identity', 'Support cycle rank equals edges minus vertices plus components.', 'The exact finite counts violate the identity.'],
+    ['Row conservation', 'Recorded row totals equal the declared supply histogram.', 'One row total differs from its declared count.'],
+    ['Column conservation', 'Recorded column totals equal the declared demand histogram.', 'One column total differs from its declared count.'],
+    ['Lineage completeness', 'Every dense cell has one coordinate-bound synthetic lineage record.', 'A coordinate is absent, duplicated, or assigned another value.'],
+    ['Permutation covariance', 'Consistent row and column permutations preserve support cardinality.', 'The transformed encoding changes nonzero-cell count.'],
+    ['Transpose involution', 'Two transpositions recover the original table and exchange marginals twice.', 'The second transpose or restored margins differ.'],
+    ['Mask fidelity', 'The support mask is true exactly at positive cells.', 'A zero cell is true or a positive cell is false.'],
+    ['Zero elision', 'Sparse encoding contains no zero while decoding restores every structural zero.', 'A zero is emitted or a missing zero is not restored.'],
+    ['Canonical order', 'Sparse coordinates are strictly row-major.', 'A coordinate is out of order or repeated.'],
+    ['Correction conservation', 'An available two-by-two correction patch preserves every row and column total.', 'A patch changes a declared marginal.'],
+    ['Authority nonpromotion', 'A software record never converts represented uncertainty into catalog publication authority.', 'A result claims a live correction, right, remedy, or cultural authority action.']
+  ],
+  probes: [
+    'Which real catalog records could be used only after lawful purpose, provenance, and affected-party review?',
+    'Which source system defines the semantic meaning of each row and column category?',
+    'How should unknown, withheld, and not-applicable cells be distinguished from numeric zero?',
+    'What independent implementation would reproduce sparse and dense encodings and adjudicate discrepancies?',
+    'Which update semantics distinguish correction, replacement, supersession, and deletion?',
+    'What evidence would justify uncertainty estimates instead of a not-estimated marker?',
+    'How should identifiers survive migration without implying identity continuity or authority?',
+    'Which rights, licenses, confidentiality duties, and data-minimization rules constrain publication?',
+    'What rollback and recovery evidence would be required after a real catalog update?',
+    'Which assistive-technology and affected-user studies are needed for a usable viewer?',
+    'How should multilingual titles, descriptions, and controlled vocabularies be governed?',
+    'Who may approve a correction, contest it, receive notice, and provide remedy?',
+    'Which cultural and Maori data-governance processes apply to relevant place and resource metadata?',
+    'How should cross-catalog links be checked without treating reachability as trust?',
+    'What monitoring and independent review would be required before any production deployment?'
+  ],
+  practices: [
+    'synthetic geospatial metadata catalog correction registrar',
+    'finite sparse and dense representation verifier',
+    'correction-lineage and non-erasure reviewer',
+    'accessible catalog handover table designer',
+    'uncertainty and missingness boundary steward',
+    'retained-negative repair reviewer',
+    'caller-envelope and refusal witness auditor',
+    'authority-vacancy and remedy-gate recorder'
+  ],
+  successorRecommendations: [
+    'independently compare sparse and dense certificates without inheriting execution credit',
+    'test semantic cost or category meanings only after explicit source authority is available',
+    'study user-facing uncertainty with manual and affected-user evaluation held open',
+    'preserve correction and supersession lineage without converting provenance into trust or authority'
+  ]
+};

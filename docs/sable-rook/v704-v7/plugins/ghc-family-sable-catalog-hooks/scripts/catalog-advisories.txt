@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('node:fs');
+const topics=["source_mutation","successful_replay","margin_drift","sparse_dense_mismatch","zero_elision","lineage_loss","uncertainty_promotion","real_catalog_update","prepared_delivery","accepted_resend"];
+const topic=process.argv[2];if(!topics.includes(topic))throw Error('unknown_advisory');
+let event={};try{const raw=fs.readFileSync(0,'utf8');if(raw.length>65536)throw Error('event_limit');event=JSON.parse(raw||'{}');}catch{event={violation:true};}
+const active=event.violation===true;console.log(JSON.stringify({continue:true,suppressOutput:true,topic,advisory_active:active,systemMessage:active?'Review the declared '+topic+' boundary; retain the failed subject and require the owner gate.':'Bounded '+topic+' fixture has no declared violation.'}));

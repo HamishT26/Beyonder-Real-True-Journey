@@ -1,0 +1,5157 @@
+[
+  {
+    "id": "SR7047-P226",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-01",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-01",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "e0f3c25c1937ca65556a90b9ec96d6e0d9ebf861f89ebe92999694f245f85e46",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "0eb9f824c5034eb5d72ceb9970722209efe97dbc9f0893a35bb11f85d4e884a7",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              2,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P226-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "invalid",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P226-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-01",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P227",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-02",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-02",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "b2750b85d21e40a16d21840c47cc07d06d7074a3970376e4feb6b8a438ede0b1",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "08123a09ef0351639c03b79f193d27af848c7bc535f64c3d668d0a9304565541",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                2,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-02",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P227-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-02",
+          "supply": [
+            0,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P227-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-02",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            4,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P228",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-03",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-03",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "bd2f7bffae4e2dcb26c9b7cecad49c4657f6eb42bce952fd52f4c1faddafff65",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            3,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "c3df8dda304d988125af523d3aaa570e899cab558902a86dbc8cd3803376b90f",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-03",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-03",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              2,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 0,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P228-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-03",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P228-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-03",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P229",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-04",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-04",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "5174f49309311a4e6d24d29bb7cf33ae97057ed1d6ebe1385cd9962237b3e253",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "eed59c97b99e0a8095d1859ec229d82bb7d06f02d3e529468e9d9f59e04c5f7e",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-04",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P229-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              -1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P229-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-04",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P230",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-05",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-05",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "957b9db3d528c800042535dffd3953095bbde7a9dee95b9d3003789dc4d7f0f7",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 2,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "1d6dd626e85491beb8dd526265fbf598d980c52cc5ccc10db4b7e3c73e123fd7",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-05",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 0,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P230-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              true,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P230-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-05",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P231",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-06",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-06",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "3cee6aa1480fc0c8a499c83ecda9bea57452d30c3f580e597005e39a8137fac2",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "5179849015b2ff3f3cc35979d7c3b7dc42123b4091bc00310c96ea6b42668a92",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P231-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P231-N2",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-06",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P232",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-07",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-07",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "756556401a1914232acedbbdb4acc110c1c99ac1e8deed97cfdb3841099272da",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "5a7fd00351e5453eb27e7ba7e4e425f56b5b2133a516b2ba7448119b545fcd03",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-07",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            1
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P232-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-07",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P232-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "invalid",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P233",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-08",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-08",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "table": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "d591cc1cc8554fb0613279cdcbff3dc8d48bc4051229b6612a9ff107507ad660",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "e5a2755fcbe60432c89653eafc5bc0d2d47f20f994d3eb2fd9e7781f0cf0363a",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-08",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 0,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P233-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-08",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P233-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-08",
+          "supply": [
+            0,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P234",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-09",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-09",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "89c93976fd1292835f62a0149d31c6ab373f6a890e21cd580742de1340f35d82",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "17a884ce373ca057f3188c370aa259252f8c6aa2897663e0e1aaa6c945f4e737",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-09",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P234-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-09",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P234-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-09",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P235",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-10",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-10",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "table": [
+        [
+          1,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "d94d11d760e36682332f7714f2405367fce5d29a29a0dac4337cd37ce6b7be77",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            4,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "cfbf8e575ded5bd0bdc2ce6c5650a69e39749d764876faf1a99b2fa22a839165",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                4,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-10",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 0,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P235-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P235-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-10",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              -1,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P236",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-11",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-11",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "d5918feb83e68bca2a8bd71b3a784879d4e587728106255d01935d61396b5f5c",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            3
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "7135abd21c84f10e0c7551ca1afb02e169811b7f485f707f32f4e4c2cb9944b2",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                3,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                3,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P236-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P236-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-11",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              true,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P237",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-12",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-12",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "table": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "902adf405c1f4f140e2f16765ea919ef21b232a549ac14fdca65f767f2eabc0d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "9e5f168e5e2d3ff9f5bdea7186ccba62f16b7a573d0f11435ffba586321d6bce",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                3
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-12",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "table": [
+            [
+              1,
+              1,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                3
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P237-N1",
+        "request": {
+          "op": "unregistered",
+          "record_id": "SGC-12",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P237-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-12",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ]
+          ]
+        },
+        "error": "row_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P238",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-13",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-13",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "e578d5dedca9a9e6a574913831881dbeb41e895194660ed690969d5a1cf8aa64",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 2,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 2,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "098a5f10f8a4c7ab8cca57d07a5dd2a8807dd6660faf303b1b5dd8fecccb58a3",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            3
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                2
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-13",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                2,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P238-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "invalid",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "record_id",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P238-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-13",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        },
+        "error": "column_margin",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P239",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-14",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-14",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "table": [
+        [
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "e5138535b4dd473e565265a4034fa0f25a3b365e3c14595301e2e5a2de9cd7cb",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 2,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 2,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "e1b296ecaf086841a2fb32ba0eca87f1952af1c5cac5bb6f36d966ffe1eec743",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "table": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 2,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 2,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-14",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              0,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 0,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                2,
+                0
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P239-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-14",
+          "supply": [
+            0,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P239-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-14",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            2,
+            2,
+            3
+          ],
+          "table": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  },
+  {
+    "id": "SR7047-P240",
+    "stage": "x2",
+    "operation": "correction_patch",
+    "profile": "SGC-15",
+    "hypothesis": "Construct one reversible two-by-two correction patch when available.",
+    "null_or_failure_condition": "Any reference mismatch, malformed acceptance, lost zero, lost coordinate, changed marginal, lineage loss, replay, or evidence promotion.",
+    "approval_class": "owner_local_synthetic",
+    "execution_lane": "x2",
+    "official_primary_source_needs": [
+      "W3C PROV-DM vocabulary only",
+      "OGC API - Records Part 1 vocabulary only"
+    ],
+    "concrete_artifacts": [
+      "saved result",
+      "refusal witness",
+      "repair receipt",
+      "Method Flow links"
+    ],
+    "falsifier_or_acceptance_gate": "Exact saved projection matches planning reference and all declared finite invariants pass.",
+    "rollback_or_recovery": "Retain the failed subject and restore from the frozen planning request without overwriting history.",
+    "protected_gates": [
+      "live catalog",
+      "standards conformance",
+      "affected-party and Maori authority",
+      "independent reproduction",
+      "Stage 20"
+    ],
+    "expected_disposition": "completed",
+    "request": {
+      "op": "correction_patch",
+      "record_id": "SGC-15",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "table": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    "request_sha256": "57095a1a3defe3b31b31cd99eb6586b8d90db7fef6b341cadcd8da2300a9a49d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "available": true,
+        "patch": [
+          {
+            "row": 0,
+            "column": 0,
+            "delta": -1
+          },
+          {
+            "row": 1,
+            "column": 1,
+            "delta": -1
+          },
+          {
+            "row": 0,
+            "column": 1,
+            "delta": 1
+          },
+          {
+            "row": 1,
+            "column": 0,
+            "delta": 1
+          }
+        ],
+        "result": [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "margins_preserved": true
+      }
+    },
+    "expected_sha256": "6507bb8af6ece7bd3afb2990c62d546e7f6c02df5828b4c8f9cba292f40740c2",
+    "alternatives": [
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-15",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            3,
+            1
+          ],
+          "table": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 0,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 1,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 0,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                1,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-15",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "table": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              2
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "available": true,
+            "patch": [
+              {
+                "row": 0,
+                "column": 1,
+                "delta": -1
+              },
+              {
+                "row": 1,
+                "column": 2,
+                "delta": -1
+              },
+              {
+                "row": 0,
+                "column": 2,
+                "delta": 1
+              },
+              {
+                "row": 1,
+                "column": 1,
+                "delta": 1
+              }
+            ],
+            "result": [
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                1,
+                1
+              ]
+            ],
+            "margins_preserved": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "SR7047-P240-N1",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-15",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "table": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "table_shape",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "SR7047-P240-N2",
+        "request": {
+          "op": "correction_patch",
+          "record_id": "SGC-15",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "table": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "novelty_scope": "New owner catalog-crosswalk representation input and contract; no universal novelty, standard conformance, or inherited execution claim.",
+    "inherited_credit": 0
+  }
+]

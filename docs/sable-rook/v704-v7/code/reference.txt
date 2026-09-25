@@ -1,0 +1,226 @@
+'use strict';
+
+// Planning-only internal reference. It does not import runtime.txt and is not
+// called during x1, x2, final publication, or the canonical aggregate.
+const OPS = [
+  'catalog_record', 'sparse_encode', 'sparse_decode', 'dense_flatten',
+  'support_graph', 'support_components', 'support_cycle_rank', 'row_profile',
+  'column_profile', 'cell_lineage', 'permutation_covariance',
+  'transpose_covariance', 'support_mask', 'zero_elision_guard',
+  'canonical_entry_order', 'correction_patch', 'accessible_summary',
+  'uncertainty_annotation', 'external_evidence_gap', 'catalog_authority_gate'
+];
+
+const copy = value => JSON.parse(JSON.stringify(value));
+const text = value => JSON.stringify(value);
+const total = values => values.reduce((value, item) => value + item, 0);
+
+function nonzero(table) {
+  const result = [];
+  table.forEach((row, i) => row.forEach((value, j) => {
+    if (value > 0) result.push({row: i, column: j, value});
+  }));
+  return result;
+}
+
+function restore(entries) {
+  return [0, 1, 2].map(i => [0, 1, 2].map(j => {
+    const found = entries.find(entry => entry.row === i && entry.column === j);
+    return found ? found.value : 0;
+  }));
+}
+
+function transposed(table) {
+  return [0, 1, 2].map(j => [0, 1, 2].map(i => table[i][j]));
+}
+
+function graphParts(table) {
+  const vertices = ['r0', 'r1', 'r2', 'c0', 'c1', 'c2'];
+  const edges = nonzero(table).map(entry => ({
+    id: 'r' + entry.row + '-c' + entry.column,
+    from: 'r' + entry.row,
+    to: 'c' + entry.column,
+    multiplicity: entry.value
+  }));
+  const linked = new Set(edges.flatMap(edge => [edge.from + '|' + edge.to, edge.to + '|' + edge.from]));
+  const remaining = new Set(vertices);
+  const components = [];
+  while (remaining.size) {
+    const seed = [...remaining].sort()[0];
+    const member = new Set([seed]);
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (const left of vertices) {
+        for (const right of vertices) {
+          if (member.has(left) && linked.has(left + '|' + right) && !member.has(right)) {
+            member.add(right);
+            changed = true;
+          }
+        }
+      }
+    }
+    const sorted = [...member].sort();
+    sorted.forEach(vertex => remaining.delete(vertex));
+    components.push(sorted);
+  }
+  components.sort((a, b) => text(a).localeCompare(text(b), 'en'));
+  return {vertices, edges, components};
+}
+
+function patch(table) {
+  const rows = [[0, 1], [0, 2], [1, 2]];
+  const columns = [[0, 1], [0, 2], [1, 2]];
+  for (const [a, b] of rows) {
+    for (const [x, y] of columns) {
+      const diagonals = [
+        [[a, x], [b, y], [a, y], [b, x]],
+        [[a, y], [b, x], [a, x], [b, y]]
+      ];
+      for (const [m1, m2, p1, p2] of diagonals) {
+        if (table[m1[0]][m1[1]] > 0 && table[m2[0]][m2[1]] > 0) {
+          const result = copy(table);
+          result[m1[0]][m1[1]] -= 1;
+          result[m2[0]][m2[1]] -= 1;
+          result[p1[0]][p1[1]] += 1;
+          result[p2[0]][p2[1]] += 1;
+          return {
+            available: true,
+            patch: [
+              {row: m1[0], column: m1[1], delta: -1},
+              {row: m2[0], column: m2[1], delta: -1},
+              {row: p1[0], column: p1[1], delta: 1},
+              {row: p2[0], column: p2[1], delta: 1}
+            ],
+            result,
+            margins_preserved: true
+          };
+        }
+      }
+    }
+  }
+  return {available: false, patch: [], result: copy(table), margins_preserved: true};
+}
+
+function disposition(op) {
+  return op === 'uncertainty_annotation' ? 'represented' :
+    op === 'external_evidence_gap' ? 'open_gap' :
+    op === 'catalog_authority_gate' ? 'exact_gate' : 'completed';
+}
+
+function oracle(request) {
+  if (!OPS.includes(request.op)) throw Error('undefined oracle operation');
+  const table = request.table;
+  const entries = nonzero(table);
+  const parts = graphParts(table);
+  const mass = total(request.supply);
+  let data;
+  if (request.op === 'catalog_record') {
+    data = {record_id: request.record_id, bins: 3, mass, valid_margins: true};
+  } else if (request.op === 'sparse_encode') {
+    data = {entries, nonzero_cells: entries.length};
+  } else if (request.op === 'sparse_decode') {
+    data = {matrix: restore(entries), roundtrip: text(restore(entries)) === text(table)};
+  } else if (request.op === 'dense_flatten') {
+    data = {order: 'row_major', values: [].concat(...table), cell_count: 9};
+  } else if (request.op === 'support_graph') {
+    data = {nodes: parts.vertices, edges: parts.edges};
+  } else if (request.op === 'support_components') {
+    data = {components: parts.components, count: parts.components.length};
+  } else if (request.op === 'support_cycle_rank') {
+    data = {
+      edge_count: parts.edges.length,
+      vertex_count: parts.vertices.length,
+      component_count: parts.components.length,
+      cycle_rank: parts.edges.length - parts.vertices.length + parts.components.length
+    };
+  } else if (request.op === 'row_profile') {
+    data = table.map((row, i) => ({row: i, total: total(row), nonzero_cells: row.filter(Boolean).length}));
+  } else if (request.op === 'column_profile') {
+    data = transposed(table).map((column, i) => ({column: i, total: total(column), nonzero_cells: column.filter(Boolean).length}));
+  } else if (request.op === 'cell_lineage') {
+    data = table.flatMap((row, i) => row.map((value, j) => ({
+      lineage_id: request.record_id + ':r' + i + 'c' + j,
+      row: i,
+      column: j,
+      value,
+      source_status: 'declared_synthetic'
+    })));
+  } else if (request.op === 'permutation_covariance') {
+    const rowOrder = [2, 0, 1];
+    const columnOrder = [1, 2, 0];
+    const matrix = rowOrder.map(i => columnOrder.map(j => table[i][j]));
+    data = {
+      row_permutation: rowOrder,
+      column_permutation: columnOrder,
+      matrix,
+      sparse_entries: nonzero(matrix),
+      support_count_preserved: nonzero(matrix).length === entries.length
+    };
+  } else if (request.op === 'transpose_covariance') {
+    const matrix = transposed(table);
+    data = {
+      matrix,
+      supply: request.demand,
+      demand: request.supply,
+      involution: text(transposed(matrix)) === text(table),
+      support_count_preserved: nonzero(matrix).length === entries.length
+    };
+  } else if (request.op === 'support_mask') {
+    data = table.map(row => row.map(value => value !== 0));
+  } else if (request.op === 'zero_elision_guard') {
+    data = {
+      encoded_zero_count: entries.filter(entry => entry.value === 0).length,
+      restored_zero_count: restore(entries).flat().filter(value => value === 0).length,
+      roundtrip: text(restore(entries)) === text(table)
+    };
+  } else if (request.op === 'canonical_entry_order') {
+    data = {
+      entries,
+      coordinate_order: entries.map(entry => 'r' + entry.row + 'c' + entry.column),
+      row_major: true
+    };
+  } else if (request.op === 'correction_patch') {
+    data = patch(table);
+  } else if (request.op === 'accessible_summary') {
+    data = {
+      record_id: request.record_id,
+      mass_units: mass,
+      nonzero_cells: entries.length,
+      support_components: parts.components.length,
+      cycle_rank: parts.edges.length - parts.vertices.length + parts.components.length,
+      statement: 'Synthetic catalog crosswalk record; no live catalog or resource update.'
+    };
+  } else if (request.op === 'uncertainty_annotation') {
+    data = {
+      record_id: request.record_id,
+      represented_only: true,
+      annotations: entries.map(entry => ({
+        row: entry.row,
+        column: entry.column,
+        declared_value: entry.value,
+        observation_status: 'not_observed',
+        uncertainty_status: 'not_estimated'
+      }))
+    };
+  } else if (request.op === 'external_evidence_gap') {
+    data = {
+      record_id: request.record_id,
+      missing: [
+        'independent implementation and discrepancy review',
+        'real catalog records with lawful purpose and provenance',
+        'manual and affected-user accessibility evaluation'
+      ],
+      external_credit: 0
+    };
+  } else {
+    data = {
+      record_id: request.record_id,
+      gate: 'Publication, correction, deletion, rights, remedy, cultural meaning and Maori authority remain outside repository authority.',
+      action_performed: false
+    };
+  }
+  return {outcome: disposition(request.op), data};
+}
+
+module.exports = {oracle};

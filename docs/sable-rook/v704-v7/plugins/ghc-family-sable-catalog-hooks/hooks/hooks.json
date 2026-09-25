@@ -1,0 +1,130 @@
+{
+  "description": "Ten nonblocking advisory topics; manual fixtures only until a live invocation is observed.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" source_mutation",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" source_mutation",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" successful_replay",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" successful_replay",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" margin_drift",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" margin_drift",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" sparse_dense_mismatch",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" sparse_dense_mismatch",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" zero_elision",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" zero_elision",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" lineage_loss",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" lineage_loss",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" uncertainty_promotion",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" uncertainty_promotion",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" real_catalog_update",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" real_catalog_update",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" prepared_delivery",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" prepared_delivery",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/catalog-advisories.txt\" accepted_resend",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/catalog-advisories.txt\" accepted_resend",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      }
+    ]
+  }
+}
