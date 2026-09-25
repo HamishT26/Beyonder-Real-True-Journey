@@ -187,13 +187,21 @@ function runBoundTool(file, args, input) {
 }
 
 function verifyFrozen() {
-  const frozen = json('planning/manifest.json');
-  for (const entry of frozen.entries) {
-    const relative = entry.path.slice(prefix.length);
-    assert.equal(sha(bytes(relative)), entry.sha256, entry.path);
-    assert.equal(bytes(relative).length, entry.bytes, entry.path);
-  }
-  assert.equal(sha(bytes('planning/manifest.json')), external('plan-published.json').artifact_sha256);
+  const replay = (receiptName, manifestName) => {
+    const receipt = external(receiptName);
+    const raw = cp.execFileSync('git', ['-C', root, 'show',
+      receipt.commit + ':' + prefix + manifestName], {maxBuffer: 64 * 1024 * 1024});
+    assert.equal(sha(raw), receipt.artifact_sha256, manifestName);
+    const declared = JSON.parse(raw);
+    for (const entry of declared.entries) {
+      const blob = cp.execFileSync('git', ['-C', root, 'show',
+        receipt.commit + ':' + entry.path], {maxBuffer: 64 * 1024 * 1024});
+      assert.equal(sha(blob), entry.sha256, entry.path);
+      assert.equal(blob.length, entry.bytes, entry.path);
+    }
+  };
+  replay('plan-published.json', 'planning/manifest.json');
+  replay('plan-correction-published.json', 'planning/correction-manifest.json');
 }
 
 function invalid(request, selector) {
@@ -650,11 +658,85 @@ function refreshPlanFlow() {
   }));
 }
 
-function execute(stage) {
+function preparePlanCorrection() {
+  assert.equal(git('rev-parse', 'HEAD'), external('plan-published.json').commit);
+  const correctionStatus = cp.execFileSync('git', ['-C', root, 'status', '--porcelain=v1'],
+    {encoding: 'utf8'}).split(/\r?\n/).filter(Boolean);
+  assert.equal(correctionStatus.every(row => {
+    const observed = row.slice(3).replaceAll('"', '');
+    return observed.startsWith(prefix) || prefix.startsWith(observed);
+  }), true);
+  const correction = {
+    schema: 'sable.planning-correction.v1', owner, phase,
+    original_plan_commit: external('plan-published.json').commit,
+    original_x1_invocation_state: 'FAILED_ZERO_SUCCESS_CREDIT',
+    original_x1_failure: {
+      negative_id: 'SR7047-X1-OP-N001', contract: 'SR7047-P087',
+      frozen_expected: 'mass_bound', observed: 'positive_histogram',
+      original_success_credit: 0
+    },
+    preparation_failure: {
+      negative_id: 'SR7047-CORRECTION-OP-N002',
+      subject: 'The first correction guard parsed porcelain after a helper trimmed its leading status column.',
+      recovery: 'Read raw porcelain bytes and accept only the exact owner prefix or its collapsed ancestor.',
+      original_success_credit: 0
+    },
+    corrections: [
+      {negative_id: 'SR7047-P087-N2', frozen_expected: 'mass_bound', corrected_expected: 'positive_histogram'},
+      {negative_id: 'SR7047-P177-N1', frozen_expected: 'mass_bound', corrected_expected: 'positive_histogram'},
+      {negative_id: 'SR7047-P267-N2', frozen_expected: 'mass_bound', corrected_expected: 'positive_histogram'}
+    ],
+    correction_scope: 'Adjudication order only; original subjects and frozen expectations remain unchanged.',
+    planning_reference_replayed: false, x1_success_credit: 0, boundary
+  };
+  write('planning/correction.json', correction);
+  const negativeId = correction.original_x1_failure.negative_id;
+  const method = 'SR7047-M-VALIDATION-ORDER-CORRECTION';
+  const guardNegative = correction.preparation_failure.negative_id;
+  const guardMethod = 'SR7047-M-CORRECTION-PORCELAIN-GUARD';
+  const witnesses = [
+    witness(negativeId, method, 'fail',
+      'Original x1 invocation reached a frozen malformed subject whose expected error ignored validation order.',
+      'mass_bound', 'positive_histogram', [negativeId]),
+    witness(negativeId + '-RECOVERY', method, 'pass',
+      'Static audit found every frozen subject with the same per-bin-before-mass ordering condition.',
+      3, correction.corrections.length, [negativeId]),
+    witness(guardNegative, guardMethod, 'fail',
+      correction.preparation_failure.subject,
+      'Owner-only correction status', 'Leading status column was trimmed', [guardNegative]),
+    witness(guardNegative + '-RECOVERY', guardMethod, 'pass',
+      correction.preparation_failure.recovery,
+      'Owner-only correction status', 'Exact owner path accepted with raw columns', [guardNegative])
+  ];
+  write('planning/correction-method-flow.json', makeLedger('planning-correction', witnesses));
+  write('planning/correction-method-flow-validation.json',
+    validateFlow('planning/correction-method-flow.json'));
+  const paths = [
+    'code/phase.txt', 'planning/correction.json',
+    'planning/correction-method-flow.json',
+    'planning/correction-method-flow-validation.json'
+  ];
+  write('planning/correction-manifest.json', {
+    schema: 'sable.stage-manifest.v1', owner, phase, stage: 'planning-correction',
+    entries: manifest(paths), excluded_self: prefix + 'planning/correction-manifest.json'
+  });
+  console.log(JSON.stringify({
+    state: 'ADDITIVE_PLANNING_CORRECTION_PREPARED',
+    corrected_subjects: correction.corrections.length,
+    planning_reference_replayed: false, x1_success_credit: 0
+  }));
+}
+
+function execute(stage, continuation = false) {
   verifyFrozen();
   const preGate = gate();
-  assert.equal(preGate.head, external(stage === 'x1' ? 'plan-published.json' : 'x1-published.json').commit);
-  const success = latch(stage), plan = json('planning/plan.json'), runtime = require('./runtime.txt');
+  assert.equal(preGate.head, external(stage === 'x1' ?
+    'plan-correction-published.json' : 'x1-published.json').commit);
+  if (stage === 'x1') assert.equal(continuation, true);
+  const success = latch(stage === 'x1' ? 'x1-continuation' : stage);
+  const plan = json('planning/plan.json'), runtime = require('./runtime.txt');
+  const correctionMap = new Map(json('planning/correction.json').corrections
+    .map(item => [item.negative_id, item.corrected_expected]));
   const rows = contracts().filter(item => item.stage === stage);
   const safe = [], failures = [], refusals = [], repairs = [], core = [], witnesses = [];
   for (const contract of rows) {
@@ -677,16 +759,19 @@ function execute(stage) {
     contract.negative_subjects.forEach(negative => {
       let observed = null;
       try { runtime.run(negative.request); } catch (error) { observed = error.message; }
-      assert.equal(observed, negative.error, contract.id + ' malformed');
+      const expectedError = correctionMap.get(negative.negative_id) || negative.error;
+      assert.equal(observed, expectedError, contract.id + ' malformed');
       failures.push({negative_id: negative.negative_id, subject: negative.request,
-        expected_error: negative.error, observed_error: observed, original_success_credit: 0, retained: true});
+        frozen_expected_error: negative.error, expected_error: expectedError,
+        corrected_adjudication: expectedError !== negative.error,
+        observed_error: observed, original_success_credit: 0, retained: true});
       witnesses.push(witness(negative.negative_id, method, 'fail', 'Malformed frozen request subject',
         'Valid bounded request', observed, [negative.negative_id]));
       const refusalId = negative.negative_id + '-REFUSAL';
       refusals.push({id: refusalId, negative_id: negative.negative_id,
-        expected: negative.error, observed, passed: true});
+        expected: expectedError, observed, passed: true});
       witnesses.push(witness(refusalId, method, 'pass', 'Separate refusal guard witness',
-        negative.error, observed, [negative.negative_id]));
+        expectedError, observed, [negative.negative_id]));
       const repaired = clone(contract.request); runtime.validate(repaired);
       assert.equal(sha(repaired), contract.request_sha256);
       const repairId = negative.negative_id + '-CFR';
@@ -886,7 +971,11 @@ function execute(stage) {
     clean_fix_refine: repairs.length, skills: skillReceipts.length,
     runners: runnerReceipts.length, tests: tests.length, models: models.length,
     hooks: hookReceipts.length / 2, retained_negatives: failures.length,
-    method_flow: ledger.counts, invocations: 1, successes: 1, replays: 0,
+    method_flow: ledger.counts,
+    invocations: stage === 'x1' ? 2 : 1,
+    successes: 1, replays: 0,
+    original_failed_invocations: stage === 'x1' ? 1 : 0,
+    continuation_invocations: stage === 'x1' ? 1 : 0,
     planning_reference_executed: false, boundary
   };
   write(stage + '/summary.json', summary);
@@ -925,11 +1014,17 @@ function closeFinal() {
   verifyFrozen();
   const preGate = gate();
   assert.equal(preGate.head, external('x2-published.json').commit);
-  const plan = json('planning/plan.json'), stageNames = ['planning', 'x1', 'x2'];
-  const ledgers = stageNames.map(stage => json(stage + '/method-flow.json'));
+  const plan = json('planning/plan.json');
+  const ledgerPaths = [
+    'planning/method-flow.json',
+    'planning/correction-method-flow.json',
+    'x1/method-flow.json',
+    'x2/method-flow.json'
+  ];
+  const ledgers = ledgerPaths.map(file => json(file));
   const startup = external('startup-negatives.json');
   const delta = {
-    negatives: startup.length + json('x1/candidate-failures.json').length + json('x2/candidate-failures.json').length,
+    negatives: ledgers.reduce((total, ledger) => total + ledger.counts.witness_results.fail, 0),
     methods: ledgers.reduce((total, ledger) => total + ledger.counts.methods, 0),
     failed_witnesses: ledgers.reduce((total, ledger) => total + ledger.counts.witness_results.fail, 0),
     passing_witnesses: ledgers.reduce((total, ledger) => total + ledger.counts.witness_results.pass, 0),
@@ -954,13 +1049,14 @@ function closeFinal() {
   write('final/failure-dossier.json', {
     source_baseline: plan.source_baseline.negatives, source_fold_count: 1,
     operational: startup,
+    planning_correction: json('planning/correction.json'),
     session_failure_files: [prefix + 'x1/candidate-failures.json', prefix + 'x2/candidate-failures.json'],
     own_negatives: delta.negatives, source_external_route_overlay_folded: false,
     source_external_route_negatives: 5, original_failed_subject_credit: 0, boundary
   });
   write('final/method-flow-index.json', {
     owner, phase,
-    ledgers: stageNames.map((stage, index) => ({path: prefix + stage + '/method-flow.json', counts: ledgers[index].counts})),
+    ledgers: ledgerPaths.map((file, index) => ({path: prefix + file, counts: ledgers[index].counts})),
     source_baseline: plan.source_baseline, source_fold_count: 1,
     owner_delta: delta, effective_totals: effective,
     predecessor_external_route_overlay_folded: false, boundary
@@ -1022,6 +1118,7 @@ function closeFinal() {
     owner, phase, source_commit: source, branch,
     lifecycle: {
       plan: external('plan-published.json').commit,
+      plan_correction: external('plan-correction-published.json').commit,
       x1: external('x1-published.json').commit,
       x2: external('x2-published.json').commit
     },
@@ -1065,9 +1162,11 @@ function closeFinal() {
 function publish(stage) {
   const state = gate();
   const artifact = stage === 'plan' ? 'planning/manifest.json' :
+    stage === 'plan-correction' ? 'planning/correction-manifest.json' :
     stage === 'final' ? 'final/content-seal.json' : stage + '/manifest.json';
   const expectedParent = stage === 'plan' ? source :
-    stage === 'x1' ? external('plan-published.json').commit :
+    stage === 'plan-correction' ? external('plan-published.json').commit :
+    stage === 'x1' ? external('plan-correction-published.json').commit :
     stage === 'x2' ? external('x1-published.json').commit :
     external('x2-published.json').commit;
   assert.equal(git('show', '-s', '--format=%P', state.head), expectedParent);
@@ -1091,11 +1190,14 @@ function canonical() {
     checks.push({name, passed: true, observed});
   };
   const plan = json('planning/plan.json'), truth = json('final/phase-truth.json');
-  const chain = [source, truth.lifecycle.plan, truth.lifecycle.x1, truth.lifecycle.x2, state.head];
+  const chain = [
+    source, truth.lifecycle.plan, truth.lifecycle.plan_correction,
+    truth.lifecycle.x1, truth.lifecycle.x2, state.head
+  ];
   for (let index = 1; index < chain.length; index += 1) {
     check('direct_parent_' + index, git('show', '-s', '--format=%P', chain[index]), chain[index - 1]);
   }
-  check('commit_count', Number(git('rev-list', '--count', source + '..' + state.head)), 4);
+  check('commit_count', Number(git('rev-list', '--count', source + '..' + state.head)), 5);
   check('zero_merges', Number(git('rev-list', '--count', '--merges', source + '..' + state.head)), 0);
   check('owner_only_delta', git('diff', '--name-only', source, state.head).split('\n').filter(Boolean)
     .every(file => file.startsWith(prefix)), true);
@@ -1104,7 +1206,9 @@ function canonical() {
   check('owner_ceiling', ownerFiles().length <= 170, true);
   check('source_unchanged', git('diff', source, state.head, '--', '.', ':(exclude)' + prefix), '');
   const manifests = [
-    ['planning/manifest.json', truth.lifecycle.plan], ['x1/manifest.json', truth.lifecycle.x1],
+    ['planning/manifest.json', truth.lifecycle.plan],
+    ['planning/correction-manifest.json', truth.lifecycle.plan_correction],
+    ['x1/manifest.json', truth.lifecycle.x1],
     ['x2/manifest.json', truth.lifecycle.x2], ['final/content-seal.json', state.head]
   ];
   let bindings = 0;
@@ -1130,11 +1234,22 @@ function canonical() {
   check('strict_json_documents', jsonParses, jsonParses);
   check('content_seal_hash', sha(bytes('final/content-seal.json')), published.artifact_sha256);
   for (const stage of ['x1', 'x2']) {
-    const summary = json(stage + '/summary.json'), invocation = external(stage + '-invocation.json');
-    check(stage + '_latch', [
-      summary.invocations, summary.successes, summary.replays,
-      invocation.invocations, invocation.successes, invocation.replays
-    ], [1, 1, 0, 1, 1, 0]);
+    const summary = json(stage + '/summary.json');
+    const invocation = external(stage === 'x1' ?
+      'x1-continuation-invocation.json' : 'x2-invocation.json');
+    if (stage === 'x1') {
+      const failed = external('x1-invocation.json');
+      check('x1_latch', [
+        summary.invocations, summary.successes, summary.replays,
+        failed.invocations, failed.successes, failed.replays,
+        invocation.invocations, invocation.successes, invocation.replays
+      ], [2, 1, 0, 1, 0, 0, 1, 1, 0]);
+    } else {
+      check('x2_latch', [
+        summary.invocations, summary.successes, summary.replays,
+        invocation.invocations, invocation.successes, invocation.replays
+      ], [1, 1, 0, 1, 1, 0]);
+    }
     check(stage + '_manifest_hash', sha(bytes(stage + '/manifest.json')), invocation.manifest_sha256);
     check(stage + '_counts', [
       summary.safe, summary.malformed_candidates, summary.separate_refusals,
@@ -1143,6 +1258,8 @@ function canonical() {
     check(stage + '_flow_valid', json(stage + '/method-flow-validation.json').valid, true);
   }
   check('planning_flow_valid', json('planning/method-flow-validation.json').valid, true);
+  check('planning_correction_flow_valid',
+    json('planning/correction-method-flow-validation.json').valid, true);
   check('x1_tests', json('x1/tests.json').length, 15);
   check('x2_tests', json('x2/tests.json').length, 30);
   check('models', json('x2/models.json').length, 15);
@@ -1189,7 +1306,9 @@ function canonical() {
 if (!bank) throw Error('Explicit external phase bank required');
 if (mode === 'plan') buildPlan();
 else if (mode === 'refresh-plan-flow') refreshPlanFlow();
-else if (mode === 'x1' || mode === 'x2') execute(mode);
+else if (mode === 'plan-correction') preparePlanCorrection();
+else if (mode === 'x1-continuation') execute('x1', true);
+else if (mode === 'x2') execute('x2');
 else if (mode === 'final') closeFinal();
 else if (mode === 'publish') publish(submode);
 else if (mode === 'canonical') canonical();
