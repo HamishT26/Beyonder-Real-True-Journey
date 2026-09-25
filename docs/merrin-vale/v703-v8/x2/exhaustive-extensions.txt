@@ -1,0 +1,21 @@
+'use strict';
+const o=require('../x1/exhaustive-oracle.txt');
+function selected(mask,rr){return rr.filter((_,j)=>(mask>>j)&1);}
+function unsatMasks(f){const rr=o.ordered(f),all=[];for(let m=0;m<2**rr.length;m++)if(o.enumerate(f,selected(m,rr)).length===0)all.push(m);return{rr,all};}
+function minimalConflicts(f){const {rr,all}=unsatMasks(f);return o.canon(all.filter(m=>!all.some(n=>n!==m&&(n&m)===n)).map(m=>selected(m,rr).map(r=>r.relation_id)));}
+function deletionRepairs(f){const rr=o.ordered(f),good=[];for(let m=0;m<2**rr.length;m++){const retained=rr.filter((_,j)=>!((m>>j)&1));if(o.enumerate(f,retained).length>0)good.push(m);}return o.canon(good.filter(m=>!good.some(n=>n!==m&&(n&m)===n)).map(m=>selected(m,rr).map(r=>r.relation_id)));}
+function expected(op,f){
+ const assignments=o.enumerate(f),rr=o.ordered(f);
+ if(op==='rc_elimination_count')return{solution_count:assignments.length,integer_arithmetic:true};
+ if(op==='rc_minimal_conflicts')return{minimal_conflicts:minimalConflicts(f)};
+ if(op==='rc_deletion_repairs')return{minimal_deletion_repairs:deletionRepairs(f),filesystem_deletion:false};
+ if(op==='rc_redundancy')return{relations:rr.map(r=>{const outside=o.enumerate(f,rr.filter(x=>x!==r)).filter(a=>!assignments.some(b=>o.same(a,b)));return{relation_id:r.relation_id,redundant:outside.length===0,counterexamples:outside};})};
+ if(op==='rc_pin_sensitivity')return{pins:f.variables.map((v,j)=>({variable:v,counts:[0,1].map(bit=>assignments.filter(a=>a[j]===bit).length)}))};
+ if(op==='rc_min_cost'){let minimum=null,best=[];for(const a of assignments){let cost=0;for(let j=0;j<f.variables.length;j++)cost+=f.costs[f.variables[j]][a[j]];if(minimum===null||cost<minimum){minimum=cost;best=[a];}else if(cost===minimum)best.push(a);}return{minimum,assignments:best,units:'declared_integer_model_units'};}
+ if(op==='rc_tree_reducer'){if(f.join_tree===null)return{declared_tree:false,relations:null,removed:null,reason:'No join tree supplied; no nonexistence claim'};const sup=o.globalSupport(f);return{declared_tree:true,relations:sup,removed:rr.reduce((n,r)=>n+r.rows.length,0)-sup.reduce((n,r)=>n+r.rows.length,0)};}
+ if(op==='rc_trinity_map')return{fixture_id:f.fixture_id,solution_count:assignments.length,mind:{representation:'formal constraint compatibility',empirical_confirmation:false},body:{representation:'joint-feasibility proxy',real_participants:0},heart:{representation:'tuple provenance schema',live_keys:0,authority:false}};
+ if(op==='rc_observation_gap')return{fixture_id:f.fixture_id,finite_satisfiable:assignments.length>0,missing:['governed real observations','independent replication','operational evaluation'],closed:false};
+ if(op==='rc_authority_gate')return{fixture_id:f.fixture_id,permitted:false,required:['exact real action','competent authority','affected-party participation','evidence and rollback'],terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+ throw Error('Unknown oracle extension');
+}
+module.exports={minimalConflicts,deletionRepairs,expected};

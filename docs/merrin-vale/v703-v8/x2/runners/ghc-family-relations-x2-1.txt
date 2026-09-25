@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('fs'),engine=require('../relational-extensions.txt');
+const allowed=["rc_elimination_count","rc_minimal_conflicts"];
+try { const request=JSON.parse(fs.readFileSync(process.argv[2],'utf8')); const result=allowed.includes(request.operation)?engine.run(request):{ok:false,error:'CALLER_OPERATION',original_completion_credit:0}; process.stdout.write(JSON.stringify(result)+'\n'); process.exitCode=result.ok?0:2; } catch(e){ process.stdout.write(JSON.stringify({ok:false,error:'REQUEST_PARSE',original_completion_credit:0})+'\n'); process.exitCode=2; }

@@ -1,0 +1,51 @@
+'use strict';
+const c=require('../x1/relational-core.txt');
+const operations=['rc_elimination_count','rc_minimal_conflicts','rc_deletion_repairs','rc_redundancy','rc_pin_sensitivity','rc_min_cost','rc_tree_reducer','rc_trinity_map','rc_observation_gap','rc_authority_gate'];
+const combinations=n=>Array.from({length:2**n},(_,m)=>Array.from({length:n},(_,j)=>(m>>j)&1));
+function eliminate(f,mode){
+ const impossible=mode==='count'?0:Infinity;
+ let factors=f.relations.map(r=>({vars:r.scope,table:new Map(r.rows.map(t=>[JSON.stringify(t),mode==='count'?1:0]))}));
+ for(const v of f.variables)factors.push({vars:[v],table:new Map([[JSON.stringify([0]),mode==='count'?1:f.costs[v][0]],[JSON.stringify([1]),mode==='count'?1:f.costs[v][1]]])});
+ for(const v of f.variables){const bucket=factors.filter(x=>x.vars.includes(v));factors=factors.filter(x=>!x.vars.includes(v));const remain=[...new Set(bucket.flatMap(x=>x.vars))].filter(x=>x!==v),table=new Map();
+  for(const a of combinations(remain.length)){let answer=mode==='count'?0:Infinity;
+   for(const bit of [0,1]){const assignment=Object.fromEntries(remain.map((x,i)=>[x,a[i]]));assignment[v]=bit;let total=mode==='count'?1:0;
+    for(const factor of bucket){const z=factor.table.get(JSON.stringify(factor.vars.map(x=>assignment[x])))??impossible;total=mode==='count'?total*z:total+z;}
+    answer=mode==='count'?answer+total:Math.min(answer,total);
+   }table.set(JSON.stringify(a),answer);
+  }factors.push({vars:remain,table});
+ }
+ return factors.reduce((a,factor)=>mode==='count'?a*(factor.table.get('[]')??0):a+(factor.table.get('[]')??Infinity),mode==='count'?1:0);
+}
+function conflicts(f){
+ const rr=[...f.relations].sort((a,b)=>a.relation_id.localeCompare(b.relation_id)),found=[],seen=new Set();
+ function visit(ids){const k=ids.join(',');if(seen.has(k))return;seen.add(k);if(c.join(f,ids.map(i=>rr[i])).length)return;
+  let smaller=false;for(let j=0;j<ids.length;j++){const child=ids.filter((_,i)=>i!==j);if(!c.join(f,child.map(i=>rr[i])).length){smaller=true;visit(child);}}
+  if(!smaller)found.push(ids.map(i=>rr[i].relation_id));
+ }visit(rr.map((_,i)=>i));return c.rows(found);
+}
+function minimalSets(sets){return c.rows(sets.map(s=>[...new Set(s)].sort())).filter((s,i,all)=>!all.some((t,j)=>i!==j&&t.length<s.length&&t.every(x=>s.includes(x))));}
+function repairs(f){let candidates=[[]];for(const conflict of conflicts(f)){const next=[];for(const set of candidates)if(set.some(x=>conflict.includes(x)))next.push(set);else for(const x of conflict)next.push([...set,x]);candidates=minimalSets(next);}return c.rows(candidates);}
+function treeReduce(f){
+ if(f.join_tree===null)return{declared_tree:false,relations:null,removed:null,reason:'No join tree supplied; no nonexistence claim'};
+ const adj=c.checkTree(f),parent=Array(f.relations.length).fill(-1),queue=[0];parent[0]=0;
+ for(let k=0;k<queue.length;k++)for(const v of adj[queue[k]])if(parent[v]===-1){parent[v]=queue[k];queue.push(v);}
+ const rr=f.relations.map(r=>({...r,rows:c.rows(r.rows)}));
+ for(let k=queue.length-1;k>0;k--){const child=queue[k],p=parent[child];rr[p]=c.semi(rr[p],rr[child]);}
+ for(let k=1;k<queue.length;k++){const child=queue[k];rr[child]=c.semi(rr[child],rr[parent[child]]);}
+ return{declared_tree:true,relations:rr.sort((a,b)=>a.relation_id.localeCompare(b.relation_id)).map(r=>({relation_id:r.relation_id,rows:c.rows(r.rows)})),removed:f.relations.reduce((n,r)=>n+r.rows.length,0)-rr.reduce((n,r)=>n+r.rows.length,0)};
+}
+function value(op,f){
+ if(op==='rc_elimination_count')return{solution_count:eliminate(f,'count'),integer_arithmetic:true};
+ if(op==='rc_minimal_conflicts')return{minimal_conflicts:conflicts(f)};
+ if(op==='rc_deletion_repairs')return{minimal_deletion_repairs:repairs(f),filesystem_deletion:false};
+ if(op==='rc_redundancy'){const base=c.join(f);return{relations:[...f.relations].sort((a,b)=>a.relation_id.localeCompare(b.relation_id)).map(r=>{const relaxed=c.join(f,f.relations.filter(x=>x!==r));return{relation_id:r.relation_id,redundant:c.eq(base,relaxed),counterexamples:relaxed.filter(a=>!base.some(b=>c.eq(a,b)))};})};}
+ if(op==='rc_pin_sensitivity')return{pins:f.variables.map(v=>({variable:v,counts:[0,1].map(bit=>c.join(f,[...f.relations,{relation_id:'pin',scope:[v],rows:[[bit]]}]).length)}))};
+ if(op==='rc_min_cost'){const optimum=eliminate(f,'cost'),solutions=c.join(f);return{minimum:Number.isFinite(optimum)?optimum:null,assignments:solutions.filter(a=>f.variables.reduce((sum,v,j)=>sum+f.costs[v][a[j]],0)===optimum),units:'declared_integer_model_units'};}
+ if(op==='rc_tree_reducer')return treeReduce(f);
+ if(op==='rc_trinity_map')return{fixture_id:f.fixture_id,solution_count:c.join(f).length,mind:{representation:'formal constraint compatibility',empirical_confirmation:false},body:{representation:'joint-feasibility proxy',real_participants:0},heart:{representation:'tuple provenance schema',live_keys:0,authority:false}};
+ if(op==='rc_observation_gap')return{fixture_id:f.fixture_id,finite_satisfiable:c.join(f).length>0,missing:['governed real observations','independent replication','operational evaluation'],closed:false};
+ if(op==='rc_authority_gate')return{fixture_id:f.fixture_id,permitted:false,required:['exact real action','competent authority','affected-party participation','evidence and rollback'],terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+ throw Error('Unknown extension operation');
+}
+function run(request){try{const f=c.admit(request,operations),v=value(request.operation,f),i=operations.indexOf(request.operation);return{ok:true,contract_id:request.contract_id,operation:request.operation,input_sha256:c.hash(request),core_outcome:i<7?'completed':i===7?'represented':i===8?'open_gap':'exact_gate',value:v};}catch(e){if(!e.code)throw e;return{ok:false,contract_id:typeof request?.contract_id==='string'?request.contract_id:null,error:e.code,original_completion_credit:0};}}
+module.exports={operations,eliminate,conflicts,repairs,treeReduce,value,run,hash:c.hash};

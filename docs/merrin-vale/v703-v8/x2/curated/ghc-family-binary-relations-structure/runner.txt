@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('fs'),a=require('../../../x1/relational-core.txt'),b=require('../../relational-extensions.txt');
+const routes={"rc_profile":"x1","rc_join":"x1","rc_pairwise":"x1","rc_join_order":"x1"};
+try{const q=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));const r=routes[q.operation]?(routes[q.operation]==='x1'?a:b).run(q):{ok:false,error:'CALLER_OPERATION',original_completion_credit:0};process.stdout.write(JSON.stringify(r)+'\n');process.exitCode=r.ok?0:2;}catch(e){process.stdout.write(JSON.stringify({ok:false,error:'REQUEST_PARSE',original_completion_credit:0})+'\n');process.exitCode=2;}
