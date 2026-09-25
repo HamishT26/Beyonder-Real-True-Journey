@@ -1,0 +1,1340 @@
+{
+  "guides": 10,
+  "paired_callers": 5,
+  "accepting_cli_uses": 10,
+  "refusing_cli_uses": 10,
+  "records": [
+    {
+      "operation": "pg_dominators",
+      "guide": "x2/skills/ghc-family-pg-dominators/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-1.txt",
+      "guide_sha256": "ca8031b0143233d3a06dd7d9310324d805336daa1357ebbecfb84a7fe3c41e00",
+      "caller_sha256": "60585c6c648c2c41d15b522632a424287d6a3a90b66f3775cbbad571be56c78b",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-0",
+        "operation": "pg_dominators",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "completion_reachable": true,
+        "mandatory_states": [
+          0,
+          3
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-0",
+        "input_sha256": "3f77c8262c1a0d73d4f35fe8e159dbdbe908ed23684d212c91960bfe7d13d4ad",
+        "core_outcome": "completed",
+        "value": {
+          "completion_reachable": true,
+          "mandatory_states": [
+            0,
+            3
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-0",
+        "operation": "pg_dominators",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_edge_cuts",
+      "guide": "x2/skills/ghc-family-pg-edge-cuts/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-1.txt",
+      "guide_sha256": "afc6e027f28e147cd1aafbb9727e27bbba6c2c49e4817b9c2daaa184318126af",
+      "caller_sha256": "60585c6c648c2c41d15b522632a424287d6a3a90b66f3775cbbad571be56c78b",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-1",
+        "operation": "pg_edge_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-1",
+        "input_sha256": "e391b67f86189a8219cbf974f01988e2aceeb9d26b901bf748680537f7a82ff0",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                3
+              ]
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-1",
+        "operation": "pg_edge_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_vertex_cuts",
+      "guide": "x2/skills/ghc-family-pg-vertex-cuts/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-2.txt",
+      "guide_sha256": "aa363b2ff8499735dc30427495e40d2853726b210b730a2ac26ae96832df7ec6",
+      "caller_sha256": "b12da85b545155e8e0bf549c30876c361795510d3981ff472ca99f59eb07d09a",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-2",
+        "operation": "pg_vertex_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-2",
+        "input_sha256": "f49c210ef52c19871c9e90872bec050e0540460a379e78a6e90f8927df17167b",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-2",
+        "operation": "pg_vertex_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_longest_dag",
+      "guide": "x2/skills/ghc-family-pg-longest-dag/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-2.txt",
+      "guide_sha256": "d80eda6801ebc38dedb2161cbdd801159dc2091bf76104e54ed81c2a5519baf5",
+      "caller_sha256": "b12da85b545155e8e0bf549c30876c361795510d3981ff472ca99f59eb07d09a",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-3",
+        "operation": "pg_longest_dag",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "acyclic": true,
+        "longest_distance": 3
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-3",
+        "input_sha256": "62175fd560fa31496a2895fd134f7dae1fe16c6bec13391b224a58f7bd499586",
+        "core_outcome": "completed",
+        "value": {
+          "acyclic": true,
+          "longest_distance": 3
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-3",
+        "operation": "pg_longest_dag",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_trap_components",
+      "guide": "x2/skills/ghc-family-pg-trap-components/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-3.txt",
+      "guide_sha256": "1e335a0a56a690ae08306dbea21a07822500ce50e741d219a64790cd48c44673",
+      "caller_sha256": "4b6aebc8096683ced64ff3620d254b7c3afa44609d755d44794a462b502089b4",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-4",
+        "operation": "pg_trap_components",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-4",
+        "input_sha256": "16421bb5a7d34de8bd879abc3a6c0cfac8a65cdacd2f53897425a7544ee418ea",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-4",
+        "operation": "pg_trap_components",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_failure_frontier",
+      "guide": "x2/skills/ghc-family-pg-failure-frontier/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-3.txt",
+      "guide_sha256": "f5791e2d4ac5fbcea70dca7da252010426f4c79450835ad60a8faab4cf4924f1",
+      "caller_sha256": "4b6aebc8096683ced64ff3620d254b7c3afa44609d755d44794a462b502089b4",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-5",
+        "operation": "pg_failure_frontier",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-5",
+        "input_sha256": "d1517315a7aafa4e76dd9beeee45a0a8c8910b7a1d948e0ef134b2b8a6f46abe",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-5",
+        "operation": "pg_failure_frontier",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_reverse_distance",
+      "guide": "x2/skills/ghc-family-pg-reverse-distance/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-4.txt",
+      "guide_sha256": "35fbf8b6de9d6fdaa41273176fd8edcb2b2dc97b1f939c5af3d91d4f775a9480",
+      "caller_sha256": "4765fc10a055dbe57ead84cd45207631d304e0c2834df3d0154c948891114611",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-6",
+        "operation": "pg_reverse_distance",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        {
+          "node": 0,
+          "distance": 2
+        },
+        {
+          "node": 1,
+          "distance": 1
+        },
+        {
+          "node": 2,
+          "distance": 1
+        },
+        {
+          "node": 3,
+          "distance": 0
+        },
+        {
+          "node": 4,
+          "distance": 0
+        }
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-6",
+        "input_sha256": "df516617fde9531ad85af249d2a499f86ac7bbc7080e66aa06dcdceba7413499",
+        "core_outcome": "completed",
+        "value": [
+          {
+            "node": 0,
+            "distance": 2
+          },
+          {
+            "node": 1,
+            "distance": 1
+          },
+          {
+            "node": 2,
+            "distance": 1
+          },
+          {
+            "node": 3,
+            "distance": 0
+          },
+          {
+            "node": 4,
+            "distance": 0
+          }
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-6",
+        "operation": "pg_reverse_distance",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_trinity_map",
+      "guide": "x2/skills/ghc-family-pg-trinity-map/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-4.txt",
+      "guide_sha256": "3b677e1cf9727b87d9d9a6865a5a1d7ade19287216261536aea484f872c6daf7",
+      "caller_sha256": "4765fc10a055dbe57ead84cd45207631d304e0c2834df3d0154c948891114611",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-7",
+        "operation": "pg_trinity_map",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "representation": "declared-state-transition-analogy",
+        "mind": "finite reachability and obstruction",
+        "body": "phase admission and evidence capture",
+        "heart": "authority and failure retention",
+        "real_system_observed": false
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-7",
+        "input_sha256": "4e6bd45a3213663aa816a3b10aa70f8f250ac7da7e64444f2d36483c6271022d",
+        "core_outcome": "represented",
+        "value": {
+          "representation": "declared-state-transition-analogy",
+          "mind": "finite reachability and obstruction",
+          "body": "phase admission and evidence capture",
+          "heart": "authority and failure retention",
+          "real_system_observed": false
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-7",
+        "operation": "pg_trinity_map",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_observation_gap",
+      "guide": "x2/skills/ghc-family-pg-observation-gap/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-5.txt",
+      "guide_sha256": "5fabc68b6a217dee3d153faff70c27c2b93799cf9cd42592e3dbcc1d094cb682",
+      "caller_sha256": "88ca0f0f44e9b9b132d11c8aeef00a4bac5faa413cf21168a25e87fd02047507",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-8",
+        "operation": "pg_observation_gap",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "observed_live_traces": 0,
+        "required": [
+          "real task-service traces",
+          "provider availability observations",
+          "independent reproduction"
+        ],
+        "gap_open": true
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-8",
+        "input_sha256": "d237068e4406cbac2991dca11c7734433bd88ffc2a12c4506df73eafbaa58172",
+        "core_outcome": "open_gap",
+        "value": {
+          "observed_live_traces": 0,
+          "required": [
+            "real task-service traces",
+            "provider availability observations",
+            "independent reproduction"
+          ],
+          "gap_open": true
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-8",
+        "operation": "pg_observation_gap",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "operation": "pg_authority_gate",
+      "guide": "x2/skills/ghc-family-pg-authority-gate/SKILL.md",
+      "caller": "x2/runners/ghc-family-protocol-x2-5.txt",
+      "guide_sha256": "d4ca27064910c1cb4b0f7a1f75fdbf7d2d97bb9cb95ce0c1f71e8ac233fa6f01",
+      "caller_sha256": "88ca0f0f44e9b9b132d11c8aeef00a4bac5faa413cf21168a25e87fd02047507",
+      "request": {
+        "contract_id": "MV7038R2-x2-CLI-9",
+        "operation": "pg_authority_gate",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "granted_authority": false,
+        "required": [
+          "scope-specific consent",
+          "competent review",
+          "affected-party governance"
+        ],
+        "executed_external_actions": 0
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-x2-CLI-9",
+        "input_sha256": "35c41b5a1049aca83002a149907b401dc7dab8b861168a78b633fbf68979049f",
+        "core_outcome": "exact_gate",
+        "value": {
+          "granted_authority": false,
+          "required": [
+            "scope-specific consent",
+            "competent review",
+            "affected-party governance"
+          ],
+          "executed_external_actions": 0
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-x2-CLI-9",
+        "operation": "pg_authority_gate",
+        "fixture": {
+          "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            3,
+            4
+          ],
+          "forbidden": [],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    }
+  ]
+}

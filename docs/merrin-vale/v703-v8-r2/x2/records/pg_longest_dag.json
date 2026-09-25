@@ -1,0 +1,4231 @@
+{
+  "operation": "pg_longest_dag",
+  "records": [
+    {
+      "definition_id": "MV7038R2-P196",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F01-linear-admission",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P196-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F01-linear-admission",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 5
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P196-S0",
+            "input_sha256": "ded8a722a31a9a4d7627101a251cdb938fc1d80381bce4642b7bb1e3f2181008",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 5
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P196-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F01-linear-admission",
+              "nodes": [
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 5
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P196-S1",
+            "input_sha256": "3b342ef8da9660b6f9b70a3a50bc27029cafd6371f9cadac3027add75f7384bf",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 5
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P196-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P196-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F01-linear-admission",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P196-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P196-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F01-linear-admission",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  6,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P196-F0",
+          "subject": {
+            "id": "MV7038R2-P196-F0",
+            "input_sha256": "ded8a722a31a9a4d7627101a251cdb938fc1d80381bce4642b7bb1e3f2181008",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P196-F0",
+            "input_sha256": "ded8a722a31a9a4d7627101a251cdb938fc1d80381bce4642b7bb1e3f2181008",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P196-F1",
+          "subject": {
+            "id": "MV7038R2-P196-F1",
+            "input_sha256": "ded8a722a31a9a4d7627101a251cdb938fc1d80381bce4642b7bb1e3f2181008",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P196-F1",
+            "input_sha256": "ded8a722a31a9a4d7627101a251cdb938fc1d80381bce4642b7bb1e3f2181008",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P197",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F02-model-check-bypass",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P197-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F02-model-check-bypass",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 5
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P197-S0",
+            "input_sha256": "2884f1052af6aa2d377c7655c45f1b580b6063b44fb362bd919abc332f82c9e0",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 5
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P197-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F02-model-check-bypass",
+              "nodes": [
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 5
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P197-S1",
+            "input_sha256": "f011bd3df597ee7e587229a8e28e0dbb371901444a96507cccc4cd8bf19a943f",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 5
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P197-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P197-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F02-model-check-bypass",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 5,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P197-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P197-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F02-model-check-bypass",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  6,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P197-F0",
+          "subject": {
+            "id": "MV7038R2-P197-F0",
+            "input_sha256": "2884f1052af6aa2d377c7655c45f1b580b6063b44fb362bd919abc332f82c9e0",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P197-F0",
+            "input_sha256": "2884f1052af6aa2d377c7655c45f1b580b6063b44fb362bd919abc332f82c9e0",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P197-F1",
+          "subject": {
+            "id": "MV7038R2-P197-F1",
+            "input_sha256": "2884f1052af6aa2d377c7655c45f1b580b6063b44fb362bd919abc332f82c9e0",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P197-F1",
+            "input_sha256": "2884f1052af6aa2d377c7655c45f1b580b6063b44fb362bd919abc332f82c9e0",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P198",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F03-blocked-model-branch",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P198-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F03-blocked-model-branch",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P198-S0",
+            "input_sha256": "bfab85029e9ed3804538e6f37b1a1b4eeb8b37886903ef01880b4e10ccc7ebee",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P198-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F03-blocked-model-branch",
+              "nodes": [
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P198-S1",
+            "input_sha256": "4ea02aa929656ec9270785d6c24b986c9628e85e89e946a1f8fd0fba49ee4f97",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P198-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P198-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F03-blocked-model-branch",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 6,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P198-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P198-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F03-blocked-model-branch",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  5,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [
+                2
+              ],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P198-F0",
+          "subject": {
+            "id": "MV7038R2-P198-F0",
+            "input_sha256": "bfab85029e9ed3804538e6f37b1a1b4eeb8b37886903ef01880b4e10ccc7ebee",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P198-F0",
+            "input_sha256": "bfab85029e9ed3804538e6f37b1a1b4eeb8b37886903ef01880b4e10ccc7ebee",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P198-F1",
+          "subject": {
+            "id": "MV7038R2-P198-F1",
+            "input_sha256": "bfab85029e9ed3804538e6f37b1a1b4eeb8b37886903ef01880b4e10ccc7ebee",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P198-F1",
+            "input_sha256": "bfab85029e9ed3804538e6f37b1a1b4eeb8b37886903ef01880b4e10ccc7ebee",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P199",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F04-bounded-retry-cycle",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P199-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F04-bounded-retry-cycle",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P199-S0",
+            "input_sha256": "a7f2f45d6d66bda68277b9f7cd7e97a1d935c85bc1b97df464e074bc21809942",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P199-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F04-bounded-retry-cycle",
+              "nodes": [
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P199-S1",
+            "input_sha256": "1d27cdad7e93e2ebf1ba5bb559ca6e39b9090d2ad4df7c101dcfcde5aedef643",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P199-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P199-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F04-bounded-retry-cycle",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P199-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P199-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F04-bounded-retry-cycle",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  5,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P199-F0",
+          "subject": {
+            "id": "MV7038R2-P199-F0",
+            "input_sha256": "a7f2f45d6d66bda68277b9f7cd7e97a1d935c85bc1b97df464e074bc21809942",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P199-F0",
+            "input_sha256": "a7f2f45d6d66bda68277b9f7cd7e97a1d935c85bc1b97df464e074bc21809942",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P199-F1",
+          "subject": {
+            "id": "MV7038R2-P199-F1",
+            "input_sha256": "a7f2f45d6d66bda68277b9f7cd7e97a1d935c85bc1b97df464e074bc21809942",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P199-F1",
+            "input_sha256": "a7f2f45d6d66bda68277b9f7cd7e97a1d935c85bc1b97df464e074bc21809942",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P200",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F05-accepted-resend-cycle",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P200-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F05-accepted-resend-cycle",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  5,
+                  3
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                3
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P200-S0",
+            "input_sha256": "a5b30c9e9355fbfab253a0d7bae9c7ae62aae3b0b31b3ee812fccb38a914063d",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P200-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F05-accepted-resend-cycle",
+              "nodes": [
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  5,
+                  3
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                3
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P200-S1",
+            "input_sha256": "1078234d2d138fe11ffe22fe05cdcce98ab1217ed48c671e5f39e8bc8f90e4c1",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P200-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P200-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F05-accepted-resend-cycle",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  5,
+                  3
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                3
+              ],
+              "horizon": 5,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P200-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P200-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F05-accepted-resend-cycle",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  5,
+                  3
+                ],
+                [
+                  6,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                3
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P200-F0",
+          "subject": {
+            "id": "MV7038R2-P200-F0",
+            "input_sha256": "a5b30c9e9355fbfab253a0d7bae9c7ae62aae3b0b31b3ee812fccb38a914063d",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P200-F0",
+            "input_sha256": "a5b30c9e9355fbfab253a0d7bae9c7ae62aae3b0b31b3ee812fccb38a914063d",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P200-F1",
+          "subject": {
+            "id": "MV7038R2-P200-F1",
+            "input_sha256": "a5b30c9e9355fbfab253a0d7bae9c7ae62aae3b0b31b3ee812fccb38a914063d",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P200-F1",
+            "input_sha256": "a5b30c9e9355fbfab253a0d7bae9c7ae62aae3b0b31b3ee812fccb38a914063d",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P201",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F06-opaque-stop",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P201-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F06-opaque-stop",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                3,
+                4
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P201-S0",
+            "input_sha256": "0dcf150c737b37a003fca18f1c447b1e0a09adb2238801632dec3233782e0a96",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P201-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F06-opaque-stop",
+              "nodes": [
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  2,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4,
+                3
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P201-S1",
+            "input_sha256": "59a44451ff8f33fcdb8305a927f60583d73046c1099bfd90d4af5d78c3c4fe9d",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P201-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P201-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F06-opaque-stop",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                3,
+                4
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P201-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P201-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F06-opaque-stop",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  5,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                3,
+                4
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P201-F0",
+          "subject": {
+            "id": "MV7038R2-P201-F0",
+            "input_sha256": "0dcf150c737b37a003fca18f1c447b1e0a09adb2238801632dec3233782e0a96",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P201-F0",
+            "input_sha256": "0dcf150c737b37a003fca18f1c447b1e0a09adb2238801632dec3233782e0a96",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P201-F1",
+          "subject": {
+            "id": "MV7038R2-P201-F1",
+            "input_sha256": "0dcf150c737b37a003fca18f1c447b1e0a09adb2238801632dec3233782e0a96",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P201-F1",
+            "input_sha256": "0dcf150c737b37a003fca18f1c447b1e0a09adb2238801632dec3233782e0a96",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P202",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F07-unresolved-deadlock",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P202-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F07-unresolved-deadlock",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P202-S0",
+            "input_sha256": "3f6103039ec07fcd5860bde0d691979c50456c124dfec5fb44b9788dc39f6796",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P202-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F07-unresolved-deadlock",
+              "nodes": [
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P202-S1",
+            "input_sha256": "69c6644017f0fe7c5c42640937f7db001e2ff6a56dab609748b1d4d4c34d82eb",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P202-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P202-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F07-unresolved-deadlock",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P202-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P202-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F07-unresolved-deadlock",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  5,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P202-F0",
+          "subject": {
+            "id": "MV7038R2-P202-F0",
+            "input_sha256": "3f6103039ec07fcd5860bde0d691979c50456c124dfec5fb44b9788dc39f6796",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P202-F0",
+            "input_sha256": "3f6103039ec07fcd5860bde0d691979c50456c124dfec5fb44b9788dc39f6796",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P202-F1",
+          "subject": {
+            "id": "MV7038R2-P202-F1",
+            "input_sha256": "3f6103039ec07fcd5860bde0d691979c50456c124dfec5fb44b9788dc39f6796",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P202-F1",
+            "input_sha256": "3f6103039ec07fcd5860bde0d691979c50456c124dfec5fb44b9788dc39f6796",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P203",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F08-unreachable-final",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P203-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F08-unreachable-final",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P203-S0",
+            "input_sha256": "572c3146e5a8cc0765ce0a30e9e2d398bddc835cc1ecf159455f67b02f9490b5",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P203-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F08-unreachable-final",
+              "nodes": [
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P203-S1",
+            "input_sha256": "7890d05825188f3c89e34bcefc50922d2d6b90b70859c8d5007ecce3b603a012",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P203-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P203-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F08-unreachable-final",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P203-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P203-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F08-unreachable-final",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  5,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P203-F0",
+          "subject": {
+            "id": "MV7038R2-P203-F0",
+            "input_sha256": "572c3146e5a8cc0765ce0a30e9e2d398bddc835cc1ecf159455f67b02f9490b5",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P203-F0",
+            "input_sha256": "572c3146e5a8cc0765ce0a30e9e2d398bddc835cc1ecf159455f67b02f9490b5",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P203-F1",
+          "subject": {
+            "id": "MV7038R2-P203-F1",
+            "input_sha256": "572c3146e5a8cc0765ce0a30e9e2d398bddc835cc1ecf159455f67b02f9490b5",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P203-F1",
+            "input_sha256": "572c3146e5a8cc0765ce0a30e9e2d398bddc835cc1ecf159455f67b02f9490b5",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P204",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P204-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P204-S0",
+            "input_sha256": "c7277a9707bbf06787a5c585596c3c6f483d56f3bc4f62a3d2a4c0ed2ba1f2dd",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P204-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+              "nodes": [
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P204-S1",
+            "input_sha256": "3900954887344571a08fa850864f06fbc665e038b37cdf15b52de05174a1318b",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P204-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P204-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P204-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P204-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  5,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                4
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P204-F0",
+          "subject": {
+            "id": "MV7038R2-P204-F0",
+            "input_sha256": "c7277a9707bbf06787a5c585596c3c6f483d56f3bc4f62a3d2a4c0ed2ba1f2dd",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P204-F0",
+            "input_sha256": "c7277a9707bbf06787a5c585596c3c6f483d56f3bc4f62a3d2a4c0ed2ba1f2dd",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P204-F1",
+          "subject": {
+            "id": "MV7038R2-P204-F1",
+            "input_sha256": "c7277a9707bbf06787a5c585596c3c6f483d56f3bc4f62a3d2a4c0ed2ba1f2dd",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P204-F1",
+            "input_sha256": "c7277a9707bbf06787a5c585596c3c6f483d56f3bc4f62a3d2a4c0ed2ba1f2dd",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P205",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F10-mandatory-gate-diamond",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P205-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F10-mandatory-gate-diamond",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 4
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P205-S0",
+            "input_sha256": "666c87fe5f8835205bea604d9bb966ae8833c4368c2dfff95c5d05a964891f38",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 4
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P205-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F10-mandatory-gate-diamond",
+              "nodes": [
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 4
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P205-S1",
+            "input_sha256": "36021cbc6ad7556a545764b11b4d9747187025da3f2557d60831fcde6d522a15",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 4
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P205-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P205-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F10-mandatory-gate-diamond",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P205-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P205-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F10-mandatory-gate-diamond",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  6,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P205-F0",
+          "subject": {
+            "id": "MV7038R2-P205-F0",
+            "input_sha256": "666c87fe5f8835205bea604d9bb966ae8833c4368c2dfff95c5d05a964891f38",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P205-F0",
+            "input_sha256": "666c87fe5f8835205bea604d9bb966ae8833c4368c2dfff95c5d05a964891f38",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P205-F1",
+          "subject": {
+            "id": "MV7038R2-P205-F1",
+            "input_sha256": "666c87fe5f8835205bea604d9bb966ae8833c4368c2dfff95c5d05a964891f38",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P205-F1",
+            "input_sha256": "666c87fe5f8835205bea604d9bb966ae8833c4368c2dfff95c5d05a964891f38",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P206",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F11-two-repair-routes",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P206-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F11-two-repair-routes",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                3,
+                4
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P206-S0",
+            "input_sha256": "b6db440d4cbbee3cb5a15a69684a610c04e2e05493b18290cce4f171319dfc42",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P206-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F11-two-repair-routes",
+              "nodes": [
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                4,
+                3
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 3
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P206-S1",
+            "input_sha256": "2975880081dfd8d53f10d1976486bad825d25d436425adc66b6ae642292cc4d8",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 3
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P206-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P206-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F11-two-repair-routes",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                3,
+                4
+              ],
+              "horizon": 5,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P206-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P206-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F11-two-repair-routes",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  6,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                3,
+                4
+              ],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P206-F0",
+          "subject": {
+            "id": "MV7038R2-P206-F0",
+            "input_sha256": "b6db440d4cbbee3cb5a15a69684a610c04e2e05493b18290cce4f171319dfc42",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P206-F0",
+            "input_sha256": "b6db440d4cbbee3cb5a15a69684a610c04e2e05493b18290cce4f171319dfc42",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P206-F1",
+          "subject": {
+            "id": "MV7038R2-P206-F1",
+            "input_sha256": "b6db440d4cbbee3cb5a15a69684a610c04e2e05493b18290cce4f171319dfc42",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P206-F1",
+            "input_sha256": "b6db440d4cbbee3cb5a15a69684a610c04e2e05493b18290cce4f171319dfc42",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P207",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F12-self-loop-observer",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P207-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F12-self-loop-observer",
+              "nodes": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                3
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P207-S0",
+            "input_sha256": "e4c55e0bca20414e97c7b8eb31ce1c252eadeeb129a3d59a8d30afe233321a39",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P207-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F12-self-loop-observer",
+              "nodes": [
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  2,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                3
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P207-S1",
+            "input_sha256": "146276620bf65e190d9b230ff3d9027e7714b6d51407d49fba4578445c509592",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P207-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P207-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F12-self-loop-observer",
+              "nodes": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                3
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P207-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P207-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F12-self-loop-observer",
+              "nodes": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  4,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                3
+              ],
+              "forbidden": [],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P207-F0",
+          "subject": {
+            "id": "MV7038R2-P207-F0",
+            "input_sha256": "e4c55e0bca20414e97c7b8eb31ce1c252eadeeb129a3d59a8d30afe233321a39",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P207-F0",
+            "input_sha256": "e4c55e0bca20414e97c7b8eb31ce1c252eadeeb129a3d59a8d30afe233321a39",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P207-F1",
+          "subject": {
+            "id": "MV7038R2-P207-F1",
+            "input_sha256": "e4c55e0bca20414e97c7b8eb31ce1c252eadeeb129a3d59a8d30afe233321a39",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P207-F1",
+            "input_sha256": "e4c55e0bca20414e97c7b8eb31ce1c252eadeeb129a3d59a8d30afe233321a39",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P208",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F13-closed-trap",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P208-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F13-closed-trap",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P208-S0",
+            "input_sha256": "28430eb8a773fde5e77fbf191057fd92de0d8f5f6b4cbf13c0b12ffd4f19e6ee",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P208-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F13-closed-trap",
+              "nodes": [
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": false,
+            "longest_distance": null
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P208-S1",
+            "input_sha256": "d20686f2f5b51531c846650c3b1ac46cbeba4e366c2bda9c8500ba6e05341794",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": false,
+              "longest_distance": null
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P208-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P208-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F13-closed-trap",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P208-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P208-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F13-closed-trap",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  6,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [],
+              "horizon": 4,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P208-F0",
+          "subject": {
+            "id": "MV7038R2-P208-F0",
+            "input_sha256": "28430eb8a773fde5e77fbf191057fd92de0d8f5f6b4cbf13c0b12ffd4f19e6ee",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P208-F0",
+            "input_sha256": "28430eb8a773fde5e77fbf191057fd92de0d8f5f6b4cbf13c0b12ffd4f19e6ee",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P208-F1",
+          "subject": {
+            "id": "MV7038R2-P208-F1",
+            "input_sha256": "28430eb8a773fde5e77fbf191057fd92de0d8f5f6b4cbf13c0b12ffd4f19e6ee",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P208-F1",
+            "input_sha256": "28430eb8a773fde5e77fbf191057fd92de0d8f5f6b4cbf13c0b12ffd4f19e6ee",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P209",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F14-zero-step-completion",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P209-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F14-zero-step-completion",
+              "nodes": [
+                0,
+                1,
+                2
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                0,
+                2
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 2
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P209-S0",
+            "input_sha256": "3ee44c953209148ef36cb89645cf5d6d3e01e528cdfa57a46c7f5ee30a16a3f1",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 2
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P209-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F14-zero-step-completion",
+              "nodes": [
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                2,
+                0
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 2
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P209-S1",
+            "input_sha256": "da6fb74996cb806e78d37dce2648efabbb232bd5ada0d759839d34a2e60f4d18",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 2
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P209-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P209-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F14-zero-step-completion",
+              "nodes": [
+                0,
+                1,
+                2
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                0,
+                2
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P209-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P209-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F14-zero-step-completion",
+              "nodes": [
+                0,
+                1,
+                2
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  3,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                0,
+                2
+              ],
+              "forbidden": [],
+              "horizon": 5,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P209-F0",
+          "subject": {
+            "id": "MV7038R2-P209-F0",
+            "input_sha256": "3ee44c953209148ef36cb89645cf5d6d3e01e528cdfa57a46c7f5ee30a16a3f1",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P209-F0",
+            "input_sha256": "3ee44c953209148ef36cb89645cf5d6d3e01e528cdfa57a46c7f5ee30a16a3f1",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P209-F1",
+          "subject": {
+            "id": "MV7038R2-P209-F1",
+            "input_sha256": "3ee44c953209148ef36cb89645cf5d6d3e01e528cdfa57a46c7f5ee30a16a3f1",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P209-F1",
+            "input_sha256": "3ee44c953209148ef36cb89645cf5d6d3e01e528cdfa57a46c7f5ee30a16a3f1",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    },
+    {
+      "definition_id": "MV7038R2-P210",
+      "operation": "pg_longest_dag",
+      "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+      "safe": [
+        {
+          "request": {
+            "contract_id": "MV7038R2-P210-S0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                4
+              ],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 4
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P210-S0",
+            "input_sha256": "f54e20aefaafdd31b8c68ed8a55213c9a8074a53e038e117c635d78c1b2e0cb1",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 4
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        },
+        {
+          "request": {
+            "contract_id": "MV7038R2-P210-S1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+              "nodes": [
+                5,
+                4,
+                3,
+                2,
+                1,
+                0
+              ],
+              "edges": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                4
+              ],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "expected": {
+            "acyclic": true,
+            "longest_distance": 4
+          },
+          "result": {
+            "ok": true,
+            "contract_id": "MV7038R2-P210-S1",
+            "input_sha256": "61413b2dbcf538fffc9b9cf52cc433a44c3f61892aef7468cb05c8e9b33b7599",
+            "core_outcome": "completed",
+            "value": {
+              "acyclic": true,
+              "longest_distance": 4
+            },
+            "boundary": "Finite declared graph only; no live reliability or authority claim."
+          },
+          "input_preserved": true
+        }
+      ],
+      "candidates": [
+        {
+          "id": "MV7038R2-P210-C0",
+          "subject": {
+            "contract_id": "MV7038R2-P210-C0",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                4
+              ],
+              "horizon": 6,
+              "synthetic": true
+            },
+            "external_authority": true
+          },
+          "result": {
+            "ok": false,
+            "error": "FIELD_SET",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        },
+        {
+          "id": "MV7038R2-P210-C1",
+          "subject": {
+            "contract_id": "MV7038R2-P210-C1",
+            "operation": "pg_longest_dag",
+            "fixture": {
+              "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+              "nodes": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "edges": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  6,
+                  0
+                ]
+              ],
+              "start": 0,
+              "targets": [
+                5
+              ],
+              "forbidden": [
+                4
+              ],
+              "horizon": 6,
+              "synthetic": true
+            }
+          },
+          "result": {
+            "ok": false,
+            "error": "EDGE_ENDPOINT",
+            "original_completion_credit": 0
+          },
+          "original_completion_credit": 0,
+          "guard_pass": true
+        }
+      ],
+      "cfr": [
+        {
+          "id": "MV7038R2-P210-F0",
+          "subject": {
+            "id": "MV7038R2-P210-F0",
+            "input_sha256": "f54e20aefaafdd31b8c68ed8a55213c9a8074a53e038e117c635d78c1b2e0cb1",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "result": {
+            "id": "MV7038R2-P210-F0",
+            "input_sha256": "f54e20aefaafdd31b8c68ed8a55213c9a8074a53e038e117c635d78c1b2e0cb1",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "pass": true
+        },
+        {
+          "id": "MV7038R2-P210-F1",
+          "subject": {
+            "id": "MV7038R2-P210-F1",
+            "input_sha256": "f54e20aefaafdd31b8c68ed8a55213c9a8074a53e038e117c635d78c1b2e0cb1",
+            "outcome": "completed",
+            "claim": "production_reliability_established"
+          },
+          "result": {
+            "id": "MV7038R2-P210-F1",
+            "input_sha256": "f54e20aefaafdd31b8c68ed8a55213c9a8074a53e038e117c635d78c1b2e0cb1",
+            "outcome": "completed",
+            "claim": "finite_declared_graph_only"
+          },
+          "original_completion_credit": 0,
+          "source_result_mutation": false
+        }
+      ]
+    }
+  ],
+  "core_count": 15,
+  "domain_replays": 0,
+  "boundary": "Finite synthetic same-owner evidence only; no independent reproduction, empirical, production, identity, consciousness, professional, legal, cultural, Maori-authority or Stage 20 promotion."
+}

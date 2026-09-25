@@ -1,0 +1,890 @@
+{
+  "tests": [
+    {
+      "id": "diamond-edge-cuts",
+      "operation": "pg_edge_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "diamond-vertex-cut",
+      "operation": "pg_vertex_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "zero-step-uncuttable",
+      "operation": "pg_edge_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-zero",
+        "nodes": [
+          0,
+          1
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          0
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": null,
+        "minimal_cuts": []
+      },
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "already-unreachable-empty-cut",
+      "operation": "pg_edge_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-none",
+        "nodes": [
+          0,
+          1,
+          2
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          2
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": true,
+        "minimum_size": 0,
+        "minimal_cuts": [
+          []
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "global-dag-requires-no-disconnected-cycle",
+      "operation": "pg_longest_dag",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-disconnectedcycle",
+        "nodes": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          4
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "acyclic": false,
+        "longest_distance": null
+      },
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "no-vacuous-dominators",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-none",
+        "nodes": [
+          0,
+          1,
+          2
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          2
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "completion_reachable": false,
+        "mandatory_states": []
+      },
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "zero-step-dominator",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-zero",
+        "nodes": [
+          0,
+          1
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          0
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "completion_reachable": true,
+        "mandatory_states": [
+          0
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "closed-trap",
+      "operation": "pg_trap_components",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-trap",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "multi-target-distance",
+      "operation": "pg_reverse_distance",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-twoends",
+        "nodes": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3,
+          4
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": [
+        {
+          "node": 0,
+          "distance": 2
+        },
+        {
+          "node": 1,
+          "distance": 1
+        },
+        {
+          "node": 2,
+          "distance": 1
+        },
+        {
+          "node": 3,
+          "distance": 0
+        },
+        {
+          "node": 4,
+          "distance": 0
+        }
+      ],
+      "stage": "x2",
+      "kind": "positive"
+    },
+    {
+      "id": "walks-not-first-arrivals",
+      "operation": "pg_walk_counts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-wait",
+        "nodes": [
+          0,
+          1
+        ],
+        "edges": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          1
+        ],
+        "forbidden": [],
+        "horizon": 8,
+        "synthetic": true
+      },
+      "expected": {
+        "horizon": 8,
+        "counts_by_length": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "stage": "x1",
+      "kind": "positive"
+    },
+    {
+      "id": "unknown-fixture-field",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true,
+        "extra": true
+      },
+      "expected_error": "FIXTURE_FIELDS",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "boolean-node",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          false,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "NODES",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "duplicate-node",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          0,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "NODES",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "duplicate-edge",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "DUPLICATE_EDGE",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "outside-edge",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "EDGE_ENDPOINT",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "no-targets",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "TARGETS",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "long-horizon",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 9,
+        "synthetic": true
+      },
+      "expected_error": "HORIZON",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "boolean-horizon",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": false,
+        "synthetic": true
+      },
+      "expected_error": "HORIZON",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "real-world-promotion",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": false
+      },
+      "expected_error": "SYNTHETIC_ONLY",
+      "stage": "x2",
+      "kind": "negative"
+    },
+    {
+      "id": "unknown-operation",
+      "operation": "pg_unsupported",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "UNKNOWN_OPERATION",
+      "stage": "x2",
+      "kind": "negative"
+    }
+  ],
+  "count": 20,
+  "frozen_before_execution": true
+}

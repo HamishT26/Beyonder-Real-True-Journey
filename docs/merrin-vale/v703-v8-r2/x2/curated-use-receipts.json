@@ -1,0 +1,6609 @@
+{
+  "local_guide_checks": 5,
+  "installed_guide_checks": 5,
+  "local_cli_uses": 40,
+  "installed_cli_uses": 40,
+  "records": [
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_profile",
+        "operation": "pg_profile",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "nodes": 6,
+        "edges": 6,
+        "targets": 1,
+        "outdegrees": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            0
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_profile",
+        "input_sha256": "d14af5dbebe973d7b8ee315a74f52481ee7e009d57b6feceaa724b3fb5fb0de5",
+        "core_outcome": "completed",
+        "value": {
+          "nodes": 6,
+          "edges": 6,
+          "targets": 1,
+          "outdegrees": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              0
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_profile",
+        "operation": "pg_profile",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_reachable",
+        "operation": "pg_reachable",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_reachable",
+        "input_sha256": "add07638513f5000b5468403766e0cb0a1e7bed23ed3ea55216048c3a25cd812",
+        "core_outcome": "completed",
+        "value": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_reachable",
+        "operation": "pg_reachable",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_can_finish",
+        "operation": "pg_can_finish",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_can_finish",
+        "input_sha256": "bc22d4dcfee6263e2c25bf5173f89e784efbbecba5928c7f6abb818c1d23579d",
+        "core_outcome": "completed",
+        "value": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_can_finish",
+        "operation": "pg_can_finish",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_shortest_completion",
+        "operation": "pg_shortest_completion",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "distance": 3,
+        "targets_at_min": [
+          5
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_shortest_completion",
+        "input_sha256": "94c20282b378065ddafe0186ba71fcc1e599a48e535d533f56283005fe0963eb",
+        "core_outcome": "completed",
+        "value": {
+          "distance": 3,
+          "targets_at_min": [
+            5
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_shortest_completion",
+        "operation": "pg_shortest_completion",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_unsafe_reach",
+        "operation": "pg_unsafe_reach",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "states": [
+          1
+        ],
+        "unsafe_reachable": true
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_unsafe_reach",
+        "input_sha256": "a1d8d86960499d2ad6f112faa9afb8ff19799905f4290e1a6ff6ae864cb0b6e7",
+        "core_outcome": "completed",
+        "value": {
+          "states": [
+            1
+          ],
+          "unsafe_reachable": true
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_unsafe_reach",
+        "operation": "pg_unsafe_reach",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_deadlocks",
+        "operation": "pg_deadlocks",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_deadlocks",
+        "input_sha256": "0cac102c01941afa68ee9bd7876b4de1f16c4d5716a944f98af274633a49bc47",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_deadlocks",
+        "operation": "pg_deadlocks",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_scc",
+        "operation": "pg_scc",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_scc",
+        "input_sha256": "e3c0d94c723680cca26b139e70d2fba2c1e75ca0b144e821ebe08ac862d1993c",
+        "core_outcome": "completed",
+        "value": [
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_scc",
+        "operation": "pg_scc",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_cycle_states",
+        "operation": "pg_cycle_states",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_cycle_states",
+        "input_sha256": "9b9c8b581247598c891dfc0c918a1155ddf5a6be7bb7a360e40da98ce1c973a8",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_cycle_states",
+        "operation": "pg_cycle_states",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_walk_counts",
+        "operation": "pg_walk_counts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "horizon": 7,
+        "counts_by_length": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_walk_counts",
+        "input_sha256": "55d5241d4269e5bc123ce2392beffb1ccc51228bc940e5829212b15a7577f1ff",
+        "core_outcome": "completed",
+        "value": {
+          "horizon": 7,
+          "counts_by_length": [
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_walk_counts",
+        "operation": "pg_walk_counts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_transition_closure",
+        "operation": "pg_transition_closure",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_transition_closure",
+        "input_sha256": "26b422b597fcbed1687f0ddc7548dd80614a26375853e87a11f90e4774ebcdb6",
+        "core_outcome": "completed",
+        "value": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_transition_closure",
+        "operation": "pg_transition_closure",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_dominators",
+        "operation": "pg_dominators",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "completion_reachable": true,
+        "mandatory_states": [
+          0,
+          5
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_dominators",
+        "input_sha256": "1c5e34319cecf2fe55c49b7281dfef052f71cdeddc425a06a531252aeadb2210",
+        "core_outcome": "completed",
+        "value": {
+          "completion_reachable": true,
+          "mandatory_states": [
+            0,
+            5
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_dominators",
+        "operation": "pg_dominators",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_edge_cuts",
+        "operation": "pg_edge_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          [
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_edge_cuts",
+        "input_sha256": "4668b19a6b24e12148fab39bfce090c82da471f5e40440ca984da8bc732ebc63",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            [
+              [
+                2,
+                4
+              ],
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              [
+                3,
+                5
+              ],
+              [
+                4,
+                5
+              ]
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_edge_cuts",
+        "operation": "pg_edge_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_vertex_cuts",
+        "operation": "pg_vertex_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_vertex_cuts",
+        "input_sha256": "d1ac3109ef7a30e895800dc32408517e23c74f92248f852630945eb6d9c1d1b6",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_vertex_cuts",
+        "operation": "pg_vertex_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_longest_dag",
+        "operation": "pg_longest_dag",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "acyclic": true,
+        "longest_distance": 3
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_longest_dag",
+        "input_sha256": "a2246dbc5efd90dabcaaa17290eb457d467eeeb9e5e57d9f9890ba21011f95dd",
+        "core_outcome": "completed",
+        "value": {
+          "acyclic": true,
+          "longest_distance": 3
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_longest_dag",
+        "operation": "pg_longest_dag",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_trap_components",
+        "operation": "pg_trap_components",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_trap_components",
+        "input_sha256": "91abf1d81e4dbd2dc60f936fcbcb19106d7868c4e25b69826e16c91e6a6870cb",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_trap_components",
+        "operation": "pg_trap_components",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_failure_frontier",
+        "operation": "pg_failure_frontier",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        [
+          0,
+          1
+        ]
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_failure_frontier",
+        "input_sha256": "b419124e1bfb352a09ac382496f1cad5fe068d2513e909fa6afe6cffcdc61baa",
+        "core_outcome": "completed",
+        "value": [
+          [
+            0,
+            1
+          ]
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_failure_frontier",
+        "operation": "pg_failure_frontier",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_reverse_distance",
+        "operation": "pg_reverse_distance",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        {
+          "node": 0,
+          "distance": 3
+        },
+        {
+          "node": 1,
+          "distance": 2
+        },
+        {
+          "node": 2,
+          "distance": 2
+        },
+        {
+          "node": 3,
+          "distance": 1
+        },
+        {
+          "node": 4,
+          "distance": 1
+        },
+        {
+          "node": 5,
+          "distance": 0
+        }
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_reverse_distance",
+        "input_sha256": "aed87625500bfbb55f01de1e3174b4c02307ba0ac46333fd680bf989b79a0153",
+        "core_outcome": "completed",
+        "value": [
+          {
+            "node": 0,
+            "distance": 3
+          },
+          {
+            "node": 1,
+            "distance": 2
+          },
+          {
+            "node": 2,
+            "distance": 2
+          },
+          {
+            "node": 3,
+            "distance": 1
+          },
+          {
+            "node": 4,
+            "distance": 1
+          },
+          {
+            "node": 5,
+            "distance": 0
+          }
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_reverse_distance",
+        "operation": "pg_reverse_distance",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_trinity_map",
+        "operation": "pg_trinity_map",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "representation": "declared-state-transition-analogy",
+        "mind": "finite reachability and obstruction",
+        "body": "phase admission and evidence capture",
+        "heart": "authority and failure retention",
+        "real_system_observed": false
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_trinity_map",
+        "input_sha256": "6e169320a1989eddadc4ec065d47a109ddfa6e782c0563d3cdaf2d4e667fee7c",
+        "core_outcome": "represented",
+        "value": {
+          "representation": "declared-state-transition-analogy",
+          "mind": "finite reachability and obstruction",
+          "body": "phase admission and evidence capture",
+          "heart": "authority and failure retention",
+          "real_system_observed": false
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_trinity_map",
+        "operation": "pg_trinity_map",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_observation_gap",
+        "operation": "pg_observation_gap",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "observed_live_traces": 0,
+        "required": [
+          "real task-service traces",
+          "provider availability observations",
+          "independent reproduction"
+        ],
+        "gap_open": true
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_observation_gap",
+        "input_sha256": "d5a55ed26223a292473679af7cd52e65f0833107f7ac2d20f63babbca81fb2da",
+        "core_outcome": "open_gap",
+        "value": {
+          "observed_live_traces": 0,
+          "required": [
+            "real task-service traces",
+            "provider availability observations",
+            "independent reproduction"
+          ],
+          "gap_open": true
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_observation_gap",
+        "operation": "pg_observation_gap",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "LOCAL",
+      "request": {
+        "contract_id": "MV7038R2-LOCAL-pg_authority_gate",
+        "operation": "pg_authority_gate",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "granted_authority": false,
+        "required": [
+          "scope-specific consent",
+          "competent review",
+          "affected-party governance"
+        ],
+        "executed_external_actions": 0
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-LOCAL-pg_authority_gate",
+        "input_sha256": "5b2d0d98c89778f6ecd9d740e8a5d3d6bef719e41256f29f2ec4f04f88695df3",
+        "core_outcome": "exact_gate",
+        "value": {
+          "granted_authority": false,
+          "required": [
+            "scope-specific consent",
+            "competent review",
+            "affected-party governance"
+          ],
+          "executed_external_actions": 0
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-LOCAL-pg_authority_gate",
+        "operation": "pg_authority_gate",
+        "fixture": {
+          "fixture_id": "MV7038R2-F11-two-repair-routes",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            1
+          ],
+          "horizon": 7,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_profile",
+        "operation": "pg_profile",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "nodes": 6,
+        "edges": 8,
+        "targets": 1,
+        "outdegrees": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            0
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_profile",
+        "input_sha256": "3c6639cbacc9ebc739c5766148cb7d48accb55db67efda00592de659594b099d",
+        "core_outcome": "completed",
+        "value": {
+          "nodes": 6,
+          "edges": 8,
+          "targets": 1,
+          "outdegrees": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              0
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_profile",
+        "operation": "pg_profile",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_reachable",
+        "operation": "pg_reachable",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_reachable",
+        "input_sha256": "d99ff0da10a8fbca049fdd959e5ad7f162a64e9f93fce2bc28461a97d512c685",
+        "core_outcome": "completed",
+        "value": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_reachable",
+        "operation": "pg_reachable",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_can_finish",
+        "operation": "pg_can_finish",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_can_finish",
+        "input_sha256": "8dbecab4c96f8e28d2fee5f396d183b9e5459874e0fe089b94a9c3fd511a1fa0",
+        "core_outcome": "completed",
+        "value": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_can_finish",
+        "operation": "pg_can_finish",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reachability",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_shortest_completion",
+        "operation": "pg_shortest_completion",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "distance": 3,
+        "targets_at_min": [
+          5
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_shortest_completion",
+        "input_sha256": "ffef93560668815150edfa49f191b04155ac5d1cdf31129d7b3c408eb6f85eeb",
+        "core_outcome": "completed",
+        "value": {
+          "distance": 3,
+          "targets_at_min": [
+            5
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_shortest_completion",
+        "operation": "pg_shortest_completion",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_unsafe_reach",
+        "operation": "pg_unsafe_reach",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "states": [
+          2,
+          4
+        ],
+        "unsafe_reachable": true
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_unsafe_reach",
+        "input_sha256": "1330b27cec7dcb8b7a7e3ae8316e97f87497b5df99338de88a974ae7859f34d9",
+        "core_outcome": "completed",
+        "value": {
+          "states": [
+            2,
+            4
+          ],
+          "unsafe_reachable": true
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_unsafe_reach",
+        "operation": "pg_unsafe_reach",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_deadlocks",
+        "operation": "pg_deadlocks",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_deadlocks",
+        "input_sha256": "fd4e5a95cc02d7c317c792533e09bf22eb8ca853230537cb605f33ab13c7c0b1",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_deadlocks",
+        "operation": "pg_deadlocks",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_scc",
+        "operation": "pg_scc",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_scc",
+        "input_sha256": "bf19c8094874be6aef1b07c58e978ca2301177ff49f0376db65918fd86de5f60",
+        "core_outcome": "completed",
+        "value": [
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_scc",
+        "operation": "pg_scc",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-hazards",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_cycle_states",
+        "operation": "pg_cycle_states",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_cycle_states",
+        "input_sha256": "f6d955e0be57979d39e2314c1ca6739f23f4aa8ad798f87ce6c3f8c2efa20b93",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_cycle_states",
+        "operation": "pg_cycle_states",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_walk_counts",
+        "operation": "pg_walk_counts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "horizon": 8,
+        "counts_by_length": [
+          0,
+          0,
+          0,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_walk_counts",
+        "input_sha256": "4a307b3af4389515e0d335843abbabd7a2428a2b23b88f98b465f0e015def683",
+        "core_outcome": "completed",
+        "value": {
+          "horizon": 8,
+          "counts_by_length": [
+            0,
+            0,
+            0,
+            3,
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_walk_counts",
+        "operation": "pg_walk_counts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_transition_closure",
+        "operation": "pg_transition_closure",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_transition_closure",
+        "input_sha256": "50ba4b85e5f14007f72e478096cce0cdcfea1cb27d8a5aa1781867464de3abed",
+        "core_outcome": "completed",
+        "value": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_transition_closure",
+        "operation": "pg_transition_closure",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_dominators",
+        "operation": "pg_dominators",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "completion_reachable": true,
+        "mandatory_states": [
+          0,
+          5
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_dominators",
+        "input_sha256": "babce8c0cc626013dcc2931cdc283972656fda1557692ae22dba5cde58a43a63",
+        "core_outcome": "completed",
+        "value": {
+          "completion_reachable": true,
+          "mandatory_states": [
+            0,
+            5
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_dominators",
+        "operation": "pg_dominators",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-certificates",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_edge_cuts",
+        "operation": "pg_edge_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              5
+            ]
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_edge_cuts",
+        "input_sha256": "e4c26e4c23a986522bc2344aaca2a1c2639ddb8acb505d52fcb7554904723f2b",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                3,
+                5
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                3,
+                5
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                2,
+                4
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            [
+              [
+                2,
+                4
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                3,
+                5
+              ]
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_edge_cuts",
+        "operation": "pg_edge_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_vertex_cuts",
+        "operation": "pg_vertex_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_vertex_cuts",
+        "input_sha256": "40e47b019c447663ae619cd8922090c8b0368d234533fda14915655956df07ec",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_vertex_cuts",
+        "operation": "pg_vertex_cuts",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_longest_dag",
+        "operation": "pg_longest_dag",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "acyclic": true,
+        "longest_distance": 4
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_longest_dag",
+        "input_sha256": "2ad6b588152651ba9c6227701ddcf75c742bc1649640f2f78cb4550f5310ad82",
+        "core_outcome": "completed",
+        "value": {
+          "acyclic": true,
+          "longest_distance": 4
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_longest_dag",
+        "operation": "pg_longest_dag",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_trap_components",
+        "operation": "pg_trap_components",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_trap_components",
+        "input_sha256": "a7c17bdd609946585da167630478849225785f196669aef89a475b62affc60b3",
+        "core_outcome": "completed",
+        "value": [],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_trap_components",
+        "operation": "pg_trap_components",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-repairs",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_failure_frontier",
+        "operation": "pg_failure_frontier",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        [
+          0,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_failure_frontier",
+        "input_sha256": "4132c3732715f189c3fff4aadb052bc19ccba7e6ef50f126a723d1b104858292",
+        "core_outcome": "completed",
+        "value": [
+          [
+            0,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_failure_frontier",
+        "operation": "pg_failure_frontier",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_reverse_distance",
+        "operation": "pg_reverse_distance",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": [
+        {
+          "node": 0,
+          "distance": 3
+        },
+        {
+          "node": 1,
+          "distance": 2
+        },
+        {
+          "node": 2,
+          "distance": 2
+        },
+        {
+          "node": 3,
+          "distance": 1
+        },
+        {
+          "node": 4,
+          "distance": 1
+        },
+        {
+          "node": 5,
+          "distance": 0
+        }
+      ],
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_reverse_distance",
+        "input_sha256": "d291c66bc4996a37cb1829ae8ca6bb612b89305e6fb6ba4f77a73891bd81af9b",
+        "core_outcome": "completed",
+        "value": [
+          {
+            "node": 0,
+            "distance": 3
+          },
+          {
+            "node": 1,
+            "distance": 2
+          },
+          {
+            "node": 2,
+            "distance": 2
+          },
+          {
+            "node": 3,
+            "distance": 1
+          },
+          {
+            "node": 4,
+            "distance": 1
+          },
+          {
+            "node": 5,
+            "distance": 0
+          }
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_reverse_distance",
+        "operation": "pg_reverse_distance",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_trinity_map",
+        "operation": "pg_trinity_map",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "representation": "declared-state-transition-analogy",
+        "mind": "finite reachability and obstruction",
+        "body": "phase admission and evidence capture",
+        "heart": "authority and failure retention",
+        "real_system_observed": false
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_trinity_map",
+        "input_sha256": "aa54aefe7387b0da7bb09a25bf4d76dfe3ba2ab842ff90d80a4b03ed6eb3140f",
+        "core_outcome": "represented",
+        "value": {
+          "representation": "declared-state-transition-analogy",
+          "mind": "finite reachability and obstruction",
+          "body": "phase admission and evidence capture",
+          "heart": "authority and failure retention",
+          "real_system_observed": false
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_trinity_map",
+        "operation": "pg_trinity_map",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_observation_gap",
+        "operation": "pg_observation_gap",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "observed_live_traces": 0,
+        "required": [
+          "real task-service traces",
+          "provider availability observations",
+          "independent reproduction"
+        ],
+        "gap_open": true
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_observation_gap",
+        "input_sha256": "5512bc3106c073595a5acb59833c1dcc7b309f480ac8ad88249269c6c80ec3c5",
+        "core_outcome": "open_gap",
+        "value": {
+          "observed_live_traces": 0,
+          "required": [
+            "real task-service traces",
+            "provider availability observations",
+            "independent reproduction"
+          ],
+          "gap_open": true
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_observation_gap",
+        "operation": "pg_observation_gap",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    },
+    {
+      "group": "ghc-family-phase-graph-reservations",
+      "scope": "GLOBAL",
+      "request": {
+        "contract_id": "MV7038R2-GLOBAL-pg_authority_gate",
+        "operation": "pg_authority_gate",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        }
+      },
+      "expected": {
+        "granted_authority": false,
+        "required": [
+          "scope-specific consent",
+          "competent review",
+          "affected-party governance"
+        ],
+        "executed_external_actions": 0
+      },
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-GLOBAL-pg_authority_gate",
+        "input_sha256": "0f718fe3ac685bd59eaa322dd92022b1a301f75210b86706b704e8d7e0cb8850",
+        "core_outcome": "exact_gate",
+        "value": {
+          "granted_authority": false,
+          "required": [
+            "scope-specific consent",
+            "competent review",
+            "affected-party governance"
+          ],
+          "executed_external_actions": 0
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "negative_subject": {
+        "contract_id": "MV7038R2-GLOBAL-pg_authority_gate",
+        "operation": "pg_authority_gate",
+        "fixture": {
+          "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+          "nodes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "start": 0,
+          "targets": [
+            5
+          ],
+          "forbidden": [
+            2,
+            4
+          ],
+          "horizon": 8,
+          "synthetic": true
+        },
+        "external_authority": true
+      },
+      "refusal": {
+        "ok": false,
+        "error": "FIELD_SET",
+        "original_completion_credit": 0
+      },
+      "accept_exit": 0,
+      "refusal_exit": 2
+    }
+  ],
+  "boundary": "Finite synthetic same-owner evidence only; no independent reproduction, empirical, production, identity, consciousness, professional, legal, cultural, Maori-authority or Stage 20 promotion."
+}

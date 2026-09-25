@@ -1,0 +1,1155 @@
+{
+  "passed": 20,
+  "failed_subjects": 10,
+  "results": [
+    {
+      "id": "diamond-edge-cuts",
+      "operation": "pg_edge_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-diamond-edge-cuts",
+        "input_sha256": "91a81b7b4dc342baad020042348cd1f2bf1ee9354110c927f2e5abbbd5b0f5ff",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                3
+              ]
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "diamond-vertex-cut",
+      "operation": "pg_vertex_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": 2,
+        "minimal_cuts": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-diamond-vertex-cut",
+        "input_sha256": "0e02cbccf82d0703c1ca5602ef1556adccc7cbf7a67fabc31bd3db16663c810e",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": 2,
+          "minimal_cuts": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "zero-step-uncuttable",
+      "operation": "pg_edge_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-zero",
+        "nodes": [
+          0,
+          1
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          0
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": false,
+        "minimum_size": null,
+        "minimal_cuts": []
+      },
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-zero-step-uncuttable",
+        "input_sha256": "a29abeb29cf52f0aeefa422eec6953467a4ade2516fe1ea25a8627cff0cde72f",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": false,
+          "minimum_size": null,
+          "minimal_cuts": []
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "already-unreachable-empty-cut",
+      "operation": "pg_edge_cuts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-none",
+        "nodes": [
+          0,
+          1,
+          2
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          2
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "already_unreachable": true,
+        "minimum_size": 0,
+        "minimal_cuts": [
+          []
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-already-unreachable-empty-cut",
+        "input_sha256": "81a5b9f57eb6d0d382275055a3360be8bb12e42a342e8a92958213e235964fd5",
+        "core_outcome": "completed",
+        "value": {
+          "already_unreachable": true,
+          "minimum_size": 0,
+          "minimal_cuts": [
+            []
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "global-dag-requires-no-disconnected-cycle",
+      "operation": "pg_longest_dag",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-disconnectedcycle",
+        "nodes": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          4
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "acyclic": false,
+        "longest_distance": null
+      },
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-global-dag-requires-no-disconnected-cycle",
+        "input_sha256": "5bd932e84059f9add695c9ab952af82f6c6100378f6e3686c1c47c871473d6d2",
+        "core_outcome": "completed",
+        "value": {
+          "acyclic": false,
+          "longest_distance": null
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "no-vacuous-dominators",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-none",
+        "nodes": [
+          0,
+          1,
+          2
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          2
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "completion_reachable": false,
+        "mandatory_states": []
+      },
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-no-vacuous-dominators",
+        "input_sha256": "30513898a31fa0201e648116c209848cb18ffabaa07002059d205d74e071b6be",
+        "core_outcome": "completed",
+        "value": {
+          "completion_reachable": false,
+          "mandatory_states": []
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "zero-step-dominator",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-zero",
+        "nodes": [
+          0,
+          1
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          0
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": {
+        "completion_reachable": true,
+        "mandatory_states": [
+          0
+        ]
+      },
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-zero-step-dominator",
+        "input_sha256": "bbe69b76c3aad229db935526d2693d41526e8ba72940bd931810cb3d303628cf",
+        "core_outcome": "completed",
+        "value": {
+          "completion_reachable": true,
+          "mandatory_states": [
+            0
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "closed-trap",
+      "operation": "pg_trap_components",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-trap",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-closed-trap",
+        "input_sha256": "ea973b962a4899929154cd675ffc78319c96836096a1c453dceff89a93ae54ea",
+        "core_outcome": "completed",
+        "value": [
+          [
+            1,
+            2
+          ]
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "multi-target-distance",
+      "operation": "pg_reverse_distance",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-twoends",
+        "nodes": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3,
+          4
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected": [
+        {
+          "node": 0,
+          "distance": 2
+        },
+        {
+          "node": 1,
+          "distance": 1
+        },
+        {
+          "node": 2,
+          "distance": 1
+        },
+        {
+          "node": 3,
+          "distance": 0
+        },
+        {
+          "node": 4,
+          "distance": 0
+        }
+      ],
+      "stage": "x2",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-multi-target-distance",
+        "input_sha256": "a234d5548b216de646fcdf8587935154c232956a3f0f1069bada8b7a32fb43be",
+        "core_outcome": "completed",
+        "value": [
+          {
+            "node": 0,
+            "distance": 2
+          },
+          {
+            "node": 1,
+            "distance": 1
+          },
+          {
+            "node": 2,
+            "distance": 1
+          },
+          {
+            "node": 3,
+            "distance": 0
+          },
+          {
+            "node": 4,
+            "distance": 0
+          }
+        ],
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "walks-not-first-arrivals",
+      "operation": "pg_walk_counts",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-wait",
+        "nodes": [
+          0,
+          1
+        ],
+        "edges": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          1
+        ],
+        "forbidden": [],
+        "horizon": 8,
+        "synthetic": true
+      },
+      "expected": {
+        "horizon": 8,
+        "counts_by_length": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "stage": "x1",
+      "kind": "positive",
+      "actual": {
+        "ok": true,
+        "contract_id": "MV7038R2-EXTRA-walks-not-first-arrivals",
+        "input_sha256": "5a98aaef9142eafd26116b1d29e4c592fe0a056ba88c066fd5a559a3e2debf9e",
+        "core_outcome": "completed",
+        "value": {
+          "horizon": 8,
+          "counts_by_length": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "boundary": "Finite declared graph only; no live reliability or authority claim."
+      },
+      "pass": true
+    },
+    {
+      "id": "unknown-fixture-field",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true,
+        "extra": true
+      },
+      "expected_error": "FIXTURE_FIELDS",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "FIXTURE_FIELDS",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "boolean-node",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          false,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "NODES",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "NODES",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "duplicate-node",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          0,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "NODES",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "NODES",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "duplicate-edge",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "DUPLICATE_EDGE",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "DUPLICATE_EDGE",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "outside-edge",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            9,
+            0
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "EDGE_ENDPOINT",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "EDGE_ENDPOINT",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "no-targets",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "TARGETS",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "TARGETS",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "long-horizon",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 9,
+        "synthetic": true
+      },
+      "expected_error": "HORIZON",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "HORIZON",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "boolean-horizon",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": false,
+        "synthetic": true
+      },
+      "expected_error": "HORIZON",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "HORIZON",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "real-world-promotion",
+      "operation": "pg_dominators",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": false
+      },
+      "expected_error": "SYNTHETIC_ONLY",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "SYNTHETIC_ONLY",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "unknown-operation",
+      "operation": "pg_unsupported",
+      "fixture": {
+        "fixture_id": "MV7038R2-EXTRA-diamond",
+        "nodes": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "start": 0,
+        "targets": [
+          3
+        ],
+        "forbidden": [],
+        "horizon": 5,
+        "synthetic": true
+      },
+      "expected_error": "UNKNOWN_OPERATION",
+      "stage": "x2",
+      "kind": "negative",
+      "actual": {
+        "ok": false,
+        "error": "UNKNOWN_OPERATION",
+        "original_completion_credit": 0
+      },
+      "pass": true
+    }
+  ],
+  "boundary": "Finite synthetic same-owner evidence only; no independent reproduction, empirical, production, identity, consciousness, professional, legal, cultural, Maori-authority or Stage 20 promotion."
+}
