@@ -23,7 +23,8 @@ const normalized = file => Buffer.from(fs.readFileSync(file, 'utf8').replace(/\r
 const files = walk(base);
 const stageRunner = path.join(root, 'scripts', `run_auren_v704_v5_${stage}.py`);
 files.push(stageRunner);
-if (stage === 'x1') files.push(fileURLToPath(import.meta.url));
+files.push(fileURLToPath(import.meta.url));
+if (stage === 'x2') files.push(path.join(root, 'scripts', 'validate_auren_v704_v5_hooks.mjs'));
 const jsonFiles = files.filter(file => file.endsWith('.json'));
 for (const file of jsonFiles) JSON.parse(fs.readFileSync(file, 'utf8'));
 
