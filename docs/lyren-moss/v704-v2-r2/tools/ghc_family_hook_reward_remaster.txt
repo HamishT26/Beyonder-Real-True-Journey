@@ -103,6 +103,14 @@ PLANNING_FAILURES = [
     },
 ]
 
+X1_FAILURES = [
+    {
+        "id": "LM7042R2-X1-001",
+        "failure": "The first x1 invocation rejected the valid declared path ./hooks/hooks.json after PurePosixPath normalized away its leading dot segment.",
+        "recovery": "The isolated path guard now checks the original declared ./ prefix and separately rejects absolute or parent-traversing normalized paths.",
+    }
+]
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -301,8 +309,9 @@ def validate_profile(profile: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("unsupported hook event")
     if not 1 <= int(profile["timeout_seconds"]) <= 5:
         raise ValueError("timeout outside bounded policy")
-    plugin_path = PurePosixPath(profile["plugin_path"])
-    if not str(plugin_path).startswith("./") or ".." in plugin_path.parts:
+    raw_plugin_path = str(profile["plugin_path"])
+    plugin_path = PurePosixPath(raw_plugin_path)
+    if not raw_plugin_path.startswith("./") or plugin_path.is_absolute() or ".." in plugin_path.parts:
         raise ValueError("plugin path escapes package")
     return {
         "states": 4,
@@ -396,8 +405,9 @@ def run_operation(name: str, profile: dict[str, Any]) -> dict[str, Any]:
     if name == "timeout_budget":
         return {"timeout_seconds": profile["timeout_seconds"], "within_five_second_budget": int(profile["timeout_seconds"]) <= 5}
     if name == "plugin_path_boundary":
+        raw_path = str(profile["plugin_path"])
         path = PurePosixPath(profile["plugin_path"])
-        return {"path": str(path), "inside_plugin": str(path).startswith("./") and ".." not in path.parts}
+        return {"path": raw_path, "normalized_path": str(path), "inside_plugin": raw_path.startswith("./") and not path.is_absolute() and ".." not in path.parts}
     if name == "nonblocking_guard":
         return {"continue": True, "blocking_decision_emitted": False}
     if name == "duplicate_send_guard":
@@ -1020,6 +1030,11 @@ def execute_session(session: str) -> None:
     witnesses = []
     negatives = []
     result_by_id = {}
+    if session == "x1":
+        for failure in X1_FAILURES:
+            negatives.append({"negative_id": failure["id"], "failure": failure["failure"], "success_credit": 0, "retained": True})
+            witnesses.append({"witness_id": failure["id"], "state": "failed", "credit": 0, "kind": "path_normalization_failure"})
+            witnesses.append({"witness_id": failure["id"] + "-RECOVERY", "state": "passing", "kind": "isolated_path_guard_recovery"})
     for contract in contracts:
         profile = profiles[contract["profile_id"]]
         result = encode(run_operation(contract["operation"], profile))
@@ -1118,6 +1133,8 @@ def execute_session(session: str) -> None:
     put_json(f"{session}/runner-smokes.json", {"count": len(runner_receipts), "receipts": runner_receipts, "boundary": BOUNDARY})
     put_json(f"{session}/retained-negatives.json", {"count": len(negatives), "negatives": negatives, "all_zero_credit": True, "boundary": BOUNDARY})
     methods = [row["operation"] for row in operations] + ["safe task projection", "candidate refusal", "CFR review", "skill validation", "runner smoke", "additional tests"]
+    if session == "x1":
+        methods.append("path normalization correction")
     flow = {
         "schema": "ghc.family.method-flow.v17",
         "session": session,
