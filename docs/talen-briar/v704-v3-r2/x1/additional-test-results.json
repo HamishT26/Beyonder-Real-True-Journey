@@ -1,0 +1,1943 @@
+{
+  "total": 15,
+  "passed": 15,
+  "tests": [
+    {
+      "test_id": "TB7043R2-x1-T01",
+      "name": "manual robust lower",
+      "request": {
+        "op": "robust_bellman",
+        "input": {
+          "states": [
+            "s0",
+            "s1"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1/2",
+                  "1/2"
+                ],
+                [
+                  "1/2",
+                  "1/2"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "10"
+          ],
+          "discount": "1",
+          "horizon": 1,
+          "policy": [
+            0,
+            0
+          ],
+          "initial": [
+            "1",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "robust_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "0",
+              "10"
+            ],
+            [
+              "5",
+              "10"
+            ]
+          ],
+          "value": [
+            "5",
+            "10"
+          ],
+          "order": "max_action_min_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T01",
+      "actual": {
+        "ok": true,
+        "op": "robust_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "0",
+              "10"
+            ],
+            [
+              "5",
+              "10"
+            ]
+          ],
+          "value": [
+            "5",
+            "10"
+          ],
+          "order": "max_action_min_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "9a7acbdc7cf506261091a43983c254e5fac280cbfc453fb4456ee439e0fa79c8",
+      "after_sha256": "9a7acbdc7cf506261091a43983c254e5fac280cbfc453fb4456ee439e0fa79c8",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T02",
+      "name": "manual optimistic upper",
+      "request": {
+        "op": "optimistic_bellman",
+        "input": {
+          "states": [
+            "s0",
+            "s1"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1/2",
+                  "1/2"
+                ],
+                [
+                  "1/2",
+                  "1/2"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "10"
+          ],
+          "discount": "1",
+          "horizon": 1,
+          "policy": [
+            0,
+            0
+          ],
+          "initial": [
+            "1",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "optimistic_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "0",
+              "10"
+            ],
+            [
+              "11",
+              "10"
+            ]
+          ],
+          "value": [
+            "11",
+            "10"
+          ],
+          "order": "max_action_max_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T02",
+      "actual": {
+        "ok": true,
+        "op": "optimistic_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "0",
+              "10"
+            ],
+            [
+              "11",
+              "10"
+            ]
+          ],
+          "value": [
+            "11",
+            "10"
+          ],
+          "order": "max_action_max_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "72804ad54ab20679cc8aa20cd3a690a7eb95b2a232682305af08d011f4604d89",
+      "after_sha256": "72804ad54ab20679cc8aa20cd3a690a7eb95b2a232682305af08d011f4604d89",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T03",
+      "name": "full action ties",
+      "request": {
+        "op": "robust_action_sets",
+        "input": {
+          "states": [
+            "s0",
+            "s1",
+            "s2"
+          ],
+          "rewards": [
+            [
+              "1",
+              "1"
+            ],
+            [
+              "2",
+              "2"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "0",
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 3,
+          "policy": [
+            0,
+            1,
+            0
+          ],
+          "initial": [
+            "1",
+            "0",
+            "0"
+          ],
+          "shift": "1",
+          "vertices": [
+            [
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ]
+          ]
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "robust_action_sets",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizon_action_sets": [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          ],
+          "unique": false
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T03",
+      "actual": {
+        "ok": true,
+        "op": "robust_action_sets",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizon_action_sets": [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          ],
+          "unique": false
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "26a438aad3d1c1430773df00924e8159a21f287b21b217c6e5d63bd586f4fad5",
+      "after_sha256": "26a438aad3d1c1430773df00924e8159a21f287b21b217c6e5d63bd586f4fad5",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T04",
+      "name": "terminal horizon zero",
+      "request": {
+        "op": "robust_bellman",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "-2"
+          ],
+          "discount": "1/2",
+          "horizon": 0,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "robust_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "-2"
+            ]
+          ],
+          "value": [
+            "-2"
+          ],
+          "order": "max_action_min_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T04",
+      "actual": {
+        "ok": true,
+        "op": "robust_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "-2"
+            ]
+          ],
+          "value": [
+            "-2"
+          ],
+          "order": "max_action_min_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "f7a7f3e49554c7167f4840b765ae4342a405010880d18b26a4d104d5a3ad02c8",
+      "after_sha256": "f7a7f3e49554c7167f4840b765ae4342a405010880d18b26a4d104d5a3ad02c8",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T05",
+      "name": "zero discount interval",
+      "request": {
+        "op": "one_step_interval",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "0",
+          "horizon": 4,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "one_step_interval",
+        "outcome": "completed",
+        "value": {
+          "lower": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "upper": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal_only_continuation": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T05",
+      "actual": {
+        "ok": true,
+        "op": "one_step_interval",
+        "outcome": "completed",
+        "value": {
+          "lower": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "upper": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal_only_continuation": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "3b094115acce010b3ecbe7f0acab8705d85fa53cdb8dd86d85615c57ea46076a",
+      "after_sha256": "3b094115acce010b3ecbe7f0acab8705d85fa53cdb8dd86d85615c57ea46076a",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T06",
+      "name": "two state row distance",
+      "request": {
+        "op": "row_total_variation",
+        "input": {
+          "states": [
+            "s0",
+            "s1"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1/2",
+                  "1/2"
+                ],
+                [
+                  "1/2",
+                  "1/2"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "10"
+          ],
+          "discount": "1",
+          "horizon": 1,
+          "policy": [
+            0,
+            0
+          ],
+          "initial": [
+            "1",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "row_total_variation",
+        "outcome": "completed",
+        "value": {
+          "distance": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T06",
+      "actual": {
+        "ok": true,
+        "op": "row_total_variation",
+        "outcome": "completed",
+        "value": {
+          "distance": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "9d8dffcbd806a81c94eeef914cf3d1e170eab39df11ed8ccb5395f5411ecd853",
+      "after_sha256": "9d8dffcbd806a81c94eeef914cf3d1e170eab39df11ed8ccb5395f5411ecd853",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T07",
+      "name": "four state upper dimension",
+      "request": {
+        "op": "robust_validate",
+        "input": {
+          "states": [
+            "s0",
+            "s1",
+            "s2",
+            "s3"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "initial": [
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "robust_validate",
+        "outcome": "completed",
+        "value": {
+          "states": 4,
+          "actions": 2,
+          "vertices_per_row": 2,
+          "horizon": 2,
+          "rectangular": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T07",
+      "actual": {
+        "ok": true,
+        "op": "robust_validate",
+        "outcome": "completed",
+        "value": {
+          "states": 4,
+          "actions": 2,
+          "vertices_per_row": 2,
+          "horizon": 2,
+          "rectangular": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "565753bac1849b629d2097493489e13944514ee406ad8cf9deddd3f8b8ed2593",
+      "after_sha256": "565753bac1849b629d2097493489e13944514ee406ad8cf9deddd3f8b8ed2593",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T08",
+      "name": "four step finite horizon",
+      "request": {
+        "op": "robust_bellman",
+        "input": {
+          "states": [
+            "s0",
+            "s1",
+            "s2",
+            "s3"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 4,
+          "policy": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "initial": [
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "robust_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1",
+              "1",
+              "1"
+            ],
+            [
+              "3/2",
+              "3/2",
+              "3/2",
+              "3/2"
+            ],
+            [
+              "7/4",
+              "7/4",
+              "7/4",
+              "7/4"
+            ],
+            [
+              "15/8",
+              "15/8",
+              "15/8",
+              "15/8"
+            ]
+          ],
+          "value": [
+            "15/8",
+            "15/8",
+            "15/8",
+            "15/8"
+          ],
+          "order": "max_action_min_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T08",
+      "actual": {
+        "ok": true,
+        "op": "robust_bellman",
+        "outcome": "completed",
+        "value": {
+          "layers": [
+            [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1",
+              "1",
+              "1"
+            ],
+            [
+              "3/2",
+              "3/2",
+              "3/2",
+              "3/2"
+            ],
+            [
+              "7/4",
+              "7/4",
+              "7/4",
+              "7/4"
+            ],
+            [
+              "15/8",
+              "15/8",
+              "15/8",
+              "15/8"
+            ]
+          ],
+          "value": [
+            "15/8",
+            "15/8",
+            "15/8",
+            "15/8"
+          ],
+          "order": "max_action_min_vertex"
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "f687077fb14340938bb349a1e6172bf25582ca4c80f7c2b3bf15b256184fa673",
+      "after_sha256": "f687077fb14340938bb349a1e6172bf25582ca4c80f7c2b3bf15b256184fa673",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T09",
+      "name": "coordinate hull not independent box",
+      "request": {
+        "op": "vertex_span",
+        "input": {
+          "states": [
+            "s0",
+            "s1"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1/2",
+                  "1/2"
+                ],
+                [
+                  "1/2",
+                  "1/2"
+                ]
+              ]
+            ],
+            [
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "10"
+          ],
+          "discount": "1",
+          "horizon": 1,
+          "policy": [
+            0,
+            0
+          ],
+          "initial": [
+            "1",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": true,
+        "op": "vertex_span",
+        "outcome": "completed",
+        "value": {
+          "lower": [
+            [
+              [
+                "0",
+                "0"
+              ],
+              [
+                "1/2",
+                "1/2"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "upper": [
+            [
+              [
+                "1",
+                "1"
+              ],
+              [
+                "1/2",
+                "1/2"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "coordinate_box_is_not_declared_set": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "task_id": "TB7043R2-x1-T09",
+      "actual": {
+        "ok": true,
+        "op": "vertex_span",
+        "outcome": "completed",
+        "value": {
+          "lower": [
+            [
+              [
+                "0",
+                "0"
+              ],
+              [
+                "1/2",
+                "1/2"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "upper": [
+            [
+              [
+                "1",
+                "1"
+              ],
+              [
+                "1/2",
+                "1/2"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "coordinate_box_is_not_declared_set": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_rectangular_uncertainty"
+      },
+      "before_sha256": "b87584b982c1f3dd92d6c0a3393a17d5cdd39f0d83f16b0790521cad03cd4a0e",
+      "after_sha256": "b87584b982c1f3dd92d6c0a3393a17d5cdd39f0d83f16b0790521cad03cd4a0e",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T10",
+      "name": "unknown field",
+      "request": {
+        "op": "robust_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1",
+          "extra": 1
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": false,
+        "error": "E_FIELDS"
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043R2-x1-T10-N",
+      "task_id": "TB7043R2-x1-T10",
+      "actual": {
+        "ok": false,
+        "error": "E_FIELDS"
+      },
+      "before_sha256": "513ecfed48e7322664ae5f7c6ea3eaba8749a0b4c4f7334dcc2e10fc3eb4dc5f",
+      "after_sha256": "513ecfed48e7322664ae5f7c6ea3eaba8749a0b4c4f7334dcc2e10fc3eb4dc5f",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T11",
+      "name": "negative vertex mass",
+      "request": {
+        "op": "robust_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "-1"
+                ],
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": false,
+        "error": "E_PROBABILITY"
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043R2-x1-T11-N",
+      "task_id": "TB7043R2-x1-T11",
+      "actual": {
+        "ok": false,
+        "error": "E_PROBABILITY"
+      },
+      "before_sha256": "d47a0e000819e1351a0e85635bdbf96675929438a98c2816de63df3c14342b42",
+      "after_sha256": "d47a0e000819e1351a0e85635bdbf96675929438a98c2816de63df3c14342b42",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T12",
+      "name": "vertex row mass",
+      "request": {
+        "op": "robust_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "2"
+                ],
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": false,
+        "error": "E_PROBABILITY"
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043R2-x1-T12-N",
+      "task_id": "TB7043R2-x1-T12",
+      "actual": {
+        "ok": false,
+        "error": "E_PROBABILITY"
+      },
+      "before_sha256": "3983c0cd05f17a1579f8160641db445b1067af091ca004a17d16ac39afda2c72",
+      "after_sha256": "3983c0cd05f17a1579f8160641db445b1067af091ca004a17d16ac39afda2c72",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T13",
+      "name": "excess horizon",
+      "request": {
+        "op": "robust_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 5,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": false,
+        "error": "E_HORIZON"
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043R2-x1-T13-N",
+      "task_id": "TB7043R2-x1-T13",
+      "actual": {
+        "ok": false,
+        "error": "E_HORIZON"
+      },
+      "before_sha256": "44fd3f286e32e1ba31b6562978af7b3fa1602399ad72fd2b16b131a40141b3dc",
+      "after_sha256": "44fd3f286e32e1ba31b6562978af7b3fa1602399ad72fd2b16b131a40141b3dc",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T14",
+      "name": "boolean horizon",
+      "request": {
+        "op": "robust_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": true,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": false,
+        "error": "E_HORIZON"
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043R2-x1-T14-N",
+      "task_id": "TB7043R2-x1-T14",
+      "actual": {
+        "ok": false,
+        "error": "E_HORIZON"
+      },
+      "before_sha256": "95a9390678dc077aa0e40bc711d928436b825f159ed05c15adb4638c5488534a",
+      "after_sha256": "95a9390678dc077aa0e40bc711d928436b825f159ed05c15adb4638c5488534a",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043R2-x1-T15",
+      "name": "one vertex instead of two",
+      "request": {
+        "op": "robust_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "vertices": [
+            [
+              [
+                [
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "1"
+                ],
+                [
+                  "1"
+                ]
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "raw_request": null,
+      "expected": {
+        "ok": false,
+        "error": "E_DIMENSION"
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043R2-x1-T15-N",
+      "task_id": "TB7043R2-x1-T15",
+      "actual": {
+        "ok": false,
+        "error": "E_DIMENSION"
+      },
+      "before_sha256": "0fb1cdbfa137e71edf88c56bb845584ac271e68bec28a4992ff1aca1a66bb9e6",
+      "after_sha256": "0fb1cdbfa137e71edf88c56bb845584ac271e68bec28a4992ff1aca1a66bb9e6",
+      "input_unchanged": true,
+      "pass": true
+    }
+  ],
+  "retained_failed_subjects": 6,
+  "domain_session_replays": 0,
+  "boundary": "Finite synthetic same-owner mathematical and software evidence. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, real participant evidence, identity, consciousness, personhood, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI, ASI or Theory-of-Everything proof. NOT_READY_FOR_STAGE_20."
+}
