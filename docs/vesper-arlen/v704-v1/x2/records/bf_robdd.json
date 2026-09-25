@@ -1,0 +1,850 @@
+{
+  "schema": "ghc.family.boolean-function.record.v1",
+  "owner": "Vesper Arlen",
+  "phase": "v704-v1",
+  "session": "x2",
+  "operation": "bf_robdd",
+  "outcome": "completed",
+  "profiles": [
+    {
+      "fixture_id": "VA7041-F01-zero",
+      "title": "Constant zero",
+      "mask_hex": "0x0000",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 0,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 0,
+        "total_node_count": 2,
+        "nodes": []
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F02-one",
+      "title": "Constant one",
+      "mask_hex": "0xffff",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 1,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 0,
+        "total_node_count": 2,
+        "nodes": []
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F03-a",
+      "title": "First projection",
+      "mask_hex": "0xff00",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 2,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 1,
+        "total_node_count": 3,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "a",
+            "level": 0,
+            "low": 0,
+            "high": 1
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F04-not-a",
+      "title": "Negated first projection",
+      "mask_hex": "0x00ff",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 2,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 1,
+        "total_node_count": 3,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "a",
+            "level": 0,
+            "low": 1,
+            "high": 0
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F05-and4",
+      "title": "Four-way conjunction",
+      "mask_hex": "0x8000",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 5,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 4,
+        "total_node_count": 6,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "c",
+            "level": 2,
+            "low": 0,
+            "high": 2
+          },
+          {
+            "id": 4,
+            "variable": "b",
+            "level": 1,
+            "low": 0,
+            "high": 3
+          },
+          {
+            "id": 5,
+            "variable": "a",
+            "level": 0,
+            "low": 0,
+            "high": 4
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F06-or4",
+      "title": "Four-way disjunction",
+      "mask_hex": "0xfffe",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 5,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 4,
+        "total_node_count": 6,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "c",
+            "level": 2,
+            "low": 2,
+            "high": 1
+          },
+          {
+            "id": 4,
+            "variable": "b",
+            "level": 1,
+            "low": 3,
+            "high": 1
+          },
+          {
+            "id": 5,
+            "variable": "a",
+            "level": 0,
+            "low": 4,
+            "high": 1
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F07-parity4",
+      "title": "Four-variable parity",
+      "mask_hex": "0x6996",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 8,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 7,
+        "total_node_count": 9,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "d",
+            "level": 3,
+            "low": 1,
+            "high": 0
+          },
+          {
+            "id": 4,
+            "variable": "c",
+            "level": 2,
+            "low": 2,
+            "high": 3
+          },
+          {
+            "id": 5,
+            "variable": "c",
+            "level": 2,
+            "low": 3,
+            "high": 2
+          },
+          {
+            "id": 6,
+            "variable": "b",
+            "level": 1,
+            "low": 4,
+            "high": 5
+          },
+          {
+            "id": 7,
+            "variable": "b",
+            "level": 1,
+            "low": 5,
+            "high": 4
+          },
+          {
+            "id": 8,
+            "variable": "a",
+            "level": 0,
+            "low": 6,
+            "high": 7
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F08-majority4",
+      "title": "At-least-two threshold",
+      "mask_hex": "0xfee8",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 7,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 6,
+        "total_node_count": 8,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "c",
+            "level": 2,
+            "low": 0,
+            "high": 2
+          },
+          {
+            "id": 4,
+            "variable": "c",
+            "level": 2,
+            "low": 2,
+            "high": 1
+          },
+          {
+            "id": 5,
+            "variable": "b",
+            "level": 1,
+            "low": 3,
+            "high": 4
+          },
+          {
+            "id": 6,
+            "variable": "b",
+            "level": 1,
+            "low": 4,
+            "high": 1
+          },
+          {
+            "id": 7,
+            "variable": "a",
+            "level": 0,
+            "low": 5,
+            "high": 6
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F09-exactly1",
+      "title": "Exactly-one predicate",
+      "mask_hex": "0x0116",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 8,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 7,
+        "total_node_count": 9,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "d",
+            "level": 3,
+            "low": 1,
+            "high": 0
+          },
+          {
+            "id": 4,
+            "variable": "c",
+            "level": 2,
+            "low": 2,
+            "high": 3
+          },
+          {
+            "id": 5,
+            "variable": "c",
+            "level": 2,
+            "low": 3,
+            "high": 0
+          },
+          {
+            "id": 6,
+            "variable": "b",
+            "level": 1,
+            "low": 4,
+            "high": 5
+          },
+          {
+            "id": 7,
+            "variable": "b",
+            "level": 1,
+            "low": 5,
+            "high": 0
+          },
+          {
+            "id": 8,
+            "variable": "a",
+            "level": 0,
+            "low": 6,
+            "high": 7
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F10-exactly2",
+      "title": "Exactly-two predicate",
+      "mask_hex": "0x1668",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 9,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 8,
+        "total_node_count": 10,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "c",
+            "level": 2,
+            "low": 0,
+            "high": 2
+          },
+          {
+            "id": 4,
+            "variable": "d",
+            "level": 3,
+            "low": 1,
+            "high": 0
+          },
+          {
+            "id": 5,
+            "variable": "c",
+            "level": 2,
+            "low": 2,
+            "high": 4
+          },
+          {
+            "id": 6,
+            "variable": "b",
+            "level": 1,
+            "low": 3,
+            "high": 5
+          },
+          {
+            "id": 7,
+            "variable": "c",
+            "level": 2,
+            "low": 4,
+            "high": 0
+          },
+          {
+            "id": 8,
+            "variable": "b",
+            "level": 1,
+            "low": 5,
+            "high": 7
+          },
+          {
+            "id": 9,
+            "variable": "a",
+            "level": 0,
+            "low": 6,
+            "high": 8
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F11-implication",
+      "title": "Implication a to b",
+      "mask_hex": "0xf0ff",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 3,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 2,
+        "total_node_count": 4,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "b",
+            "level": 1,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "a",
+            "level": 0,
+            "low": 1,
+            "high": 2
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F12-mux",
+      "title": "Multiplexer a chooses b or c",
+      "mask_hex": "0xf0cc",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 4,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 3,
+        "total_node_count": 5,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "c",
+            "level": 2,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "b",
+            "level": 1,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 4,
+            "variable": "a",
+            "level": 0,
+            "low": 2,
+            "high": 3
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F13-parity3",
+      "title": "Three-variable parity with inert d",
+      "mask_hex": "0xc33c",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 6,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 5,
+        "total_node_count": 7,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "c",
+            "level": 2,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "c",
+            "level": 2,
+            "low": 1,
+            "high": 0
+          },
+          {
+            "id": 4,
+            "variable": "b",
+            "level": 1,
+            "low": 2,
+            "high": 3
+          },
+          {
+            "id": 5,
+            "variable": "b",
+            "level": 1,
+            "low": 3,
+            "high": 2
+          },
+          {
+            "id": 6,
+            "variable": "a",
+            "level": 0,
+            "low": 4,
+            "high": 5
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F14-threshold3",
+      "title": "At-least-three threshold",
+      "mask_hex": "0xe880",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 7,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 6,
+        "total_node_count": 8,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "c",
+            "level": 2,
+            "low": 0,
+            "high": 2
+          },
+          {
+            "id": 4,
+            "variable": "b",
+            "level": 1,
+            "low": 0,
+            "high": 3
+          },
+          {
+            "id": 5,
+            "variable": "c",
+            "level": 2,
+            "low": 2,
+            "high": 1
+          },
+          {
+            "id": 6,
+            "variable": "b",
+            "level": 1,
+            "low": 3,
+            "high": 5
+          },
+          {
+            "id": 7,
+            "variable": "a",
+            "level": 0,
+            "low": 4,
+            "high": 6
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F15-nonlinear",
+      "title": "Mixed nonlinear predicate",
+      "mask_hex": "0xf222",
+      "result": {
+        "variable_order": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "root": 5,
+        "terminal_nodes": [
+          0,
+          1
+        ],
+        "nonterminal_count": 4,
+        "total_node_count": 6,
+        "nodes": [
+          {
+            "id": 2,
+            "variable": "d",
+            "level": 3,
+            "low": 0,
+            "high": 1
+          },
+          {
+            "id": 3,
+            "variable": "c",
+            "level": 2,
+            "low": 2,
+            "high": 0
+          },
+          {
+            "id": 4,
+            "variable": "b",
+            "level": 1,
+            "low": 3,
+            "high": 1
+          },
+          {
+            "id": 5,
+            "variable": "a",
+            "level": 0,
+            "low": 3,
+            "high": 4
+          }
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    }
+  ],
+  "boundary": "Finite synthetic same-owner software and documentation evidence only; no independent reproduction, empirical confirmation, production readiness, identity continuity, consciousness, personhood, professional authority, legal authority, cultural authority, Maori authority, exhaustive security, privacy completeness, accessibility completeness, Theory-of-Everything proof, canon or Stage 20 promotion."
+}
