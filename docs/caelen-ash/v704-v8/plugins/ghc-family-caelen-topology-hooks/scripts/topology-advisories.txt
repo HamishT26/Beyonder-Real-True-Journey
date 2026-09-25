@@ -1,0 +1,4 @@
+'use strict';
+const topics=["source_mutation","successful_replay","relation_drift","topology_mismatch","point_loss","uncertainty_promotion","real_route_update","accessibility_overclaim","prepared_delivery","accepted_resend"];
+function advise(subject){if(!subject||!topics.includes(subject.topic))return {ok:false,warning:"unsupported_topic",blocking:false};if(subject.adverse)return {ok:true,warning:"retain_and_review_"+subject.topic,blocking:false};return {ok:true,warning:null,blocking:false};}
+module.exports={advise,topics};
