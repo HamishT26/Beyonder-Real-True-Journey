@@ -1,0 +1,1504 @@
+{
+  "total": 15,
+  "passed": 15,
+  "tests": [
+    {
+      "test_id": "TB7043-x1-T01",
+      "purpose": "Hand-computed fixed-policy terminal return",
+      "request": {
+        "op": "mdp_policy_evaluation",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_policy_evaluation",
+        "outcome": "completed",
+        "value": {
+          "policy": [
+            1
+          ],
+          "values": [
+            "9/4"
+          ],
+          "horizon": 2
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T01",
+      "actual": {
+        "ok": true,
+        "op": "mdp_policy_evaluation",
+        "outcome": "completed",
+        "value": {
+          "policy": [
+            1
+          ],
+          "values": [
+            "9/4"
+          ],
+          "horizon": 2
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "cb2fa3286a358db50795a17420dde7489f16dc00d8aea4e8c75c07c7b0ea0e79",
+      "after_sha256": "cb2fa3286a358db50795a17420dde7489f16dc00d8aea4e8c75c07c7b0ea0e79",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T02",
+      "purpose": "Hand-computed optimal terminal return",
+      "request": {
+        "op": "mdp_bellman_values",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_bellman_values",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            0,
+            1,
+            2
+          ],
+          "values": [
+            [
+              "3"
+            ],
+            [
+              "7/2"
+            ],
+            [
+              "15/4"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T02",
+      "actual": {
+        "ok": true,
+        "op": "mdp_bellman_values",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            0,
+            1,
+            2
+          ],
+          "values": [
+            [
+              "3"
+            ],
+            [
+              "7/2"
+            ],
+            [
+              "15/4"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "63cff47dc7fbd2dca6308257b531cbc1c03268b0c529f348f1a27835bc55ca95",
+      "after_sha256": "63cff47dc7fbd2dca6308257b531cbc1c03268b0c529f348f1a27835bc55ca95",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T03",
+      "purpose": "Both actions remain optimal under exact ties",
+      "request": {
+        "op": "mdp_optimal_action_sets",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "2"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1",
+          "horizon": 3,
+          "policy": [
+            0
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_optimal_action_sets",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            1,
+            2,
+            3
+          ],
+          "actions": [
+            [
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ]
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T03",
+      "actual": {
+        "ok": true,
+        "op": "mdp_optimal_action_sets",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            1,
+            2,
+            3
+          ],
+          "actions": [
+            [
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                0,
+                1
+              ]
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "edeadc892d582c9bac1f953597d6380abe130917715ee0f859005a5ee040044e",
+      "after_sha256": "edeadc892d582c9bac1f953597d6380abe130917715ee0f859005a5ee040044e",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T04",
+      "purpose": "Zero remaining horizon equals terminal value",
+      "request": {
+        "op": "mdp_bellman_values",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "-2"
+          ],
+          "discount": "1/2",
+          "horizon": 0,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_bellman_values",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            0
+          ],
+          "values": [
+            [
+              "-2"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T04",
+      "actual": {
+        "ok": true,
+        "op": "mdp_bellman_values",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            0
+          ],
+          "values": [
+            [
+              "-2"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "0ea6e0f69311bc65db727f75c192a34ce1b6a9d564d85c05e5d8ad0e69ddadfa",
+      "after_sha256": "0ea6e0f69311bc65db727f75c192a34ce1b6a9d564d85c05e5d8ad0e69ddadfa",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T05",
+      "purpose": "Zero discount suppresses future return",
+      "request": {
+        "op": "mdp_one_step_actions",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "0",
+          "horizon": 4,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_one_step_actions",
+        "outcome": "completed",
+        "value": [
+          [
+            "2",
+            "1"
+          ]
+        ],
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T05",
+      "actual": {
+        "ok": true,
+        "op": "mdp_one_step_actions",
+        "outcome": "completed",
+        "value": [
+          [
+            "2",
+            "1"
+          ]
+        ],
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "752fc8e7e8e24129cf76a3dccb589a5167660b779994d3d4550cca6a5272ed61",
+      "after_sha256": "752fc8e7e8e24129cf76a3dccb589a5167660b779994d3d4550cca6a5272ed61",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T06",
+      "purpose": "Exact near-tie ordering",
+      "request": {
+        "op": "mdp_optimal_policy",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1/3",
+              "2/7"
+            ]
+          ],
+          "terminal": [
+            "0"
+          ],
+          "discount": "1/2",
+          "horizon": 1,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_optimal_policy",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            1
+          ],
+          "policy": [
+            [
+              0
+            ]
+          ],
+          "tie_counts": [
+            [
+              1
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T06",
+      "actual": {
+        "ok": true,
+        "op": "mdp_optimal_policy",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            1
+          ],
+          "policy": [
+            [
+              0
+            ]
+          ],
+          "tie_counts": [
+            [
+              1
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "a19b83182a9b928580340450ff3e050847bd3733582502904f4b7545b54d4fd2",
+      "after_sha256": "a19b83182a9b928580340450ff3e050847bd3733582502904f4b7545b54d4fd2",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T07",
+      "purpose": "Two-state dimension boundary",
+      "request": {
+        "op": "mdp_validate",
+        "input": {
+          "states": [
+            "s0",
+            "s1"
+          ],
+          "transition": [
+            [
+              [
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "0"
+          ],
+          "discount": "1",
+          "horizon": 3,
+          "policy": [
+            0,
+            1
+          ],
+          "initial": [
+            "1",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_validate",
+        "outcome": "completed",
+        "value": {
+          "states": 2,
+          "actions": 2,
+          "horizon": 3,
+          "finite": true,
+          "terminal_included": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T07",
+      "actual": {
+        "ok": true,
+        "op": "mdp_validate",
+        "outcome": "completed",
+        "value": {
+          "states": 2,
+          "actions": 2,
+          "horizon": 3,
+          "finite": true,
+          "terminal_included": true
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "22f76863f3a176567d9582fd0d067a13ab050c2ab91a4867af996a0df4ed776b",
+      "after_sha256": "22f76863f3a176567d9582fd0d067a13ab050c2ab91a4867af996a0df4ed776b",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T08",
+      "purpose": "Horizon-specific action change",
+      "request": {
+        "op": "mdp_optimal_policy",
+        "input": {
+          "states": [
+            "s0",
+            "s1",
+            "s2"
+          ],
+          "transition": [
+            [
+              [
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "4",
+              "0"
+            ],
+            [
+              "3",
+              "3"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "0",
+            "0"
+          ],
+          "discount": "1",
+          "horizon": 3,
+          "policy": [
+            0,
+            1,
+            0
+          ],
+          "initial": [
+            "1",
+            "0",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_optimal_policy",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            1,
+            2,
+            3
+          ],
+          "policy": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "tie_counts": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              1,
+              2,
+              2
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T08",
+      "actual": {
+        "ok": true,
+        "op": "mdp_optimal_policy",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            1,
+            2,
+            3
+          ],
+          "policy": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "tie_counts": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              1,
+              2,
+              2
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "fe2df87b257c83e8580d3a2e0fbf1e6dffdabd816857ea4bcab57a3039cf6364",
+      "after_sha256": "fe2df87b257c83e8580d3a2e0fbf1e6dffdabd816857ea4bcab57a3039cf6364",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T09",
+      "purpose": "Four-state four-step cap admitted",
+      "request": {
+        "op": "mdp_bellman_values",
+        "input": {
+          "states": [
+            "s0",
+            "s1",
+            "s2",
+            "s3"
+          ],
+          "transition": [
+            [
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "2",
+              "1"
+            ],
+            [
+              "3",
+              "2"
+            ],
+            [
+              "4",
+              "3"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "discount": "1",
+          "horizon": 4,
+          "policy": [
+            0,
+            1,
+            0,
+            1
+          ],
+          "initial": [
+            "1",
+            "0",
+            "0",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mdp_bellman_values",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "values": [
+            [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            [
+              "2",
+              "4",
+              "6",
+              "8"
+            ],
+            [
+              "3",
+              "6",
+              "9",
+              "12"
+            ],
+            [
+              "4",
+              "8",
+              "12",
+              "16"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "invalid_subject": false,
+      "negative_id": null,
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T09",
+      "actual": {
+        "ok": true,
+        "op": "mdp_bellman_values",
+        "outcome": "completed",
+        "value": {
+          "remaining_horizons": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "values": [
+            [
+              "0",
+              "0",
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            [
+              "2",
+              "4",
+              "6",
+              "8"
+            ],
+            [
+              "3",
+              "6",
+              "9",
+              "12"
+            ],
+            [
+              "4",
+              "8",
+              "12",
+              "16"
+            ]
+          ]
+        },
+        "external_credit": false,
+        "scope": "finite_synthetic_same_owner"
+      },
+      "before_sha256": "4ccc9c6f2618945307eac701edab84bf9e4b13c46b876f1cb37b1c8e0e478297",
+      "after_sha256": "4ccc9c6f2618945307eac701edab84bf9e4b13c46b876f1cb37b1c8e0e478297",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T10",
+      "purpose": "Closed input fields",
+      "request": {
+        "op": "mdp_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1",
+          "unexpected": 0
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "E_FIELDS",
+        "success_credit": 0
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043-x1-T10-N",
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T10",
+      "actual": {
+        "ok": false,
+        "error": "E_FIELDS",
+        "success_credit": 0
+      },
+      "before_sha256": "cdd0f00535a5f47a4431200993b1aa291183d89bf6a80f0244110cc7a7bdd26c",
+      "after_sha256": "cdd0f00535a5f47a4431200993b1aa291183d89bf6a80f0244110cc7a7bdd26c",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T11",
+      "purpose": "Negative probability refused",
+      "request": {
+        "op": "mdp_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "-1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "E_PROBABILITY",
+        "success_credit": 0
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043-x1-T11-N",
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T11",
+      "actual": {
+        "ok": false,
+        "error": "E_PROBABILITY",
+        "success_credit": 0
+      },
+      "before_sha256": "1ce069a2b2dc9d8491addd4e1930728e2de14d31e8cb66fc07f32a61f490d5d4",
+      "after_sha256": "1ce069a2b2dc9d8491addd4e1930728e2de14d31e8cb66fc07f32a61f490d5d4",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T12",
+      "purpose": "Probability row sum refused",
+      "request": {
+        "op": "mdp_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "2"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "1/2",
+          "horizon": 2,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "E_PROBABILITY",
+        "success_credit": 0
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043-x1-T12-N",
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T12",
+      "actual": {
+        "ok": false,
+        "error": "E_PROBABILITY",
+        "success_credit": 0
+      },
+      "before_sha256": "5ec7246a2e692dfae6dda57694acd9a7325db3213a2155474b1a2f299a151399",
+      "after_sha256": "5ec7246a2e692dfae6dda57694acd9a7325db3213a2155474b1a2f299a151399",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T13",
+      "purpose": "Horizon above cap refused",
+      "request": {
+        "op": "mdp_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "1/2",
+          "horizon": 5,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "E_HORIZON",
+        "success_credit": 0
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043-x1-T13-N",
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T13",
+      "actual": {
+        "ok": false,
+        "error": "E_HORIZON",
+        "success_credit": 0
+      },
+      "before_sha256": "5869385e62b3c46f8bcdbf01fbef568b820319cf6f767b7e46c3379c370fd2d1",
+      "after_sha256": "5869385e62b3c46f8bcdbf01fbef568b820319cf6f767b7e46c3379c370fd2d1",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T14",
+      "purpose": "State count above cap refused",
+      "request": {
+        "op": "mdp_validate",
+        "input": {
+          "states": [
+            "s0",
+            "s1",
+            "s2",
+            "s3",
+            "s4"
+          ],
+          "transition": [
+            [
+              [
+                "1",
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "1",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "0",
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1",
+                "0"
+              ]
+            ],
+            [
+              [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "0",
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "terminal": [
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "discount": "1",
+          "horizon": 3,
+          "policy": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "initial": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "E_DIMENSION",
+        "success_credit": 0
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043-x1-T14-N",
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T14",
+      "actual": {
+        "ok": false,
+        "error": "E_DIMENSION",
+        "success_credit": 0
+      },
+      "before_sha256": "bfec48a5c9e33947ce432f32826b0ae79c64919822fa07e160b46d2ddc89dbcd",
+      "after_sha256": "bfec48a5c9e33947ce432f32826b0ae79c64919822fa07e160b46d2ddc89dbcd",
+      "input_unchanged": true,
+      "pass": true
+    },
+    {
+      "test_id": "TB7043-x1-T15",
+      "purpose": "Boolean is not an integer horizon",
+      "request": {
+        "op": "mdp_validate",
+        "input": {
+          "states": [
+            "s0"
+          ],
+          "transition": [
+            [
+              [
+                "1"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "rewards": [
+            [
+              "2",
+              "1"
+            ]
+          ],
+          "terminal": [
+            "3"
+          ],
+          "discount": "1/2",
+          "horizon": true,
+          "policy": [
+            1
+          ],
+          "initial": [
+            "1"
+          ],
+          "shift": "1"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "E_HORIZON",
+        "success_credit": 0
+      },
+      "invalid_subject": true,
+      "negative_id": "TB7043-x1-T15-N",
+      "frozen_before_x1": true,
+      "task_id": "TB7043-x1-T15",
+      "actual": {
+        "ok": false,
+        "error": "E_HORIZON",
+        "success_credit": 0
+      },
+      "before_sha256": "d405836691c33bd1e2e5814ee1473051066df7b314256916deb56746250180e5",
+      "after_sha256": "d405836691c33bd1e2e5814ee1473051066df7b314256916deb56746250180e5",
+      "input_unchanged": true,
+      "pass": true
+    }
+  ],
+  "retained_failed_subjects": 6,
+  "domain_session_replays": 0,
+  "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}
