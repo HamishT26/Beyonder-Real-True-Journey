@@ -1,0 +1,588 @@
+{
+  "schema": "ghc.family.boolean-function.record.v1",
+  "owner": "Vesper Arlen",
+  "phase": "v704-v1",
+  "session": "x1",
+  "operation": "bf_anf",
+  "outcome": "completed",
+  "profiles": [
+    {
+      "fixture_id": "VA7041-F01-zero",
+      "title": "Constant zero",
+      "mask_hex": "0x0000",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terms": []
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F02-one",
+      "title": "Constant one",
+      "mask_hex": "0xffff",
+      "result": {
+        "coefficients": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terms": [
+          "1"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F03-a",
+      "title": "First projection",
+      "mask_hex": "0xff00",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terms": [
+          "a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F04-not-a",
+      "title": "Negated first projection",
+      "mask_hex": "0x00ff",
+      "result": {
+        "coefficients": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terms": [
+          "1",
+          "a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F05-and4",
+      "title": "Four-way conjunction",
+      "mask_hex": "0x8000",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "terms": [
+          "d*c*b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F06-or4",
+      "title": "Four-way disjunction",
+      "mask_hex": "0xfffe",
+      "result": {
+        "coefficients": [
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "terms": [
+          "d",
+          "c",
+          "d*c",
+          "b",
+          "d*b",
+          "c*b",
+          "d*c*b",
+          "a",
+          "d*a",
+          "c*a",
+          "d*c*a",
+          "b*a",
+          "d*b*a",
+          "c*b*a",
+          "d*c*b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F07-parity4",
+      "title": "Four-variable parity",
+      "mask_hex": "0x6996",
+      "result": {
+        "coefficients": [
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terms": [
+          "d",
+          "c",
+          "b",
+          "a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F08-majority4",
+      "title": "At-least-two threshold",
+      "mask_hex": "0xfee8",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        "terms": [
+          "d*c",
+          "d*b",
+          "c*b",
+          "d*a",
+          "c*a",
+          "b*a",
+          "d*c*b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F09-exactly1",
+      "title": "Exactly-one predicate",
+      "mask_hex": "0x0116",
+      "result": {
+        "coefficients": [
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0
+        ],
+        "terms": [
+          "d",
+          "c",
+          "b",
+          "d*c*b",
+          "a",
+          "d*c*a",
+          "d*b*a",
+          "c*b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F10-exactly2",
+      "title": "Exactly-two predicate",
+      "mask_hex": "0x1668",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "terms": [
+          "d*c",
+          "d*b",
+          "c*b",
+          "d*c*b",
+          "d*a",
+          "c*a",
+          "d*c*a",
+          "b*a",
+          "d*b*a",
+          "c*b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F11-implication",
+      "title": "Implication a to b",
+      "mask_hex": "0xf0ff",
+      "result": {
+        "coefficients": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "terms": [
+          "1",
+          "a",
+          "b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F12-mux",
+      "title": "Multiplexer a chooses b or c",
+      "mask_hex": "0xf0cc",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "terms": [
+          "c",
+          "c*a",
+          "b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F13-parity3",
+      "title": "Three-variable parity with inert d",
+      "mask_hex": "0xc33c",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terms": [
+          "c",
+          "b",
+          "a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F14-threshold3",
+      "title": "At-least-three threshold",
+      "mask_hex": "0xe880",
+      "result": {
+        "coefficients": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1
+        ],
+        "terms": [
+          "d*c*b",
+          "d*c*a",
+          "d*b*a",
+          "c*b*a",
+          "d*c*b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    },
+    {
+      "fixture_id": "VA7041-F15-nonlinear",
+      "title": "Mixed nonlinear predicate",
+      "mask_hex": "0xf222",
+      "result": {
+        "coefficients": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        "terms": [
+          "d",
+          "d*c",
+          "b*a",
+          "d*b*a",
+          "d*c*b*a"
+        ]
+      },
+      "canonical_request_passed": true,
+      "reversed_key_request_passed": true,
+      "malformed_unknown_field_rejected": true,
+      "malformed_unknown_profile_rejected": true,
+      "cfr_readback_passed": true,
+      "cfr_restoration_passed": true,
+      "source_mutated": false
+    }
+  ],
+  "boundary": "Finite synthetic same-owner software and documentation evidence only; no independent reproduction, empirical confirmation, production readiness, identity continuity, consciousness, personhood, professional authority, legal authority, cultural authority, Maori authority, exhaustive security, privacy completeness, accessibility completeness, Theory-of-Everything proof, canon or Stage 20 promotion."
+}
