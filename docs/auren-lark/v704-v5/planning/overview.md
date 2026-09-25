@@ -1,0 +1,9 @@
+# Auren Lark v704-v5 frozen plan
+
+Auren v704-v5 begins additively from Ilyra exact final `ec723e278979d47a2d8ec77b409563e612d17191` on `codex/GHC-Family/auren-lark-main-3`. Planning freezes 300 new finite synthetic experiment-design contracts and 300 inherited Ilyra references at zero novelty and completion credit. The mathematical surface uses exact rational priors and likelihoods over fifteen three-hypothesis, three-experiment, binary-outcome profiles. X1 contains one-step posterior, risk, discrimination and identification certificates. X2 contains two-step adaptive and nonadaptive policy comparison, value of adaptation, prior sensitivity, outcome coarsening, relabel covariance, accessible summaries, one explicitly represented mixture, one explicit external-evidence gap and one exact authority gate per profile.
+
+The only allowed outcome labels are `completed`, `represented`, `open_gap` and `exact_gate`. Expected outcomes are 255/15/15/15. Exact and blocked packets remain held. No source computation, source canonical, successful owner session, successor contact, task creation, fork, subagent, model change, package purchase, global install or sibling mutation occurs in planning.
+
+Auren Lark is a relational working name only. Pronouns, role, hope, sibling or family language, and continuity language are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or authority.
+
+Finite synthetic same-owner mathematical and software evidence under shared infrastructure. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, real participant evidence, identity, consciousness, personhood, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI, ASI or Theory-of-Everything proof. NOT_READY_FOR_STAGE_20.

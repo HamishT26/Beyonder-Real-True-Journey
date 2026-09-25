@@ -1,0 +1,292 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v704-v5-planning",
+  "owner": "Auren Lark",
+  "identity_boundary": "Auren Lark is a relational working name only. Pronouns, role, hope, sibling or family language, and continuity language are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or authority.",
+  "execution_authority": "owner_self_scoped_delta",
+  "attributable_owner": "Auren Lark",
+  "source_commit": "ec723e278979d47a2d8ec77b409563e612d17191",
+  "final_commit": null,
+  "changed_file_allowlist": [
+    "scripts/build_auren_v704_v5_plan.mjs",
+    "scripts/validate_auren_v704_v5_plan.mjs",
+    "docs/auren-lark/v704-v5/planning/**"
+  ],
+  "module_allowlist": [
+    "planning"
+  ],
+  "repository_scan": false,
+  "module_scan": true,
+  "cross_lane_scan": false,
+  "unchanged_history_scan": false,
+  "sibling_lane_mutation": false,
+  "exact_pushed_head_required": true,
+  "methods": [
+    {
+      "method_id": "AL7045-PL-M01",
+      "title": "Materialized branch-existence probe",
+      "failure_signature": "The first PowerShell lane-creation wrapper embedded a semicolon-bearing Git command inside a parenthesized assignment and failed to parse before execution.",
+      "trigger_preconditions": [
+        "fresh owner lane creation",
+        "PowerShell expression evaluation"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Run the Git probe first, store LASTEXITCODE, then evaluate the boolean in a separate statement.",
+      "validation_witness_ids": [
+        "AL7045-PL-W01-F",
+        "AL7045-PL-W01-R"
+      ],
+      "recurrence_guard": "Materialize command exit codes before boolean composition in PowerShell.",
+      "rollback": "No rollback required because the parser failed before mutation; preserve the failure.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "source_lane_read_only",
+        "retained_failure_nonerasure"
+      ],
+      "retained_negative_ids": [
+        "AL7045-PL-N01"
+      ],
+      "scope_boundary": "Owner-lane creation wrapper only; no domain or authority credit."
+    },
+    {
+      "method_id": "AL7045-PL-M02",
+      "title": "Native ESM planning entrypoint",
+      "failure_signature": "The first planning invocation used CommonJS require inside an .mjs entrypoint and stopped before writing any phase file.",
+      "trigger_preconditions": [
+        "Node .mjs planning builder",
+        "CommonJS import form"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Use node: imports and derive the directory from import.meta.url.",
+      "validation_witness_ids": [
+        "AL7045-PL-W02-F",
+        "AL7045-PL-W02-R"
+      ],
+      "recurrence_guard": "Run node --check and use ESM-native imports for .mjs lifecycle builders.",
+      "rollback": "No generated phase files existed; retain the invocation failure and patch only the module boundary.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "successful_builder_no_replay",
+        "retained_failure_nonerasure"
+      ],
+      "retained_negative_ids": [
+        "AL7045-PL-N02"
+      ],
+      "scope_boundary": "Planning entrypoint loading only; no domain or authority credit."
+    },
+    {
+      "method_id": "AL7045-PL-M03",
+      "title": "File-backed planning preflight",
+      "failure_signature": "The first inline JavaScript preflight was parsed by PowerShell because privacy-regex punctuation crossed the shell boundary.",
+      "trigger_preconditions": [
+        "inline Node validator",
+        "PowerShell command-string quoting"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Move the validator into an owner-scoped .mjs file and invoke it without shell-interpreted source text.",
+      "validation_witness_ids": [
+        "AL7045-PL-W03-F",
+        "AL7045-PL-W03-R"
+      ],
+      "recurrence_guard": "Use file-backed validators when JavaScript contains regular expressions or shell-significant punctuation.",
+      "rollback": "No validation or repository mutation occurred; retain the wrapper failure and run only the file-backed recovery.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "retained_failure_nonerasure",
+        "owner_scoped_validation"
+      ],
+      "retained_negative_ids": [
+        "AL7045-PL-N03"
+      ],
+      "scope_boundary": "Planning preflight transport only; no domain or authority credit."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "AL7045-PL-W01-F",
+      "method_id": "AL7045-PL-M01",
+      "procedure": "Invoke the original lane-creation wrapper.",
+      "scope": "PowerShell wrapper parsing",
+      "expected": "read branch state and create nothing until guards pass",
+      "observed": "parser error before execution",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-PL-N01"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-PL-W01-R",
+      "method_id": "AL7045-PL-M01",
+      "procedure": "Materialize Git exit code and rerun the guarded wrapper once.",
+      "scope": "fresh Auren lane creation",
+      "expected": "clean sparse lane at exact source",
+      "observed": "clean 463-file tracked lane at exact source; 147 materialized files",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-PL-N01"
+      ],
+      "boundary": "Bounded wrapper recovery only."
+    },
+    {
+      "witness_id": "AL7045-PL-W02-F",
+      "method_id": "AL7045-PL-M02",
+      "procedure": "Invoke the original .mjs planning builder once.",
+      "scope": "planning entrypoint load",
+      "expected": "load and build the frozen plan",
+      "observed": "ReferenceError before any phase file was written",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-PL-N02"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-PL-W02-R",
+      "method_id": "AL7045-PL-M02",
+      "procedure": "Replace CommonJS imports with native ESM imports and invoke the corrected builder once.",
+      "scope": "planning entrypoint load and frozen plan build",
+      "expected": "build exactly one planning corpus",
+      "observed": "corrected ESM entrypoint selected for the bounded recovery",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-PL-N02"
+      ],
+      "boundary": "Bounded entrypoint recovery only."
+    },
+    {
+      "witness_id": "AL7045-PL-W03-F",
+      "method_id": "AL7045-PL-M03",
+      "procedure": "Invoke the first shell-inline planning validator.",
+      "scope": "planning preflight wrapper",
+      "expected": "parse owner JSON, replay the manifest and scan five privacy classes",
+      "observed": "PowerShell parser error before validation",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-PL-N03"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-PL-W03-R",
+      "method_id": "AL7045-PL-M03",
+      "procedure": "Invoke the file-backed owner planning validator.",
+      "scope": "planning JSON, normalized-LF manifest, five privacy classes and file guard",
+      "expected": "all declared planning checks pass once",
+      "observed": "file-backed bounded recovery selected",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-PL-N03"
+      ],
+      "boundary": "Bounded same-owner planning validation only."
+    }
+  ],
+  "state_events": [
+    {
+      "event_id": "AL7045-PL-E01",
+      "method_id": "AL7045-PL-M01",
+      "from": "observed",
+      "to": "validated",
+      "witness_id": "AL7045-PL-W01-R"
+    },
+    {
+      "event_id": "AL7045-PL-E02",
+      "method_id": "AL7045-PL-M02",
+      "from": "observed",
+      "to": "validated",
+      "witness_id": "AL7045-PL-W02-R"
+    },
+    {
+      "event_id": "AL7045-PL-E03",
+      "method_id": "AL7045-PL-M03",
+      "from": "observed",
+      "to": "validated",
+      "witness_id": "AL7045-PL-W03-R"
+    }
+  ],
+  "recommendations": [
+    {
+      "recommendation_id": "AL7045-PL-R01",
+      "method_id": "AL7045-PL-M01",
+      "state": "validated",
+      "text": "Materialize PowerShell process exit codes before boolean expressions."
+    },
+    {
+      "recommendation_id": "AL7045-PL-R02",
+      "method_id": "AL7045-PL-M02",
+      "state": "validated",
+      "text": "Use native ESM imports for .mjs lifecycle builders."
+    },
+    {
+      "recommendation_id": "AL7045-PL-R03",
+      "method_id": "AL7045-PL-M03",
+      "state": "validated",
+      "text": "Use file-backed validators for regular-expression-heavy checks on PowerShell."
+    }
+  ],
+  "counts": {
+    "methods": 3,
+    "witnesses": 6,
+    "state_events": 3,
+    "recommendations": 3,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 3,
+      "preferred": 0,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "pass": 3,
+      "fail": 3
+    }
+  },
+  "evidence_counts": {
+    "negatives": 3,
+    "methods": 3,
+    "failed_witnesses": 3,
+    "passing_witnesses": 3,
+    "witnesses": 6,
+    "open_gaps": 0,
+    "exact_gates": 0
+  },
+  "selected_source_baseline": {
+    "negatives": 64380,
+    "methods": 5746,
+    "failed_witnesses": 55545,
+    "passing_witnesses": 175796,
+    "witnesses": 231341,
+    "open_gaps": 1995,
+    "exact_gates": 2078
+  },
+  "source_fold_count": 1,
+  "effective_totals": {
+    "negatives": 64383,
+    "methods": 5749,
+    "failed_witnesses": 55548,
+    "passing_witnesses": 175799,
+    "witnesses": 231347,
+    "open_gaps": 1995,
+    "exact_gates": 2078
+  },
+  "boundary": "Finite synthetic same-owner mathematical and software evidence under shared infrastructure. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, real participant evidence, identity, consciousness, personhood, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI, ASI or Theory-of-Everything proof. NOT_READY_FOR_STAGE_20."
+}
