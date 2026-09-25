@@ -1,0 +1,135 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v704-v5-planning-correction",
+  "owner": "Auren Lark",
+  "identity_boundary": "Auren Lark is a relational working name only; no consciousness, personhood, continuity, qualification, independent agency or authority evidence follows.",
+  "execution_authority": "owner_self_scoped_delta",
+  "attributable_owner": "Auren Lark",
+  "source_commit": "19012bc59cc9588a31e0bf19854c46106871b0fb",
+  "final_commit": null,
+  "changed_file_allowlist": [
+    "docs/auren-lark/v704-v5/planning/correction.json",
+    "docs/auren-lark/v704-v5/planning/method-flow-correction.json",
+    "docs/auren-lark/v704-v5/planning/correction-manifest.json"
+  ],
+  "module_allowlist": [
+    "planning-correction"
+  ],
+  "repository_scan": false,
+  "module_scan": true,
+  "cross_lane_scan": false,
+  "unchanged_history_scan": false,
+  "sibling_lane_mutation": false,
+  "exact_pushed_head_required": true,
+  "methods": [
+    {
+      "method_id": "AL7045-PC-M01",
+      "title": "Explicit owner tracking-ref materialization",
+      "failure_signature": "The new branch push succeeded but the clone lacked the owner remote-tracking ref, so upstream and tracking probes were unavailable.",
+      "trigger_preconditions": ["single-branch clone", "new owner branch push"],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Fetch exactly the owner branch into its matching remote-tracking ref.",
+      "validation_witness_ids": ["AL7045-PC-W01-F", "AL7045-PC-W01-R"],
+      "recurrence_guard": "Audit fetch-map and remote-tracking state before treating a successful push as four-way equality.",
+      "rollback": "Delete no ref; retain the missing-ref failure and the exact fetched ref.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": ["fresh_live_equality", "retained_failure_nonerasure"],
+      "retained_negative_ids": ["AL7045-PC-N01"],
+      "scope_boundary": "Owner branch transport only; no domain or authority credit."
+    },
+    {
+      "method_id": "AL7045-PC-M02",
+      "title": "Exact owner fetch-map binding",
+      "failure_signature": "The narrow ref existed after an explicit fetch, but upstream shorthand remained unresolved because the clone fetch map excluded the owner branch.",
+      "trigger_preconditions": ["materialized remote-tracking ref", "absent owner fetch refspec"],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Add only the exact owner branch mapping to remote.origin.fetch and fetch that branch once.",
+      "validation_witness_ids": ["AL7045-PC-W02-F", "AL7045-PC-W02-R"],
+      "recurrence_guard": "Bind every reusable owner branch to one exact fetch refspec before shorthand equality checks.",
+      "rollback": "The exact owner mapping can be removed without touching commits; no broad refspec is added.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": ["fresh_live_equality", "source_lane_read_only"],
+      "retained_negative_ids": ["AL7045-PC-N02"],
+      "scope_boundary": "Owner branch fetch mapping only; no domain or authority credit."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "AL7045-PC-W01-F",
+      "method_id": "AL7045-PC-M01",
+      "procedure": "Run the first post-push local/upstream/tracking/live equality wrapper.",
+      "scope": "planning commit transport",
+      "expected": "four equal identities and typed 0/0 divergence",
+      "observed": "live remote matched, while upstream and tracking resolution failed",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["AL7045-PC-N01"],
+      "boundary": "Zero-credit transport failure."
+    },
+    {
+      "witness_id": "AL7045-PC-W01-R",
+      "method_id": "AL7045-PC-M01",
+      "procedure": "Fetch the exact owner branch into its matching remote-tracking ref.",
+      "scope": "planning commit tracking ref",
+      "expected": "tracking ref equals local and live remote",
+      "observed": "tracking ref materialized at the planning commit; shorthand still exposed a separate fetch-map gap",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["AL7045-PC-N01"],
+      "boundary": "Bounded tracking-ref recovery only."
+    },
+    {
+      "witness_id": "AL7045-PC-W02-F",
+      "method_id": "AL7045-PC-M02",
+      "procedure": "Resolve upstream shorthand after the exact ref fetch.",
+      "scope": "planning commit upstream mapping",
+      "expected": "upstream resolves to the owner remote-tracking branch",
+      "observed": "Git rejected shorthand because the fetch map lacked the branch",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["AL7045-PC-N02"],
+      "boundary": "Zero-credit fetch-map failure."
+    },
+    {
+      "witness_id": "AL7045-PC-W02-R",
+      "method_id": "AL7045-PC-M02",
+      "procedure": "Add the exact owner fetch refspec, fetch once and repeat the equality projection.",
+      "scope": "planning commit four-way equality",
+      "expected": "local, upstream, tracking and fresh live remote all equal with 0/0 divergence",
+      "observed": "all four identities equal 19012bc59cc9588a31e0bf19854c46106871b0fb; lane clean",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["AL7045-PC-N02"],
+      "boundary": "Bounded same-owner transport recovery only."
+    }
+  ],
+  "state_events": [
+    {"event_id": "AL7045-PC-E01", "method_id": "AL7045-PC-M01", "from": "observed", "to": "validated", "witness_id": "AL7045-PC-W01-R"},
+    {"event_id": "AL7045-PC-E02", "method_id": "AL7045-PC-M02", "from": "observed", "to": "validated", "witness_id": "AL7045-PC-W02-R"}
+  ],
+  "recommendations": [
+    {"recommendation_id": "AL7045-PC-R01", "method_id": "AL7045-PC-M01", "state": "validated", "text": "Materialize the exact owner remote-tracking ref after a first push from a single-branch clone."},
+    {"recommendation_id": "AL7045-PC-R02", "method_id": "AL7045-PC-M02", "state": "validated", "text": "Add only the exact owner branch to the fetch map before using upstream shorthand."}
+  ],
+  "counts": {
+    "methods": 2,
+    "witnesses": 4,
+    "state_events": 2,
+    "recommendations": 2,
+    "states": {"observed": 0, "candidate": 0, "validated": 2, "preferred": 0, "superseded": 0, "deprecated": 0},
+    "witness_results": {"pass": 2, "fail": 2}
+  },
+  "evidence_counts": {"negatives": 2, "methods": 2, "failed_witnesses": 2, "passing_witnesses": 2, "witnesses": 4, "open_gaps": 0, "exact_gates": 0},
+  "selected_pre_correction_baseline": {"negatives": 64383, "methods": 5749, "failed_witnesses": 55548, "passing_witnesses": 175799, "witnesses": 231347, "open_gaps": 1995, "exact_gates": 2078},
+  "source_fold_count": 0,
+  "effective_totals": {"negatives": 64385, "methods": 5751, "failed_witnesses": 55550, "passing_witnesses": 175801, "witnesses": 231351, "open_gaps": 1995, "exact_gates": 2078},
+  "boundary": "Bounded same-owner Git transport evidence only. No independent reproduction, empirical confirmation, authority or Stage 20 promotion. NOT_READY_FOR_STAGE_20."
+}
