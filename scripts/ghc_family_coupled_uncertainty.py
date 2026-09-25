@@ -25,6 +25,19 @@ X1_OPERATIONS = {
     "horizon_layer_trace",
     "coupling_signature",
 }
+X2_OPERATIONS = {
+    "rectangular_relaxation",
+    "rectangularity_gap",
+    "model_deletion_sensitivity",
+    "relabel_covariance",
+    "discount_zero_certificate",
+    "accessible_summary",
+    "scene_coordinates",
+    "mixture_representation",
+    "calibration_evidence_gap",
+    "authority_gate",
+}
+ALL_OPERATIONS = X1_OPERATIONS | X2_OPERATIONS
 
 
 class ContractError(ValueError):
@@ -145,12 +158,55 @@ def best_rows(table: list[dict[str, Any]], field: str) -> dict[str, Any]:
     return {"value": q(best), "policies": [row["policy"] for row in table if Fraction(row[field]) == best]}
 
 
+def rectangular_value(profile: dict[str, Any], policy: list[int]) -> Fraction:
+    """Evaluate the separately labelled rowwise rectangular relaxation exactly."""
+
+    values = list(profile["terminal"])
+    for _ in range(profile["horizon"]):
+        next_values = []
+        for state, action in enumerate(policy):
+            candidates = []
+            for model in profile["global_models"]:
+                candidates.append(
+                    sum(
+                        (prob * values[target] for target, prob in enumerate(model[state][action])),
+                        Fraction(0),
+                    )
+                )
+            next_values.append(profile["rewards"][state][action] + profile["discount"] * min(candidates))
+        values = next_values
+    return sum((profile["initial"][i] * values[i] for i in range(len(values))), Fraction(0))
+
+
+def permuted_profile(profile: dict[str, Any]) -> dict[str, Any]:
+    """Reverse state labels while preserving the exact transition relation."""
+
+    permutation = list(reversed(range(len(profile["states"]))))
+    other = deepcopy(profile)
+    other["states"] = [f"r{i}" for i in range(len(permutation))]
+    other["rewards"] = [profile["rewards"][old] for old in permutation]
+    other["terminal"] = [profile["terminal"][old] for old in permutation]
+    other["initial"] = [profile["initial"][old] for old in permutation]
+    other["fixed_policy"] = [profile["fixed_policy"][old] for old in permutation]
+    other["global_models"] = [
+        [
+            [
+                [model[old_state][action][old_target] for old_target in permutation]
+                for action in (0, 1)
+            ]
+            for old_state in permutation
+        ]
+        for model in profile["global_models"]
+    ]
+    return other
+
+
 def evaluate(request: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(request, dict):
         raise ContractError("request must be an object")
     operation = request.get("op")
-    if operation not in X1_OPERATIONS:
-        raise ContractError(f"unsupported x1 operation: {operation!r}")
+    if operation not in ALL_OPERATIONS:
+        raise ContractError(f"unsupported operation: {operation!r}")
     profile = validate_profile(request.get("input"))
     base: dict[str, Any] = {"scope": SCOPE, "external_credit": False}
     table = policy_table(profile)
@@ -185,6 +241,97 @@ def evaluate(request: dict[str, Any]) -> dict[str, Any]:
                 if profile["global_models"][0][state][action] != profile["global_models"][1][state][action]:
                     differing.append([state, action])
         return {**base, "differing_rows": differing}
+    robust_policy = robust["policies"][0]
+    rectangular = rectangular_value(profile, robust_policy)
+    gap = Fraction(robust["value"]) - rectangular
+    if operation == "rectangular_relaxation":
+        return {
+            **base,
+            "policy": robust_policy,
+            "value": q(rectangular),
+            "relation": "rowwise model choice at each state and time",
+        }
+    if operation == "rectangularity_gap":
+        return {
+            **base,
+            "global_value": robust["value"],
+            "rectangular_value": q(rectangular),
+            "gap": q(gap),
+            "nonnegative": gap >= 0,
+        }
+    if operation == "model_deletion_sensitivity":
+        retained = []
+        for model_index in range(len(profile["global_models"])):
+            retained.append(q(max(Fraction(row["model_values"][model_index]) for row in table)))
+        return {**base, "full_value": robust["value"], "retained_single_model_values": retained}
+    if operation == "relabel_covariance":
+        other = best_rows(policy_table(permuted_profile(profile)), "lower")
+        return {
+            **base,
+            "original": robust["value"],
+            "relabelled": other["value"],
+            "equal": Fraction(robust["value"]) == Fraction(other["value"]),
+        }
+    if operation == "discount_zero_certificate":
+        zero_profile = deepcopy(profile)
+        zero_profile["discount"] = Fraction(0)
+        zero_best = best_rows(policy_table(zero_profile), "lower")
+        return {
+            **base,
+            "value": zero_best["value"],
+            "policies": zero_best["policies"],
+            "transition_independent_after_first_reward": True,
+        }
+    if operation == "accessible_summary":
+        return {
+            **base,
+            "title": profile["label"],
+            "states": len(profile["states"]),
+            "global_models": len(profile["global_models"]),
+            "robust_value": robust["value"],
+            "rectangular_value": q(rectangular),
+            "gap": q(gap),
+            "note": "A single global model persists; the rectangular comparator may combine rows that no one global model contains.",
+        }
+    if operation == "scene_coordinates":
+        return {
+            **base,
+            "axes": ["remaining decisions", "state count", "rectangularity gap"],
+            "coordinates": [profile["horizon"], len(profile["states"]), q(gap)],
+        }
+    if operation == "mixture_representation":
+        mixture = (Fraction(fixed[0]["scalar"]) + Fraction(fixed[1]["scalar"])) * Fraction(1, 2)
+        return {
+            **base,
+            "outcome": "represented",
+            "weights": ["1/2", "1/2"],
+            "fixed_policy_mixture_value": q(mixture),
+            "reservation": "A mixture representation is not evidence that the data-generating model is a mixture.",
+        }
+    if operation == "calibration_evidence_gap":
+        return {
+            **base,
+            "outcome": "open_gap",
+            "missing": [
+                "governed observations",
+                "sampling design",
+                "likelihood",
+                "coverage assessment",
+                "independent review",
+            ],
+        }
+    if operation == "authority_gate":
+        return {
+            **base,
+            "outcome": "exact_gate",
+            "held": [
+                "real intervention",
+                "participant decision",
+                "production deployment",
+                "legal or cultural authority",
+                "Maori authority",
+            ],
+        }
     raise AssertionError("unreachable")
 
 
