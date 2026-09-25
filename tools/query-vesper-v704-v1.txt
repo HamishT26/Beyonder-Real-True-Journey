@@ -1,0 +1,50 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const workbench = require(path.join(__dirname, "build-vesper-v704-v1.txt"));
+
+function refuse(code, detail) {
+  process.stdout.write(JSON.stringify({ disposition: "refused", code, detail, boundary: workbench.BOUNDARY }) + "\n");
+  process.exitCode = 2;
+}
+
+const raw = fs.readFileSync(0, "utf8");
+let request;
+try {
+  request = JSON.parse(raw);
+} catch (error) {
+  refuse("INVALID_JSON", error.message);
+  return;
+}
+
+const keys = Object.keys(request).sort();
+if (JSON.stringify(keys) !== JSON.stringify(["operation", "profile_id"])) {
+  refuse("UNKNOWN_OR_MISSING_FIELD", keys);
+  return;
+}
+
+if (typeof request.operation !== "string" || typeof request.profile_id !== "string") {
+  refuse("INVALID_TYPE", "operation and profile_id must be strings");
+  return;
+}
+
+const operation = workbench.OPERATIONS.find((row) => row.id === request.operation);
+const profile = workbench.PROFILES.find((row) => row.fixture_id === request.profile_id);
+if (!operation) {
+  refuse("UNKNOWN_OPERATION", request.operation);
+  return;
+}
+if (!profile) {
+  refuse("UNKNOWN_PROFILE", request.profile_id);
+  return;
+}
+
+const result = workbench.operationResult(operation, profile);
+process.stdout.write(JSON.stringify({
+  disposition: operation.outcome,
+  operation: operation.id,
+  profile_id: profile.fixture_id,
+  result,
+  boundary: workbench.BOUNDARY
+}) + "\n");

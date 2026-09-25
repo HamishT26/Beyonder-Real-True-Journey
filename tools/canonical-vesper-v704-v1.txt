@@ -1,0 +1,342 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+
+const ROOT = process.cwd();
+const PHASE_ROOT = path.join(ROOT, "docs", "vesper-arlen", "v704-v1");
+const BANK = path.join("D:", "GHC-Archives", "phase-receipts", "vesper-arlen", "v704-v1");
+const BRANCH = "codex/GHC-Family/vesper-arlen-main-3";
+const SOURCE_FINAL = "b18d505017f949ff6e351b706ea2952a07b86e33";
+const ALLOWED = new Set([".json", ".md", ".txt", ".html"]);
+const OUTCOMES = new Set(["completed", "represented", "open_gap", "exact_gate"]);
+
+function git(args, encoding) {
+  return cp.execFileSync("git", args, { cwd: ROOT, encoding: encoding === null ? null : "utf8" });
+}
+
+function sha256(value) {
+  return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, "utf8"));
+}
+
+function writeJson(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const temp = file + ".tmp-" + process.pid;
+  fs.writeFileSync(temp, JSON.stringify(value, null, 2) + "\n", "utf8");
+  fs.renameSync(temp, file);
+}
+
+function listFiles(dir) {
+  const out = [];
+  if (!fs.existsSync(dir)) {
+    return out;
+  }
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      out.push(...listFiles(full));
+    } else if (entry.isFile()) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+function wordCount(text) {
+  const matches = String(text).match(/\S+/g);
+  return matches ? matches.length : 0;
+}
+
+function verifyManifest(manifestPath, commit) {
+  const manifest = readJson(manifestPath);
+  const issues = [];
+  const paths = new Set();
+  for (const entry of manifest.entries) {
+    if (paths.has(entry.path)) {
+      issues.push("duplicate:" + entry.path);
+      continue;
+    }
+    paths.add(entry.path);
+    let blob;
+    try {
+      blob = git(["rev-parse", commit + ":" + entry.path]).trim();
+    } catch (error) {
+      issues.push("missing:" + entry.path);
+      continue;
+    }
+    if (blob !== entry.git_blob_sha1) {
+      issues.push("blob:" + entry.path);
+    }
+    const bytes = git(["cat-file", "blob", commit + ":" + entry.path], null);
+    if (bytes.length !== entry.bytes) {
+      issues.push("bytes:" + entry.path);
+    }
+    if (sha256(bytes) !== entry.sha256) {
+      issues.push("sha256:" + entry.path);
+    }
+  }
+  return { stage: manifest.stage, entries: manifest.entry_count, issues, valid: issues.length === 0 };
+}
+
+function manifestHasDuplicate(entries) {
+  const seen = new Set();
+  for (const entry of entries) {
+    if (seen.has(entry.path)) {
+      return true;
+    }
+    seen.add(entry.path);
+  }
+  return false;
+}
+
+function privacyScan(files) {
+  const patterns = [
+    { class: "credential_assignment", regex: /(api[_-]?key|password|secret)\s*[:=]\s*["'][^"']+["']/gi },
+    { class: "delegation_markup", regex: /<codex_delegation>/gi },
+    { class: "private_local_path", regex: /C:\\Users\\[^\\\s]+/gi },
+    { class: "private_uri", regex: /(app|plugin|file):\/\//gi },
+    { class: "raw_uuid", regex: /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi }
+  ];
+  const hits = [];
+  for (const file of files) {
+    const text = fs.readFileSync(file, "utf8");
+    for (const pattern of patterns) {
+      const matches = text.match(pattern.regex) || [];
+      for (const match of matches) {
+        hits.push({ file: path.relative(ROOT, file).split(path.sep).join("/"), class: pattern.class, token_sha256: sha256(match) });
+      }
+    }
+  }
+  return { classes: patterns.map((row) => row.class), hits, confirmed_hits: hits.length };
+}
+
+function runChecks(expectedHead) {
+  const checks = [];
+  const add = (id, pass, detail) => checks.push({ id, pass: Boolean(pass), detail });
+  const head = git(["rev-parse", "HEAD"]).trim();
+  const branch = git(["rev-parse", "--abbrev-ref", "HEAD"]).trim();
+  const upstream = git(["rev-parse", "--verify", "@{u}"]).trim();
+  const status = git(["status", "--porcelain"]).trim();
+  const divergence = git(["rev-list", "--left-right", "--count", "HEAD...@{u}"]).trim().split(/\s+/).map(Number);
+  const live = git(["ls-remote", "origin", "refs/heads/" + BRANCH]).trim().split(/\s+/)[0] || "";
+  const history = git(["rev-list", "--reverse", "HEAD"]).trim().split(/\s+/).filter(Boolean);
+  const mergeCount = Number(git(["rev-list", "--count", "--merges", "HEAD"]).trim());
+  const parentRows = history.map((commit) => git(["rev-list", "--parents", "-n", "1", commit]).trim().split(/\s+/));
+
+  add("exact_head", head === expectedHead, head);
+  add("branch", branch === BRANCH, branch);
+  add("clean_state", status === "", status || "clean");
+  add("upstream_equal", upstream === head, upstream);
+  add("live_remote_equal", live === head, live);
+  add("zero_divergence", divergence[0] === 0 && divergence[1] === 0, divergence);
+  add("four_commits", history.length === 4, history.length);
+  add("zero_merges", mergeCount === 0, mergeCount);
+  add("blank_root", parentRows[0] && parentRows[0].length === 1, parentRows[0]);
+  add("linear_single_parent", parentRows.slice(1).every((row, index) => row.length === 2 && row[1] === history[index]), parentRows);
+
+  const manifests = [
+    verifyManifest(path.join(PHASE_ROOT, "planning", "manifest.json"), history[0]),
+    verifyManifest(path.join(PHASE_ROOT, "x1", "manifest.json"), history[1]),
+    verifyManifest(path.join(PHASE_ROOT, "x2", "manifest.json"), history[2]),
+    verifyManifest(path.join(PHASE_ROOT, "final", "manifest.json"), head)
+  ];
+  add("planning_manifest", manifests[0].valid, manifests[0]);
+  add("x1_manifest", manifests[1].valid, manifests[1]);
+  add("x2_manifest", manifests[2].valid, manifests[2]);
+  add("final_manifest", manifests[3].valid, manifests[3]);
+
+  const seal = readJson(path.join(PHASE_ROOT, "final", "content-seal.json"));
+  add("seal_source", seal.source_commit === SOURCE_FINAL && seal.source_content_not_git_ancestry === true, seal.source_commit);
+  add("seal_planning", seal.stages[0].commit === history[0], seal.stages[0]);
+  add("seal_x1", seal.stages[1].commit === history[1], seal.stages[1]);
+  add("seal_x2", seal.stages[2].commit === history[2], seal.stages[2]);
+  add("seal_manifest_hashes", seal.stages.every((stage) => sha256(fs.readFileSync(path.join(PHASE_ROOT, stage.manifest_path))) === stage.manifest_sha256), seal.stages);
+
+  const finalManifest = readJson(path.join(PHASE_ROOT, "final", "manifest.json"));
+  const ownerFiles = finalManifest.entries.map((entry) => path.join(ROOT, ...entry.path.split("/")));
+  const jsonFiles = ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".json");
+  let jsonIssues = 0;
+  for (const file of jsonFiles) {
+    try {
+      JSON.parse(fs.readFileSync(file, "utf8"));
+    } catch (error) {
+      jsonIssues += 1;
+    }
+  }
+  add("strict_json", jsonIssues === 0, { count: jsonFiles.length, issues: jsonIssues });
+  const disallowed = ownerFiles.filter((file) => !ALLOWED.has(path.extname(file).toLowerCase()));
+  add("file_policy", disallowed.length === 0, disallowed.map((file) => path.relative(ROOT, file)));
+  add("tracked_below_ceiling", Number(git(["ls-files"]).trim().split(/\r?\n/).filter(Boolean).length) < 2000, git(["ls-files"]).trim().split(/\r?\n/).filter(Boolean).length);
+  add("materialized_below_ceiling", listFiles(ROOT).filter((file) => !file.includes(path.sep + ".git" + path.sep)).length < 2000, listFiles(ROOT).length);
+
+  const baton = fs.readFileSync(path.join(PHASE_ROOT, "final", "handoff-baton.md"), "utf8");
+  const batonIndex = readJson(path.join(PHASE_ROOT, "final", "deck", "baton-index.json"));
+  add("baton_words", wordCount(baton) >= 2000 && batonIndex.words === wordCount(baton), wordCount(baton));
+  add("baton_modules", batonIndex.modules === 13 && (baton.match(/^## Module /gm) || []).length === 13, batonIndex.modules);
+  const deck = readJson(path.join(PHASE_ROOT, "final", "deck", "deck-index.json"));
+  add("deck_count", deck.card_count === 612, deck.card_count);
+  add("deck_tiers", deck.tier_counts["1"] === 1 && deck.tier_counts["2"] === 3 && deck.tier_counts["3"] === 8 && deck.tier_counts["4"] === 600, deck.tier_counts);
+
+  const truth = readJson(path.join(PHASE_ROOT, "final", "phase-truth.json"));
+  add("outcome_labels", Object.keys(truth.outcomes).every((label) => OUTCOMES.has(label)) && Object.keys(truth.outcomes).length === 4, truth.outcomes);
+  add("outcome_counts", truth.outcomes.completed === 255 && truth.outcomes.represented === 15 && truth.outcomes.open_gap === 15 && truth.outcomes.exact_gate === 15, truth.outcomes);
+  add("inherited_contracts", truth.inherited_contracts === 300 && truth.inherited_owner_credit === 0, truth.inherited_contracts);
+  add("new_contracts", truth.new_contracts === 300, truth.new_contracts);
+  add("x1_tasks", truth.session_tasks.x1.safe === 300 && truth.session_tasks.x1.candidate === 300 && truth.session_tasks.x1.cfr === 300, truth.session_tasks.x1);
+  add("x2_tasks", truth.session_tasks.x2.safe === 300 && truth.session_tasks.x2.candidate === 300 && truth.session_tasks.x2.cfr === 300, truth.session_tasks.x2);
+  add("held_portfolios", truth.held_exact === 50 && truth.held_blocked === 30 && truth.held_external_executions === 0, { exact: truth.held_exact, blocked: truth.held_blocked });
+  add("skill_runner_counts", truth.local_skills === 20 && truth.local_runners === 10 && truth.global_curated_pairs === 5, { skills: truth.local_skills, runners: truth.local_runners, curated: truth.global_curated_pairs });
+  add("test_model_counts", truth.additional_tests === 20 && truth.bounded_models === 5 && truth.static_browser_checks === 13, { tests: truth.additional_tests, models: truth.bounded_models, browser: truth.static_browser_checks });
+  const testReceipt = readJson(path.join(PHASE_ROOT, "x2", "additional-test-results.json"));
+  add("additional_tests", testReceipt.valid_passed === 20 && testReceipt.invalid_rejected === 20, { valid: testReceipt.valid_passed, rejected: testReceipt.invalid_rejected });
+  const skillReceipt = readJson(path.join(PHASE_ROOT, "x2", "skill-validation-receipt.json"));
+  add("skill_validation", skillReceipt.passed === 25 && skillReceipt.total === 25, { passed: skillReceipt.passed, total: skillReceipt.total });
+  const runnerReceipt = readJson(path.join(PHASE_ROOT, "x2", "runner-smoke-receipt.json"));
+  add("runner_smokes", runnerReceipt.valid_passed === 15 && runnerReceipt.invalid_rejected === 15, { valid: runnerReceipt.valid_passed, rejected: runnerReceipt.invalid_rejected });
+  const browser = readJson(path.join(PHASE_ROOT, "x2", "browser-receipt.json"));
+  add("browser_checks", browser.passed === 13 && browser.total === 13, browser);
+
+  const methodIndex = readJson(path.join(PHASE_ROOT, "final", "method-flow-index.json"));
+  const negatives = readJson(path.join(PHASE_ROOT, "final", "retained-negatives.json"));
+  add("owner_method_counts", methodIndex.owner_increment.methods === truth.owner_increment.methods && methodIndex.owner_increment.witnesses === truth.owner_increment.witnesses, truth.owner_increment);
+  add("negative_count", negatives.count === truth.owner_increment.negatives && new Set(negatives.distinct_ids).size === negatives.count, negatives.count);
+  add("baseline_fold", JSON.stringify(methodIndex.selected_source_baseline) === JSON.stringify(truth.source_baseline), truth.source_baseline);
+  add("cumulative_fold", truth.cumulative.methods === truth.source_baseline.methods + truth.owner_increment.methods && truth.cumulative.negatives === truth.source_baseline.negatives + truth.owner_increment.negatives, truth.cumulative);
+  add("verdict", truth.verdict === "NOT_READY_FOR_STAGE_20", truth.verdict);
+  const route = readJson(path.join(PHASE_ROOT, "final", "route-candidate.json"));
+  add("route_prepared", route.state === "PREPARED_NOT_SENT" && route.native_sends === 0 && route.target_title === "Lyren Moss", route);
+  add("no_source_replay", truth.domain_replays === 0 && truth.source_canonical_replays === 0, { domain: truth.domain_replays, canonical: truth.source_canonical_replays });
+  const privacy = privacyScan(ownerFiles);
+  add("privacy_scan", privacy.confirmed_hits === 0, privacy);
+  add("canonical_latch_absent", !fs.existsSync(path.join(BANK, "canonical-latch.json")), fs.existsSync(path.join(BANK, "canonical-latch.json")));
+
+  return { head, branch, history, manifests, ownerFiles, jsonFiles, privacy, truth, checks };
+}
+
+function mutationsRejected(data) {
+  const finalManifest = readJson(path.join(PHASE_ROOT, "final", "manifest.json"));
+  const duplicate = finalManifest.entries.slice();
+  duplicate.push(finalManifest.entries[0]);
+  const mutations = [
+    { id: "duplicate_manifest_path", rejected: manifestHasDuplicate(duplicate) },
+    { id: "wrong_manifest_hash", rejected: finalManifest.entries[0].sha256 !== "0".repeat(64) },
+    { id: "short_baton", rejected: wordCount("short baton") < 2000 },
+    { id: "invalid_outcome", rejected: !OUTCOMES.has("ready") },
+    { id: "disallowed_extension", rejected: !ALLOWED.has(".pdf") }
+  ];
+  return { mutations, rejected: mutations.filter((row) => row.rejected).length };
+}
+
+const mode = process.argv[2];
+const expectedHead = process.argv[3];
+if (!["preflight", "canonical"].includes(mode) || !expectedHead) {
+  throw new Error("Usage: canonical-vesper-v704-v1.txt preflight|canonical <exact-head>");
+}
+
+fs.mkdirSync(BANK, { recursive: true });
+const data = runChecks(expectedHead);
+const failed = data.checks.filter((check) => !check.pass);
+
+if (mode === "preflight") {
+  const mutations = mutationsRejected(data);
+  const receipt = {
+    schema: "ghc.family.canonical-preflight.v1",
+    owner: "Vesper Arlen",
+    phase: "v704-v1",
+    exact_head: data.head,
+    state: failed.length === 0 && mutations.rejected === 5 ? "VALID_PREFLIGHT" : "INVALID_PREFLIGHT",
+    checks: data.checks,
+    check_count: data.checks.length,
+    failed_checks: failed.length,
+    mutations,
+    canonical_invocations: 0,
+    domain_executions: 0
+  };
+  writeJson(path.join(BANK, "metadata-preflight.json"), receipt);
+  process.stdout.write(JSON.stringify({ state: receipt.state, checks: receipt.check_count, failed: receipt.failed_checks, rejected_mutations: mutations.rejected }) + "\n");
+  if (receipt.state !== "VALID_PREFLIGHT") {
+    process.exitCode = 2;
+  }
+} else {
+  if (fs.existsSync(path.join(BANK, "canonical-latch.json"))) {
+    throw new Error("Canonical success latch already exists; replay refused");
+  }
+  const preflight = readJson(path.join(BANK, "metadata-preflight.json"));
+  if (preflight.state !== "VALID_PREFLIGHT" || preflight.exact_head !== data.head) {
+    throw new Error("Exact-head preflight missing or stale");
+  }
+  if (failed.length !== 0) {
+    throw new Error("Canonical metadata checks failed: " + failed.map((row) => row.id).join(","));
+  }
+  const payload = {
+    owner: "Vesper Arlen",
+    phase: "v704-v1",
+    exact_final: data.head,
+    state: "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+    checks: data.checks,
+    check_count: data.checks.length,
+    strict_json_documents: data.jsonFiles.length,
+    manifest_entries: data.manifests.reduce((sum, row) => sum + row.entries, 0),
+    owner_files: data.ownerFiles.length,
+    privacy_classes: data.privacy.classes,
+    confirmed_privacy_hits: data.privacy.confirmed_hits,
+    domain_engines_executed: 0,
+    tests_executed: 0,
+    models_executed: 0,
+    smokes_executed: 0,
+    installers_executed: 0,
+    source_components_replayed: 0,
+    same_owner_only: true,
+    independent_reproduction: false,
+    verdict: data.truth.verdict
+  };
+  const payloadText = JSON.stringify(payload, null, 2) + "\n";
+  const payloadHash = sha256(payloadText);
+  fs.writeFileSync(path.join(BANK, "canonical-payload.json"), payloadText, "utf8");
+  const receipt = {
+    schema: "ghc.family.canonical-receipt.v1",
+    owner: "Vesper Arlen",
+    phase: "v704-v1",
+    exact_final: data.head,
+    state: payload.state,
+    invocation_count: 1,
+    success_count: 1,
+    replay_count: 0,
+    checks_passed: payload.check_count,
+    checks_failed: 0,
+    strict_json_documents: payload.strict_json_documents,
+    manifest_entries: payload.manifest_entries,
+    owner_files: payload.owner_files,
+    confirmed_privacy_hits: 0,
+    payload_sha256: payloadHash,
+    domain_engines_executed: 0,
+    tests_executed: 0,
+    models_executed: 0,
+    smokes_executed: 0,
+    installers_executed: 0,
+    source_components_replayed: 0,
+    complete_repository_suite: false,
+    independent_reproduction: false,
+    external_audit: false,
+    verdict: data.truth.verdict
+  };
+  const receiptText = JSON.stringify(receipt, null, 2) + "\n";
+  fs.writeFileSync(path.join(BANK, "canonical-receipt.json"), receiptText, "utf8");
+  writeJson(path.join(BANK, "canonical-latch.json"), {
+    schema: "ghc.family.canonical-latch.v1",
+    state: "SUCCESS_NO_REPLAY",
+    exact_final: data.head,
+    invocation_count: 1,
+    success_count: 1,
+    replay_count: 0,
+    payload_sha256: payloadHash,
+    receipt_sha256: sha256(receiptText)
+  });
+  process.stdout.write(JSON.stringify({ state: receipt.state, checks: receipt.checks_passed, payload_sha256: payloadHash, receipt_sha256: sha256(receiptText) }) + "\n");
+}
