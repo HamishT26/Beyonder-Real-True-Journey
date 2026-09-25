@@ -1,0 +1,36 @@
+'use strict';
+const C=require('../x1/engine.txt');
+const {Z,ONE,of,sum,dot,max}=C;
+const EXT=['mdp_policy_regret','mdp_all_policy_envelope','mdp_advantage','mdp_occupancy','mdp_occupancy_value_identity','mdp_reward_shift','mdp_relabel_covariance','mdp_policy_model','mdp_evidence_gap','mdp_deployment_gate'];
+function evaluate(req){
+ if(req&&C.CORE.includes(req.op))return C.evaluate(req);
+ const d=C.request(req,EXT),{n,H,P,R,z,g,policy,mu,shift}=d,{V,Qv,choices,fixed}=C.dynamic(d),op=req.op;let value;
+ switch(op){
+ case 'mdp_policy_regret':value={optimal:V[H],declared:fixed[H],regret:V[H].map((v,s)=>v.sub(fixed[H][s]))};break;
+ case 'mdp_all_policy_envelope':{
+  const rows=[];for(let mask=0;mask<2**n;mask++){const pol=Array.from({length:n},(_,s)=>(mask>>(n-1-s))&1);rows.push({policy:pol,values:C.dynamic({...d,policy:pol}).fixed[H]});}
+  const top=Array.from({length:n},(_,s)=>max(rows.map(row=>row.values[s])));value={stationary_policies:rows,pointwise_stationary_envelope:top,nonstationary_optimal:V[H],gap:V[H].map((v,s)=>v.sub(top[s]))};break;
+ }
+ case 'mdp_advantage':value={remaining_horizons:Array.from({length:H},(_,h)=>h+1),shortfalls:Qv.map((row,h)=>row.map((q,s)=>q.map(v=>V[h+1][s].sub(v))))};break;
+ case 'mdp_occupancy':case 'mdp_occupancy_value_identity':{
+  const occ=[mu.slice()],stage=[];
+  for(let t=0;t<H;t++){const pol=choices[H-t-1].map(a=>a[0]);stage.push(sum(occ[t].map((v,s)=>v.mul(R[s][pol[s]]))));occ.push(Array.from({length:n},(_,j)=>sum(occ[t].map((v,s)=>v.mul(P[s][pol[s]][j])))));}
+  const terminal=dot(occ[H],z);
+  if(op==='mdp_occupancy')value={times:Array.from({length:H+1},(_,t)=>t),occupancy:occ,row_sums:occ.map(sum)};
+  else{const forward=sum(stage.map((v,t)=>g.pow(t).mul(v))).add(g.pow(H).mul(terminal)),backward=dot(mu,V[H]);value={stage_rewards:stage,terminal_reward:terminal,forward,backward,residual:forward.sub(backward),holds:forward.eq(backward)};}break;
+ }
+ case 'mdp_reward_shift':{const shifted=C.dynamic({...d,R:R.map(row=>row.map(v=>v.add(shift)))}).V[H],delta=shift.mul(sum(Array.from({length:H},(_,t)=>g.pow(t)))),actual=shifted.map((v,s)=>v.sub(V[H][s]));value={shift,predicted_delta:delta,actual_delta:actual,holds:actual.every(v=>v.eq(delta))};break;}
+ case 'mdp_relabel_covariance':{
+  const perm=Array.from({length:n},(_,i)=>n-1-i),other={...d,P:perm.map(i=>[0,1].map(a=>perm.map(j=>P[i][a][j]))),R:perm.map(i=>R[i]),z:perm.map(i=>z[i]),mu:perm.map(i=>mu[i]),policy:perm.map(i=>policy[i]),states:perm.map(i=>d.states[i])};
+  const v=C.dynamic(other).V[H],mapped=Array.from({length:n},(_,s)=>v[perm.indexOf(s)]);value={permutation:perm,original_values:V[H],mapped_back_values:mapped,holds:mapped.every((x,s)=>x.eq(V[H][s]))};break;
+ }
+ case 'mdp_policy_model':{const points=[];for(let h=0;h<=H;h++)for(let s=0;s<n;s++)points.push({state:d.states[s],xyz:[of(h),of(s),V[h][s]]});value={axes:['remaining_steps','state_index','optimal_value'],points,physical:false};break;}
+ case 'mdp_evidence_gap':value={missing:['real_observations','independent_replication','model_validation'],synthetic_only:true};break;
+ case 'mdp_deployment_gate':value={release_authorized:false,required:['competent_authority','affected_party_consent','safety_and_rollback'],live_actions:0};break;
+ default:C.fail('E_OPERATION');
+ }
+ return C.output(op,value);
+}
+function handle(req){try{return evaluate(req);}catch(e){if(e instanceof C.Fault)return {ok:false,error:e.code,success_credit:0};throw e;}}
+function handleText(text){try{return handle(C.strictParse(text));}catch(e){if(e instanceof C.Fault)return {ok:false,error:e.code,success_credit:0};throw e;}}
+module.exports={...C,EXT,evaluate,handle,handleText};

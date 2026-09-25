@@ -1,0 +1,338 @@
+{
+  "plugin_path": "docs/talen-briar/v704-v3/x2/plugins/ghc-family-talen-decision-advisories",
+  "validator_exit": 0,
+  "validator_stdout": "Plugin validation passed: docs/talen-briar/v704-v3/x2/plugins/ghc-family-talen-decision-advisories",
+  "hook_count": 10,
+  "manual_smokes": 20,
+  "manual_results": [
+    {
+      "hook_id": "TB7043-H01",
+      "check": "cwd_shape",
+      "event": "SessionStart",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "1f969e122ed715f12c28ee4821eaab65c15e6396d252b4f1f53d1e7c55f4f5dc",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H01",
+      "check": "cwd_shape",
+      "event": "SessionStart",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "A declared working-directory string is missing; owner scope remains unverified."
+      },
+      "actual": {
+        "systemMessage": "A declared working-directory string is missing; owner scope remains unverified."
+      },
+      "pass": true,
+      "input_sha256": "aa38f55cb1c56ba5820e9f4e9b4962024ff2e7a926a7a17f26660ca2de713aae",
+      "exit_code": 0,
+      "output_bytes": 100,
+      "negative_id": "TB7043-HOOK-N01",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H02",
+      "check": "model_shape",
+      "event": "SessionStart",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "1f969e122ed715f12c28ee4821eaab65c15e6396d252b4f1f53d1e7c55f4f5dc",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H02",
+      "check": "model_shape",
+      "event": "SessionStart",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "The payload does not declare an admitted model; this advisory does not change a model."
+      },
+      "actual": {
+        "systemMessage": "The payload does not declare an admitted model; this advisory does not change a model."
+      },
+      "pass": true,
+      "input_sha256": "eba4e72b343cabd678febfead5aeb7bd6bcb7ff791719ed93a7119dc768f5cee",
+      "exit_code": 0,
+      "output_bytes": 107,
+      "negative_id": "TB7043-HOOK-N02",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H03",
+      "check": "source_mode",
+      "event": "SessionStart",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "1f969e122ed715f12c28ee4821eaab65c15e6396d252b4f1f53d1e7c55f4f5dc",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H03",
+      "check": "source_mode",
+      "event": "SessionStart",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "The session source is outside the documented finite set; inspect the current lifecycle."
+      },
+      "actual": {
+        "systemMessage": "The session source is outside the documented finite set; inspect the current lifecycle."
+      },
+      "pass": true,
+      "input_sha256": "50d6552f5e3e2cb67996034aa37874ef8e89a819ed5ce9981b0f92afa17bf373",
+      "exit_code": 0,
+      "output_bytes": 108,
+      "negative_id": "TB7043-HOOK-N03",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H04",
+      "check": "transcript_shape",
+      "event": "SessionStart",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "1f969e122ed715f12c28ee4821eaab65c15e6396d252b4f1f53d1e7c55f4f5dc",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H04",
+      "check": "transcript_shape",
+      "event": "SessionStart",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "The transcript reference has an unexpected shape; no transcript is opened."
+      },
+      "actual": {
+        "systemMessage": "The transcript reference has an unexpected shape; no transcript is opened."
+      },
+      "pass": true,
+      "input_sha256": "7f3e53660a7d96533e05dff82c7ff6d104f567811f50d74b05097e16ce363ccd",
+      "exit_code": 0,
+      "output_bytes": 95,
+      "negative_id": "TB7043-HOOK-N04",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H05",
+      "check": "command_budget",
+      "event": "PreToolUse",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "a21fe50b47d02e40ff1fbdf8647a269a805fed5ce277f5c995b4d36fbf52f5fc",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H05",
+      "check": "command_budget",
+      "event": "PreToolUse",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "The command exceeds the declared review budget; keep execution inside the exact owner scope."
+      },
+      "actual": {
+        "systemMessage": "The command exceeds the declared review budget; keep execution inside the exact owner scope."
+      },
+      "pass": true,
+      "input_sha256": "407dc4d45e62ea70c2e28b214955cc3d522c7bfcdc7c6ef5b61783cacc2f9393",
+      "exit_code": 0,
+      "output_bytes": 113,
+      "negative_id": "TB7043-HOOK-N05",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H06",
+      "check": "command_shape",
+      "event": "PreToolUse",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "a21fe50b47d02e40ff1fbdf8647a269a805fed5ce277f5c995b4d36fbf52f5fc",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H06",
+      "check": "command_shape",
+      "event": "PreToolUse",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "The Bash or patch command is not a string; inspect its public caller contract."
+      },
+      "actual": {
+        "systemMessage": "The Bash or patch command is not a string; inspect its public caller contract."
+      },
+      "pass": true,
+      "input_sha256": "2f23c29d7a29c4198038ad5ada984bbac430d8ad70f95b49611c3ff134c57ca8",
+      "exit_code": 0,
+      "output_bytes": 99,
+      "negative_id": "TB7043-HOOK-N06",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H07",
+      "check": "failed_result",
+      "event": "PostToolUse",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "b36099be253b6f0f024e1412ade3198b63bd8c99b3d8f29e6f44e54f6cb43b41",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H07",
+      "check": "failed_result",
+      "event": "PostToolUse",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "Retain the failed subject separately from a later passing recovery."
+      },
+      "actual": {
+        "systemMessage": "Retain the failed subject separately from a later passing recovery."
+      },
+      "pass": true,
+      "input_sha256": "16c139869db1e4739162fc67d70293e3a50c64e824edaea33bbe4b8cdf70c33b",
+      "exit_code": 0,
+      "output_bytes": 88,
+      "negative_id": "TB7043-HOOK-N07",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H08",
+      "check": "result_budget",
+      "event": "PostToolUse",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "b36099be253b6f0f024e1412ade3198b63bd8c99b3d8f29e6f44e54f6cb43b41",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H08",
+      "check": "result_budget",
+      "event": "PostToolUse",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "The returned result exceeds the bounded display budget; preserve bytes and use a bounded projection."
+      },
+      "actual": {
+        "systemMessage": "The returned result exceeds the bounded display budget; preserve bytes and use a bounded projection."
+      },
+      "pass": true,
+      "input_sha256": "1e60029c81d7296ee8a16ba2d80e8755c05025f7531c957d4a340906bc97bec2",
+      "exit_code": 0,
+      "output_bytes": 121,
+      "negative_id": "TB7043-HOOK-N08",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H09",
+      "check": "stop_summary",
+      "event": "Stop",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "b0c545741cb8d43288632e7305f5953a5d1a9e23975882ab493e211448399ca7",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H09",
+      "check": "stop_summary",
+      "event": "Stop",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "A terminal summary is missing; preparation, canonical and delivery remain separate records."
+      },
+      "actual": {
+        "systemMessage": "A terminal summary is missing; preparation, canonical and delivery remain separate records."
+      },
+      "pass": true,
+      "input_sha256": "8ecf14c1f85d1a20cd21c74a486491b42d3e9bb3e26cc5b8eb0a1a1b424b595b",
+      "exit_code": 0,
+      "output_bytes": 112,
+      "negative_id": "TB7043-HOOK-N09",
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H10",
+      "check": "claim_scope",
+      "event": "Stop",
+      "subject": "nominal",
+      "expected": {},
+      "actual": {},
+      "pass": true,
+      "input_sha256": "b0c545741cb8d43288632e7305f5953a5d1a9e23975882ab493e211448399ca7",
+      "exit_code": 0,
+      "output_bytes": 3,
+      "negative_id": null,
+      "live_event_observation": false
+    },
+    {
+      "hook_id": "TB7043-H10",
+      "check": "claim_scope",
+      "event": "Stop",
+      "subject": "adverse",
+      "expected": {
+        "systemMessage": "Review the empirical claim against attributable evidence; a finite synthetic pass grants no external credit."
+      },
+      "actual": {
+        "systemMessage": "Review the empirical claim against attributable evidence; a finite synthetic pass grants no external credit."
+      },
+      "pass": true,
+      "input_sha256": "87fa5a185c60d872cfa7b1876dda688e98d50311fda0bcc0c96d869f12ef3a8c",
+      "exit_code": 0,
+      "output_bytes": 129,
+      "negative_id": "TB7043-HOOK-N10",
+      "live_event_observation": false
+    }
+  ],
+  "manifest_sha256": "68654d514a6add0809f7204ec2169a2d3b48ca5557d1c263bd80c0174299f2f6",
+  "hooks_sha256": "fd3c8231cf657bb9fe57ebc642b60e732ab9df96a2282952650bdae83782f30c",
+  "script_sha256": "0df135bbf5ce1361998a28845a02dfc9cd9380d83031d238820596d30a74b1cb",
+  "marketplace_writes": 0,
+  "global_installs": 0,
+  "live_trust": "exact_gate",
+  "live_execution": "open_gap",
+  "payload_side_effects": 0,
+  "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

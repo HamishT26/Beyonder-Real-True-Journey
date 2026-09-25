@@ -1,0 +1,35 @@
+'use strict';
+const fs=require('fs');
+const specs={
+ cwd_shape:['SessionStart','A declared working-directory string is missing; owner scope remains unverified.'],
+ model_shape:['SessionStart','The payload does not declare an admitted model; this advisory does not change a model.'],
+ source_mode:['SessionStart','The session source is outside the documented finite set; inspect the current lifecycle.'],
+ transcript_shape:['SessionStart','The transcript reference has an unexpected shape; no transcript is opened.'],
+ command_budget:['PreToolUse','The command exceeds the declared review budget; keep execution inside the exact owner scope.'],
+ command_shape:['PreToolUse','The Bash or patch command is not a string; inspect its public caller contract.'],
+ failed_result:['PostToolUse','Retain the failed subject separately from a later passing recovery.'],
+ result_budget:['PostToolUse','The returned result exceeds the bounded display budget; preserve bytes and use a bounded projection.'],
+ stop_summary:['Stop','A terminal summary is missing; preparation, canonical and delivery remain separate records.'],
+ claim_scope:['Stop','Review the empirical claim against attributable evidence; a finite synthetic pass grants no external credit.']
+};
+function inspect(id,input){
+ if(!Object.hasOwn(specs,id))return {systemMessage:'Unknown advisory selector; no action was taken.'};
+ if(!input||typeof input!=='object'||Array.isArray(input)||input.hook_event_name!==specs[id][0])return {systemMessage:'Hook payload shape is unverified; no action was taken.'};
+ if(input.hook_event_name==='Stop'&&input.stop_hook_active===true)return {};
+ let warning=false;
+ switch(id){
+ case 'cwd_shape':warning=typeof input.cwd!=='string'||input.cwd.length===0;break;
+ case 'model_shape':warning=!['gpt-5.6-sol','gpt-6-astra'].includes(input.model);break;
+ case 'source_mode':warning=!['startup','resume','clear','compact'].includes(input.source);break;
+ case 'transcript_shape':warning=input.transcript_path!==null&&typeof input.transcript_path!=='string';break;
+ case 'command_budget':warning=typeof input.tool_input?.command==='string'&&input.tool_input.command.length>4096;break;
+ case 'command_shape':warning=['Bash','apply_patch'].includes(input.tool_name)&&typeof input.tool_input?.command!=='string';break;
+ case 'failed_result':warning=Boolean(input.tool_response&&typeof input.tool_response==='object'&&(input.tool_response.error||input.tool_response.isError===true));break;
+ case 'result_budget':warning=Buffer.byteLength(JSON.stringify(input.tool_response??null),'utf8')>8192;break;
+ case 'stop_summary':warning=typeof input.last_assistant_message!=='string'||input.last_assistant_message.trim().length===0;break;
+ case 'claim_scope':warning=typeof input.last_assistant_message==='string'&&/^\s*CLAIM:\s*(?:empirically proven|consciousness proved|production certified|theory of everything proven)\s*$/im.test(input.last_assistant_message);break;
+ }
+ return warning?{systemMessage:specs[id][1]}:{};
+}
+function main(){let result;try{const raw=fs.readFileSync(0,'utf8');if(Buffer.byteLength(raw,'utf8')>131072)throw new Error('bounded input');result=inspect(process.argv[2],JSON.parse(raw));}catch{result={systemMessage:'Hook payload could not be inspected; no action was taken.'};}process.stdout.write(JSON.stringify(result)+'\n');}
+module.exports={inspect,specs};if(require.main===module)main();

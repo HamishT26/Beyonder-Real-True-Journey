@@ -1,0 +1,77 @@
+'use strict';
+class Fault extends Error{constructor(code){super(code);this.code=code;}}
+function fail(code){throw new Fault(code);}
+function gcd(a,b){a=a<0n?-a:a;while(b){const r=a%b;a=b;b=r;}return a||1n;}
+class Q{
+ constructor(n,d=1n){if(d===0n)fail('E_RATIONAL');if(d<0n){n=-n;d=-d;}const k=gcd(n,d);this.n=n/k;this.d=d/k;}
+ add(b){return new Q(this.n*b.d+b.n*this.d,this.d*b.d);}
+ sub(b){return new Q(this.n*b.d-b.n*this.d,this.d*b.d);}
+ mul(b){return new Q(this.n*b.n,this.d*b.d);}
+ cmp(b){const v=this.n*b.d-b.n*this.d;return v<0n?-1:v>0n?1:0;}
+ eq(b){return this.cmp(b)===0;}
+ pow(k){return new Q(this.n**BigInt(k),this.d**BigInt(k));}
+ toString(){return this.d===1n?String(this.n):this.n+'/'+this.d;}
+}
+const Z=new Q(0n),ONE=new Q(1n),of=n=>new Q(BigInt(n)),sum=xs=>xs.reduce((a,b)=>a.add(b),Z),dot=(a,b)=>sum(a.map((v,i)=>v.mul(b[i]))),max=xs=>xs.reduce((a,b)=>a.cmp(b)>=0?a:b);
+function rational(s){if(typeof s!=='string'||s.length>30||!/^(-?(?:0|[1-9]\d*))(?:\/([1-9]\d*))?$/.test(s))fail('E_RATIONAL');const [ns,ds='1']=s.split('/');const n=BigInt(ns),d=BigInt(ds);if(d>1024n||n>1000n*d||n< -1000n*d)fail('E_RATIONAL');return new Q(n,d);}
+function strictParse(text){
+ if(typeof text!=='string'||Buffer.byteLength(text,'utf8')>131072)fail('E_JSON');let i=0;
+ const ws=()=>{while(/[\x20\t\r\n]/.test(text[i]||'\0'))i++;};
+ function string(){const start=i++;let closed=false;while(i<text.length){const c=text[i++];if(c==='\\'){i++;continue;}if(c==='"'){closed=true;break;}if(c<' ')fail('E_JSON');}if(!closed)fail('E_JSON');try{return JSON.parse(text.slice(start,i));}catch{fail('E_JSON');}}
+ function value(depth){if(depth>32)fail('E_JSON');ws();const c=text[i];
+  if(c==='"')return string();
+  if(c==='{'){i++;const o=Object.create(null),keys=new Set();ws();if(text[i]==='}'){i++;return o;}while(true){ws();if(text[i]!=='"')fail('E_JSON');const k=string();if(keys.has(k))fail('E_DUPLICATE');keys.add(k);ws();if(text[i++]!==':')fail('E_JSON');o[k]=value(depth+1);ws();const end=text[i++];if(end==='}')return o;if(end!==',')fail('E_JSON');}}
+  if(c==='['){i++;const a=[];ws();if(text[i]===']'){i++;return a;}while(true){a.push(value(depth+1));ws();const end=text[i++];if(end===']')return a;if(end!==',')fail('E_JSON');}}
+  for(const [token,v] of [['true',true],['false',false],['null',null]])if(text.startsWith(token,i)){i+=token.length;return v;}
+  const m=text.slice(i).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);if(!m)fail('E_JSON');i+=m[0].length;const n=Number(m[0]);if(!Number.isFinite(n))fail('E_JSON');return n;
+ }
+ const r=value(0);ws();if(i!==text.length)fail('E_JSON');return r;
+}
+function object(o){return o!==null&&typeof o==='object'&&!Array.isArray(o);}
+function fields(o,keys){if(!object(o)||Object.keys(o).sort().join('|')!==[...keys].sort().join('|'))fail('E_FIELDS');}
+const CORE=['mdp_validate','mdp_action_rewards','mdp_fixed_policy_transition','mdp_fixed_policy_reward','mdp_policy_evaluation','mdp_one_step_actions','mdp_bellman_values','mdp_optimal_action_sets','mdp_optimal_policy','mdp_bellman_residual'];
+function input(d){
+ fields(d,['states','transition','rewards','terminal','discount','horizon','policy','initial','shift']);
+ if(!Array.isArray(d.states)||d.states.length<1||d.states.length>4)fail('E_DIMENSION');const n=d.states.length;
+ if(d.states.some(s=>typeof s!=='string'||!/^s\d+$/.test(s))||new Set(d.states).size!==n)fail('E_STATES');
+ if(!Number.isInteger(d.horizon)||d.horizon<0||d.horizon>4)fail('E_HORIZON');
+ const vec=(x,k)=>Array.isArray(x)&&x.length===k;
+ if(!vec(d.transition,n)||!d.transition.every(x=>vec(x,2)&&x.every(r=>vec(r,n)))||!vec(d.rewards,n)||!d.rewards.every(r=>vec(r,2))||!vec(d.terminal,n)||!vec(d.initial,n))fail('E_DIMENSION');
+ const P=d.transition.map(x=>x.map(r=>r.map(rational))),R=d.rewards.map(r=>r.map(rational)),z=d.terminal.map(rational),mu=d.initial.map(rational),g=rational(d.discount),shift=rational(d.shift);
+ for(const state of P)for(const row of state)if(row.some(x=>x.cmp(Z)<0||x.cmp(ONE)>0)||!sum(row).eq(ONE))fail('E_PROBABILITY');
+ if(mu.some(x=>x.cmp(Z)<0||x.cmp(ONE)>0)||!sum(mu).eq(ONE))fail('E_PROBABILITY');
+ if(g.cmp(Z)<0||g.cmp(ONE)>0)fail('E_DISCOUNT');
+ if(!vec(d.policy,n)||!d.policy.every(x=>Number.isInteger(x)&&x>=0&&x<2))fail('E_POLICY');
+ return {n,H:d.horizon,P,R,z,mu,g,shift,policy:[...d.policy],states:[...d.states]};
+}
+function request(req,allowed=CORE){fields(req,['op','input']);if(typeof req.op!=='string'||!allowed.includes(req.op))fail('E_OPERATION');return input(req.input);}
+function dynamic(d){
+ const {n,H,P,R,z,g,policy}=d,V=[z.slice()],fixed=[z.slice()],Qv=[],choices=[];
+ for(let h=1;h<=H;h++){
+  const q=Array.from({length:n},(_,s)=>[0,1].map(a=>R[s][a].add(g.mul(dot(P[s][a],V[h-1])))));const v=q.map(max);
+  Qv.push(q);V.push(v);choices.push(q.map((row,s)=>[0,1].filter(a=>row[a].eq(v[s]))));
+  fixed.push(Array.from({length:n},(_,s)=>R[s][policy[s]].add(g.mul(dot(P[s][policy[s]],fixed[h-1])))));
+ }
+ return {V,Qv,choices,fixed};
+}
+function encode(v){if(v instanceof Q)return v.toString();if(Array.isArray(v))return v.map(encode);if(object(v))return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,encode(x)]));return v;}
+function output(op,value){return {ok:true,op,outcome:op==='mdp_policy_model'?'represented':op==='mdp_evidence_gap'?'open_gap':op==='mdp_deployment_gate'?'exact_gate':'completed',value:encode(value),external_credit:false,scope:'finite_synthetic_same_owner'};}
+function evaluate(req){const d=request(req),{n,H,P,R,z,g,policy}=d,{V,Qv,choices,fixed}=dynamic(d),op=req.op;let value;
+ switch(op){
+ case 'mdp_validate':value={states:n,actions:2,horizon:H,finite:true,terminal_included:true};break;
+ case 'mdp_action_rewards':value=R;break;
+ case 'mdp_fixed_policy_transition':value=P.map((row,s)=>row[policy[s]]);break;
+ case 'mdp_fixed_policy_reward':value=R.map((row,s)=>row[policy[s]]);break;
+ case 'mdp_policy_evaluation':value={policy,values:fixed[H],horizon:H};break;
+ case 'mdp_one_step_actions':value=R.map((row,s)=>row.map((v,a)=>v.add(g.mul(dot(P[s][a],z)))));break;
+ case 'mdp_bellman_values':value={remaining_horizons:Array.from({length:H+1},(_,h)=>h),values:V};break;
+ case 'mdp_optimal_action_sets':value={remaining_horizons:Array.from({length:H},(_,h)=>h+1),actions:choices};break;
+ case 'mdp_optimal_policy':value={remaining_horizons:Array.from({length:H},(_,h)=>h+1),policy:choices.map(row=>row.map(a=>a[0])),tie_counts:choices.map(row=>row.map(a=>a.length))};break;
+ case 'mdp_bellman_residual':{const residuals=Qv.map((row,h)=>row.map((q,s)=>V[h+1][s].sub(max(q))));value={residuals,zero:residuals.every(row=>row.every(q=>q.eq(Z)))};break;}
+ default:fail('E_OPERATION');
+ }
+ return output(op,value);
+}
+function handle(req){try{return evaluate(req);}catch(e){if(e instanceof Fault)return {ok:false,error:e.code,success_credit:0};throw e;}}
+function handleText(text){try{return handle(strictParse(text));}catch(e){if(e instanceof Fault)return {ok:false,error:e.code,success_credit:0};throw e;}}
+module.exports={Fault,fail,Q,Z,ONE,of,sum,dot,max,rational,strictParse,object,fields,input,request,dynamic,encode,output,evaluate,handle,handleText,CORE};

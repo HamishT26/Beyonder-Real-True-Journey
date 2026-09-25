@@ -1,0 +1,141 @@
+{
+  "description": "Owner-local advisory source. Manual observations do not establish trusted live execution.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" cwd_shape",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" cwd_shape",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" model_shape",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" model_shape",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" source_mode",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" source_mode",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" transcript_shape",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" transcript_shape",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" command_budget",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" command_budget",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" command_shape",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" command_shape",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" failed_result",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" failed_result",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" result_budget",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" result_budget",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" stop_summary",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" stop_summary",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/ghc_family_decision_advisories.txt\" claim_scope",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/ghc_family_decision_advisories.txt\" claim_scope",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Inspecting bounded owner evidence payload"
+          }
+        ]
+      }
+    ]
+  }
+}
