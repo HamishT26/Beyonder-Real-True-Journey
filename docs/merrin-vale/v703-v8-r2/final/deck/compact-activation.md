@@ -1,0 +1,1 @@
+After the exact-final canonical and fresh native guards, activate only the existing Vesper Arlen task for v704-v1 with a short pointer to final/handoff-baton.md and final/method-flow-dossier.md. No later owner activation or recipient-completion claim follows.
