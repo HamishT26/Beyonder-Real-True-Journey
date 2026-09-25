@@ -1,0 +1,5 @@
+# Authorization boundary
+
+The direct Sable activation and current v18 controls authorize this solo Caelen owner lane. Source, sibling, shared, user, and standby content remain read-only. Orren Pike remains terminally gated. No task creation, fork, subagent, model override, elevation, desktop update, host-security weakening, Windows-feature change, reboot, credential use, or real authority act is authorized.
+
+Finite synthetic same-owner Alexandrov-topology, software and documentary evidence only. No real museum, route, visitor, participant, accessibility evaluation, identity, credential, observation, measurement, professional act, production act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains conjectural; THOS and Freed ID remain nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.
