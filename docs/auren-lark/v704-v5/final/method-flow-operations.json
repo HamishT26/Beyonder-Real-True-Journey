@@ -1,0 +1,462 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v704-v5-final-operations",
+  "owner": "Auren Lark",
+  "identity_boundary": "Auren Lark is a relational working name. They/them pronouns, the role revision cartographer and countermodel release steward, the hope of exposing assumptions, countermodels, reversibility and authority limits, sibling or family language, and continuity language are working conventions only. They are never evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or scientific, operational, professional, legal, cultural, affected-party or Maori authority.",
+  "execution_authority": "owner_self_scoped_delta",
+  "attributable_owner": "Auren Lark",
+  "source_commit": "e1e06d8298ef5137e9c7fd6dde83e12542262d5f",
+  "final_commit": null,
+  "changed_file_allowlist": [
+    "scripts/build_auren_v704_v5_final.mjs",
+    "scripts/validate_auren_v704_v5_canonical.mjs",
+    "docs/auren-lark/v704-v5/final/**"
+  ],
+  "module_allowlist": [
+    "final"
+  ],
+  "repository_scan": false,
+  "module_scan": true,
+  "cross_lane_scan": false,
+  "unchanged_history_scan": false,
+  "sibling_lane_mutation": false,
+  "exact_pushed_head_required": true,
+  "methods": [
+    {
+      "method_id": "AL7045-FN-M01",
+      "title": "Materialized read-only inventory rows",
+      "failure_signature": "A first PowerShell path-inventory wrapper piped directly from a foreach block and failed to parse before reading state.",
+      "trigger_preconditions": [
+        "PowerShell foreach expression",
+        "pipeline formatting"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Assign the foreach results to a named collection before piping to Format-Table.",
+      "validation_witness_ids": [
+        "AL7045-FN-W01-F",
+        "AL7045-FN-W01-R"
+      ],
+      "recurrence_guard": "Materialize PowerShell loop results before formatting.",
+      "rollback": "No state changed; retain the parser failure.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "retained_failure_nonerasure",
+        "read_only_source_audit"
+      ],
+      "retained_negative_ids": [
+        "AL7045-FN-N01"
+      ],
+      "scope_boundary": "Read-only inventory transport only; no domain or authority credit."
+    },
+    {
+      "method_id": "AL7045-FN-M02",
+      "title": "Chunked complete skill reads",
+      "failure_signature": "Two combined skill-reading calls returned truncated projections before the selected files had been read completely.",
+      "trigger_preconditions": [
+        "multiple large SKILL.md files",
+        "single combined output projection"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Read each selected instruction file separately and read the Method Flow schema in its own bounded call.",
+      "validation_witness_ids": [
+        "AL7045-FN-W02A-F",
+        "AL7045-FN-W02A-R",
+        "AL7045-FN-W02B-F",
+        "AL7045-FN-W02B-R"
+      ],
+      "recurrence_guard": "Use file-sized output budgets and chunk only at file boundaries, never inside a selected SKILL.md.",
+      "rollback": "Treat truncated projections as unread; preserve them and use complete bounded reads.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "skill_complete_read",
+        "retained_failure_nonerasure"
+      ],
+      "retained_negative_ids": [
+        "AL7045-FN-N02",
+        "AL7045-FN-N03"
+      ],
+      "scope_boundary": "Instruction-loading recovery only; no domain or authority credit."
+    },
+    {
+      "method_id": "AL7045-FN-M03",
+      "title": "Inspect before exact patch context",
+      "failure_signature": "A narrow patch expected the x1 validation-summary manifest count to be 27, while the generated pre-manifest value was 26.",
+      "trigger_preconditions": [
+        "generated JSON field update",
+        "uninspected exact patch context"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Read the exact generated object, then patch the observed scalar and refresh its manifest digest.",
+      "validation_witness_ids": [
+        "AL7045-FN-W03-F",
+        "AL7045-FN-W03-R"
+      ],
+      "recurrence_guard": "Inspect generated context before applying a scalar patch.",
+      "rollback": "The failed patch changed no bytes; retain the failed attempt and exact correction.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "manifest_exactness",
+        "retained_failure_nonerasure"
+      ],
+      "retained_negative_ids": [
+        "AL7045-FN-N04"
+      ],
+      "scope_boundary": "Precommit metadata correction only; no domain or authority credit."
+    },
+    {
+      "method_id": "AL7045-FN-M04",
+      "title": "Primary-source metadata fallback",
+      "failure_signature": "Three direct web opens were unusable: one publisher page returned 405, one journal page exposed only an iframe, and one DOI resolver was inaccessible.",
+      "trigger_preconditions": [
+        "bounded primary-source terminology check",
+        "direct web open"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Retain the failed opens and use bounded search metadata that identifies the primary publication and DOI without claiming content inspection.",
+      "validation_witness_ids": [
+        "AL7045-FN-W04A-F",
+        "AL7045-FN-W04A-R",
+        "AL7045-FN-W04B-F",
+        "AL7045-FN-W04B-R",
+        "AL7045-FN-W04C-F",
+        "AL7045-FN-W04C-R"
+      ],
+      "recurrence_guard": "Separate bibliographic metadata confirmation from full-text inspection and state which one occurred.",
+      "rollback": "Remove no source record; label direct opens failed and metadata-only recovery bounded.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "source_attribution",
+        "empirical_nonpromotion"
+      ],
+      "retained_negative_ids": [
+        "AL7045-FN-N05",
+        "AL7045-FN-N06",
+        "AL7045-FN-N07"
+      ],
+      "scope_boundary": "Bibliographic terminology context only; no endorsement, artifact validation or scientific credit."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "AL7045-FN-W01-F",
+      "method_id": "AL7045-FN-M01",
+      "procedure": "Invoke the first path inventory wrapper.",
+      "scope": "bounded phase operation",
+      "expected": "operation succeeds",
+      "observed": "PowerShell parser error before reading state",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N01"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-FN-W01-R",
+      "method_id": "AL7045-FN-M01",
+      "procedure": "Materialize inventory rows before formatting.",
+      "scope": "bounded phase operation",
+      "expected": "smallest recovery succeeds",
+      "observed": "expected paths and existence state rendered",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N01"
+      ],
+      "boundary": "Bounded same-owner recovery only."
+    },
+    {
+      "witness_id": "AL7045-FN-W02A-F",
+      "method_id": "AL7045-FN-M02",
+      "procedure": "Read the first combined skill group.",
+      "scope": "bounded phase operation",
+      "expected": "operation succeeds",
+      "observed": "projection truncated before complete selected files",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N02"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-FN-W02A-R",
+      "method_id": "AL7045-FN-M02",
+      "procedure": "Read each first-group skill separately.",
+      "scope": "bounded phase operation",
+      "expected": "smallest recovery succeeds",
+      "observed": "every selected instruction file reached EOF",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N02"
+      ],
+      "boundary": "Bounded same-owner recovery only."
+    },
+    {
+      "witness_id": "AL7045-FN-W02B-F",
+      "method_id": "AL7045-FN-M02",
+      "procedure": "Read the Method Flow and truth group together.",
+      "scope": "bounded phase operation",
+      "expected": "operation succeeds",
+      "observed": "projection truncated inside the schema group",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N03"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-FN-W02B-R",
+      "method_id": "AL7045-FN-M02",
+      "procedure": "Read Method Flow, schema and companion skills in bounded files.",
+      "scope": "bounded phase operation",
+      "expected": "smallest recovery succeeds",
+      "observed": "every selected file reached EOF",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N03"
+      ],
+      "boundary": "Bounded same-owner recovery only."
+    },
+    {
+      "witness_id": "AL7045-FN-W03-F",
+      "method_id": "AL7045-FN-M03",
+      "procedure": "Patch the assumed x1 manifest count.",
+      "scope": "bounded phase operation",
+      "expected": "operation succeeds",
+      "observed": "patch context not found; no bytes changed",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N04"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-FN-W03-R",
+      "method_id": "AL7045-FN-M03",
+      "procedure": "Inspect the generated summary and patch the observed value.",
+      "scope": "bounded phase operation",
+      "expected": "smallest recovery succeeds",
+      "observed": "summary and manifest digest aligned before x1 commit",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N04"
+      ],
+      "boundary": "Bounded same-owner recovery only."
+    },
+    {
+      "witness_id": "AL7045-FN-W04A-F",
+      "method_id": "AL7045-FN-M04",
+      "procedure": "Open the Blackwell publisher page.",
+      "scope": "bounded phase operation",
+      "expected": "operation succeeds",
+      "observed": "HTTP 405 from the direct open",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N05"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-FN-W04A-R",
+      "method_id": "AL7045-FN-M04",
+      "procedure": "Use publisher-indexed search metadata.",
+      "scope": "bounded phase operation",
+      "expected": "smallest recovery succeeds",
+      "observed": "title, author, year, pages and DOI identified",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N05"
+      ],
+      "boundary": "Bounded same-owner recovery only."
+    },
+    {
+      "witness_id": "AL7045-FN-W04B-F",
+      "method_id": "AL7045-FN-M04",
+      "procedure": "Open the Lindley Project Euclid full record.",
+      "scope": "bounded phase operation",
+      "expected": "operation succeeds",
+      "observed": "only an iframe shell was visible",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N06"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-FN-W04B-R",
+      "method_id": "AL7045-FN-M04",
+      "procedure": "Use DOI-bound journal search metadata.",
+      "scope": "bounded phase operation",
+      "expected": "smallest recovery succeeds",
+      "observed": "title, journal, year, pages and DOI identified",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N06"
+      ],
+      "boundary": "Bounded same-owner recovery only."
+    },
+    {
+      "witness_id": "AL7045-FN-W04C-F",
+      "method_id": "AL7045-FN-M04",
+      "procedure": "Open the DeGroot DOI resolver.",
+      "scope": "bounded phase operation",
+      "expected": "operation succeeds",
+      "observed": "resolver inaccessible to the bounded web tool",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N07"
+      ],
+      "boundary": "Zero-credit operational failure."
+    },
+    {
+      "witness_id": "AL7045-FN-W04C-R",
+      "method_id": "AL7045-FN-M04",
+      "procedure": "Use DOI-bound publication search metadata.",
+      "scope": "bounded phase operation",
+      "expected": "smallest recovery succeeds",
+      "observed": "title, journal, year, pages and DOI identified",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "AL7045-FN-N07"
+      ],
+      "boundary": "Bounded same-owner recovery only."
+    }
+  ],
+  "state_events": [
+    {
+      "event_id": "AL7045-FN-E01",
+      "method_id": "AL7045-FN-M01",
+      "from": "observed",
+      "to": "validated",
+      "witness_id": "AL7045-FN-W01-R"
+    },
+    {
+      "event_id": "AL7045-FN-E02",
+      "method_id": "AL7045-FN-M02",
+      "from": "observed",
+      "to": "validated",
+      "witness_id": "AL7045-FN-W02B-R"
+    },
+    {
+      "event_id": "AL7045-FN-E03",
+      "method_id": "AL7045-FN-M03",
+      "from": "observed",
+      "to": "validated",
+      "witness_id": "AL7045-FN-W03-R"
+    },
+    {
+      "event_id": "AL7045-FN-E04",
+      "method_id": "AL7045-FN-M04",
+      "from": "observed",
+      "to": "validated",
+      "witness_id": "AL7045-FN-W04C-R"
+    }
+  ],
+  "recommendations": [
+    {
+      "recommendation_id": "AL7045-FN-R01",
+      "method_id": "AL7045-FN-M01",
+      "state": "validated",
+      "text": "Assign the foreach results to a named collection before piping to Format-Table."
+    },
+    {
+      "recommendation_id": "AL7045-FN-R02",
+      "method_id": "AL7045-FN-M02",
+      "state": "validated",
+      "text": "Read each selected instruction file separately and read the Method Flow schema in its own bounded call."
+    },
+    {
+      "recommendation_id": "AL7045-FN-R03",
+      "method_id": "AL7045-FN-M03",
+      "state": "validated",
+      "text": "Read the exact generated object, then patch the observed scalar and refresh its manifest digest."
+    },
+    {
+      "recommendation_id": "AL7045-FN-R04",
+      "method_id": "AL7045-FN-M04",
+      "state": "validated",
+      "text": "Retain the failed opens and use bounded search metadata that identifies the primary publication and DOI without claiming content inspection."
+    }
+  ],
+  "counts": {
+    "methods": 4,
+    "witnesses": 14,
+    "state_events": 4,
+    "recommendations": 4,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 4,
+      "preferred": 0,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "pass": 7,
+      "fail": 7
+    }
+  },
+  "evidence_counts": {
+    "negatives": 7,
+    "methods": 4,
+    "failed_witnesses": 7,
+    "passing_witnesses": 7,
+    "witnesses": 14,
+    "open_gaps": 2,
+    "exact_gates": 0
+  },
+  "selected_pre_final_baseline": {
+    "negatives": 64985,
+    "methods": 5771,
+    "failed_witnesses": 56150,
+    "passing_witnesses": 177801,
+    "witnesses": 233951,
+    "open_gaps": 2010,
+    "exact_gates": 2093
+  },
+  "source_fold_count": 0,
+  "effective_totals": {
+    "negatives": 64992,
+    "methods": 5775,
+    "failed_witnesses": 56157,
+    "passing_witnesses": 177808,
+    "witnesses": 233965,
+    "open_gaps": 2012,
+    "exact_gates": 2093
+  },
+  "boundary": "Finite synthetic same-owner mathematical, software, static-HTML and plugin-validation evidence under shared infrastructure. No full-repository validation, independent reproduction, external audit, empirical GMUT confirmation, production THOS or Freed ID, professional or operational authority, legal or cultural authority, affected-party or Maori authority, complete privacy or accessibility assurance, exhaustive security, AGI or ASI result, consciousness or personhood evidence, Theory-of-Everything proof, canon, or Stage 20 evidence. NOT_READY_FOR_STAGE_20."
+}
