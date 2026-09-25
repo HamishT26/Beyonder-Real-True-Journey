@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+import json
+import runpy
+import sys
+from pathlib import Path
+
+builder = Path(__file__).resolve().parents[2] / "tools" / "ghc_family_hook_reward_remaster.txt"
+module = runpy.run_path(str(builder), run_name="ghc_family_hook_reward_runner")
+request = json.load(sys.stdin)
+operation = request.get("operation")
+allowed = ['hook_concurrency_reservation', 'accessible_summary']
+if operation not in allowed:
+    raise ValueError("operation not allowed by this runner")
+profile_index = int(request.get("profile_index", 1))
+print(json.dumps(module["query_one"](operation, profile_index), sort_keys=True))

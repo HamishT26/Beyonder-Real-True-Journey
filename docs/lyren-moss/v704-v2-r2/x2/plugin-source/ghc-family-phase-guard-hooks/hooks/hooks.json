@@ -1,0 +1,142 @@
+{
+  "description": "Ten bounded nonbackground GHC phase lifecycle guards.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check method_flow_advisory",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check method_flow_advisory",
+            "statusMessage": "Checking Method Flow retention",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      },
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check delivery_no_resend",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check delivery_no_resend",
+            "statusMessage": "Checking delivery latch",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "mcp__codex_app__send_message_to_thread"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check destructive_root_advisory",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check destructive_root_advisory",
+            "statusMessage": "Checking destructive-root risk",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      },
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check authored_extension_advisory",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check authored_extension_advisory",
+            "statusMessage": "Checking authored extension",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "apply_patch|Edit|Write"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check model_allowlist",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check model_allowlist",
+            "statusMessage": "Checking allowed model",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      },
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check d_first_storage",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check d_first_storage",
+            "statusMessage": "Checking D-first posture",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      },
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check branch_identity",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check branch_identity",
+            "statusMessage": "Checking owner branch",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      },
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check file_ceiling",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check file_ceiling",
+            "statusMessage": "Checking file ceiling",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      },
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check coordinator_marker",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check coordinator_marker",
+            "statusMessage": "Checking Coordinator marker",
+            "timeout": 5,
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume|clear|compact"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "additionalContextLimit": 600,
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check terminal_boundary_advisory",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/ghc_family_phase_guard_hooks.txt\" --check terminal_boundary_advisory",
+            "statusMessage": "Checking terminal boundary",
+            "timeout": 5,
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  }
+}

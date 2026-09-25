@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ALLOWED_MODELS = {"gpt-5.6-sol", "gpt-6-astra"}
+ALLOWED_EXTENSIONS = {".json", ".md", ".txt", ".html"}
+
+def read_payload():
+    raw = sys.stdin.buffer.read(131073)
+    if len(raw) > 131072:
+        return {}
+    try:
+        value = json.loads(raw.decode("utf-8"))
+    except Exception:
+        return {}
+    return value if isinstance(value, dict) else {}
+
+def git(cwd, *args):
+    completed = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True)
+    return completed.returncode, completed.stdout.strip()
+
+def context(event, message):
+    if event == "SessionStart":
+        print(json.dumps({"continue": True, "hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": message}}))
+    elif message:
+        print(json.dumps({"systemMessage": message}))
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", required=True)
+    args = parser.parse_args()
+    payload = read_payload()
+    event = payload.get("hook_event_name", "")
+    cwd = Path(payload.get("cwd", ".")).resolve()
+    command = str((payload.get("tool_input") or {}).get("command", ""))
+    check = args.check
+    message = ""
+    if check == "model_allowlist":
+        model = payload.get("model")
+        message = "GHC model allowlist observed." if model in ALLOWED_MODELS else "Model is outside the local GHC allowlist; do not begin a phase side effect."
+    elif check == "d_first_storage":
+        message = "D-first owner storage is active." if cwd.drive.upper() == "D:" else "C drive is an essential-control exception; keep bulk phase data on D."
+    elif check == "branch_identity":
+        code, branch = git(cwd, "branch", "--show-current")
+        message = "Owner branch: " + branch if code == 0 and branch else "No Git branch resolved; avoid repository mutation."
+    elif check == "file_ceiling":
+        code, files = git(cwd, "ls-files")
+        count = len(files.splitlines()) if code == 0 and files else 0
+        message = "Tracked file count is " + str(count) + " of 2000." if count <= 2000 else "Tracked file ceiling exceeded; stop additions and rotate safely."
+    elif check == "coordinator_marker":
+        marker = None
+        for root in (cwd, *cwd.parents):
+            candidate = root / ".codex" / "coordination" / "project.yaml"
+            if candidate.is_file():
+                marker = candidate
+                break
+        message = "Coordinator marker present; load the board before substantial writes." if marker else "Coordinator board is not enabled; remain single-task and do not infer claims."
+    elif check == "destructive_root_advisory":
+        broad = re.search(r"(?i)(git\s+reset\s+--hard|rm\s+-rf\s+[~/]|Remove-Item.+-Recurse.+(?:HOME|CODEX_HOME|[A-Z]:\\?$))", command)
+        if broad:
+            print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "Broad destructive root command blocked by GHC guard."}}))
+            return
+    elif check == "authored_extension_advisory":
+        forbidden = re.search(r"(?i)\.(pdf|png|jpg|jpeg|gif|tex|py|ps1|js|mjs|cjs)(?:\s|$)", command)
+        if forbidden:
+            context(event, "Current phase authoring prefers JSON, Markdown, TXT and HTML; verify the exception before writing.")
+            return
+    elif check == "method_flow_advisory":
+        if re.search(r"(?i)canonical|retry|replay|rerun", command):
+            message = "Retain the failed subject and recover only the smallest dependency; never replay a successful canonical."
+    elif check == "delivery_no_resend":
+        message = "After acknowledged, opaque, or unresolved delivery, stop duplicate sends and keep recipient completion unclaimed."
+    elif check == "terminal_boundary_advisory":
+        code, status = git(cwd, "status", "--porcelain")
+        if code == 0 and status:
+            message = "Working tree is not clean; do not claim an exact terminal gate."
+    context(event, message)
+
+if __name__ == "__main__":
+    main()
