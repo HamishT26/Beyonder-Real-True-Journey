@@ -1,0 +1,2822 @@
+[
+  {
+    "id": "TR7046-P091",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T01",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "dace94601b1922a63ee834aff366ca73433816a7eb79bd4032e1b57b1cb9307c",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "0/1",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "0/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "0/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P091-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P091-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            0,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "ad6e6c9493171119043c599fa48e296f9a6cc1080544cf24ad743e395a9e9908"
+  },
+  {
+    "id": "TR7046-P092",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T02",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "29145d2b459cfed0717dcb8ad22a32f3636c1010ba7c4c2efa677eb3dafd5ed0",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "2/3",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "2/3",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/6",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P092-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P092-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            -1,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "96f11402245b047b499d0a0c86bfd3e1314c885c5f20e203816c0a6cefa329d2"
+  },
+  {
+    "id": "TR7046-P093",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T03",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "75c63c4c8957829eabd3c2aec33352697d4d1e6b477c2676dab07a75af40cfc1",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/3",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/3",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/3",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P093-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P093-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            true,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "087429ad53e2d23a509aa665a065c6327efb970050a422bb44b637c76795a0ba"
+  },
+  {
+    "id": "TR7046-P094",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T04",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          3
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "97fdc62cd73e0ca38ff17575b57b4ac4df718fcd2837039d998ae82f9a284870",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/2",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              4
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/2",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "0/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P094-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P094-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              7,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "b1a4804f3926ec126b913d0ea2af97dcd59124b10d2888bf5e9729720ddceb2e"
+  },
+  {
+    "id": "TR7046-P095",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T05",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "12de6573e984de053bff5ca04b5970b784c1bedbcaed7d4bcd4295f820d19383",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/2",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/2",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/4",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P095-N1",
+        "request": {
+          "op": "line_distance",
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P095-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "b1a4804f3926ec126b913d0ea2af97dcd59124b10d2888bf5e9729720ddceb2e"
+  },
+  {
+    "id": "TR7046-P096",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T06",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "036c0e0a375ee57187dab806e573ba13cfc8ba44f60e0483794db8253da79861",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "0/1",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "0/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "0/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P096-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P096-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "ad6e6c9493171119043c599fa48e296f9a6cc1080544cf24ad743e395a9e9908"
+  },
+  {
+    "id": "TR7046-P097",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T07",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          1,
+          4,
+          2
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "58637f5f67ad08e79371cd9dcae5f5a4bcb26b2ae1d179e48ee89b5e2b4ed07f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "2/5",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              3
+            ],
+            [
+              4,
+              1,
+              2
+            ],
+            [
+              3,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "2/5",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              3,
+              0
+            ],
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "2/5",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P097-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P097-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "236c583238bf4aca64c7d2e2afcdf01cc93655cd08a6eaf9ac8d527255ed1b58"
+  },
+  {
+    "id": "TR7046-P098",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T08",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "d45300bf856f6e229c8294f8958e10a2e7522ec40cbf86b33404eba9675d8c8d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "2/5",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              5,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "2/5",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "0/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P098-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            true,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P098-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "236c583238bf4aca64c7d2e2afcdf01cc93655cd08a6eaf9ac8d527255ed1b58"
+  },
+  {
+    "id": "TR7046-P099",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T09",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          3,
+          1
+        ],
+        [
+          2,
+          0,
+          4
+        ],
+        [
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "d920d97459d5e1b2cfaad67809c48e0de6f53257f68b8681172b6e2493eff6c1",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "2/5",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              1,
+              5
+            ],
+            [
+              4,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "2/5",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/5",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P099-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              7,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P099-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "236c583238bf4aca64c7d2e2afcdf01cc93655cd08a6eaf9ac8d527255ed1b58"
+  },
+  {
+    "id": "TR7046-P100",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T10",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "9c48b2ff060555aeff59db9c426db492bc9d9df38d1c4d0512b4b76ea7f6e7eb",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/2",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/2",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "0/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P100-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P100-N2",
+        "request": {
+          "op": "line_distance",
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "b1a4804f3926ec126b913d0ea2af97dcd59124b10d2888bf5e9729720ddceb2e"
+  },
+  {
+    "id": "TR7046-P101",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T11",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "cost": [
+        [
+          2,
+          0,
+          3
+        ],
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "b1ca34b815d03400590591f0bd1600f993e02cfe73895289fd97e4ef6ed6963b",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/2",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              4,
+              3,
+              1
+            ],
+            [
+              1,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/2",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P101-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P101-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            0,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "b1a4804f3926ec126b913d0ea2af97dcd59124b10d2888bf5e9729720ddceb2e"
+  },
+  {
+    "id": "TR7046-P102",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T12",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "260aee29b1e6572dad3d3253b99e2645b1dec53c6588797e14497f0458427c44",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/1",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/1",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P102-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P102-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            -1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "acdedcbfcb6a31a90aaa99b4c24ac3c20c3bf197cbaa20a4ab6a85e189c54e9f"
+  },
+  {
+    "id": "TR7046-P103",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T13",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          3,
+          1,
+          4
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          2,
+          5,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "469fffce8b7c7023b4bc0db0215d69f100cf069c630e05a22edc1a81d5787b78",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/3",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              5
+            ],
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              3,
+              6,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/3",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P103-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P103-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            true,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "087429ad53e2d23a509aa665a065c6327efb970050a422bb44b637c76795a0ba"
+  },
+  {
+    "id": "TR7046-P104",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T14",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "cost": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "request_sha256": "6477abb5c298c0ca215308d2134e19a8776057be9a3ebde5c3c7abc45270f8f7",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "2/3",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "2/3",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P104-N1",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P104-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              7,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "96f11402245b047b499d0a0c86bfd3e1314c885c5f20e203816c0a6cefa329d2"
+  },
+  {
+    "id": "TR7046-P105",
+    "stage": "x1",
+    "operation": "line_distance",
+    "profile": "T15",
+    "hypothesis": "Compare line-metric transport with cumulative mass imbalance.",
+    "request": {
+      "op": "line_distance",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          5
+        ],
+        [
+          4,
+          0,
+          1
+        ],
+        [
+          1,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "555aa4ea9ee35eb60cd6f0c3d30ae0b94728a72e62bd2ded90389fdb0fd00d01",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "value": "1/3",
+        "cost": "absolute labelled index distance"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              6
+            ],
+            [
+              5,
+              1,
+              2
+            ],
+            [
+              2,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "value": "1/3",
+            "cost": "absolute labelled index distance"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P105-N1",
+        "request": {
+          "op": "line_distance",
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P105-N2",
+        "request": {
+          "op": "line_distance",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "087429ad53e2d23a509aa665a065c6327efb970050a422bb44b637c76795a0ba"
+  }
+]

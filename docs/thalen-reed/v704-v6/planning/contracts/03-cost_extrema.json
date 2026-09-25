@@ -1,0 +1,3017 @@
+[
+  {
+    "id": "TR7046-P031",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T01",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "07e87cb9f21693864dc4516948b4cda34c043e9ab0791d1ca6f67d28433065e7",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "0/1",
+        "maximum": "4/3"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/1",
+            "maximum": "7/3"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "0/1",
+            "maximum": "4/3"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P031-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            -1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P031-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "d0dac89560af9a5c10270137093ceb901ba6693f16cb497fb2f3b587aa2890f6"
+  },
+  {
+    "id": "TR7046-P032",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T02",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "1cd0b54f0172f3f9a67314ff0e4c1b87cd8104c9e149a9ad1b70d827943c2b7f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "2/3",
+        "maximum": "4/3"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "5/3",
+            "maximum": "7/3"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "2/3",
+            "maximum": "4/3"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P032-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            true,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P032-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "359d65413de2185663b860bbb11d628269ae4fe829f4f7af5149fc459a269b0d"
+  },
+  {
+    "id": "TR7046-P033",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T03",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "05d71e114ef6868532a8cc8167df38af06707296de56d0b8854c87d212a9966b",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "1/3",
+        "maximum": "11/6"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "4/3",
+            "maximum": "17/6"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/3",
+            "maximum": "11/6"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P033-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P033-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "dc53900a02378ff879c7fba4fcc5678aa2cc15382270b8b082ff30fabe4fad48"
+  },
+  {
+    "id": "TR7046-P034",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T04",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          3
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "e6c9167df11be81cfcfebb0fc473d4430520f7967d5c28583a5dd06be62ad3ae",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "1/2",
+        "maximum": "9/4"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              4
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "3/2",
+            "maximum": "13/4"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/2",
+            "maximum": "9/4"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P034-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P034-N2",
+        "request": {
+          "op": "cost_extrema",
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "127034b9404f606a18124776b543d14b5d0fb596956d735578026e454b208956"
+  },
+  {
+    "id": "TR7046-P035",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T05",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "229a6e079b3b95b3675e46579828f098ebac1051a8a7b7280a5352038793c4de",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "0/1",
+        "maximum": "0/1"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/1",
+            "maximum": "1/1"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "0/1",
+            "maximum": "0/1"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P035-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P035-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "06598ed2657989b46ac22ade78a1124a69602598df8b7a40f08ff3944cd53a46"
+  },
+  {
+    "id": "TR7046-P036",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T06",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "a3344d3cac1996e675482c09ebda0a31659f795d5e3a9e8a6683836ac161e466",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "0/1",
+        "maximum": "1/1"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/1",
+            "maximum": "2/1"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "0/1",
+            "maximum": "1/1"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P036-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P036-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "848e53e4e596c84cd6771021ca47e6f3d652747b5d4d87f9dfb3477b5eb7ed80"
+  },
+  {
+    "id": "TR7046-P037",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T07",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          1,
+          4,
+          2
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "959656d0cfad81dff7e04335205ed2dc8cc956aaf2ceef3caddb2460401e25ce",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "1/1",
+        "maximum": "12/5"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              3
+            ],
+            [
+              4,
+              1,
+              2
+            ],
+            [
+              3,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "2/1",
+            "maximum": "17/5"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              3,
+              0
+            ],
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/1",
+            "maximum": "12/5"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P037-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P037-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            true,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "6db7eaa5950cb56cb1ebaabe25268e0e4cce0423bcb27de1fc14e7654355b33c"
+  },
+  {
+    "id": "TR7046-P038",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T08",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "165c32a185922b2b033fe42e13af3af7ee3d683f1bbd1b7908ae2147e8b09c55",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "8/5",
+        "maximum": "8/5"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              5,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "13/5",
+            "maximum": "13/5"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "8/5",
+            "maximum": "8/5"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P038-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P038-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "9930ac5fa1fdf04c0ce66a6887373b7794682101078d04791c7098aa5a85b71c"
+  },
+  {
+    "id": "TR7046-P039",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T09",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          3,
+          1
+        ],
+        [
+          2,
+          0,
+          4
+        ],
+        [
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "be861df57bf5c5d0e6819262d5c60527c916f101aec1b701d1b2600a992f7c2e",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "3/5",
+        "maximum": "13/5"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              1,
+              5
+            ],
+            [
+              4,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "8/5",
+            "maximum": "18/5"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "3/5",
+            "maximum": "13/5"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P039-N1",
+        "request": {
+          "op": "cost_extrema",
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P039-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "56810990f0f98149b7887ff5fffbf31beeb8023786cf10a8e28ba78c5e76e06a"
+  },
+  {
+    "id": "TR7046-P040",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T10",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "fe8bd38f9f065e68c46fe29b6566fc02dbeb937e048000699a162d390fc56f0f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "1/1",
+        "maximum": "7/3"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "2/1",
+            "maximum": "10/3"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/1",
+            "maximum": "7/3"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P040-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P040-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "5d39ce2bf0b984033160fd84002814f75f26fbac4442c0c382fb43db1114ab63"
+  },
+  {
+    "id": "TR7046-P041",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T11",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "cost": [
+        [
+          2,
+          0,
+          3
+        ],
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "86c3780c73663dcaa58666d6cc5c322d2b17b3b2e9ff561c8675c84a6638ccce",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "0/1",
+        "maximum": "5/3"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              4,
+              3,
+              1
+            ],
+            [
+              1,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/1",
+            "maximum": "8/3"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              2
+            ],
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "0/1",
+            "maximum": "5/3"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P041-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P041-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "b326bb7c79eb0ad85df5ee5fea600eb41c282f82301b9088b6aa8551bd338523"
+  },
+  {
+    "id": "TR7046-P042",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T12",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "bfce422f59f506c1f25229bfd51f3188b1f58734e11697ef16d071a9d6d4bb4b",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "2/1",
+        "maximum": "10/3"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "3/1",
+            "maximum": "13/3"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "2/1",
+            "maximum": "10/3"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P042-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            true,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P042-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "0c07a1394b688d277b88e0e0a37c324f44c179c6e1bb15952cfa7245676475ad"
+  },
+  {
+    "id": "TR7046-P043",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T13",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          3,
+          1,
+          4
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          2,
+          5,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "c06db419a96b2e6d9d674d0c3eb8632bec23e56011fdd80270473cdecdfd6437",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "1/1",
+        "maximum": "17/6"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              5
+            ],
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              3,
+              6,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "2/1",
+            "maximum": "23/6"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              0
+            ],
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/1",
+            "maximum": "17/6"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P043-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P043-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "3af5bbdec847a11a8b78c1bde3419d7f2e0cc5add2b059bf9860b04552d1a014"
+  },
+  {
+    "id": "TR7046-P044",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T14",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "cost": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "request_sha256": "22b7a722f39c42521ce6a3b80053dee67ddaad63915322d91505c1777bb7900f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "3/1",
+        "maximum": "3/1"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "4/1",
+            "maximum": "4/1"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "3/1",
+            "maximum": "3/1"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P044-N1",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P044-N2",
+        "request": {
+          "op": "cost_extrema",
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "4d92892cfbd221f4d366b7542c854dccf8fe07f52ef324c0ca013e5f8a4c29f5"
+  },
+  {
+    "id": "TR7046-P045",
+    "stage": "x1",
+    "operation": "cost_extrema",
+    "profile": "T15",
+    "hypothesis": "Find exact minimum and maximum normalized transport cost.",
+    "request": {
+      "op": "cost_extrema",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          5
+        ],
+        [
+          4,
+          0,
+          1
+        ],
+        [
+          1,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "8d5c7000c92b0c7526dd2f3eafaa34e1a21ff2fe567462513986f9a740fbace5",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "minimum": "1/2",
+        "maximum": "25/6"
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              6
+            ],
+            [
+              5,
+              1,
+              2
+            ],
+            [
+              2,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "3/2",
+            "maximum": "31/6"
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "minimum": "1/2",
+            "maximum": "25/6"
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P045-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P045-N2",
+        "request": {
+          "op": "cost_extrema",
+          "supply": [
+            0,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "c1fb7b888584a90fdde7351ec46d74448723fbc58dec56d724aa76c290e529b7"
+  }
+]

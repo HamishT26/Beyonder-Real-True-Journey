@@ -1,0 +1,130 @@
+{
+  "description": "Ten advisory topics; manual fixture evidence only until observed in a live lifecycle.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" source_mutation",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" source_mutation",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" successful_replay",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" successful_replay",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" marginal_drift",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" marginal_drift",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" dual_gap",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" dual_gap",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" lost_tie",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" lost_tie",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" cost_semantics",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" cost_semantics",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" grid_promotion",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" grid_promotion",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" real_allocation",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" real_allocation",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" prepared_delivery",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" prepared_delivery",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/transport-advisories.txt\" accepted_resend",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/transport-advisories.txt\" accepted_resend",
+            "timeout": 5,
+            "async": false
+          }
+        ]
+      }
+    ]
+  }
+}

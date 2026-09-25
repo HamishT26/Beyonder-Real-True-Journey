@@ -1,0 +1,2522 @@
+[
+  {
+    "id": "TR7046-P256",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T01",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "de4898e2e9aa37031c85d2afed256993fff809c4296026c3c3944bf490dfe1f9",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "perturbed": "1/3",
+        "increase": "1/3",
+        "upper_bound": "1/3",
+        "new_optimal_count": 1
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "perturbed": "4/3",
+            "increase": "1/3",
+            "upper_bound": "1/3",
+            "new_optimal_count": 1
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P256-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P256-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            -1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "aa94d94f10c1b1d521943d6ce8fd0520ff270e8bcc6477e616b3dc4fc8d69e76"
+  },
+  {
+    "id": "TR7046-P257",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T02",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "2254d91cbd2d0ef0a4e1b15109844fd2e002515a8b57e02f18f1bb3c1d7b8ca2",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "2/3",
+        "perturbed": "5/6",
+        "increase": "1/6",
+        "upper_bound": "1/6",
+        "new_optimal_count": 3
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "5/3",
+            "perturbed": "11/6",
+            "increase": "1/6",
+            "upper_bound": "1/6",
+            "new_optimal_count": 3
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P257-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P257-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            true,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "b4ef425990b988a31d0d9680495843a3fd3660b3dd7292e6b9515186ed2c841d"
+  },
+  {
+    "id": "TR7046-P258",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T03",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "8155ce41fe73272bb18b0713d76bd3d095e13dd45164ae7e65e4638458687aae",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/3",
+        "perturbed": "1/2",
+        "increase": "1/6",
+        "upper_bound": "1/6",
+        "new_optimal_count": 1
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "4/3",
+            "perturbed": "3/2",
+            "increase": "1/6",
+            "upper_bound": "1/6",
+            "new_optimal_count": 1
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P258-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P258-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "8357df4e7b75ddb3c8e202325d36946fcd234f812d70ffdadef9c3a45b61fa45"
+  },
+  {
+    "id": "TR7046-P259",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T04",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          3
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "d77e85c008bcd39314c494fe58371d392711c858f7c050779580d9a7624ee8bf",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/2",
+        "perturbed": "3/4",
+        "increase": "1/4",
+        "upper_bound": "1/4",
+        "new_optimal_count": 2
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              4
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/2",
+            "perturbed": "7/4",
+            "increase": "1/4",
+            "upper_bound": "1/4",
+            "new_optimal_count": 2
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P259-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P259-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "4dc8608500bbe0dd2b3bf6d7040ac9eb2b300714d58f5c7d61cf24d316f06b0b"
+  },
+  {
+    "id": "TR7046-P260",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T05",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "43759c8be4a50c1be42f971b1754deed674608777e4da7c6ef2f0f244a8b42ee",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "perturbed": "0/1",
+        "increase": "0/1",
+        "upper_bound": "0/1",
+        "new_optimal_count": 4
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "perturbed": "1/1",
+            "increase": "0/1",
+            "upper_bound": "0/1",
+            "new_optimal_count": 4
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P260-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P260-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "deee8f39c8f7423477e9a9d3b0e399432da5b13bea2221afd24db0e62fd95d4d"
+  },
+  {
+    "id": "TR7046-P261",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T06",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "f7b9e4f288428885264c4c246cd9e5ee2207d39da85d4223ce57383767f11b7b",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "perturbed": "1/3",
+        "increase": "1/3",
+        "upper_bound": "1/3",
+        "new_optimal_count": 1
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "perturbed": "4/3",
+            "increase": "1/3",
+            "upper_bound": "1/3",
+            "new_optimal_count": 1
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P261-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P261-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "aa94d94f10c1b1d521943d6ce8fd0520ff270e8bcc6477e616b3dc4fc8d69e76"
+  },
+  {
+    "id": "TR7046-P262",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T07",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          1,
+          4,
+          2
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "b6eccb91dd0f309993d6dbe59ffca402aa29f3b850c62c28e8516ecccf30eb3a",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "perturbed": "6/5",
+        "increase": "1/5",
+        "upper_bound": "1/5",
+        "new_optimal_count": 2
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              3
+            ],
+            [
+              4,
+              1,
+              2
+            ],
+            [
+              3,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "perturbed": "11/5",
+            "increase": "1/5",
+            "upper_bound": "1/5",
+            "new_optimal_count": 2
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P262-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            true,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P262-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "5bc942efd96573ab0545514f3377d3a485b0df26a9ffcb412f9f02ef5d020202"
+  },
+  {
+    "id": "TR7046-P263",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T08",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "a7af2533cd7ed11f8bf9e135d43f50a6127a8fa5b32ccd7fde326e88497d6fc4",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "8/5",
+        "perturbed": "8/5",
+        "increase": "0/1",
+        "upper_bound": "0/1",
+        "new_optimal_count": 7
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              5,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "13/5",
+            "perturbed": "13/5",
+            "increase": "0/1",
+            "upper_bound": "0/1",
+            "new_optimal_count": 7
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P263-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P263-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "9fb9ddf13ce22e1082acb621bcf3be643e701b736dcfc6cd351ca329d8fb8144"
+  },
+  {
+    "id": "TR7046-P264",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T09",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          3,
+          1
+        ],
+        [
+          2,
+          0,
+          4
+        ],
+        [
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "e65335b007dd73febe8fd91a5f12d000d4fed3da697c544789d20f3ed3e40a3d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "3/5",
+        "perturbed": "4/5",
+        "increase": "1/5",
+        "upper_bound": "1/5",
+        "new_optimal_count": 2
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              1,
+              5
+            ],
+            [
+              4,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "8/5",
+            "perturbed": "9/5",
+            "increase": "1/5",
+            "upper_bound": "1/5",
+            "new_optimal_count": 2
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P264-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P264-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "c90df79da61f1f59c5a4caa94ac3be9d219709e5c23bbb1396469a32e1b126c1"
+  },
+  {
+    "id": "TR7046-P265",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T10",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "80f0f9512defc599f4151a30e6c1c5d047d38571649472db5f2f27a3ba0dae8e",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "perturbed": "7/6",
+        "increase": "1/6",
+        "upper_bound": "1/6",
+        "new_optimal_count": 1
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "perturbed": "13/6",
+            "increase": "1/6",
+            "upper_bound": "1/6",
+            "new_optimal_count": 1
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P265-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P265-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "801f91f59f106d58e49090252d9a0d90b0094399106288343c7a1297c26ba518"
+  },
+  {
+    "id": "TR7046-P266",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T11",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "cost": [
+        [
+          2,
+          0,
+          3
+        ],
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "b4e2a728c2f5c8c54c8a8aee186e2c2c022a1107acef057a7bdbfe40c90aa528",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "perturbed": "0/1",
+        "increase": "0/1",
+        "upper_bound": "0/1",
+        "new_optimal_count": 1
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              4,
+              3,
+              1
+            ],
+            [
+              1,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "perturbed": "1/1",
+            "increase": "0/1",
+            "upper_bound": "0/1",
+            "new_optimal_count": 1
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P266-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P266-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "8c46dbfe45439e036bef0cbdf71df7ce6fcad8ccb17706f19e8e35f90fb5c2f7"
+  },
+  {
+    "id": "TR7046-P267",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T12",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "81ec33ceb4e68eb0417b9a07faf11537d65792964609cedde4b6d897c8585bd1",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "2/1",
+        "perturbed": "13/6",
+        "increase": "1/6",
+        "upper_bound": "1/6",
+        "new_optimal_count": 2
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/1",
+            "perturbed": "19/6",
+            "increase": "1/6",
+            "upper_bound": "1/6",
+            "new_optimal_count": 2
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P267-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P267-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            true,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "bf1bcbac206d50a402d7787cfaf7de88301e0c480dc0b3f7d8d5f3f336536e3f"
+  },
+  {
+    "id": "TR7046-P268",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T13",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          3,
+          1,
+          4
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          2,
+          5,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "842a50c5e23866cf6505a5060cb9bef9882c90e306da8c40fddcbc33a414c2db",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "perturbed": "7/6",
+        "increase": "1/6",
+        "upper_bound": "1/6",
+        "new_optimal_count": 1
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              5
+            ],
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              3,
+              6,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "perturbed": "13/6",
+            "increase": "1/6",
+            "upper_bound": "1/6",
+            "new_optimal_count": 1
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P268-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P268-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "801f91f59f106d58e49090252d9a0d90b0094399106288343c7a1297c26ba518"
+  },
+  {
+    "id": "TR7046-P269",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T14",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "cost": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "request_sha256": "e6b94bbf5086e0d60e2797dd8b575f4245d353fa9fffa6c4f84344d20a8e79e6",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "3/1",
+        "perturbed": "3/1",
+        "increase": "0/1",
+        "upper_bound": "0/1",
+        "new_optimal_count": 7
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "4/1",
+            "perturbed": "4/1",
+            "increase": "0/1",
+            "upper_bound": "0/1",
+            "new_optimal_count": 7
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P269-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P269-N2",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "6fe2f7eb273df933020339e567450290be932c3eeec4c0221ce6f28194dfb449"
+  },
+  {
+    "id": "TR7046-P270",
+    "stage": "x2",
+    "operation": "cell_cost_sensitivity",
+    "profile": "T15",
+    "hypothesis": "Measure the response to one declared cell-cost increment.",
+    "request": {
+      "op": "cell_cost_sensitivity",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          5
+        ],
+        [
+          4,
+          0,
+          1
+        ],
+        [
+          1,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "92c3b685250a4f1f1d3cd17d638e529e9e64f873c8f1360a99e851027a54bb4e",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/2",
+        "perturbed": "5/6",
+        "increase": "1/3",
+        "upper_bound": "1/3",
+        "new_optimal_count": 1
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              6
+            ],
+            [
+              5,
+              1,
+              2
+            ],
+            [
+              2,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/2",
+            "perturbed": "11/6",
+            "increase": "1/3",
+            "upper_bound": "1/3",
+            "new_optimal_count": 1
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P270-N1",
+        "request": {
+          "op": "cell_cost_sensitivity",
+          "supply": [
+            0,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P270-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "192899efc602f2ee88e88e0009cd548cd25a408c1283b198487236e05e03d1f5"
+  }
+]

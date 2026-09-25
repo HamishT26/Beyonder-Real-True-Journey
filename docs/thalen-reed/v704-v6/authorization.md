@@ -1,0 +1,11 @@
+# Current owner authorization
+
+Auren's acknowledged native terminal activation assigns the existing Thalen Reed task solo v704-v6 under Hamish's current v18 formal schedule. The exact source is `208c67b86e163dca7484be2dc68353fb7f2393d0`. The complete baton and controlling sources were read through EOF; 271 raw Git manifest entries and the exact source canonical receipt hash were verified without source execution.
+
+The direct activation authorizes one fresh additive Thalen-owned D-first lane. Repository product writes are limited to `docs/thalen-reed/v704-v6/`; external receipts use the phase's separate owner bank. Only this native task's bounded Coordinator claim is created and later released in the primary board. This direct fresh-lane instruction takes precedence over the Coordinator skill's generic same-checkout convention. It does not authorize another task, delegation, a fork, a model change or any sibling mutation.
+
+The current v18 controls govern prospective workloads, code formats and phase gates. Their general shared-install permissions are narrowed here by the incoming activation's explicit read-only boundary for shared and user lanes. This phase therefore keeps skills, runners and hook payloads local. No global package update, personal/shared marketplace mutation or memory write is selected. PDF authoring is prohibited. Purchased spending is zero with a USD 50 ceiling.
+
+Only after exact final publication and one attributable metadata canonical may Sable Rook be freshly resolved and immediately reread for v704-v7. Caelen Ash v704-v8 remains Sable-gated. Five supported preacceptance recovery attempts precede a route hold; up to three corrected submissions apply only after definite preacceptance rejection. Accepted, opaque or unresolved delivery closes the send latch. No second confirmation or post-send monitoring is selected.
+
+Inherited references carry zero Thalen execution and novelty credit. Preserve every failed subject, recovery, held packet and protected gate. Relational family language establishes no consciousness, personhood, identity continuity, qualification, agency or authority. Current user steering remains controlling. NOT_READY_FOR_STAGE_20.

@@ -1,0 +1,2844 @@
+[
+  {
+    "id": "TR7046-P136",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T01",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "1cb5db4d971fc92a72acfa0ee7a3dec8156497b8011e9b632affd4ac8879dcc6",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "0/1",
+          "count": 1
+        },
+        {
+          "cost": "1/3",
+          "count": 2
+        },
+        {
+          "cost": "2/3",
+          "count": 6
+        },
+        {
+          "cost": "1/1",
+          "count": 6
+        },
+        {
+          "cost": "4/3",
+          "count": 6
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "1/1",
+              "count": 1
+            },
+            {
+              "cost": "4/3",
+              "count": 2
+            },
+            {
+              "cost": "5/3",
+              "count": 6
+            },
+            {
+              "cost": "2/1",
+              "count": 6
+            },
+            {
+              "cost": "7/3",
+              "count": 6
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P136-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P136-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "aa52e5dec41b4047769e06029885d044c300ca220118603483ebe3487087b616"
+  },
+  {
+    "id": "TR7046-P137",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T02",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "269047bb75e272309ecfe977bdcfe56aeb148ea55fb2dc1e49a1613817323180",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "2/3",
+          "count": 3
+        },
+        {
+          "cost": "1/1",
+          "count": 4
+        },
+        {
+          "cost": "4/3",
+          "count": 5
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "5/3",
+              "count": 3
+            },
+            {
+              "cost": "2/1",
+              "count": 4
+            },
+            {
+              "cost": "7/3",
+              "count": 5
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P137-N1",
+        "request": {
+          "op": "cost_histogram",
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P137-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "416539d195e30f0bced001d5189aad578854b85cd6eaa7ee126ec91a32e14b35"
+  },
+  {
+    "id": "TR7046-P138",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T03",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "f6cdcc16f58ac693d9f3a307d863e3509b055d66709b403f984b74b2aa1b075f",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "1/3",
+          "count": 1
+        },
+        {
+          "cost": "5/6",
+          "count": 5
+        },
+        {
+          "cost": "4/3",
+          "count": 5
+        },
+        {
+          "cost": "11/6",
+          "count": 1
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "4/3",
+              "count": 1
+            },
+            {
+              "cost": "11/6",
+              "count": 5
+            },
+            {
+              "cost": "7/3",
+              "count": 5
+            },
+            {
+              "cost": "17/6",
+              "count": 1
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P138-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            0,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P138-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "599332adaa61636cb676fc41282c139714470bc97bb4285980b790151bb31e84"
+  },
+  {
+    "id": "TR7046-P139",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T04",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          3
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "36dec10980e7e3df4703b0039e15d9c7cf9fc5c532f36e42f60f267dc307c4b5",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "1/2",
+          "count": 2
+        },
+        {
+          "cost": "5/4",
+          "count": 3
+        },
+        {
+          "cost": "3/2",
+          "count": 1
+        },
+        {
+          "cost": "9/4",
+          "count": 1
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              4
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "3/2",
+              "count": 2
+            },
+            {
+              "cost": "9/4",
+              "count": 3
+            },
+            {
+              "cost": "5/2",
+              "count": 1
+            },
+            {
+              "cost": "13/4",
+              "count": 1
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P139-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            -1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P139-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "2d83576ad966dbbb273ef9e16cbd2418c16138194a1a65c9ad49ea0081be2225"
+  },
+  {
+    "id": "TR7046-P140",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T05",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "d3a29ded859e322ede39e441bf933ba098ea6617fe3675f1473ecf4c28ceae3f",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "0/1",
+          "count": 7
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "1/1",
+              "count": 7
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P140-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            true,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P140-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "c9fb301aa92fdc29ea4e46937879b91c1d57f552174af620f740b571919bf356"
+  },
+  {
+    "id": "TR7046-P141",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T06",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "603543ff55d34334995f0d442e86e38238c2f0216fb02cf34c4f423377b420a2",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "0/1",
+          "count": 1
+        },
+        {
+          "cost": "2/3",
+          "count": 3
+        },
+        {
+          "cost": "1/1",
+          "count": 2
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "1/1",
+              "count": 1
+            },
+            {
+              "cost": "5/3",
+              "count": 3
+            },
+            {
+              "cost": "2/1",
+              "count": 2
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P141-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P141-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "549b0d97966686b5d4be94c35e25c2325692f20bf466ae10e605d27562169dde"
+  },
+  {
+    "id": "TR7046-P142",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T07",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          1,
+          4,
+          2
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "e821f9130dd6e6a61b2b3d0cd3f1520601b9508098023a984089e7cb04dd7225",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "1/1",
+          "count": 2
+        },
+        {
+          "cost": "8/5",
+          "count": 2
+        },
+        {
+          "cost": "9/5",
+          "count": 1
+        },
+        {
+          "cost": "11/5",
+          "count": 2
+        },
+        {
+          "cost": "12/5",
+          "count": 1
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              3
+            ],
+            [
+              4,
+              1,
+              2
+            ],
+            [
+              3,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "2/1",
+              "count": 2
+            },
+            {
+              "cost": "13/5",
+              "count": 2
+            },
+            {
+              "cost": "14/5",
+              "count": 1
+            },
+            {
+              "cost": "16/5",
+              "count": 2
+            },
+            {
+              "cost": "17/5",
+              "count": 1
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P142-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P142-N2",
+        "request": {
+          "op": "cost_histogram",
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "3b34baec402a827937b9172c95850836c295c485090ab1d2ecdf977921e37c0d"
+  },
+  {
+    "id": "TR7046-P143",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T08",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "8043609b9f2e20f3ac182d0afeb7beb255b5fdd31e4e374d002ad9090bca7fa4",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "8/5",
+          "count": 11
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              5,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "13/5",
+              "count": 11
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P143-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P143-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            0,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "0bfa8e5627220e1bc130c533f40c9ef04d4d3a71839b38a8ea719ca4438e3315"
+  },
+  {
+    "id": "TR7046-P144",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T09",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          3,
+          1
+        ],
+        [
+          2,
+          0,
+          4
+        ],
+        [
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "c1c5dce212dc792b99e44a7570fc1984903be3f5233ee4558340bd3ce1742fee",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "3/5",
+          "count": 2
+        },
+        {
+          "cost": "7/5",
+          "count": 3
+        },
+        {
+          "cost": "8/5",
+          "count": 4
+        },
+        {
+          "cost": "13/5",
+          "count": 2
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              1,
+              5
+            ],
+            [
+              4,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "8/5",
+              "count": 2
+            },
+            {
+              "cost": "12/5",
+              "count": 3
+            },
+            {
+              "cost": "13/5",
+              "count": 4
+            },
+            {
+              "cost": "18/5",
+              "count": 2
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P144-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P144-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            -1,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "46f2116f07d620be4b38eabfe01d2a606c970f4d8bb541a2ee1af3af2880e546"
+  },
+  {
+    "id": "TR7046-P145",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T10",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "e1448d43144251fa20df5a23b76c58369a57cfe893915faa2ce2ac6dd5c50a15",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "1/1",
+          "count": 1
+        },
+        {
+          "cost": "5/3",
+          "count": 3
+        },
+        {
+          "cost": "7/3",
+          "count": 3
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "2/1",
+              "count": 1
+            },
+            {
+              "cost": "8/3",
+              "count": 3
+            },
+            {
+              "cost": "10/3",
+              "count": 3
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P145-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P145-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            true,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "f80bb2c7518207cb073028e6242afea58461a13cd9969e377ffd4b41445145dd"
+  },
+  {
+    "id": "TR7046-P146",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T11",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "cost": [
+        [
+          2,
+          0,
+          3
+        ],
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "6927b6156686913d0f5bb4bd012e8d996e7da3e1c6e67c8bf1df7772e24b9463",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "0/1",
+          "count": 1
+        },
+        {
+          "cost": "5/6",
+          "count": 3
+        },
+        {
+          "cost": "1/1",
+          "count": 1
+        },
+        {
+          "cost": "3/2",
+          "count": 1
+        },
+        {
+          "cost": "5/3",
+          "count": 1
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              4,
+              3,
+              1
+            ],
+            [
+              1,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "1/1",
+              "count": 1
+            },
+            {
+              "cost": "11/6",
+              "count": 3
+            },
+            {
+              "cost": "2/1",
+              "count": 1
+            },
+            {
+              "cost": "5/2",
+              "count": 1
+            },
+            {
+              "cost": "8/3",
+              "count": 1
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P146-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P146-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              7,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "7df24918b55d7a646f2723ec6aed379408ee949ffde0cde5f2d1071c2d0d4b09"
+  },
+  {
+    "id": "TR7046-P147",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T12",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "3a1040a96131c72d48ea5ce7145a78cc36fb96cfc38807ff1cc777c28db1c9ec",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "2/1",
+          "count": 2
+        },
+        {
+          "cost": "8/3",
+          "count": 2
+        },
+        {
+          "cost": "10/3",
+          "count": 3
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "3/1",
+              "count": 2
+            },
+            {
+              "cost": "11/3",
+              "count": 2
+            },
+            {
+              "cost": "13/3",
+              "count": 3
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P147-N1",
+        "request": {
+          "op": "cost_histogram",
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P147-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "363e3a4b0fb182a66ecba555474a9815a4a3fa29e65e0fc5067723d8a66072fa"
+  },
+  {
+    "id": "TR7046-P148",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T13",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          3,
+          1,
+          4
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          2,
+          5,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "3dae09b3b4acccbed194679074a19ee715bd2429c0cbde85f28031137f3fac3f",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "1/1",
+          "count": 1
+        },
+        {
+          "cost": "3/2",
+          "count": 2
+        },
+        {
+          "cost": "5/3",
+          "count": 1
+        },
+        {
+          "cost": "11/6",
+          "count": 1
+        },
+        {
+          "cost": "2/1",
+          "count": 1
+        },
+        {
+          "cost": "13/6",
+          "count": 1
+        },
+        {
+          "cost": "7/3",
+          "count": 2
+        },
+        {
+          "cost": "8/3",
+          "count": 1
+        },
+        {
+          "cost": "17/6",
+          "count": 2
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              5
+            ],
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              3,
+              6,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "2/1",
+              "count": 1
+            },
+            {
+              "cost": "5/2",
+              "count": 2
+            },
+            {
+              "cost": "8/3",
+              "count": 1
+            },
+            {
+              "cost": "17/6",
+              "count": 1
+            },
+            {
+              "cost": "3/1",
+              "count": 1
+            },
+            {
+              "cost": "19/6",
+              "count": 1
+            },
+            {
+              "cost": "10/3",
+              "count": 2
+            },
+            {
+              "cost": "11/3",
+              "count": 1
+            },
+            {
+              "cost": "23/6",
+              "count": 2
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P148-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            0,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P148-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "a2998d4eff918f7a500a73992dd3208c8441b380780c8e39de020c194c327c6a"
+  },
+  {
+    "id": "TR7046-P149",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T14",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "cost": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "request_sha256": "391ad716612102c7296d93c922a568955203072b4728f3a9f2417119a7ef8444",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "3/1",
+          "count": 12
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "4/1",
+              "count": 12
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P149-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            -1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P149-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "466ba85566ba9149c7ac773c6e5e468b0e50a579be162b10826b25f869d71d22"
+  },
+  {
+    "id": "TR7046-P150",
+    "stage": "x1",
+    "operation": "cost_histogram",
+    "profile": "T15",
+    "hypothesis": "Count grid couplings at every exact cost.",
+    "request": {
+      "op": "cost_histogram",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          5
+        ],
+        [
+          4,
+          0,
+          1
+        ],
+        [
+          1,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "ee99ab6a923272464d4e93cc4f8a94140e588cb0d96712cfc00e1ba8613cbb2a",
+    "expected": {
+      "outcome": "completed",
+      "data": [
+        {
+          "cost": "1/2",
+          "count": 1
+        },
+        {
+          "cost": "5/6",
+          "count": 1
+        },
+        {
+          "cost": "3/2",
+          "count": 2
+        },
+        {
+          "cost": "11/6",
+          "count": 2
+        },
+        {
+          "cost": "13/6",
+          "count": 1
+        },
+        {
+          "cost": "17/6",
+          "count": 2
+        },
+        {
+          "cost": "19/6",
+          "count": 2
+        },
+        {
+          "cost": "25/6",
+          "count": 1
+        }
+      ]
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              6
+            ],
+            [
+              5,
+              1,
+              2
+            ],
+            [
+              2,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": [
+            {
+              "cost": "3/2",
+              "count": 1
+            },
+            {
+              "cost": "11/6",
+              "count": 1
+            },
+            {
+              "cost": "5/2",
+              "count": 2
+            },
+            {
+              "cost": "17/6",
+              "count": 2
+            },
+            {
+              "cost": "19/6",
+              "count": 1
+            },
+            {
+              "cost": "23/6",
+              "count": 2
+            },
+            {
+              "cost": "25/6",
+              "count": 2
+            },
+            {
+              "cost": "31/6",
+              "count": 1
+            }
+          ]
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P150-N1",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            true,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P150-N2",
+        "request": {
+          "op": "cost_histogram",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "ca750d59e750cdfcff7353f9646d6fd52a6a70db038ee2d27f42ee6bf591356b"
+  }
+]

@@ -1,0 +1,40 @@
+'use strict';
+// Pure finite three-bin transport contracts. No I/O or external actions.
+const OPS=['transport_record','coupling_count','cost_extrema','optimal_couplings','independent_coupling','minimum_disagreement','line_distance','cell_bounds','optimal_support','cost_histogram','dual_certificate','slackness_certificate','cost_shift','transpose_covariance','relabel_covariance','coupling_mixture','accessible_summary','cell_cost_sensitivity','external_evidence_gap','allocation_authority_gate'];
+const clone=x=>JSON.parse(JSON.stringify(x)),key=JSON.stringify,sort=x=>x.slice().sort((a,b)=>key(a).localeCompare(key(b),'en'));
+const sum=x=>x.reduce((a,b)=>a+b,0),gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a),q=(n,d=1)=>{const g=gcd(n,d);return (n/g)+'/'+(d/g);};
+function validate(r){if(!r||typeof r!=='object'||Array.isArray(r)||key(Object.keys(r).sort())!==key(['cost','demand','op','supply']))throw Error('field_set');if(!OPS.includes(r.op))throw Error('operation');for(const k of ['supply','demand'])if(!Array.isArray(r[k])||r[k].length!==3||r[k].some(n=>!Number.isInteger(n)||n<1||n>4))throw Error('positive_histogram');const mass=sum(r.supply);if(mass!==sum(r.demand)||mass>6)throw Error('mass_bound');if(!Array.isArray(r.cost)||r.cost.length!==3||r.cost.some(row=>!Array.isArray(row)||row.length!==3||row.some(n=>!Number.isInteger(n)||n<0||n>6)))throw Error('cost_matrix');return mass;}
+function tables(a,b){const result=[];function row(i,remaining,m){if(i===2){if(sum(remaining)===a[2])result.push([...m,remaining.slice()]);return;}for(let x=0;x<=Math.min(a[i],remaining[0]);x++)for(let y=0;y<=Math.min(a[i]-x,remaining[1]);y++){const z=a[i]-x-y;if(z<=remaining[2])row(i+1,[remaining[0]-x,remaining[1]-y,remaining[2]-z],[...m,[x,y,z]]);}}row(0,b,[]);return sort(result);}
+const objective=(x,c)=>sum(x.flatMap((row,i)=>row.map((n,j)=>n*c[i][j])));
+function info(a,b,c){const all=tables(a,b),costs=all.map(x=>objective(x,c)),min=Math.min(...costs),max=Math.max(...costs);return {all,costs,min,max,opt:all.filter((x,i)=>costs[i]===min)};}
+function dual(a,b,c){const bound=Math.max(...c.flat()),M=sum(a);let best=-Infinity,pot;
+ for(let x=-bound;x<=bound;x++)for(let y=-bound;y<=bound;y++){const u=[0,x,y],v=[0,1,2].map(j=>Math.min(...u.map((z,i)=>c[i][j]-z))),value=sum(u.map((z,i)=>z*a[i]))+sum(v.map((z,j)=>z*b[j]));if(value>best){best=value;pot={u,v};}}
+ return {value:q(best,M),...pot};
+}
+function run(r){const M=validate(r),a=r.supply,b=r.demand,c=r.cost,s=info(a,b,c);let data;
+ switch(r.op){
+ case 'transport_record':data={bins:3,mass:M,lattice_denominator:M,couplings:s.all.length};break;
+ case 'coupling_count':data={count:s.all.length};break;
+ case 'cost_extrema':data={minimum:q(s.min,M),maximum:q(s.max,M)};break;
+ case 'optimal_couplings':data={value:q(s.min,M),integer_tables:s.opt,denominator:M};break;
+ case 'independent_coupling':data={matrix:a.map(x=>b.map(y=>q(x*y,M*M))),expected_cost:q(sum(a.flatMap((x,i)=>b.map((y,j)=>x*y*c[i][j]))),M*M),integer_lattice_member:a.every(x=>b.every(y=>x*y%M===0))};break;
+ case 'minimum_disagreement':{const d=a.map((_,i)=>b.map((_,j)=>i===j?0:1)),best=info(a,b,d).min;data={value:q(best,M),total_variation:q(sum(a.map((x,i)=>Math.abs(x-b[i]))),2*M)};break;}
+ case 'line_distance':{const d=a.map((_,i)=>b.map((_,j)=>Math.abs(i-j)));data={value:q(info(a,b,d).min,M),cost:'absolute labelled index distance'};break;}
+ case 'cell_bounds':data=a.map((x,i)=>b.map((y,j)=>({minimum:q(Math.min(...s.all.map(t=>t[i][j])),M),maximum:q(Math.max(...s.all.map(t=>t[i][j])),M)})));break;
+ case 'optimal_support':data={possible:a.map((_,i)=>b.map((_,j)=>s.opt.some(t=>t[i][j]>0))),forced:a.map((_,i)=>b.map((_,j)=>s.opt.every(t=>t[i][j]>0)))};break;
+ case 'cost_histogram':{const h=new Map();for(const value of s.costs)h.set(value,(h.get(value)||0)+1);data=[...h].sort((x,y)=>x[0]-y[0]).map(([value,count])=>({cost:q(value,M),count}));break;}
+ case 'dual_certificate':data=dual(a,b,c);break;
+ case 'slackness_certificate':{const d=dual(a,b,c),slacks=c.map((row,i)=>row.map((n,j)=>n-d.u[i]-d.v[j]));data={value:d.value,u:d.u,v:d.v,slacks,all_optimal_positive_cells_tight:s.opt.every(t=>t.every((row,i)=>row.every((n,j)=>n===0||slacks[i][j]===0)))};break;}
+ case 'cost_shift':{const rs=[0,1,2],cs=[2,1,0],shifted=c.map((row,i)=>row.map((n,j)=>n+rs[i]+cs[j])),t=info(a,b,shifted),offset=sum(a.map((n,i)=>n*rs[i]))+sum(b.map((n,j)=>n*cs[j]));data={original:q(s.min,M),shifted:q(t.min,M),offset:q(offset,M),same_optimal_tables:key(s.opt)===key(t.opt)};break;}
+ case 'transpose_covariance':{const ct=c[0].map((_,j)=>c.map(row=>row[j])),t=info(b,a,ct),back=sort(t.opt.map(x=>x[0].map((_,j)=>x.map(row=>row[j]))));data={original:q(s.min,M),transposed:q(t.min,M),same_optimal_tables:key(back)===key(s.opt)};break;}
+ case 'relabel_covariance':{const p=[2,0,1],z=[1,2,0],t=info(p.map(i=>a[i]),z.map(j=>b[j]),p.map(i=>z.map(j=>c[i][j]))),expected=sort(s.opt.map(x=>p.map(i=>z.map(j=>x[i][j]))));data={value:q(t.min,M),same_optimal_tables:key(t.opt)===key(expected),row_permutation:p,column_permutation:z};break;}
+ case 'coupling_mixture':{const first=s.all[0],last=s.all.at(-1),nums=first.map((row,i)=>row.map((n,j)=>n+last[i][j]));data={matrix:nums.map(row=>row.map(n=>q(n,2*M))),expected_cost:q(objective(nums,c),2*M),first_integer_table:first,last_integer_table:last,physical_interpretation:false};break;}
+ case 'accessible_summary':data={mass_units:M,feasible_lattice_tables:s.all.length,optimal_lattice_tables:s.opt.length,minimum_cost:q(s.min,M),maximum_cost:q(s.max,M),statement:'Finite declared transport table; no real allocation.'};break;
+ case 'cell_cost_sensitivity':{const changed=clone(c);changed[0][0]++;const t=info(a,b,changed);data={original:q(s.min,M),perturbed:q(t.min,M),increase:q(t.min-s.min,M),upper_bound:q(Math.min(...s.opt.map(x=>x[0][0])),M),new_optimal_count:t.opt.length};break;}
+ case 'external_evidence_gap':data={mass_units:M,feasible_lattice_tables:s.all.length,missing:['independent implementation','empirical allocation data and justified costs'],external_credit:0};break;
+ case 'allocation_authority_gate':data={mass_units:M,minimum_synthetic_cost:q(s.min,M),gate:'Real allocation, people, resources, identity and competent authority remain outside scope',action_performed:false};break;
+ }
+ return {outcome:r.op==='coupling_mixture'?'represented':r.op==='external_evidence_gap'?'open_gap':r.op==='allocation_authority_gate'?'exact_gate':'completed',data};
+}
+function project(result,op){if(op==='dual_certificate')return {outcome:result.outcome,data:{value:result.data.value}};if(op==='slackness_certificate')return {outcome:result.outcome,data:{value:result.data.value,all_optimal_positive_cells_tight:result.data.all_optimal_positive_cells_tight}};return result;}
+module.exports={OPS,run,validate,project,q};

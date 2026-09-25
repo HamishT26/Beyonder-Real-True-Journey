@@ -1,0 +1,3062 @@
+[
+  {
+    "id": "TR7046-P196",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T01",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "c1a10624cdfc652121a1d76314697603e7b68d6e24de3bc53ebfa815926a7ab7",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "transposed": "0/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "transposed": "1/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "transposed": "0/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P196-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            true,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P196-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "0df39203b58a0e6d583d655d5e103f005da76d80aac1f387cd78cb59021e8943"
+  },
+  {
+    "id": "TR7046-P197",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T02",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "54cbe8b1b95c2747bf97a36c4e6683caa4f52ef2eaba3318b15b21468c8eab29",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "2/3",
+        "transposed": "2/3",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "5/3",
+            "transposed": "5/3",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/3",
+            "transposed": "2/3",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P197-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P197-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "5b3bb3f62414c996ae6edb5693a5a85dce495fd1c4cccedef855dbc47273b4d0"
+  },
+  {
+    "id": "TR7046-P198",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T03",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "050eba136475c0355fe9c30fea663162b17252a129fb43ac6d676a622f10f4d7",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/3",
+        "transposed": "1/3",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "4/3",
+            "transposed": "4/3",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/3",
+            "transposed": "1/3",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P198-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P198-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "9546222d19f6434d4960b0d4b1ca21854f2634912cafcc02172c4912a0e02a04"
+  },
+  {
+    "id": "TR7046-P199",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T04",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          3
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "8a864d821794df5bde8dc5ff6e820b7cc3d82e3417f919e206a957a1a46834db",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/2",
+        "transposed": "1/2",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              4
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/2",
+            "transposed": "3/2",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/2",
+            "transposed": "1/2",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P199-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P199-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            0,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "8783f1ec803c57d23bc3764db8fb22d6aa84a007c8a52ab0b43da4926f75f416"
+  },
+  {
+    "id": "TR7046-P200",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T05",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "2b4c72f4d169b34dfee7dc8e6b3451c6039a97c029dc2587e5a4373c1186936f",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "transposed": "0/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "transposed": "1/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "transposed": "0/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P200-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P200-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "0df39203b58a0e6d583d655d5e103f005da76d80aac1f387cd78cb59021e8943"
+  },
+  {
+    "id": "TR7046-P201",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T06",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "4c3e8400a089b630eb951ca67893fe6f8466f4ab9181e8a97cd01ccd963a8918",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "transposed": "0/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "transposed": "1/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "transposed": "0/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P201-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P201-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            true,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "0df39203b58a0e6d583d655d5e103f005da76d80aac1f387cd78cb59021e8943"
+  },
+  {
+    "id": "TR7046-P202",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T07",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          1,
+          4,
+          2
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "9e4284f97c57574c23f842f77654ce25f41c36017636d0f95e6a1e5ab52d57fa",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "transposed": "1/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              3
+            ],
+            [
+              4,
+              1,
+              2
+            ],
+            [
+              3,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "transposed": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              3,
+              0
+            ],
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "transposed": "1/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P202-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P202-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "da7c3ba9618024b4a078f468160e5df3c2a8a54c26e7d8e8766efc94527ce101"
+  },
+  {
+    "id": "TR7046-P203",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T08",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "9ef4610b70000055b8cbbb69241d54a4af9878ec1de4690b69c9811e1ba5e71d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "8/5",
+        "transposed": "8/5",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              5,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "13/5",
+            "transposed": "13/5",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "8/5",
+            "transposed": "8/5",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P203-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P203-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "3dca75f9fa6fd70f634a5b09c21487545e8f14bd97c676f72108705a702c1993"
+  },
+  {
+    "id": "TR7046-P204",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T09",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          3,
+          1
+        ],
+        [
+          2,
+          0,
+          4
+        ],
+        [
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "0b13fe7c62a424f08ce09a6d04e58cc81a033824b32ba663cca2b1b627759dfb",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "3/5",
+        "transposed": "3/5",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              1,
+              5
+            ],
+            [
+              4,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "8/5",
+            "transposed": "8/5",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/5",
+            "transposed": "3/5",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P204-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            0,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P204-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "8447197bd377421feacd0f495fb0446fb4c55818e9acff68a636683934b28dc2"
+  },
+  {
+    "id": "TR7046-P205",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T10",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "8a2e7d4663bae12d01ad456075add92b06d9878ae877594eabbe30b5410b3d32",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "transposed": "1/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "transposed": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "transposed": "1/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P205-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            -1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P205-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "da7c3ba9618024b4a078f468160e5df3c2a8a54c26e7d8e8766efc94527ce101"
+  },
+  {
+    "id": "TR7046-P206",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T11",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "cost": [
+        [
+          2,
+          0,
+          3
+        ],
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "3adb0ded1a8928ba99504c9d9062422940ad881fadaea3d5ca354fa4729b31a0",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "transposed": "0/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              4,
+              3,
+              1
+            ],
+            [
+              1,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "transposed": "1/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              2
+            ],
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "transposed": "0/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P206-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            true,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P206-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "0df39203b58a0e6d583d655d5e103f005da76d80aac1f387cd78cb59021e8943"
+  },
+  {
+    "id": "TR7046-P207",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T12",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "c2ed74c284d1862902c402d60ba476614e21c055924c16e3c90489186f749dfe",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "2/1",
+        "transposed": "2/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/1",
+            "transposed": "3/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "transposed": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P207-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              7,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P207-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "fbc8808e81a4e83bae09f62e9ff6a3f65d01d1c699d09d57fa6f989c5385a757"
+  },
+  {
+    "id": "TR7046-P208",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T13",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          3,
+          1,
+          4
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          2,
+          5,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "d1f6593d99b38df9933da2b604ae03a9a04da243ff98fbec591065cfcf947606",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "transposed": "1/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              5
+            ],
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              3,
+              6,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "transposed": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              0
+            ],
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "transposed": "1/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P208-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P208-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "da7c3ba9618024b4a078f468160e5df3c2a8a54c26e7d8e8766efc94527ce101"
+  },
+  {
+    "id": "TR7046-P209",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T14",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "cost": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "request_sha256": "f0c144e8e34966908c132ab4b67298050ff9a35ddfd20320433f69798a42eef0",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "3/1",
+        "transposed": "3/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "4/1",
+            "transposed": "4/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/1",
+            "transposed": "3/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P209-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P209-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            0,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "7885aff2b30c6812e56f5a7a42cecbdc8c8888c9a266d26585d00f1bf9db35a6"
+  },
+  {
+    "id": "TR7046-P210",
+    "stage": "x2",
+    "operation": "transpose_covariance",
+    "profile": "T15",
+    "hypothesis": "Test transposition of supply, demand and costs.",
+    "request": {
+      "op": "transpose_covariance",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          5
+        ],
+        [
+          4,
+          0,
+          1
+        ],
+        [
+          1,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "c143c0327eecb6104b900abca566f5af9c543388cb06102c2566d0bef2054ee7",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/2",
+        "transposed": "1/2",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              6
+            ],
+            [
+              5,
+              1,
+              2
+            ],
+            [
+              2,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/2",
+            "transposed": "3/2",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/2",
+            "transposed": "1/2",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P210-N1",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P210-N2",
+        "request": {
+          "op": "transpose_covariance",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "8783f1ec803c57d23bc3764db8fb22d6aa84a007c8a52ab0b43da4926f75f416"
+  }
+]

@@ -1,0 +1,3107 @@
+[
+  {
+    "id": "TR7046-P181",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T01",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        2,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "bfa5d157c2c452edfc9162b12700d81dadca1ed365a04889f5d46709ef4a8151",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "shifted": "2/1",
+        "offset": "2/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "shifted": "3/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "shifted": "2/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P181-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            -1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P181-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "c52a4ccc33d813992c707710f3846aaab2701a7005c00c3e0e3cbb21aa3a178f"
+  },
+  {
+    "id": "TR7046-P182",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T02",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        1,
+        2,
+        3
+      ],
+      "demand": [
+        3,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "0426c6bc8e1cd7291170f6a6c44fb14406a464c790e88cb8505286eb8b314ade",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "2/3",
+        "shifted": "10/3",
+        "offset": "8/3",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "5/3",
+            "shifted": "13/3",
+            "offset": "8/3",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/3",
+            "shifted": "17/6",
+            "offset": "13/6",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P182-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            true,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P182-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "851e9495dc4621c14131e944377446f34400709673abf0a54f34c4eaeb29c4ac"
+  },
+  {
+    "id": "TR7046-P183",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T03",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        3,
+        1,
+        2
+      ],
+      "demand": [
+        1,
+        3,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "8d098c6e699eca684f24980f4f72d785de82e86982e8832a94d824cff264af12",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/3",
+        "shifted": "2/1",
+        "offset": "5/3",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              3,
+              1,
+              2
+            ],
+            [
+              2,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "4/3",
+            "shifted": "3/1",
+            "offset": "5/3",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/3",
+            "shifted": "2/1",
+            "offset": "5/3",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P183-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            3,
+            1,
+            2
+          ],
+          "demand": [
+            1,
+            3,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P183-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              1,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "962500f11ad9408706a35bfd7396a35b3815a361f493499c3cff3842d5b3b161"
+  },
+  {
+    "id": "TR7046-P184",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T04",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        1,
+        1,
+        2
+      ],
+      "demand": [
+        2,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          3
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "5eb8b13135d80a7921a00b37e00ae01bda12b3d7a5a5e9044a415c3d3d06bff8",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/2",
+        "shifted": "3/1",
+        "offset": "5/2",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              4
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/2",
+            "shifted": "4/1",
+            "offset": "5/2",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/2",
+            "shifted": "5/2",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P184-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P184-N2",
+        "request": {
+          "op": "cost_shift",
+          "demand": [
+            2,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              1,
+              0,
+              3
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "20260c7b4191e400ab06ca7c4a41683d812dbf8128c600faf138b993c6ed942d"
+  },
+  {
+    "id": "TR7046-P185",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T05",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        2,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "caa447f487c9f992248465a89949f28fcda8c0bba34f462749a89a128cab8b0e",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "shifted": "3/2",
+        "offset": "3/2",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "shifted": "5/2",
+            "offset": "3/2",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "shifted": "7/4",
+            "offset": "7/4",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P185-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P185-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "6d8feb221a9623faff92df28a20d6aad35a4d7a08613893bf07ae2229b4317db"
+  },
+  {
+    "id": "TR7046-P186",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T06",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        1,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "8fc85edd4d86ee470e921197416be4d4eb0a714e41869788effce309bde20ab3",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "shifted": "2/1",
+        "offset": "2/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              2,
+              1,
+              2
+            ],
+            [
+              2,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "shifted": "3/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "shifted": "2/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P186-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P186-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "c52a4ccc33d813992c707710f3846aaab2701a7005c00c3e0e3cbb21aa3a178f"
+  },
+  {
+    "id": "TR7046-P187",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T07",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        1,
+        3,
+        1
+      ],
+      "demand": [
+        2,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          1,
+          4,
+          2
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          2,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "f9c99fb3cc88b4e04cdb0f34310a2a9fd75d230022dfba957287f385caf059c7",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "shifted": "3/1",
+        "offset": "2/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              3
+            ],
+            [
+              4,
+              1,
+              2
+            ],
+            [
+              3,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "shifted": "4/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            3
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              3,
+              0
+            ],
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "shifted": "17/5",
+            "offset": "12/5",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P187-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P187-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            true,
+            3,
+            1
+          ],
+          "demand": [
+            2,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "8229f8743c38b78844fb64d857f482d0ca0bb0b315ab8919c4b62de6bfe9bf8f"
+  },
+  {
+    "id": "TR7046-P188",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T08",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        2,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        2
+      ],
+      "cost": [
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "c2bad5893ecba2aed3b370a44caebdd136b50e52c0617acb42263403b01f3e42",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "8/5",
+        "shifted": "16/5",
+        "offset": "8/5",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              5,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "13/5",
+            "shifted": "21/5",
+            "offset": "8/5",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              3,
+              2
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "8/5",
+            "shifted": "18/5",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P188-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P188-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              0
+            ],
+            [
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "a8c390f6f81d35770d5af6efd4d75789d9a3ea6d8588889a094f2e2742178639"
+  },
+  {
+    "id": "TR7046-P189",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T09",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        1,
+        2,
+        2
+      ],
+      "demand": [
+        2,
+        2,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          3,
+          1
+        ],
+        [
+          2,
+          0,
+          4
+        ],
+        [
+          3,
+          1,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "1f3a833e6de2a863a5d099c4721a174203c624b8b5ac9958c893b82bbd6d62a2",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "3/5",
+        "shifted": "3/1",
+        "offset": "12/5",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              4,
+              2
+            ],
+            [
+              3,
+              1,
+              5
+            ],
+            [
+              4,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "8/5",
+            "shifted": "4/1",
+            "offset": "12/5",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            1,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/5",
+            "shifted": "14/5",
+            "offset": "11/5",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P189-N1",
+        "request": {
+          "op": "cost_shift",
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P189-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            2,
+            2
+          ],
+          "demand": [
+            2,
+            2,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              1
+            ],
+            [
+              2,
+              0,
+              4
+            ],
+            [
+              3,
+              1,
+              0
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "ff711e0969da21ec1d0a2f87f7634f4da34bbdb520d77d9f036b411584c93b02"
+  },
+  {
+    "id": "TR7046-P190",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T10",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        4,
+        1,
+        1
+      ],
+      "demand": [
+        1,
+        4,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "4aaf1bfe35edf7ec82181cdf93ea2e1305a4e8cd4c80f10bb10224b8999af38d",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "shifted": "5/2",
+        "offset": "3/2",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "shifted": "7/2",
+            "offset": "3/2",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "shifted": "3/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P190-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            0,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P190-N2",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            4,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "b9464c2fe39e7cf28504a36ec8f4131dd2dc9691d6b92775dbf334fd27002aa1"
+  },
+  {
+    "id": "TR7046-P191",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T11",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        1,
+        4,
+        1
+      ],
+      "demand": [
+        1,
+        1,
+        4
+      ],
+      "cost": [
+        [
+          2,
+          0,
+          3
+        ],
+        [
+          3,
+          2,
+          0
+        ],
+        [
+          0,
+          3,
+          2
+        ]
+      ]
+    },
+    "request_sha256": "4845edf46d72c2d0e9d84b2b16556ecb894c267de43e65bf3f459d25157c206a",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "0/1",
+        "shifted": "3/2",
+        "offset": "3/2",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              4,
+              3,
+              1
+            ],
+            [
+              1,
+              4,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "shifted": "5/2",
+            "offset": "3/2",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              3,
+              2
+            ],
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "0/1",
+            "shifted": "2/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P191-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            -1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              2,
+              0,
+              3
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P191-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            4,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              2
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "6d8feb221a9623faff92df28a20d6aad35a4d7a08613893bf07ae2229b4317db"
+  },
+  {
+    "id": "TR7046-P192",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T12",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        1,
+        1,
+        4
+      ],
+      "demand": [
+        4,
+        1,
+        1
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          2,
+          0,
+          2
+        ],
+        [
+          4,
+          2,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "93acbb2a748c473b7f77cbcabedf4753d61ca2705aadafc067192b634aedc4c1",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "2/1",
+        "shifted": "5/1",
+        "offset": "3/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              5
+            ],
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              5,
+              3,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/1",
+            "shifted": "6/1",
+            "offset": "3/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            4,
+            1,
+            1
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "shifted": "4/1",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P192-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            true,
+            1,
+            4
+          ],
+          "demand": [
+            4,
+            1,
+            1
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P192-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            4,
+            4,
+            4
+          ],
+          "demand": [
+            4,
+            4,
+            4
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              4
+            ],
+            [
+              2,
+              0,
+              2
+            ],
+            [
+              4,
+              2,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "66180e038a5c1ee403f6a47c164bb39c1e1e7f51070f63fc4b0a05de7c12327e"
+  },
+  {
+    "id": "TR7046-P193",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T13",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        2,
+        1,
+        3
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          3,
+          1,
+          4
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          2,
+          5,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "66030e4497d9cb20a924d509f4027873bc735cc0809497490bee6a17281df953",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/1",
+        "shifted": "10/3",
+        "offset": "7/3",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              4,
+              2,
+              5
+            ],
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              3,
+              6,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "2/1",
+            "shifted": "13/3",
+            "offset": "7/3",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              2,
+              5,
+              0
+            ],
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/1",
+            "shifted": "17/6",
+            "offset": "11/6",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P193-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            1,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              7,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "cost_matrix",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P193-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            1,
+            1
+          ],
+          "demand": [
+            1,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              3,
+              1,
+              4
+            ],
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              2,
+              5,
+              0
+            ]
+          ]
+        },
+        "error": "mass_bound",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "4a49418008320dd6a2eaf0abcc961d61c5833590a9871a9db5942cf495eecae9"
+  },
+  {
+    "id": "TR7046-P194",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T14",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        3,
+        2,
+        1
+      ],
+      "demand": [
+        1,
+        2,
+        3
+      ],
+      "cost": [
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "request_sha256": "874d83cfd9110042733dd3c2190b9a9e97520fdd35eb326b2a71dabc6449064a",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "3/1",
+        "shifted": "13/3",
+        "offset": "4/3",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ],
+            [
+              4,
+              4,
+              4
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "4/1",
+            "shifted": "16/3",
+            "offset": "4/3",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            3,
+            2
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/1",
+            "shifted": "29/6",
+            "offset": "11/6",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P194-N1",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            3,
+            2,
+            1
+          ],
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ],
+          "extra": true
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P194-N2",
+        "request": {
+          "op": "cost_shift",
+          "demand": [
+            1,
+            2,
+            3
+          ],
+          "cost": [
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ],
+            [
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "error": "field_set",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "0194d8cac3496e0d1ad4c6809be82343d8a7626fa848ce7b687f8542e544199e"
+  },
+  {
+    "id": "TR7046-P195",
+    "stage": "x2",
+    "operation": "cost_shift",
+    "profile": "T15",
+    "hypothesis": "Test invariance of the optimal set under row and column cost shifts.",
+    "request": {
+      "op": "cost_shift",
+      "supply": [
+        2,
+        3,
+        1
+      ],
+      "demand": [
+        3,
+        1,
+        2
+      ],
+      "cost": [
+        [
+          0,
+          2,
+          5
+        ],
+        [
+          4,
+          0,
+          1
+        ],
+        [
+          1,
+          3,
+          0
+        ]
+      ]
+    },
+    "request_sha256": "c286972a546bdea21dd659d2a192497ade42f2224960dd3d12e4c7bbec85967a",
+    "expected": {
+      "outcome": "completed",
+      "data": {
+        "original": "1/2",
+        "shifted": "5/2",
+        "offset": "2/1",
+        "same_optimal_tables": true
+      }
+    },
+    "alternatives": [
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              6
+            ],
+            [
+              5,
+              1,
+              2
+            ],
+            [
+              2,
+              4,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "3/2",
+            "shifted": "7/2",
+            "offset": "2/1",
+            "same_optimal_tables": true
+          }
+        }
+      },
+      {
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            1,
+            2,
+            3
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ]
+          ]
+        },
+        "expected": {
+          "outcome": "completed",
+          "data": {
+            "original": "1/2",
+            "shifted": "3/1",
+            "offset": "5/2",
+            "same_optimal_tables": true
+          }
+        }
+      }
+    ],
+    "negative_subjects": [
+      {
+        "negative_id": "TR7046-P195-N1",
+        "request": {
+          "op": "unregistered",
+          "supply": [
+            2,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "operation",
+        "original_success_credit": 0
+      },
+      {
+        "negative_id": "TR7046-P195-N2",
+        "request": {
+          "op": "cost_shift",
+          "supply": [
+            0,
+            3,
+            1
+          ],
+          "demand": [
+            3,
+            1,
+            2
+          ],
+          "cost": [
+            [
+              0,
+              2,
+              5
+            ],
+            [
+              4,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              0
+            ]
+          ]
+        },
+        "error": "positive_histogram",
+        "original_success_credit": 0
+      }
+    ],
+    "outcome": "completed",
+    "falsifier": "Any projected-reference mismatch, invalid marginal, lost tie, invalid dual certificate, malformed acceptance or evidence promotion.",
+    "novelty_scope": "New owner transport inputs and contracts; no original-mathematics or universal-novelty claim.",
+    "external_credit": 0,
+    "expected_sha256": "94cff92c94761f1de357d04bb2b5377bd3e48a2b46eb308d2f87f6b63be06b55"
+  }
+]
