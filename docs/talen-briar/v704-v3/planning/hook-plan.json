@@ -1,0 +1,171 @@
+{
+  "hooks": [
+    {
+      "hook_id": "TB7043-H01",
+      "check": "cwd_shape",
+      "event": "SessionStart",
+      "field": "cwd",
+      "advisory": "A declared working-directory string is missing; owner scope remains unverified.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H02",
+      "check": "model_shape",
+      "event": "SessionStart",
+      "field": "model",
+      "advisory": "The payload does not declare an admitted model; this advisory does not change a model.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H03",
+      "check": "source_mode",
+      "event": "SessionStart",
+      "field": "source",
+      "advisory": "The session source is outside the documented finite set; inspect the current lifecycle.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H04",
+      "check": "transcript_shape",
+      "event": "SessionStart",
+      "field": "transcript_path",
+      "advisory": "The transcript reference has an unexpected shape; no transcript is opened.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H05",
+      "check": "command_budget",
+      "event": "PreToolUse",
+      "field": "tool_input.command",
+      "advisory": "The command exceeds the declared review budget; keep execution inside the exact owner scope.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H06",
+      "check": "command_shape",
+      "event": "PreToolUse",
+      "field": "tool_input.command",
+      "advisory": "The Bash or patch command is not a string; inspect its public caller contract.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H07",
+      "check": "failed_result",
+      "event": "PostToolUse",
+      "field": "tool_response",
+      "advisory": "Retain the failed subject separately from a later passing recovery.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H08",
+      "check": "result_budget",
+      "event": "PostToolUse",
+      "field": "tool_response",
+      "advisory": "The returned result exceeds the bounded display budget; preserve bytes and use a bounded projection.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H09",
+      "check": "stop_summary",
+      "event": "Stop",
+      "field": "last_assistant_message",
+      "advisory": "A terminal summary is missing; preparation, canonical and delivery remain separate records.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    },
+    {
+      "hook_id": "TB7043-H10",
+      "check": "claim_scope",
+      "event": "Stop",
+      "field": "last_assistant_message",
+      "advisory": "Review the empirical claim against attributable evidence; a finite synthetic pass grants no external credit.",
+      "timeout_seconds": 5,
+      "async": false,
+      "blocking": false,
+      "output_fields": [
+        "systemMessage"
+      ],
+      "filesystem_writes": 0,
+      "process_launches": 0,
+      "network_calls": 0
+    }
+  ],
+  "count": 10,
+  "source_format": "owner-local legacy Codex manifest plus hooks/hooks.json",
+  "installation": "exact_gate under incoming shared-read-only scope",
+  "live_trust": "exact_gate",
+  "live_execution": "open_gap",
+  "payload_privacy": "No input value or transcript content is echoed or persisted.",
+  "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

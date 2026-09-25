@@ -1,0 +1,118 @@
+from fractions import Fraction as F
+from functools import lru_cache
+import json,hashlib,copy,itertools
+
+def sha(b):return hashlib.sha256(b).hexdigest()
+
+
+def canon(d):return json.dumps(d,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode('utf8')
+
+
+def emit(v):
+ if isinstance(v,F):return str(v)
+ if isinstance(v,list):return [emit(x) for x in v]
+ if isinstance(v,tuple):return [emit(x) for x in v]
+ if isinstance(v,dict):return {k:emit(x) for k,x in v.items()}
+ return v
+
+
+def basic_input(n=3):
+ return {'states':[f's{i}' for i in range(n)],'transition':[[[str(int(i==j)) for j in range(n)] for a in range(2)] for i in range(n)],'rewards':[['0','0'] for i in range(n)],'terminal':['0']*n,'discount':'1','horizon':3,'policy':[i%2 for i in range(n)],'initial':['1']+['0']*(n-1),'shift':'1'}
+
+
+def make_profile(pid,title,reason,rows,rewards,terminal=None,discount='1',horizon=3,policy=None,initial=None):
+ d=basic_input(3);d['transition']=[[[str(F(x,sum(row))) for x in row] for row in state] for state in rows];d['rewards']=[[str(F(x)) for x in row] for row in rewards];d['terminal']=[str(F(x)) for x in (terminal or [0,0,0])];d['discount']=discount;d['horizon']=horizon
+ if policy is not None:d['policy']=policy
+ if initial is not None:d['initial']=[str(F(x)) for x in initial]
+ return {'profile_id':pid,'title':title,'distinguishing_question':reason,'input':d,'synthetic':True,'external_credit':False}
+
+
+def profiles():
+ stay=[[[1,0,0],[1,0,0]],[[0,1,0],[0,1,0]],[[0,0,1],[0,0,1]]]
+ delayed=[[[1,0,0],[0,1,0]],[[0,0,1],[0,1,0]],[[0,0,1],[0,0,1]]]
+ choice=[[[0,0,1],[0,1,0]],[[0,1,0],[0,1,0]],[[0,0,1],[0,0,1]]]
+ mixed=[[[1,1,0],[0,1,1]],[[0,2,1],[1,0,2]],[[1,0,1],[0,1,1]]]
+ cycle=[[[0,1,0],[0,0,1]],[[0,0,1],[1,0,0]],[[1,0,0],[0,1,0]]]
+ rows=[
+ ('delayed_gain','Can delayed state rewards compete with immediate gains?',delayed,[[2,0],[0,3],[6,6]],None,'1',3),
+ ('myopic_trap','Does the first-action optimum change when two later rewards are available?',choice,[[5,0],[4,4],[0,0]],None,'1',3),
+ ('full_ties','Do equal actions preserve both optimizers instead of a unique-policy claim?',stay,[[1,1],[2,2],[3,3]],None,'1/2',3),
+ ('terminal_payoff','Can a terminal payoff reverse the action chosen from immediate reward?',cycle,[[2,0],[0,1],[1,0]],[0,5,-2],'1',2),
+ ('discount_sensitive','Does strong discounting reduce the value of delayed rewards?',choice,[[5,0],[4,4],[0,0]],None,'1/4',3),
+ ('unreachable_state','Does an unreachable reward remain separate from initial expected value?',stay,[[1,0],[3,2],[20,19]],None,'1',3),
+ ('stochastic_tradeoff','Are rational transition averages retained without sampling?',mixed,[[3,0],[-1,4],[2,1]],[1,0,2],'2/3',3),
+ ('negative_rewards','Does maximization select the less costly negative option?',cycle,[[-4,-2],[-3,-1],[-2,-5]],[-1,-2,-3],'1/2',3),
+ ('absorbing_reward','Can a one-way move produce a persistent reward stream?',delayed,[[0,1],[0,-1],[5,5]],None,'1',3),
+ ('wait_then_exit','Can a time-dependent wait-then-exit policy beat every stationary policy?',[[[1,0,0],[0,1,0]],[[0,1,0],[0,1,0]],[[0,0,1],[0,0,1]]],[[1,3],[0,0],[-1,-1]],None,'1',3),
+ ('horizon_switch','Does the action optimal with one remaining step differ from that with three?',choice,[[4,0],[3,3],[0,0]],None,'1',3),
+ ('near_tie','Are close rational action values distinguished exactly?',stay,[[F(1,3),F(2,7)],[F(5,8),F(3,5)],[F(-1,9),F(-1,8)]],None,'3/4',2),
+ ('symmetric_actions','Do identical transition and reward actions produce explicit ties?',[[[1,1,0],[1,1,0]],[[0,1,1],[0,1,1]],[[1,0,1],[1,0,1]]],[[1,1],[0,0],[2,2]],[1,1,1],'1/2',3),
+ ('mixed_initial','Does the occupancy identity hold for a non-point initial distribution?',mixed,[[0,3],[2,1],[4,-1]],[1,-1,2],'1',3),
+ ('terminal_loss','Does finite terminal loss differ from ignoring the terminal boundary?',cycle,[[1,0],[2,0],[3,0]],[-10,1,-2],'1',2)]
+ out=[]
+ for i,(title,why,t,r,z,g,h) in enumerate(rows):out.append(make_profile(f'F{i+1:02d}',title,why,t,r,z,g,h,initial=[F(1,2),F(1,3),F(1,6)] if i==13 else None))
+ assert len({sha(canon(x['input'])) for x in out})==15
+ return out
+
+
+@lru_cache(maxsize=2048)
+def computed(key):
+ d=json.loads(key);n=len(d['states']);H=d['horizon'];P=[[[F(x) for x in row] for row in state] for state in d['transition']];r=[[F(x) for x in row] for row in d['rewards']];z=[F(x) for x in d['terminal']];g=F(d['discount']);policy=d['policy'];mu=[F(x) for x in d['initial']]
+ @lru_cache(None)
+ def optimal(h,s):return z[s] if h==0 else max(r[s][a]+g*sum((P[s][a][j]*optimal(h-1,j) for j in range(n)),F(0)) for a in range(2))
+ V=[[optimal(h,s) for s in range(n)] for h in range(H+1)]
+ Q=[[[r[s][a]+g*sum((P[s][a][j]*V[h-1][j] for j in range(n)),F(0)) for a in range(2)] for s in range(n)] for h in range(1,H+1)]
+ choices=[[[a for a in range(2) if Q[h-1][s][a]==V[h][s]] for s in range(n)] for h in range(1,H+1)]
+ return n,H,P,r,z,g,policy,mu,V,Q,choices
+
+
+def fixed_paths(d,policy=None):
+ n=len(d['states']);H=d['horizon'];P=[[[F(x) for x in row] for row in state] for state in d['transition']];r=[[F(x) for x in row] for row in d['rewards']];z=[F(x) for x in d['terminal']];g=F(d['discount']);policy=d['policy'] if policy is None else policy;out=[]
+ for start in range(n):
+  total=F(0)
+  for route in itertools.product(range(n),repeat=H):
+   prob=F(1);value=F(0);state=start
+   for t,nxt in enumerate(route):
+    a=policy[state];value+=g**t*r[state][a];prob*=P[state][a][nxt];state=nxt
+   value+=g**H*z[state];total+=prob*value
+  out.append(total)
+ return out
+
+
+def expected(op,d):
+ n,H,P,r,z,g,policy,mu,V,Q,choices=computed(canon(d).decode())
+ if op=='mdp_validate':value={'states':n,'actions':2,'horizon':H,'finite':True,'terminal_included':True}
+ elif op=='mdp_action_rewards':value=r
+ elif op=='mdp_fixed_policy_transition':value=[P[s][policy[s]] for s in range(n)]
+ elif op=='mdp_fixed_policy_reward':value=[r[s][policy[s]] for s in range(n)]
+ elif op=='mdp_policy_evaluation':value={'policy':policy,'values':fixed_paths(d),'horizon':H}
+ elif op=='mdp_one_step_actions':value=[[r[s][a]+g*sum((P[s][a][j]*z[j] for j in range(n)),F(0)) for a in range(2)] for s in range(n)]
+ elif op=='mdp_bellman_values':value={'remaining_horizons':list(range(H+1)),'values':V}
+ elif op=='mdp_optimal_action_sets':value={'remaining_horizons':list(range(1,H+1)),'actions':choices}
+ elif op=='mdp_optimal_policy':value={'remaining_horizons':list(range(1,H+1)),'policy':[[a[0] for a in row] for row in choices],'tie_counts':[[len(a) for a in row] for row in choices]}
+ elif op=='mdp_bellman_residual':value={'residuals':[[V[h][s]-max(Q[h-1][s]) for s in range(n)] for h in range(1,H+1)],'zero':True}
+ elif op=='mdp_policy_regret':
+  fixed=fixed_paths(d);value={'optimal':V[H],'declared':fixed,'regret':[a-b for a,b in zip(V[H],fixed)]}
+ elif op=='mdp_all_policy_envelope':
+  rows=[{'policy':list(pol),'values':fixed_paths(d,list(pol))} for pol in itertools.product(range(2),repeat=n)];top=[max(row['values'][s] for row in rows) for s in range(n)];value={'stationary_policies':rows,'pointwise_stationary_envelope':top,'nonstationary_optimal':V[H],'gap':[a-b for a,b in zip(V[H],top)]}
+ elif op=='mdp_advantage':value={'remaining_horizons':list(range(1,H+1)),'shortfalls':[[[V[h][s]-Q[h-1][s][a] for a in range(2)] for s in range(n)] for h in range(1,H+1)]}
+ elif op in ['mdp_occupancy','mdp_occupancy_value_identity']:
+  occ=[mu[:]];stage=[]
+  for t in range(H):
+   pol=[a[0] for a in choices[H-t-1]];stage.append(sum((occ[t][s]*r[s][pol[s]] for s in range(n)),F(0)));occ.append([sum((occ[t][s]*P[s][pol[s]][j] for s in range(n)),F(0)) for j in range(n)])
+  terminal=sum((occ[H][s]*z[s] for s in range(n)),F(0))
+  if op=='mdp_occupancy':value={'times':list(range(H+1)),'occupancy':occ,'row_sums':[sum(row,F(0)) for row in occ]}
+  else:
+   forward=sum((g**t*stage[t] for t in range(H)),F(0))+g**H*terminal;backward=sum((mu[s]*V[H][s] for s in range(n)),F(0));value={'stage_rewards':stage,'terminal_reward':terminal,'forward':forward,'backward':backward,'residual':forward-backward,'holds':forward==backward}
+ elif op=='mdp_reward_shift':
+  c=F(d['shift']);q=copy.deepcopy(d);q['rewards']=[[str(F(x)+c) for x in row] for row in d['rewards']];shifted=computed(canon(q).decode())[8][H];delta=c*sum((g**t for t in range(H)),F(0));actual=[a-b for a,b in zip(shifted,V[H])];value={'shift':c,'predicted_delta':delta,'actual_delta':actual,'holds':all(x==delta for x in actual)}
+ elif op=='mdp_relabel_covariance':
+  perm=list(reversed(range(n)));q=copy.deepcopy(d);q['states']=[d['states'][i] for i in perm];q['transition']=[[[d['transition'][i][a][j] for j in perm] for a in range(2)] for i in perm]
+  for k in ['rewards','terminal','policy','initial']:q[k]=[d[k][i] for i in perm]
+  other=computed(canon(q).decode())[8][H];mapped=[other[perm.index(s)] for s in range(n)];value={'permutation':perm,'original_values':V[H],'mapped_back_values':mapped,'holds':mapped==V[H]}
+ elif op=='mdp_policy_model':value={'axes':['remaining_steps','state_index','optimal_value'],'points':[{'state':d['states'][s],'xyz':[F(h),F(s),V[h][s]]} for h in range(H+1) for s in range(n)],'physical':False}
+ elif op=='mdp_evidence_gap':value={'missing':['real_observations','independent_replication','model_validation'],'synthetic_only':True}
+ elif op=='mdp_deployment_gate':value={'release_authorized':False,'required':['competent_authority','affected_party_consent','safety_and_rollback'],'live_actions':0}
+ else:raise ValueError(op)
+ outcome='represented' if op=='mdp_policy_model' else 'open_gap' if op=='mdp_evidence_gap' else 'exact_gate' if op=='mdp_deployment_gate' else 'completed'
+ return {'ok':True,'op':op,'outcome':outcome,'value':emit(value),'external_credit':False,'scope':'finite_synthetic_same_owner'}
