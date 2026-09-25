@@ -1,0 +1,184 @@
+{
+  "status": "PASS",
+  "rejected_before_child": 9,
+  "allowed_children": 2,
+  "check_only": 2,
+  "model_api_requests": 0,
+  "observations": [
+    {
+      "id": "missing",
+      "args": [],
+      "child_override": null,
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "MODEL_NOT_ALLOWED",
+        "message": "Choose gpt-5.6-sol or gpt-6-astra. No phase process, worktree or baton was created.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "gpt54",
+      "args": [
+        "--model",
+        "gpt-5.4"
+      ],
+      "child_override": null,
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "MODEL_NOT_ALLOWED",
+        "message": "Choose gpt-5.6-sol or gpt-6-astra. No phase process, worktree or baton was created.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "case",
+      "args": [
+        "--model",
+        "GPT-6-ASTRA"
+      ],
+      "child_override": null,
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "MODEL_NOT_ALLOWED",
+        "message": "Choose gpt-5.6-sol or gpt-6-astra. No phase process, worktree or baton was created.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "blank",
+      "args": [
+        "--model",
+        " "
+      ],
+      "child_override": null,
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "MODEL_NOT_ALLOWED",
+        "message": "Choose gpt-5.6-sol or gpt-6-astra. No phase process, worktree or baton was created.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "injected",
+      "args": [
+        "--model",
+        "gpt-6-astra;anything"
+      ],
+      "child_override": null,
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "MODEL_NOT_ALLOWED",
+        "message": "Choose gpt-5.6-sol or gpt-6-astra. No phase process, worktree or baton was created.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "duplicate",
+      "args": [
+        "--model",
+        "gpt-6-astra",
+        "--model",
+        "gpt-5.6-sol"
+      ],
+      "child_override": null,
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "DUPLICATE_OPTION",
+        "message": "Specify --model once.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "child-model",
+      "args": [
+        "--model",
+        "gpt-6-astra"
+      ],
+      "child_override": "--model=gpt-5.4",
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "CHILD_MODEL_OVERRIDE",
+        "message": "Model or profile overrides must be selected at the guarded launcher.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "child-profile",
+      "args": [
+        "--model",
+        "gpt-6-astra"
+      ],
+      "child_override": "--profile=old",
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "CHILD_MODEL_OVERRIDE",
+        "message": "Model or profile overrides must be selected at the guarded launcher.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "id": "child-config",
+      "args": [
+        "--model",
+        "gpt-6-astra"
+      ],
+      "child_override": "--config=model=\"gpt-5.4\"",
+      "exit": 2,
+      "marker_created": false,
+      "stderr": {
+        "ok": false,
+        "error": "CHILD_MODEL_OVERRIDE",
+        "message": "Model or profile overrides must be selected at the guarded launcher.",
+        "child_started": false,
+        "mutation_performed": false
+      }
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "exit": 0,
+      "child_result": {
+        "model": "gpt-5.6-sol",
+        "args": [
+          "literal space value",
+          "literal-$()-value"
+        ]
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "exit": 0,
+      "child_result": {
+        "model": "gpt-6-astra",
+        "args": [
+          "literal space value",
+          "literal-$()-value"
+        ]
+      }
+    }
+  ],
+  "scope": "Registered launcher paths only; this is not a sandbox against arbitrary external shell commands."
+}

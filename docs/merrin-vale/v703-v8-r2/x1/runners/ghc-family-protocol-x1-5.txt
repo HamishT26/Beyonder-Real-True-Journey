@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('fs'),engine=require('../protocol-core.txt');const allowed=["pg_walk_counts","pg_transition_closure"];
+let q;try{const raw=fs.readFileSync(process.argv[2],'utf8');if(Buffer.byteLength(raw)>65536)throw Error('size');q=JSON.parse(raw);}catch(e){console.log(JSON.stringify({ok:false,error:'REQUEST_PARSE',original_completion_credit:0}));process.exit(2);}
+const r=allowed.includes(q.operation)?engine.run(q):{ok:false,error:'CALLER_OPERATION',original_completion_credit:0};console.log(JSON.stringify(r));process.exitCode=r.ok?0:2;
