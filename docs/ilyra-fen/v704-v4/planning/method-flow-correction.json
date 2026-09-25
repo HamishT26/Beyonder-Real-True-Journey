@@ -1,0 +1,117 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v704-v4-planning-correction",
+  "owner": "Ilyra Fen",
+  "identity_boundary": "Relational working identity only; no consciousness, personhood, continuity or authority evidence.",
+  "methods": [
+    {
+      "method_id": "IF7044-PL-M009",
+      "title": "Exact owner refspec recovery",
+      "failure_signature": "A single-branch clone cannot resolve a newly pushed owner branch through a remote-tracking ref until its exact fetch refspec is present.",
+      "trigger_preconditions": ["new owner branch pushed from a single-branch clone"],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Add and fetch the exact owner branch refspec, then bind upstream.",
+      "validation_witness_ids": ["IF7044-PL-W009-F", "IF7044-PL-W009-R"],
+      "recurrence_guard": "Check remote.origin.fetch before the first four-way equality probe in a rotated independent clone.",
+      "rollback": "Remove only the exact added refspec if it is incorrect; never rewrite a commit.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": ["exact_remote_equality", "no_force_push"],
+      "retained_negative_ids": ["IF7044-PL-N009"],
+      "scope_boundary": "Local Git metadata recovery only; no source or sibling mutation."
+    },
+    {
+      "method_id": "IF7044-PL-M010",
+      "title": "Raw Git-blob planning manifest",
+      "failure_signature": "Working-tree byte hashes can differ from committed blobs under line-ending normalization.",
+      "trigger_preconditions": ["a pushed planning commit", "one working-byte versus Git-blob mismatch"],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Hash raw git show bytes for every exact planning-delta path and publish an additive manifest.",
+      "validation_witness_ids": ["IF7044-PL-W010-F", "IF7044-PL-W010-R"],
+      "recurrence_guard": "Use raw Git blobs for all post-commit manifests; label working-byte manifests as precommit only.",
+      "rollback": "Retain both manifests and remove neither historical record.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": ["exact_blob_domain", "planning_commit_immutable"],
+      "retained_negative_ids": ["IF7044-PL-N010"],
+      "scope_boundary": "Planning-commit byte evidence only; no domain or scientific promotion."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "IF7044-PL-W009-F",
+      "method_id": "IF7044-PL-M009",
+      "procedure": "Resolve upstream and remote-tracking state before adding the target fetch refspec.",
+      "scope": "local branch metadata",
+      "expected": "the exact ref is absent and verification stops",
+      "observed": "upstream and tracking resolution failed while fresh live remote equality remained visible",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["IF7044-PL-N009"],
+      "boundary": "Zero delivery, domain or completion credit."
+    },
+    {
+      "witness_id": "IF7044-PL-W009-R",
+      "method_id": "IF7044-PL-M009",
+      "procedure": "Add the exact fetch refspec, fetch one ref and bind upstream.",
+      "scope": "local branch metadata",
+      "expected": "upstream and tracking resolve to the immutable planning commit",
+      "observed": "both resolved to dd4f51ac27c47513cdc663fc94f73af1cb5973be",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["IF7044-PL-N009"],
+      "boundary": "Bounded local Git metadata evidence only."
+    },
+    {
+      "witness_id": "IF7044-PL-W010-F",
+      "method_id": "IF7044-PL-M010",
+      "procedure": "Replay the precommit manifest against raw committed planning blobs.",
+      "scope": "planning delta",
+      "expected": "all working-byte hashes match normalized Git blobs",
+      "observed": "complete-roster.md differed after line-ending normalization",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["IF7044-PL-N010"],
+      "boundary": "The mismatch remains retained at zero pass credit."
+    },
+    {
+      "witness_id": "IF7044-PL-W010-R",
+      "method_id": "IF7044-PL-M010",
+      "procedure": "Hash every raw Git blob in the immutable planning delta.",
+      "scope": "planning delta",
+      "expected": "an exact additive Git-blob manifest covers all 59 delta paths",
+      "observed": "pending manifest generation and exact replay",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": ["IF7044-PL-N010"],
+      "boundary": "Same-owner byte evidence only."
+    }
+  ],
+  "state_events": [
+    {"event_id": "IF7044-PL-E009", "method_id": "IF7044-PL-M009", "from": "observed", "to": "validated", "witness_id": "IF7044-PL-W009-R"},
+    {"event_id": "IF7044-PL-E010", "method_id": "IF7044-PL-M010", "from": "observed", "to": "validated", "witness_id": "IF7044-PL-W010-R"}
+  ],
+  "recommendations": [
+    {"recommendation_id": "IF7044-PL-R009", "method_id": "IF7044-PL-M009", "state": "validated", "text": "Bind an exact target refspec in independent single-branch clones before four-way verification."},
+    {"recommendation_id": "IF7044-PL-R010", "method_id": "IF7044-PL-M010", "state": "validated", "text": "Use raw Git blobs, not checkout bytes, for post-commit manifests."}
+  ],
+  "counts": {
+    "methods": 2,
+    "witnesses": 4,
+    "state_events": 2,
+    "recommendations": 2,
+    "states": {"observed": 0, "candidate": 0, "validated": 2, "preferred": 0, "superseded": 0, "deprecated": 0},
+    "witness_results": {"pass": 2, "fail": 2}
+  },
+  "evidence_counts": {"negatives": 2, "methods": 2, "failed_witnesses": 2, "passing_witnesses": 2, "witnesses": 4, "open_gaps": 0, "exact_gates": 0},
+  "selected_source_and_prior_planning_baseline": {"negatives": 63771, "methods": 5717, "failed_witnesses": 54936, "passing_witnesses": 173787, "witnesses": 228723, "open_gaps": 1978, "exact_gates": 2063},
+  "source_fold_count": 0,
+  "effective_totals": {"negatives": 63773, "methods": 5719, "failed_witnesses": 54938, "passing_witnesses": 173789, "witnesses": 228727, "open_gaps": 1978, "exact_gates": 2063},
+  "boundary": "Finite synthetic same-owner software evidence only. No independent reproduction, empirical confirmation, authority or Stage 20 promotion. NOT_READY_FOR_STAGE_20."
+}
