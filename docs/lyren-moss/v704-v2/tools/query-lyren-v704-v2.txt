@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+import json, runpy, sys
+from pathlib import Path
+builder = Path(__file__).resolve().with_name("ghc_family_exact_markov_phase_builder.txt")
+api = runpy.run_path(str(builder))
+try:
+    request = json.load(sys.stdin)
+except Exception:
+    print(json.dumps({"disposition": "refused", "code": "INVALID_JSON"}, sort_keys=True))
+    raise SystemExit(2)
+if set(request) != {"operation", "profile_id"}:
+    print(json.dumps({"disposition": "refused", "code": "FIELDS_NOT_ADMITTED"}, sort_keys=True))
+    raise SystemExit(2)
+profiles = {row["profile_id"]: row for row in api["all_profiles"]()}
+if request.get("operation") not in api["OP_BY_NAME"] or request.get("profile_id") not in profiles:
+    print(json.dumps({"disposition": "refused", "code": "REQUEST_NOT_ADMITTED"}, sort_keys=True))
+    raise SystemExit(2)
+print(json.dumps(api["run_operation"](request["operation"], profiles[request["profile_id"]]), indent=2, sort_keys=True))
