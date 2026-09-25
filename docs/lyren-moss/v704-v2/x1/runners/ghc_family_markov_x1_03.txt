@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+"""D-backed exact finite Markov caller with bounded refusal."""
+import json, subprocess, sys
+allowed = ['mc_reachability', 'mc_communicating_classes']
+try:
+    request = json.load(sys.stdin)
+except Exception:
+    print(json.dumps({"disposition": "refused", "code": "INVALID_JSON"}, sort_keys=True))
+    raise SystemExit(2)
+if set(request) != {"operation", "profile_id"} or request.get("operation") not in allowed:
+    print(json.dumps({"disposition": "refused", "code": "REQUEST_NOT_ADMITTED"}, sort_keys=True))
+    raise SystemExit(2)
+child = subprocess.run([sys.executable, 'D:/GHC-Archives/worktrees/lyren-moss-main-3/docs/lyren-moss/v704-v2/tools/ghc_family_exact_markov_phase_builder.txt', "query"], input=json.dumps(request), text=True, capture_output=True)
+sys.stdout.write(child.stdout)
+sys.stderr.write(child.stderr)
+raise SystemExit(child.returncode)
