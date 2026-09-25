@@ -98,7 +98,8 @@ function gitJson(commit, relative) {
 }
 
 function ownerStatus() {
-  const rows = git(['status', '--porcelain=v1']).split(/\r?\n/).filter(Boolean);
+  const raw = cp.execFileSync('git', ['-C', REPO, 'status', '--porcelain=v1'], { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
+  const rows = raw.split(/\r?\n/).filter(Boolean);
   for (const row of rows) {
     const relative = row.slice(3).replace(/\\/g, '/');
     const collapsedAncestors = ['docs/caelen-ash/', 'docs/caelen-ash/v704-v8', 'docs/caelen-ash/v704-v8/'];
@@ -1097,10 +1098,16 @@ function wordCount(text) {
 
 function failureDossier() {
   const startup = readJson(path.join(BANK, 'startup-negatives.json'));
+  const supplemental = [];
+  for (const name of ['x1-packaging-correction.json', 'x2-packaging-correction.json']) {
+    const file = path.join(BANK, name);
+    if (fs.existsSync(file)) supplemental.push(readJson(file));
+  }
   return {
     source_baseline: SOURCE_BASELINE.negatives,
     source_fold_count: 1,
     operational: startup.records,
+    supplemental_operational: supplemental,
     session_failure_files: [
       PREFIX + '/x1/candidate-failures.json',
       PREFIX + '/x2/candidate-failures.json'
@@ -1322,7 +1329,7 @@ function privacyHits(text) {
 }
 
 function validateStage(stage) {
-  ownerStatus();
+  const scopedStatusRows = ownerStatus();
   const files = [];
   function walk(directory) {
     if (!fs.existsSync(directory)) return;
@@ -1375,7 +1382,10 @@ function validateStage(stage) {
     privacy_candidates: privacy,
     manifest_entries: m.entries.length,
     head: git(['rev-parse', 'HEAD']),
-    clean_before_staging: git(['status', '--porcelain=v1']).split(/\r?\n/).filter(Boolean).every((row) => row.slice(3).replace(/\\/g, '/').startsWith(PREFIX)),
+    clean_before_staging: scopedStatusRows.every((row) => {
+      const relative = row.slice(3).replace(/\\/g, '/');
+      return ['docs/caelen-ash/', 'docs/caelen-ash/v704-v8', 'docs/caelen-ash/v704-v8/'].includes(relative) || relative.startsWith(PREFIX + '/');
+    }),
     boundary: BOUNDARY
   };
   bankJson('validation-' + stage + '.json', receipt);
@@ -1521,5 +1531,12 @@ if (COMMAND === 'plan') plan();
 else if (COMMAND === 'x1' || COMMAND === 'x2') executeStage(COMMAND);
 else if (COMMAND === 'final') finalBuild();
 else if (COMMAND === 'validate') validateStage(ARGS._[1]);
+else if (COMMAND === 'refresh-manifest') {
+  const stage = ARGS._[1];
+  if (!['x1', 'x2'].includes(stage)) throw new Error('refresh stage must be x1 or x2');
+  ownerStatus();
+  manifest(stage + '/manifest.json', stage);
+  console.log(JSON.stringify({ ok: true, stage, manifest_refreshed: true, domain_replayed: false }));
+}
 else if (COMMAND === 'canonical') canonical();
-else throw new Error('command must be plan, x1, x2, final, validate, or canonical');
+else throw new Error('command must be plan, x1, x2, final, validate, refresh-manifest, or canonical');

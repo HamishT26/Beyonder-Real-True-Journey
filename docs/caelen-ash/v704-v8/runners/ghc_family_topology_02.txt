@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+'use strict';
+const fs=require('fs');
+const path=require('path');
+const runtime=require(path.resolve(__dirname,'../code/runtime.cjs'));
+const allowed=["closed_set_census","interior_signature"];
+let subject=null;
+try{subject=JSON.parse(fs.readFileSync(0,'utf8'));if(!allowed.includes(subject.op))throw Object.assign(new Error('runner_operation'),{code:'runner_operation'});const value=runtime.evaluate(subject);process.stdout.write(JSON.stringify({runner:'CA7048-R02',ok:true,value,error:null}));}
+catch(error){process.stdout.write(JSON.stringify({runner:'CA7048-R02',ok:false,value:null,error:error.code||error.message}));process.exitCode=0;}
