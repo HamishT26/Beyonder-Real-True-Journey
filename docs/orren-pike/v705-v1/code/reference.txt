@@ -1,0 +1,59 @@
+"""Planning-only set and permutation reference. Never imported by x1 or x2."""
+from itertools import permutations, product, combinations
+
+OPS = ['table_record','left_division','right_division','identities','associativity','commutativity','idempotents','left_translation_cycles','right_translation_cycles','subquasigroups','nuclei','automorphisms','transversals','parastrophes','principal_loop_isotope','relabel_covariance','accessible_summary','uncertainty_annotation','external_evidence_gap','authority_gate']
+
+def cycles(p):
+    remaining=set(range(len(p))); out=[]
+    while remaining:
+        a=min(remaining); cycle=[a]; remaining.remove(a); b=p[a]
+        while b!=a:
+            cycle.append(b); remaining.remove(b); b=p[b]
+        out.append(cycle)
+    return out
+
+def evaluate(req):
+    t=req['table']; n=len(t); u=range(n); op=req['operation']
+    triples=list(product(u,repeat=3)); pairs=list(product(u,repeat=2))
+    if op=='table_record': return {'order':n,'entries':n*n,'latin':all(set(r)==set(u) for r in t) and all(set(c)==set(u) for c in zip(*t))}
+    if op=='left_division': return [[next(y for y in u if t[x][y]==z) for z in u] for x in u]
+    if op=='right_division': return [[next(x for x in u if t[x][y]==z) for y in u] for z in u]
+    if op=='identities':
+        left=[e for e in u if all(t[e][x]==x for x in u)]; right=[e for e in u if all(t[x][e]==x for x in u)]
+        return {'left':left,'right':right,'two_sided':sorted(set(left)&set(right))}
+    if op=='associativity':
+        bad=[[a,b,c,t[t[a][b]][c],t[a][t[b][c]]] for a,b,c in triples if t[t[a][b]][c]!=t[a][t[b][c]]]
+        return {'holds':not bad,'failure_count':len(bad),'first_failure':bad[0] if bad else None}
+    if op=='commutativity':
+        bad=[[a,b,t[a][b],t[b][a]] for a,b in pairs if t[a][b]!=t[b][a]]
+        return {'holds':not bad,'failure_count':len(bad),'first_failure':bad[0] if bad else None}
+    if op=='idempotents': return [a for a in u if t[a][a]==a]
+    if op=='left_translation_cycles': return [cycles(r) for r in t]
+    if op=='right_translation_cycles': return [cycles(c) for c in zip(*t)]
+    if op=='subquasigroups':
+        ss=[list(s) for k in range(1,n+1) for s in combinations(u,k) if all(t[a][b] in s for a,b in product(s,repeat=2))]
+        return sorted(ss,key=lambda s:sum(2**i for i in s))
+    if op=='nuclei':
+        left=[a for a in u if all(t[a][t[b][c]]==t[t[a][b]][c] for b,c in pairs)]
+        middle=[b for b in u if all(t[a][t[b][c]]==t[t[a][b]][c] for a,c in pairs)]
+        right=[c for c in u if all(t[a][t[b][c]]==t[t[a][b]][c] for a,b in pairs)]
+        return {'left':left,'middle':middle,'right':right,'intersection':sorted(set(left)&set(middle)&set(right))}
+    if op=='automorphisms': return [list(p) for p in permutations(u) if all(t[p[a]][p[b]]==p[t[a][b]] for a,b in pairs)]
+    if op=='transversals': return [list(p) for p in permutations(u) if len({t[a][p[a]] for a in u})==n]
+    if op=='parastrophes':
+        relation=[(a,b,t[a][b]) for a,b in pairs]; out={}
+        for p in permutations(range(3)):
+            d={(v[p[0]],v[p[1]]):v[p[2]] for v in relation}
+            out[''.join(map(str,p))]=[[d[a,b] for b in u] for a in u]
+        return out
+    if op=='principal_loop_isotope':
+        f=0;g=1;ri=[next(a for a in u if t[a][g]==x) for x in u];li=[next(b for b in u if t[f][b]==y) for y in u]
+        return {'f':f,'g':g,'left_map':ri,'right_map':li,'table':[[t[ri[x]][li[y]] for y in u] for x in u],'identity':t[f][g]}
+    if op=='relabel_covariance':
+        p=[(i+1)%n for i in u];q=[p.index(i) for i in u];s=[[p[t[q[a]][q[b]]] for b in u] for a in u]
+        return {'mapping':p,'inverse':q,'table':s,'roundtrip_verified':[[q[s[p[a]][p[b]]] for b in u] for a in u]==t}
+    if op=='accessible_summary': return {'order':n,'row_symbols_unique':True,'column_symbols_unique':True,'real_layout_authorized':False,'table':t}
+    if op=='uncertainty_annotation': return {'measurement_uncertainty':None,'reason':'No observations; exact finite synthetic table only.'}
+    if op=='external_evidence_gap': return {'missing':['independent implementation','real use study','affected-user review'],'empirical_credit':0}
+    if op=='authority_gate': return {'action':'held','required':['competent review','affected-party authorization'],'executed':False}
+    raise ValueError(op)

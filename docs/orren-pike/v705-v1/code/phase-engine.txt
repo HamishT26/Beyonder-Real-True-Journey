@@ -1,0 +1,466 @@
+"""Owner-only lifecycle. Phase execution requires the registered model launcher."""
+import os,sys,json,hashlib,subprocess,itertools,collections,copy,re,runpy,html,ast
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+REPO=ROOT.parents[2]
+BANK=Path(os.environ['GHC_PHASE_BANK'])
+SKILLS=Path(os.environ['GHC_SKILLS'])
+NODE=os.environ['GHC_NODE']
+PREFIX='docs/orren-pike/v705-v1/'
+SOURCE='7a5ed85e8eb80f5f228b34a143fd1cd8ff12b355'
+SOURCE_PREFIX='docs/caelen-ash/v704-v8/'
+BRANCH='codex/GHC-Family/orren-pike-main-1'
+BOUNDARY='Finite synthetic same-owner mathematical and software evidence only. No real participants, measurements, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, complete privacy or accessibility, exhaustive security, professional, legal, cultural, affected-party or Maori authority, consciousness, personhood, identity continuity, qualification, independent agency, AGI/ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.'
+OPS=['table_record','left_division','right_division','identities','associativity','commutativity','idempotents','left_translation_cycles','right_translation_cycles','subquasigroups','nuclei','automorphisms','transversals','parastrophes','principal_loop_isotope','relabel_covariance','accessible_summary','uncertainty_annotation','external_evidence_gap','authority_gate']
+def raw(cmd,input=None,cwd=None):
+    r=subprocess.run(cmd,input=input,stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=cwd)
+    if r.returncode: raise RuntimeError('Child failed '+str(r.returncode)+': '+r.stderr.decode('utf8','replace')[:1500])
+    return r.stdout
+def git(*args):return raw(['git','-C',str(REPO),*args]).decode('utf8').strip()
+def blob(head,path):return raw(['git','-C',str(REPO),'show',head+':'+path])
+def sha(b):return hashlib.sha256(b).hexdigest()
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()
+def digest(v):return sha(stable(v))
+def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
+def write(p,v):
+    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True)
+    p.write_text(json.dumps(v,indent=2,ensure_ascii=True)+'\n',encoding='utf8',newline='\n')
+def textfile(p,s):
+    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(s,encoding='utf8',newline='\n')
+def run_requests(reqs,runner=None):
+    return json.loads(raw([NODE,str(runner or ROOT/'code/runtime.cjs')],stable(reqs)))
+def outcome(op):return {'uncertainty_annotation':'represented','external_evidence_gap':'open_gap','authority_gate':'exact_gate'}.get(op,'completed')
+def request(pid,t,op):return {'schema':'ghc.family.quasigroup.request.v1','profile_id':pid,'table':t,'operation':op,'purpose':'synthetic'}
+def manifest(stage):
+    target=ROOT/stage/('content-seal.json' if stage=='final' else 'manifest.json')
+    entries=[]
+    for f in sorted(ROOT.rglob('*')):
+        if f.is_file() and f!=target:
+            b=f.read_bytes();assert b'\r' not in b
+            entries.append({'path':f.relative_to(REPO).as_posix(),'bytes':len(b),'sha256':sha(b),'domain':'UTF8_LF_bytes_verified_against_index_before_commit'})
+    write(target,{'schema':'orren.owner-manifest.v1','owner':'Orren Pike','phase':'v705-v1','stage':stage,'source':SOURCE,'entries':entries,'excluded_self':target.relative_to(REPO).as_posix()})
+def ensure_gate(stage):
+    assert git('branch','--show-current')==BRANCH
+    previous={'planning':SOURCE,'x1':read(BANK/'planning-publication.json')['head'] if (BANK/'planning-publication.json').exists() else None,'x2':read(BANK/'x1-publication.json')['head'] if (BANK/'x1-publication.json').exists() else None,'final':read(BANK/'x2-publication.json')['head'] if (BANK/'x2-publication.json').exists() else None}[stage]
+    assert previous and git('rev-parse','HEAD')==previous
+    if stage!='planning':
+        status=raw(['git','-C',str(REPO),'status','--porcelain=v1','-uall']).decode()
+        if '--resume-packaging' in sys.argv:
+            assert all(line[3:].replace('\\','/').startswith(PREFIX) for line in status.splitlines()),'Outside-owner status during recovery'
+        else:assert status==''
+        assert git('rev-parse','@{upstream}')==previous
+        assert git('ls-remote','--exit-code','origin','refs/heads/'+BRANCH).split()[0]==previous
+    return previous
+def load_method_tool():return runpy.run_path(str(SKILLS/'ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py'))
+def ledger(stage):
+    m=load_method_tool();return m['new_ledger']('v705-v1-'+stage,'Orren Pike')
+def add_witness(l,key,procedure,expected,observed,passed,negative_ids=()):
+    mid='OP7051-'+key
+    method=next((x for x in l['methods'] if x['method_id']==mid),None)
+    if method is None:
+        method={'method_id':mid,'title':key.replace('_',' '),'failure_signature':'The declared input or guard condition is not satisfied.','trigger_preconditions':['Frozen owner-scoped synthetic request or observed bounded tooling failure'],'privacy_class':'sanitized_public','approval_class':'authorized_now_owner_local','candidate_workaround':'Retain the failed subject; use only the separately bound valid template or bounded readback recovery.','validation_witness_ids':[],'recurrence_guard':'Validate the complete envelope and exact previous lifecycle boundary before execution.','rollback':'Revert only the attributable owner change; preserve source and failed evidence.','recommendation_state':'candidate','supersedes':[],'protected_gates':['empirical','participant','production','authority','Stage20'],'retained_negative_ids':[],'scope_boundary':BOUNDARY}
+        l['methods'].append(method)
+    wid='OP7051-'+l['phase']+'-W'+str(len(l['witnesses'])+1).zfill(4)
+    w={'witness_id':wid,'method_id':mid,'procedure':procedure,'scope':PREFIX,'expected':expected,'observed':observed,'result':'pass' if passed else 'fail','same_owner_only':True,'independent_reproduction':False,'retained_negative_ids':list(negative_ids),'boundary':'Bounded same-owner evidence; no broader assurance or authority.'}
+    method['validation_witness_ids'].append(wid)
+    for neg in negative_ids:
+        if neg not in method['retained_negative_ids']:method['retained_negative_ids'].append(neg)
+    l['witnesses'].append(w)
+    return wid
+def seal_ledger(stage,l):
+    m=load_method_tool()
+    for q in l['methods']:
+        assert q['retained_negative_ids'],q['method_id']
+        if any(w['result']=='pass' and w['method_id']==q['method_id'] for w in l['witnesses']):q['recommendation_state']='validated'
+        l['state_events'].extend([{'method_id':q['method_id'],'before':'observed','after':'candidate','reason':'Failure retained.'},{'method_id':q['method_id'],'before':'candidate','after':q['recommendation_state'],'reason':'Only attributed passing witnesses support bounded validation.'}])
+    l['execution_authority']='owner_self_scoped_delta';l['source_commit']=SOURCE
+    m['refresh_counts'](l); receipt=m['validate_ledger'](l);assert receipt['valid'],receipt
+    write(BANK/(stage+'-method-flow-assembled.json'),l)
+    write(ROOT/stage/'method-flow-validation.json',receipt)
+    shards=[]
+    for i in range(0,len(l['witnesses']),200):
+        f=ROOT/stage/('witnesses-'+str(i//200+1).zfill(2)+'.json');part=l['witnesses'][i:i+200];write(f,part);shards.append({'path':f.relative_to(REPO).as_posix(),'count':len(part),'sha256':sha(f.read_bytes())})
+    head={k:v for k,v in l.items() if k!='witnesses'};head['schema']='ghc.family.method-flow-state.bundle.v1';head['witness_shards']=shards;head['reassembled_schema']='ghc.family.method-flow-state.v1';head['assembled_sha256']=digest(l)
+    write(ROOT/stage/'method-flow.json',head);return l['counts']
+def planning():
+    previous=ensure_gate('planning');assert not (ROOT/'planning/plan.json').exists()
+    audit=read(BANK/'source-admission.json');assert audit['all_passed']
+    write(ROOT/'planning/source-admission.json',audit)
+    refs=runpy.run_path(str(ROOT/'code/reference.txt')); assert refs['OPS']==OPS
+    controls={}
+    for name,rel in [('workflow','ghc-family-index/references/current-workflow-v18.json'),('roster','ghc-family-index/references/current-roster-v18.json'),('authorization','ghc-family-auth-permission-state/references/current-authorization-v18.json')]:
+        b=(SKILLS/rel).read_bytes();write(ROOT/('controls/'+name+'.json'),json.loads(b));controls[name]={'sha256':sha(b),'logical_source':rel}
+    src=read_source_json('final/phase-truth.json'); inherited=[]
+    source_paths=git('ls-tree','-r','--name-only',SOURCE,'--',SOURCE_PREFIX+'planning/contracts/').splitlines()
+    for path in source_paths:
+        b=blob(SOURCE,path);data=json.loads(b)
+        rows=data if isinstance(data,list) else data.get('contracts',[])
+        for item in rows:inherited.append({'source_path':path,'source_blob_sha256':sha(b),'contract':item,'new_credit':0,'execution_credit':0})
+    assert len(inherited)==300,('inherited',len(inherited))
+    for i in range(0,300,30):write(ROOT/'planning/inherited'/('rows-'+str(i//30+1).zfill(2)+'.json'),inherited[i:i+30])
+    bases=[[[ (a+b)%n for b in range(n)] for a in range(n)] for n in [2,3,4,5]]
+    bases+=[[[a^b for b in range(4)] for a in range(4)],[[0,1,2,3,4],[1,0,3,4,2],[2,3,4,0,1],[3,4,1,2,0],[4,2,0,1,3]]]
+    profiles=[];seen=set()
+    for variant in range(3):
+        for base in bases:
+            n=len(base);t=copy.deepcopy(base) if variant==0 else ([base[(i+1)%n][:] for i in range(n)] if variant==1 else [list(reversed(row)) for row in base])
+            if digest(t) in seen:continue
+            seen.add(digest(t)); profiles.append({'profile_id':'OPQ-'+str(len(profiles)+1).zfill(2),'table':t,'order':n,'construction':['base_table','row_rotation','column_reversal'][variant]})
+            if len(profiles)==15:break
+        if len(profiles)==15:break
+    assert len(profiles)==15
+    allrows=[]
+    for j,op in enumerate(OPS):
+        rows=[]
+        for p in profiles:
+            req=request(p['profile_id'],p['table'],op);value=refs['evaluate'](req);bad=copy.deepcopy(req);bad['table'][0][0]=bad['table'][0][1]
+            forbidden=copy.deepcopy(req);forbidden['real_authority']=True
+            row={'contract_id':'OP7051-C-'+str(j+1).zfill(2)+'-'+p['profile_id'],'stage':'x1' if j<10 else 'x2','request':req,'request_sha256':digest(req),'expected':value,'expected_sha256':digest(value),'outcome':outcome(op),'malformed':[{'kind':'duplicate_symbol','request':bad,'error':'LATIN'},{'kind':'authority_claim','request':forbidden,'error':'AUTHORITY'}],'new_credit_scope':'Distinct from the 300 immediate-source contracts; no universal novelty claim.'}
+            row.update({'hypothesis':'The finite '+op+' certificate satisfies its exact declared definition.','null_or_failure_condition':'A frozen reference mismatch, malformed acceptance, lost input, incorrect identity or protected claim.','approval_class':'owner_local_synthetic','execution_lane':row['stage'],'official_primary_source_needs':['GAP LOOPS definitions','Wanless transversal definition when applicable'],'concrete_artifacts':['saved certificate','retained malformed subject','separate refusal','separate repair','Method Flow binding'],'falsifier_or_acceptance_gate':'Exact output agreement plus the declared reconstruction checks.','rollback_or_recovery':'Restore the frozen valid template; retain the original failure.','protected_gates':['empirical','real use','production','affected-party and Maori authority','Stage20']})
+            rows.append(row);allrows.append(row)
+        write(ROOT/'planning/contracts'/(str(j+1).zfill(2)+'-'+op+'.json'),rows)
+    core_shapes={digest([x['request']['operation'],x['request']['table']]) for x in allrows}
+    for stage,ops in [('x1',OPS[:10]),('x2',OPS[10:17])]:
+        aux=[];seen_aux=set(core_shapes);base=bases[3]
+        for perm in itertools.permutations(range(5)):
+            t=[base[i][:] for i in perm]
+            for op in ops:
+                key=digest([op,t])
+                if key in seen_aux:continue
+                seen_aux.add(key);req=request('AUX-'+stage+'-'+str(len(aux)+1).zfill(3),t,op);value=refs['evaluate'](req)
+                aux.append({'case_id':req['profile_id'],'request':req,'expected':value,'expected_sha256':digest(value),'semantic_shape_sha256':key})
+                if len(aux)==250:break
+            if len(aux)==250:break
+        assert len(aux)==250;write(ROOT/'planning'/('auxiliary-'+stage+'.json'),aux)
+    source_hashes={digest(x['contract'].get('request',x['contract'])) for x in inherited};own_hashes={x['request_sha256'] for x in allrows};assert not source_hashes&own_hashes
+    def tokens(x):return set(re.findall('[a-z]+',json.dumps(x).lower()))
+    src_tokens=[tokens(x['contract'].get('request',x['contract'])) for x in inherited]
+    neighbors=[]
+    for row in allrows:
+        a=tokens(row['request']);scores=[len(a&b)/max(1,len(a|b)) for b in src_tokens];k=max(range(300),key=lambda i:scores[i]);neighbors.append({'contract_id':row['contract_id'],'source_row':k+1,'token_jaccard':round(scores[k],6)})
+    write(ROOT/'planning/semantic-neighbors.json',{'comparisons':90000,'hash_intersections':0,'rows':neighbors,'known_overlap':'The existing cyclic Latin-square design skill already covers construction and row/column balance. Quasigroup structure checking is not a new mathematical result. Accessibility and authority vocabulary is shared.','new_scope':'Division, identities and failed identities, translation cycles, subquasigroups, nuclei, automorphisms, transversals, parastrophes and loop isotopes over declared nontrivial finite tables.'})
+    laws=['Unique left division','Unique right division','Row permutation','Column permutation','Two-sided identity uniqueness','Associativity witness exactness','Commutativity witness exactness','Idempotent singleton closure','Translation cycle partition','Finite multiplication closure','Nucleus intersection','Automorphism preservation','Transversal symbol uniqueness','Parastrophe reconstruction','Principal loop isotope identity']
+    probes=['Independent implementation discrepancy','Larger-order search complexity','Table provenance semantics','Nonassociative counterexample coverage','Isotopy versus isomorphism classification','Transversal enumeration scaling','Accessible table navigation','Affected-user usability','Uncertainty interpretation','Real puzzle or layout purpose','Security review','Correction and rollback governance','Minimum disclosure and remedy','Cultural and Maori authority where relevant','Preregistered empirical effectiveness study']
+    held=[]
+    for kind,count in [('exact_gate',50),('blocked',30)]:
+        for i in range(count):held.append({'packet_id':'OP7051-'+kind+'-'+str(i+1).zfill(3),'class':kind,'subject':probes[i%15],'profile_id':profiles[i%15]['profile_id'],'state':'HELD_UNEXECUTED','synthetic_template':True,'authorization_inferred':False})
+    plan={'schema':'orren.finite-quasigroup.plan.v1','owner':'Orren Pike','phase':'v705-v1','branch':BRANCH,'source_commit':SOURCE,'source_fold_count':1,'source_baseline':src['effective_totals'],'source_external_overlay_folded':False,'controls':controls,'profile':'v18','lifecycle':['planning','x1','x2','final'],'route':{'from':'Caelen Ash v704-v8','owner':'Orren Pike v705-v1','prospective_next':'Orin Thale v705-v2','state':'PREPARED_NOT_SENT'},'primary_pillar':'GMUT Mind','preserved_pillars':['THOS Body workload and repair proxy','Freed ID and CBR Heart disclosure and remedy reservations'],'practice':'synthetic puzzle-table certificate registrar','profiles':profiles,'operations':OPS,'inherited':300,'new_contracts':300,'counts':{'safe_per_session':400,'candidate_per_session':300,'cfr_per_session':300,'skills_per_session':10,'runners_per_session':5,'x1_tests':15,'x2_tests':30,'x2_models':15,'hooks':10},'held_packets':held,'law_hypotheses':[{'id':'OP7051-LAW-'+str(i+1).zfill(2),'title':s,'label':'finite fixture hypothesis; known mathematical context, not a new natural law','falsifier':'One exact frozen table violates the declared certificate or reconstruction identity.'} for i,s in enumerate(laws)],'open_problem_probes':[{'id':'OP7051-PROBE-'+str(i+1).zfill(2),'question':s,'state':'open_gap','solved':False} for i,s in enumerate(probes)],'own_practices':['finite-table registrar','division-certificate reader','counterexample keeper','translation-cycle reviewer','isotopy distinction recorder','accessible-table author','repair provenance reviewer','authority and remedy vacancy recorder'],'successor_practices':['Compare independent formulations','Preserve nonassociative counterexamples','Evaluate accessible tables with affected users only when authorized','Separate structural certificates from practical authority'],'successor_skill_ideas':['quasigroup division','identity falsifiers','isotopy certificates','transversal enumeration','authority-aware table handover'],'successor_runner_ideas':['division readback','nucleus certificate','transversal checker','parastrophe reconstructor','loop isotope verifier'],'source_context':[{'title':'GAP LOOPS mathematical background','url':'https://gap-packages.github.io/loops/doc/chap2_mj.html','status':'current','use':'Definitions of division, nuclei and principal loop isotopes; no GAP execution or reproduction claim.'},{'title':'Ian Wanless, Transversals in Latin Squares','url':'https://arxiv.org/abs/0903.5142','status':'stable','use':'Transversal definition and research context; no general open problem solved.'}],'planning_reference':'set-based Python planning oracle, once only','runtime':'separate JavaScript direct loops, inverse maps, bit masks and transversal backtracking','replay_policy':'No successful source, session or canonical replay. Packaging recovery reads saved evidence only.','file_ceiling':2000,'owner_file_forecast':180,'document_words_max':100000,'baton_words_min':2000,'purchased_spend_usd':0,'spend_ceiling_usd':50,'global_installs':0,'memory_writes':0,'shared_lane_mutations':0,'boundary':BOUNDARY}
+    plan['test_definitions']={'x1':[{'id':'OP7051-X1-T-'+p['profile_id'],'profile_id':p['profile_id'],'checks':['left division reconstructs product','right division reconstructs product','identities unique','associativity implies a two-sided identity','translation cycles partition carrier','full carrier is closed']} for p in profiles],'x2':[{'id':'OP7051-X2-T-'+p['profile_id']+'-'+kind,'profile_id':p['profile_id'],'kind':kind,'checks':(['identity automorphism exists','automorphisms preserve every product','transversal rows columns symbols unique','nucleus is exact three-way intersection'] if kind=='algebra' else ['six parastrophes Latin','012 parastrophe is original','principal isotope has declared identity','relabeling roundtrip exact'])} for p in profiles for kind in ['algebra','transformations']]}
+    plan['model_coordinates']=['carrier order','automorphism count','transversal count']
+    plan['hook_topics']=['source_fixity','division_orientation','identity_nonpromotion','associativity_falsifier','isotopy_nonidentity','transversal_bounds','uncertainty_missingness','accessible_fallback','repair_nonerasure','authority_hold']
+    plan['skill_operations']={'x1':OPS[:10],'x2':OPS[10:]};plan['runner_pairs']=[OPS[i:i+2] for i in range(0,20,2)]
+    write(ROOT/'planning/manifest-tribunal-fixture.json',{'owner':'Orren Pike','outcomes':['completed','represented','open_gap','exact_gate'],'canonical_successes':0,'paths':[PREFIX+'README.md'],'mutation_kinds':['wrong_owner','unknown_outcome','accepted_replay','path_escape','private_path'],'fixture_only':True})
+    write(ROOT/'planning/plan.json',plan)
+    l=ledger('planning')
+    for row in read(BANK/'startup-negatives.json')['records']:
+        key=row['negative_id'];add_witness(l,key,'Retained startup observation','Complete bounded read or supported operation',row['subject'],False,[key]);add_witness(l,key,'Narrow readback recovery',row['recovery'],row['recovery_observed'],True,[key])
+    counts=seal_ledger('planning',l)
+    textfile(ROOT/'README.md','# Orren Pike v705-v1\n\nExact finite quasigroup certificates with separate planning, x1, x2, final, canonical and route states. The phase-local guides and callers preserve the distinction between Latin tables, quasigroups, loops and groups. See planning/plan.json and the eventual final/handoff-baton.md.\n\n'+BOUNDARY+'\n')
+    textfile(ROOT/'authorization.md','# Owner scope\n\nThe current Caelen activation authorizes solo Orren v705-v1 in this owner lane. Current v18 controls apply prospectively. The issuer fields in the copied shared profile remain Talen history; they do not rename this task. Orin v705-v2 is terminally gated. No task, fork, subagent, early contact, source execution, canonical replay, sibling mutation, memory write, model change, purchase or real authority act is performed.\n\n'+BOUNDARY+'\n')
+    write(ROOT/'planning/summary.json',{'reference_invocations':1,'contracts':300,'auxiliary_expected':500,'inherited_zero_credit':300,'method_flow':counts,'source_execution':0,'boundary':BOUNDARY})
+    manifest('planning');print(json.dumps({'stage':'planning','contracts':300,'inherited':300,'profiles':15,'method_flow':counts}))
+def read_source_json(rel):return json.loads(blob(SOURCE,SOURCE_PREFIX+rel))
+
+def contracts(stage):
+    rows=[]
+    for f in sorted((ROOT/'planning/contracts').glob('*.json')):rows.extend(x for x in read(f) if x['stage']==stage)
+    return rows
+
+NOTES={
+ 'table_record':'Keep the carrier exactly 0 through n minus 1. A Latin table is a quasigroup certificate, not a group certificate.',
+ 'left_division':'Entry [x][z] is the unique y with x*y=z; do not interchange row and column division.',
+ 'right_division':'Entry [z][y] is the unique x with x*y=z. The output indexing differs from left division.',
+ 'identities':'Keep left, right and two-sided identities separate; an empty list is substantive evidence.',
+ 'associativity':'Retain the first ordered triple and both product values when associativity fails; never silently reassociate.',
+ 'commutativity':'Count ordered failing pairs. This count is twice the unordered-pair count for distinct entries.',
+ 'idempotents':'An idempotent satisfies x*x=x; it is not thereby an identity for other elements.',
+ 'left_translation_cycles':'A row acts as a permutation of the right operand. Start each cycle at its least unused element.',
+ 'right_translation_cycles':'A column acts as a permutation of the left operand. Do not transpose the cycle meaning.',
+ 'subquasigroups':'The finite carrier permits multiplication-closure testing. Preserve the nonempty singleton and full-carrier cases.',
+ 'nuclei':'Left, middle and right positions in the associativity equation define different tests; retain all three sets.',
+ 'automorphisms':'Use one common relabeling on both inputs and output. Three unrelated permutations would test isotopy instead.',
+ 'transversals':'A transversal selects one cell per row, column and symbol. An empty census is a valid result.',
+ 'parastrophes':'Permute coordinates of triples (row,column,symbol). Keep all six coordinate orders explicitly labeled.',
+ 'principal_loop_isotope':'For f=0 and g=1 use inverse right translation by g and inverse left translation by f. The neutral element is f*g.',
+ 'relabel_covariance':'Transport both operands and the output with one bijection, then prove the inverse roundtrip.',
+ 'accessible_summary':'Expose the exact table and order in text. A readable structural fallback does not establish accessibility conformance.',
+ 'uncertainty_annotation':'Null measurement uncertainty means no observation was supplied. Do not convert it to zero uncertainty.',
+ 'external_evidence_gap':'Independent implementation and real-use evidence remain absent even when all finite calculations agree.',
+ 'authority_gate':'Keep consequential use held. A synthetic algebra certificate grants no practical, professional or affected-party authority.'}
+
+def tooling(stage,rows,l):
+    selected=OPS[:10] if stage=='x1' else OPS[10:]
+    quick=SKILLS/'.system/skill-creator/scripts/quick_validate.py'
+    skill_receipts=[];runner_receipts=[]
+    for op in selected:
+        name='ghc-family-quasigroup-'+op.replace('_','-'); folder=ROOT/'skills'/name
+        textfile(folder/'SKILL.md','---\nname: '+name+'\ndescription: Inspect the exact finite quasigroup '+op.replace('_',' ')+' certificate for synthetic tables of order two through five.\n---\n\n# '+op.replace('_',' ').title()+'\n\n'+NOTES[op]+'\n\nUse the declared request envelope in the frozen planning contract and the phase-local ghc_family caller for this operation. Preserve the input, returned value, expected digest and any refusal. A malformed subject retains zero success credit; a passing guard and a repaired valid template are separate observations.\n\nThe matching caller pairs are listed in planning/plan.json. The runtime is ../../code/runtime.cjs. Do not rerun a sealed phase batch to demonstrate a guide. Use only a separately declared smoke fixture. Roll back only the guide or caller change while preserving the source and prior evidence.\n\n'+BOUNDARY+'\n')
+        cache=BANK/(stage+'-skill-'+op+'.json')
+        if cache.exists():result=read(cache)
+        else:
+            r=subprocess.run([sys.executable,'-X','utf8',str(quick),str(folder)],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            result={'operation':op,'exit_code':r.returncode,'passed':r.returncode==0,'validator_stdout':r.stdout.decode('utf8').strip()};write(cache,result)
+        skill_receipts.append(result);add_witness(l,op,'Official skill quick validation','exit zero',result['exit_code'],result['passed']);assert result['passed'],result
+    for k in range(5):
+        pair=selected[2*k:2*k+2]; number=k+1+(0 if stage=='x1' else 5);f=ROOT/'runners'/('ghc_family_quasigroup_'+str(number).zfill(2)+'.txt')
+        textfile(f,"'use strict';\nconst fs=require('fs'),r=require('../code/runtime.cjs');const allowed="+json.dumps(pair)+";\nconst q=JSON.parse(fs.readFileSync(0,'utf8'));const one=x=>x&&allowed.includes(x.operation)?r.evaluate(x):{ok:false,error:'RUNNER_OPERATION'};process.stdout.write(JSON.stringify(Array.isArray(q)?q.map(one):one(q))+'\\n');\n")
+        cache=BANK/(stage+'-runner-'+str(number)+'.json')
+        subjects=[next(x for x in rows if x['request']['operation']==op) for op in pair]
+        if cache.exists():result=read(cache)
+        else:
+            output=run_requests([x['request'] for x in subjects]+[{}],f)
+            result={'runner':f.relative_to(REPO).as_posix(),'operations':pair,'outputs':output};write(cache,result)
+        outputs=result['outputs'];neg='OP7051-'+stage+'-RUNNER-N'+str(k+1).zfill(2)
+        add_witness(l,pair[0],'Retain malformed runner subject','Valid operation-bound envelope',{},False,[neg])
+        for row,out in zip(subjects,outputs[:2]):
+            ok=out.get('ok') and digest(out['value'])==row['expected_sha256'];assert ok
+            add_witness(l,row['request']['operation'],'Guide-directed accepted caller smoke',row['expected_sha256'],digest(out['value']),ok)
+        assert outputs[2]=={'ok':False,'error':'RUNNER_OPERATION'}
+        add_witness(l,pair[0],'Separate malformed runner refusal','RUNNER_OPERATION',outputs[2]['error'],True,[neg]);runner_receipts.append(result)
+    write(ROOT/stage/'skill-validation.json',skill_receipts);write(ROOT/stage/'runner-smokes.json',runner_receipts)
+
+def extra_tests(stage,rows,outputs,l):
+    plan=read(ROOT/'planning/plan.json');values={(r['request']['profile_id'],r['request']['operation']):o['value'] for r,o in zip(rows,outputs)}
+    if stage=='x2':
+        old=read(ROOT/'x1/core-results.json')
+        values.update({(x['profile_id'],x['operation']):x['value'] for x in old})
+    tests=[]
+    for p in plan['profiles']:
+        pid=p['profile_id'];t=p['table'];n=len(t);v=lambda op:values[pid,op]
+        if stage=='x1':
+            checks=[all(v('left_division')[x][t[x][y]]==y for x in range(n) for y in range(n)),all(v('right_division')[t[x][y]][y]==x for x in range(n) for y in range(n)),len(v('identities')['left'])<=1 and len(v('identities')['right'])<=1,(not v('associativity')['holds']) or len(v('identities')['two_sided'])==1,all(sorted(sum(c,[]))==list(range(n)) for c in v('left_translation_cycles')+v('right_translation_cycles')),list(range(n)) in v('subquasigroups')]
+            tests.append({'id':'OP7051-X1-T-'+pid,'clauses':checks,'passed':all(checks),'saved_results_only':True})
+        else:
+            autos=v('automorphisms'); trans=v('transversals');nuc=v('nuclei');iso=v('principal_loop_isotope');s=iso['table'];e=iso['identity'];para=v('parastrophes')
+            algebra=[list(range(n)) in autos,all(t[a[x]][a[y]]==a[t[x][y]] for a in autos for x in range(n) for y in range(n)),all(len(set(q))==n and len({t[i][q[i]] for i in range(n)})==n for q in trans),nuc['intersection']==sorted(set(nuc['left'])&set(nuc['middle'])&set(nuc['right']))]
+            transformations=[len(para)==6 and all(all(sorted(r)==list(range(n)) for r in a) and all(sorted(c)==list(range(n)) for c in zip(*a)) for a in para.values()),para['012']==t,all(s[e][x]==x and s[x][e]==x for x in range(n)),v('relabel_covariance')['roundtrip_verified']]
+            tests.extend([{'id':'OP7051-X2-T-'+pid+'-algebra','clauses':algebra,'passed':all(algebra),'saved_results_only':True},{'id':'OP7051-X2-T-'+pid+'-transformations','clauses':transformations,'passed':all(transformations),'saved_results_only':True}])
+    for t in tests:add_witness(l,'table_record' if stage=='x1' else 'principal_loop_isotope','Additional frozen invariant test',True,t['passed'],t['passed'])
+    write(ROOT/stage/'tests.json',tests);assert all(t['passed'] for t in tests);return tests,values
+
+def hooks_and_viewer(l,values):
+    plan=read(ROOT/'planning/plan.json');topics=plan['hook_topics'];plugin=ROOT/'plugins/ghc-family-orren-quasigroup-hooks';name=plugin.name
+    pm={'name':name,'version':'1.0.0','description':'Phase-local advisory fixtures for finite quasigroup evidence.','author':{'name':'Orren Pike working role'},'interface':{'displayName':'Orren quasigroup advisories','shortDescription':'Bounded finite-table advice','longDescription':'Manual advisory fixtures preserving finite evidence and authority boundaries. No marketplace installation or live hook observation.','developerName':'Orren Pike working role','category':'Productivity','capabilities':['Read'],'defaultPrompt':['Review a declared synthetic quasigroup certificate.']}}
+    write(plugin/'.codex-plugin/plugin.json',pm)
+    script=plugin/'scripts/advisories.txt'
+    textfile(script,"'use strict';\nconst fs=require('fs');const topics="+json.dumps(topics)+";const x=JSON.parse(fs.readFileSync(0,'utf8'));const valid=x&&topics.includes(x.topic)&&x.synthetic===true&&x.real_authority===false;process.stdout.write(JSON.stringify({ok:valid,action:'observe_only',topic:topics.includes(x.topic)?x.topic:null,advice:valid?'Inspect the saved certificate and retain its limits.':'Hold the unsupported context; do not act.',side_effects:false})+'\\n');\n")
+    write(plugin/'hooks/hooks.json',{'hooks':{'PreToolUse':[{'matcher':'.*','hooks':[{'type':'command','command':'node "${CLAUDE_PLUGIN_ROOT}/scripts/advisories.txt"','timeout':10}]}]},'manual_only_topics':topics})
+    records=[]
+    for i,topic in enumerate(topics):
+        cache=BANK/('hook-'+topic+'.json')
+        if cache.exists():r=read(cache)
+        else:
+            inputs=[{'topic':topic,'synthetic':True,'real_authority':False},{'topic':topic,'synthetic':True,'real_authority':True}]
+            results=[json.loads(raw([NODE,str(script)],stable(x))) for x in inputs];r={'topic':topic,'inputs':inputs,'results':results};write(cache,r)
+        neg='OP7051-HOOK-N'+str(i+1).zfill(2);key='hook_'+topic
+        add_witness(l,key,'Retained adverse advisory subject','Synthetic context without authority promotion',r['inputs'][1],False,[neg])
+        add_witness(l,key,'Benign manual advisory fixture',True,r['results'][0]['ok'],r['results'][0]['ok'],[neg])
+        add_witness(l,key,'Separate adverse advisory guard',False,r['results'][1]['ok'],r['results'][1]['ok'] is False,[neg]);assert r['results'][0]['ok'] and not r['results'][1]['ok'];records.append(r)
+    write(ROOT/'x2/hook-smokes.json',records)
+    cache=BANK/'plugin-validation.json'
+    if cache.exists():receipt=read(cache)
+    else:
+        r=subprocess.run([sys.executable,'-X','utf8',str(SKILLS/'.system/plugin-creator/scripts/validate_plugin.py'),str(plugin)],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        receipt={'passed':r.returncode==0,'exit_code':r.returncode,'stdout':r.stdout.decode('utf8').replace(str(plugin),'owner-plugin'),'stderr':r.stderr.decode('utf8').replace(str(plugin),'owner-plugin')};write(cache,receipt)
+    write(ROOT/'x2/plugin-validation.json',receipt);assert receipt['passed'],receipt
+    add_witness(l,'hook_source_fixity','Plugin structure validation','exit zero',receipt['exit_code'],receipt['passed'])
+    models=[]
+    for p in plan['profiles']:
+        pid=p['profile_id'];models.append({'profile_id':pid,'coordinates':[len(p['table']),len(values[pid,'automorphisms']),len(values[pid,'transversals'])],'coordinate_names':plan['model_coordinates'],'units':['dimensionless']*3,'mathematical_object':p['table'],'physical_interpretation':None,'authority_credit':0})
+    write(ROOT/'x2/models.json',models)
+    rows=''.join('<tr><th scope="row">'+m['profile_id']+'</th>'+''.join('<td>'+str(v)+'</td>' for v in m['coordinates'])+'</tr>' for m in models)
+    circles=''.join('<g><circle cx="'+str(40+m['coordinates'][0]*65+m['coordinates'][2]*3)+'" cy="'+str(370-m['coordinates'][1]*12-m['coordinates'][2]*4)+'" r="6"/><text x="'+str(48+m['coordinates'][0]*65+m['coordinates'][2]*3)+'" y="'+str(365-m['coordinates'][1]*12-m['coordinates'][2]*4)+'">'+m['profile_id']+'</text></g>' for m in models)
+    textfile(ROOT/'x2/viewer/index.html','<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Finite quasigroup certificates</title><style>body{font:18px system-ui;max-width:1000px;margin:2rem auto;padding:1rem;background:#f5f1e8;color:#192c34}table{border-collapse:collapse;width:100%}th,td{padding:.6rem;text-align:left;border-bottom:1px solid #89999b}svg{width:100%;background:white}circle{fill:#0f706c}text{font:12px system-ui}code{white-space:pre-wrap}</style><main><h1>Finite quasigroup certificates</h1><p>Fifteen synthetic algebra records. This oblique projection uses order, automorphism count and transversal count; distances have no physical or inferential meaning.</p><svg viewBox="0 0 620 410" role="img" aria-labelledby="plot-title plot-desc"><title id="plot-title">Three-count projection</title><desc id="plot-desc">The exact values for every point follow in the table. Overlapping points retain distinct table rows.</desc>'+circles+'</svg><table><caption>Exact dimensionless coordinates</caption><thead><tr><th scope="col">Profile</th><th scope="col">Order</th><th scope="col">Automorphisms</th><th scope="col">Transversals</th></tr></thead><tbody>'+rows+'</tbody></table><h2>Interpretation</h2><p>Unique division does not imply associativity. A loop isotope is a new operation related by three coordinate maps; it need not preserve every property of the original operation.</p><p>Structural fallback only. Browser, assistive-technology and affected-user evaluations remain open.</p><p>'+html.escape(BOUNDARY)+'</p></main></html>\n')
+    content=(ROOT/'x2/viewer/index.html').read_text();checks={'fifteen_rows':content.count('<tr><th scope="row">')==15,'text_alternative':'plot-desc' in content,'no_remote_dependencies':not re.search(r'(src|href)="https?://',content),'no_script': '<script' not in content,'models_bound_to_saved_results':len(models)==15,'browser_evaluation':'open_gap','complete_accessibility':'open_gap'}
+    assert all(checks[x] for x in ['fifteen_rows','text_alternative','no_remote_dependencies','no_script','models_bound_to_saved_results']);write(ROOT/'x2/viewer-structure.json',checks)
+    add_witness(l,'accessible_summary','Exact fallback and model structure',15,15,True)
+
+def session(stage):
+    ensure_gate(stage);rows=contracts(stage);aux=read(ROOT/'planning'/('auxiliary-'+stage+'.json'));assert len(rows)==150 and len(aux)==250
+    subjects=[(row,bad) for row in rows for bad in row['malformed']];requests=[r['request'] for r in rows+aux]+[bad['request'] for row,bad in subjects]+[row['request'] for row,bad in subjects]
+    cache=BANK/(stage+'-domain-results.json');latch=BANK/(stage+'-invocation.json')
+    if latch.exists():
+        assert '--resume-packaging' in sys.argv and cache.exists(),'Session already invoked; successful or uncertain batches cannot be replayed.'
+        observed=read(cache)
+    else:
+        write(latch,{'stage':stage,'invocations':1,'state':'STARTED','definition_commit':git('rev-parse','HEAD'),'domain_replays':0})
+        observed=run_requests(requests);write(cache,observed)
+        write(latch,{'stage':stage,'invocations':1,'state':'RESULTS_SAVED','definition_commit':git('rev-parse','HEAD'),'domain_replays':0,'request_count':len(requests),'results_sha256':digest(observed)})
+    assert len(observed)==1000
+    l=ledger(stage);core=[];safe=[];failed=[];refused=[];repairs=[]
+    for i,(row,bad) in enumerate(subjects):
+        neg='OP7051-'+stage+'-CAND-N'+str(i+1).zfill(3);actual=observed[400+i];repair=observed[700+i];op=row['request']['operation']
+        failed.append({'negative_id':neg,'contract_id':row['contract_id'],'subject':bad['request'],'observed':actual,'original_success_credit':0})
+        add_witness(l,op,'Original malformed subject','Valid declared synthetic envelope',actual,False,[neg])
+        ok=actual=={'ok':False,'error':bad['error']};refused.append({'negative_id':neg,'passed':ok,'expected_error':bad['error'],'actual':actual})
+        add_witness(l,op,'Separate refusal',bad['error'],actual.get('error'),ok,[neg]);assert ok,(neg,actual)
+        fixed=repair.get('ok') and digest(repair['value'])==row['expected_sha256'];repairs.append({'negative_id':neg,'kind':['CLEAN','FIX','REFINE'][i%3],'restored_request':row['request'],'observed':repair,'passed':fixed})
+        add_witness(l,op,'Separate valid-template restoration',row['expected_sha256'],digest(repair.get('value')),fixed,[neg]);assert fixed
+    for i,(row,actual) in enumerate(zip(rows+aux,observed[:400])):
+        ok=actual.get('ok') and digest(actual['value'])==row['expected_sha256'];op=row['request']['operation'];assert ok,(row.get('contract_id',row.get('case_id')),actual)
+        rec={'id':row.get('contract_id',row.get('case_id')),'profile_id':row['request']['profile_id'],'operation':op,'request_sha256':digest(row['request']),'value':actual['value'],'sha256':digest(actual['value']),'outcome':outcome(op),'passed':ok}
+        safe.append(rec)
+        if i<150:core.append(rec)
+        add_witness(l,op,'Frozen reference agreement',row['expected_sha256'],digest(actual['value']),ok)
+    for i in range(0,400,100):write(ROOT/stage/('safe-'+str(i//100+1).zfill(2)+'.json'),safe[i:i+100])
+    write(ROOT/stage/'core-results.json',core);write(ROOT/stage/'candidate-failures.json',failed);write(ROOT/stage/'refusals.json',refused);write(ROOT/stage/'cfr.json',repairs)
+    tooling(stage,rows,l);tests,values=extra_tests(stage,rows,observed[:150],l)
+    if stage=='x1':tribunal(l)
+    if stage=='x2':hooks_and_viewer(l,values)
+    counts=seal_ledger(stage,l)
+    summary={'owner':'Orren Pike','phase':'v705-v1','stage':stage,'definition_commit':git('rev-parse','HEAD'),'contracts':150,'safe':400,'malformed_candidates':300,'original_candidate_successes':0,'separate_refusals':300,'cfr':300,'skills':10,'runners':5,'tests':len(tests),'test_clauses':sum(len(t['clauses']) for t in tests),'models':15 if stage=='x2' else 0,'hooks':10 if stage=='x2' else 0,'hook_fixtures':20 if stage=='x2' else 0,'method_flow':counts,'invocations':1,'successes':1,'domain_replays':0,'planning_reference_executed':False,'boundary':BOUNDARY}
+    write(ROOT/stage/'summary.json',summary);manifest(stage);print(json.dumps(summary))
+
+def tribunal(l):
+    base=read(ROOT/'planning/manifest-tribunal-fixture.json');variants=[base]
+    for kind in base['mutation_kinds']:
+        x=copy.deepcopy(base)
+        if kind=='wrong_owner':x['owner']='Other owner'
+        if kind=='unknown_outcome':x['outcomes'].append('proved')
+        if kind=='accepted_replay':x['canonical_successes']=1
+        if kind=='path_escape':x['paths']=[PREFIX+'../outside.md']
+        if kind=='private_path':x['paths']=[chr(67)+':'+chr(92)+'Private'+chr(92)+'fixture.md']
+        variants.append(x)
+    cache=BANK/'tribunal-results.json'
+    if cache.exists():results=read(cache)
+    else:
+        results=[json.loads(raw([sys.executable,'-X','utf8',str(ROOT/'code/ghc_family_manifest_privacy_tribunal.py')],stable(x))) for x in variants];write(cache,results)
+    # Store only sanitized mutation labels; the private-path adversary remains an in-memory synthetic string.
+    for i,kind in enumerate(base['mutation_kinds'],1):
+        neg='OP7051-TRIBUNAL-N'+str(i);add_witness(l,'manifest_tribunal','Retained invalid structural fixture','Admitted bounded owner fixture',kind,False,[neg]);add_witness(l,'manifest_tribunal','Separate structural refusal',False,results[i]['valid'],not results[i]['valid'],[neg])
+    add_witness(l,'manifest_tribunal','Valid structural fixture',True,results[0]['valid'],results[0]['valid']);assert results[0]['valid'] and all(not r['valid'] for r in results[1:])
+    write(ROOT/'x1/manifest-tribunal.json',{'implementation':'Owner-local scoped implementation; unavailable historical helper is not claimed equivalent.','fixture_only':True,'valid_fixture':results[0],'mutations':[{'kind':k,'result':r,'original_success_credit':0} for k,r in zip(base['mutation_kinds'],results[1:])],'canonical_invocations':0,'boundary':BOUNDARY})
+
+def privacy_scan(files):
+    patterns={'raw_identifier':r'\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b','private_local_path':r'(?i)\b[A-Za-z]:[\\/](?:Users|GHC-Archives|Program Files)\b','private_uri':r'(?i)\b(?:codex|app|plugin)://(?:threads|tasks|sessions|agent)','delegation_markup':r'<(?:codex_delegation|source_thread_id)>','credential_assignment':r'''(?i)\b(?:api[_-]?key|access[_-]?token|password|secret)\b\s*[:=]\s*["'][A-Za-z0-9._-]{8,}["']'''}
+    hits=[]
+    for name,b in files:
+        s=b.decode('utf8')
+        for cls,pat in patterns.items():
+            if re.search(pat,s):hits.append({'path':name,'class':cls})
+    return hits
+def review(stage):
+    files=[f for f in sorted(ROOT.rglob('*')) if f.is_file()];blobs=[(f.relative_to(REPO).as_posix(),f.read_bytes()) for f in files]
+    assert len(files)<=180
+    stats={'owner_files':len(files),'json':0,'python':0,'javascript':0,'max_document_words':0,'privacy_hits':[]}
+    js=[]
+    for f,(name,b) in zip(files,blobs):
+        s=b.decode('utf8');assert b'\r' not in b;words=len(s.split());assert words<=100000,(name,words);stats['max_document_words']=max(stats['max_document_words'],words)
+        if f.suffix=='.json':
+            def pairs(ps):
+                d={}
+                for k,v in ps:
+                    if k in d:raise ValueError('Duplicate JSON key '+k)
+                    d[k]=v
+                return d
+            json.loads(s,object_pairs_hook=pairs,parse_constant=lambda x:(_ for _ in ()).throw(ValueError(x)));stats['json']+=1
+        if f.name in ['reference.txt','phase-engine.txt'] or f.suffix=='.py':ast.parse(s);stats['python']+=1
+        elif f.suffix in ['.txt','.cjs']:js.append(str(f))
+    if js:raw([NODE,'-e',"const fs=require('fs'),vm=require('vm');for(const p of process.argv.slice(1))new vm.Script(fs.readFileSync(p,'utf8'),{filename:p});",*js]);stats['javascript']=len(js)
+    hits=privacy_scan(blobs);stats['privacy_hits']=hits;assert not hits,hits
+    mf=ROOT/stage/('content-seal.json' if stage=='final' else 'manifest.json');m=read(mf);assert len(m['entries'])==len(files)-1
+    for e in m['entries']:
+        b=(REPO/e['path']).read_bytes();assert sha(b)==e['sha256'] and len(b)==e['bytes'],e['path']
+    stats['manifest_bindings']=len(m['entries']);stats['valid']=True;write(BANK/(stage+'-review.json'),stats);print(json.dumps(stats));return stats
+def publish(stage):
+    assert not (BANK/(stage+'-publication.json')).exists(),'Published stage cannot be replayed.'
+    review(stage)
+    raw(['git','-C',str(REPO),'add','--',PREFIX])
+    changed=git('diff','--cached','--name-only').splitlines();assert changed and all(p.startswith(PREFIX) for p in changed)
+    mf=ROOT/stage/('content-seal.json' if stage=='final' else 'manifest.json');m=read(mf)
+    p=subprocess.Popen(['git','-C',str(REPO),'cat-file','--batch'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+    for e in m['entries']:
+        p.stdin.write((':'+e['path']+'\n').encode());p.stdin.flush();head=p.stdout.readline().decode().split();assert head[1]=='blob';b=p.stdout.read(int(head[2]));assert p.stdout.read(1)==b'\n';assert len(b)==e['bytes'] and sha(b)==e['sha256'],e['path']
+    p.stdin.close();p.wait();assert p.returncode==0
+    raw(['git','-C',str(REPO),'diff','--cached','--check'])
+    raw(['git','-C',str(REPO),'commit','-m','Orren Pike v705-v1 '+stage+' finite quasigroup evidence'])
+    head=git('rev-parse','HEAD');assert git('status','--porcelain=v1')==''
+    write(BANK/(stage+'-commit.json'),{'head':head,'stage':stage,'changed_files':changed,'index_manifest_verified':True})
+    raw(['git','-C',str(REPO),'push','--set-upstream','origin','HEAD:refs/heads/'+BRANCH])
+    live=git('ls-remote','--exit-code','origin','refs/heads/'+BRANCH).split()[0]
+    tracking=git('rev-parse','refs/remotes/origin/'+BRANCH);upstream=git('rev-parse','@{upstream}')
+    assert live==tracking==upstream==head
+    ab=list(map(int,git('rev-list','--left-right','--count','HEAD...@{upstream}').split()));assert ab==[0,0]
+    receipt={'stage':stage,'head':head,'parent':git('show','-s','--format=%P',head),'branch':BRANCH,'push_exit':0,'local':head,'upstream':upstream,'tracking':tracking,'fresh_remote':live,'ahead':0,'behind':0,'clean':git('status','--porcelain=v1')=='','changed_files':len(changed),'source':SOURCE}
+    write(BANK/(stage+'-publication.json'),receipt);print(json.dumps(receipt))
+
+def final():
+    ensure_gate('final');assert not (ROOT/'final/phase-truth.json').exists()
+    plan=read(ROOT/'planning/plan.json');summaries=[read(ROOT/x/'summary.json') for x in ['x1','x2']]
+    assert all(x['successes']==1 and x['domain_replays']==0 for x in summaries)
+    ledgers=[read(BANK/(stage+'-method-flow-assembled.json')) for stage in ['planning','x1','x2']]
+    operational=read(BANK/'operational-failures.json')['records'] if (BANK/'operational-failures.json').exists() else []
+    l=ledger('final')
+    for i,r in enumerate(operational):
+        neg='OP7051-OP-N'+str(i+1).zfill(3);add_witness(l,'packaging_recovery','Original bounded operational failure','Completed attributable operation',r['error'],False,[neg]);add_witness(l,'packaging_recovery','Dependency-only recovery from saved evidence','Domain results retained without replay',r.get('recovery','Corrected owner packaging or metadata only; saved domain evidence preserved.'),True,[neg])
+    if l['methods']:seal_ledger('final',l);ledgers.append(l)
+    counts={'methods':sum(len(z['methods']) for z in ledgers),'witnesses':sum(len(z['witnesses']) for z in ledgers),'failed_witnesses':sum(w['result']=='fail' for z in ledgers for w in z['witnesses']),'passing_witnesses':sum(w['result']=='pass' for z in ledgers for w in z['witnesses'])}
+    negatives={n for z in ledgers for w in z['witnesses'] if w['result']=='fail' for n in w['retained_negative_ids']};counts['negatives']=len(negatives);counts['open_gaps']=19;counts['exact_gates']=15
+    effective={k:plan['source_baseline'][k]+counts[k] for k in counts}
+    outcomes=dict(collections.Counter(r['outcome'] for stage in ['x1','x2'] for r in read(ROOT/stage/'core-results.json')));assert outcomes=={'completed':255,'represented':15,'open_gap':15,'exact_gate':15}
+    publications={stage:read(BANK/(stage+'-publication.json'))['head'] for stage in ['planning','x1','x2']}
+    truth={'owner':'Orren Pike','phase':'v705-v1','source_commit':SOURCE,'branch':BRANCH,'lifecycle':publications,'source_fold_count':1,'source_baseline':plan['source_baseline'],'source_external_overlay_folded':False,'owner_delta':counts,'effective_totals':effective,'outcomes':outcomes,'inherited_zero_credit':300,'new_contracts':300,'sessions':summaries,'canonical_state':'PREPARED_NOT_INVOKED','route':{'state':'PREPARED_NOT_SENT','endpoint_kind':'main_task','endpoint_label':'Orin Thale','phase':'v705-v2','terminal_conditions':'Clean pushed exact final; one canonical success; fresh live controls and unique immediate target reread; native acknowledgement.'},'additional_open_gaps':['independent reproduction','browser and affected-user accessibility evaluation','live hook installation and observation','native terminal route availability'], 'global_installs':0,'memory_writes':0,'model_changes':0,'source_executions':0,'task_creations':0,'subagents':0,'purchased_spend_usd':0,'terminal_verdict':'NOT_READY_FOR_STAGE_20','boundary':BOUNDARY}
+    write(ROOT/'final/phase-truth.json',truth)
+    write(ROOT/'final/method-flow-index.json',{'ledgers':[{'stage':z['phase'],'counts':z['counts']} for z in ledgers],'source_baseline':plan['source_baseline'],'source_fold_count':1,'owner_delta':counts,'effective_totals':effective,'later_canonical_and_route_external':True,'boundary':BOUNDARY})
+    write(ROOT/'final/failure-dossier.json',{'startup':read(BANK/'startup-negatives.json')['records'],'operational':operational,'failed_subject_files':[PREFIX+s+'/candidate-failures.json' for s in ['x1','x2']],'negative_ids':sorted(negatives),'original_failed_credit':0,'source_negative_baseline':plan['source_baseline']['negatives'],'source_fold_count':1,'later_overlay_folded':False,'boundary':BOUNDARY})
+    write(ROOT/'final/requirements-audit.json',{'current_profile':'v18','inherited':300,'new':300,'safe':[400,400],'candidates':[300,300],'refusals':[300,300],'cfr':[300,300],'skills':[10,10],'runners':[5,5],'tests':[15,30],'extra_structural_tribunal_cases':6,'models':15,'hook_topics':10,'manual_hook_fixtures':20,'live_hooks':'open_gap','held_exact':50,'held_blocked':30,'hypotheses':15,'open_problem_probes':15,'own_practices':8,'successor_practices':4,'source_runtime_credit':0,'boundary':BOUNDARY})
+    write(ROOT/'final/reflection.json',{'decision':'remaster_additive_owner_scope','known_overlap':'Cyclic Latin-square construction and row/column checks remain existing capability; no universal novelty claim.','preserved_callers':'Family-current ghc_family entrypoint naming; all existing global callers untouched.','distinct_scope':'Explicit quasigroup division, falsified identities, nuclei, transversals, parastrophes and loop-isotope certificates.','rollback':'Revert only four Orren-owned commits; preserve source and external receipts.','known_gap':'Historical manifest tribunal helper was not found in the selected installed skill surface. A bounded owner-local implementation was frozen and exercised without an equivalence claim.','source_context':plan['source_context'],'boundary':BOUNDARY})
+    write(ROOT/'final/wellbeing.json',{'workload_bounded':True,'learning_practices_not_credentials':True,'no_sentience_or_personhood_inference':True,'no_sibling_changes':True,'no_real_participants':True,'domain_sessions_once_each':True,'boundary':BOUNDARY})
+    textfile(ROOT/'final/overview.md','# Orren Pike v705-v1\n\nThe owner phase provides exact finite quasigroup certificates over fifteen public synthetic tables. It separates unique division from identity and associativity and makes failed algebraic identities inspectable. Outcomes are 255 completed, 15 represented, 15 open gaps and 15 exact gates. These labels concern finite contracts only.\n\nThe two language implementations agree on the declared fixtures. Same-owner agreement is not independent reproduction. Twenty local guides, ten local callers, ten manually exercised advisory topics and a fifteen-record exact table viewer are included.\n\n'+BOUNDARY+'\n')
+    template=(ROOT/'code/baton-template.md').read_text(encoding='utf8')
+    baton=template.replace('{{ACCOUNTING}}',json.dumps({'owner_delta':counts,'effective_totals':effective,'outcomes':outcomes},sort_keys=True)).replace('{{LIFECYCLE}}',json.dumps(publications,sort_keys=True))
+    words=len(baton.split());assert 2000<=words<=100000,words
+    textfile(ROOT/'final/handoff-baton.md',baton);write(ROOT/'final/baton-metadata.json',{'words':words,'bytes':len(baton.encode()),'sha256':sha(baton.encode()),'literal_eof':'END OF ORREN PIKE V705-V1 HANDOFF BATON'})
+    manifest('final');print(json.dumps({'stage':'final','owner_delta':counts,'effective_totals':effective,'baton_words':words}))
+
+def canonical():
+    latch=BANK/'canonical-invocation.json';assert not latch.exists(),'Canonical invocation already reserved; do not replay.'
+    final_pub=read(BANK/'final-publication.json');head=git('rev-parse','HEAD');assert head==final_pub['head']
+    assert git('status','--porcelain=v1')=='' and git('ls-remote','--exit-code','origin','refs/heads/'+BRANCH).split()[0]==head
+    write(latch,{'state':'INVOKED_ONCE','exact_final':head,'owner':'Orren Pike','phase':'v705-v1','invocations':1,'replays':0,'metadata_only':True})
+    checks=[]
+    def check(name,ok,observed):checks.append({'name':name,'passed':bool(ok),'observed':observed})
+    chain=[SOURCE]+[read(BANK/(s+'-publication.json'))['head'] for s in ['planning','x1','x2','final']]
+    for i in range(1,5):parent=git('show','-s','--format=%P',chain[i]);check('direct_parent_'+str(i),parent==chain[i-1],parent)
+    check('four_commits',git('rev-list','--count',SOURCE+'..'+head)=='4',git('rev-list','--count',SOURCE+'..'+head));check('zero_merges',git('rev-list','--count','--merges',SOURCE+'..'+head)=='0',git('rev-list','--count','--merges',SOURCE+'..'+head))
+    for label,ref in [('head','HEAD'),('upstream','@{upstream}'),('tracking','refs/remotes/origin/'+BRANCH)]:value=git('rev-parse',ref);check(label,value==head,value)
+    check('branch',git('branch','--show-current')==BRANCH,git('branch','--show-current'));check('clean',git('status','--porcelain=v1')=='',git('status','--porcelain=v1'))
+    live=git('ls-remote','--exit-code','origin','refs/heads/'+BRANCH).split()[0];check('fresh_remote',live==head,live)
+    delta=git('diff','--name-only',SOURCE,head).splitlines();check('owner_delta',all(p.startswith(PREFIX) for p in delta),len(delta))
+    repo_count=len(git('ls-tree','-r','--name-only',head).splitlines());check('file_ceiling',repo_count<2000,repo_count)
+    proc=subprocess.Popen(['git','-C',str(REPO),'cat-file','--batch'],stdin=subprocess.PIPE,stdout=subprocess.PIPE);cache={}
+    def cb(ref):
+        if ref in cache:return cache[ref]
+        proc.stdin.write((ref+'\n').encode());proc.stdin.flush();hd=proc.stdout.readline().decode().split();assert hd[1]=='blob';b=proc.stdout.read(int(hd[2]));assert proc.stdout.read(1)==b'\n';cache[ref]=b;return b
+    total=0
+    for stage,ch in zip(['planning','x1','x2','final'],chain[1:]):
+        path=PREFIX+stage+('/content-seal.json' if stage=='final' else '/manifest.json');m=json.loads(cb(ch+':'+path));bad=[]
+        for e in m['entries']:
+            b=cb(ch+':'+e['path']);total+=1
+            if sha(b)!=e['sha256'] or len(b)!=e['bytes']:bad.append(e['path'])
+        check(stage+'_git_blob_manifest',not bad,{'bindings':len(m['entries']),'bad':bad})
+    final_files=git('ls-tree','-r','--name-only',head,'--',PREFIX).splitlines();blobs=[(f,cb(head+':'+f)) for f in final_files];proc.stdin.close();proc.wait()
+    check('privacy',not privacy_scan(blobs),privacy_scan(blobs));check('document_ceiling',all(len(b.decode().split())<=100000 for f,b in blobs),max(len(b.decode().split()) for f,b in blobs))
+    json_count=0
+    for f,b in blobs:
+        if f.endswith('.json'):json.loads(b);json_count+=1
+    check('json_parse',True,json_count)
+    truth=json.loads(dict(blobs)[PREFIX+'final/phase-truth.json']);check('fold_once',truth['source_fold_count']==1 and all(truth['effective_totals'][k]==truth['source_baseline'][k]+truth['owner_delta'][k] for k in truth['owner_delta']),truth['source_fold_count'])
+    check('outcomes',truth['outcomes']=={'completed':255,'represented':15,'open_gap':15,'exact_gate':15},truth['outcomes']);check('route_held',truth['route']['state']=='PREPARED_NOT_SENT',truth['route']['state']);check('stage20',truth['terminal_verdict']=='NOT_READY_FOR_STAGE_20',truth['terminal_verdict']);check('sessions_once',all(x['invocations']==x['successes']==1 and x['domain_replays']==0 for x in truth['sessions']),[x['invocations'] for x in truth['sessions']]);check('source_not_executed',truth['source_executions']==0,truth['source_executions'])
+    valid=all(x['passed'] for x in checks);receipt={'schema':'orren.owner-canonical.v1','state':'VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL' if valid else 'FAILED_OWNER_CANONICAL','owner':'Orren Pike','phase':'v705-v1','exact_final':head,'checks':checks,'passed':sum(x['passed'] for x in checks),'total':len(checks),'manifest_bindings':total,'invocations':1,'successes':1 if valid else 0,'replays':0,'domain_replays':0,'metadata_only':True,'boundary':BOUNDARY}
+    write(BANK/'canonical-receipt.json',receipt);assert valid,receipt;print(json.dumps(receipt))
+
+def main():
+    assert os.environ.get('GHC_MODEL_GUARD')=='v16'
+    action=sys.argv[1]
+    if action=='planning':planning()
+    elif action in ['x1','x2']:session(action)
+    elif action=='final':final()
+    elif action=='review':review(sys.argv[2])
+    elif action=='publish':publish(sys.argv[2])
+    elif action=='canonical':canonical()
+    else:raise ValueError('Unknown owner action')
+if __name__=='__main__':
+    try:main()
+    except Exception as e:
+        p=BANK/'operational-failures.json';data=read(p) if p.exists() else {'records':[]};msg=str(e).replace(str(REPO),'OWNER_REPOSITORY').replace(str(SKILLS),'INSTALLED_SKILLS').replace(str(BANK),'OWNER_RECEIPT_BANK');data['records'].append({'action':sys.argv[1:],'error':type(e).__name__+': '+msg,'original_success_credit':0,'domain_replay_permitted':False});write(p,data);raise
