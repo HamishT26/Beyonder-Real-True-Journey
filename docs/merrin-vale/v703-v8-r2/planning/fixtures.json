@@ -1,0 +1,621 @@
+{
+  "fixtures": [
+    {
+      "fixture_id": "MV7038R2-F01-linear-admission",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        5
+      ],
+      "forbidden": [],
+      "horizon": 4,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F02-model-check-bypass",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        5
+      ],
+      "forbidden": [
+        2
+      ],
+      "horizon": 5,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F03-blocked-model-branch",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        4
+      ],
+      "forbidden": [
+        2
+      ],
+      "horizon": 6,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F04-bounded-retry-cycle",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        4
+      ],
+      "forbidden": [],
+      "horizon": 4,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F05-accepted-resend-cycle",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        5
+      ],
+      "forbidden": [
+        3
+      ],
+      "horizon": 5,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F06-opaque-stop",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        3,
+        4
+      ],
+      "forbidden": [],
+      "horizon": 6,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F07-unresolved-deadlock",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        4
+      ],
+      "forbidden": [],
+      "horizon": 4,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F08-unreachable-final",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        4
+      ],
+      "forbidden": [],
+      "horizon": 5,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F09-parallel-read-diamond",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        4
+      ],
+      "forbidden": [],
+      "horizon": 6,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F10-mandatory-gate-diamond",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        5
+      ],
+      "forbidden": [],
+      "horizon": 4,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F11-two-repair-routes",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        5
+      ],
+      "forbidden": [
+        3,
+        4
+      ],
+      "horizon": 5,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F12-self-loop-observer",
+      "nodes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        3
+      ],
+      "forbidden": [],
+      "horizon": 6,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F13-closed-trap",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        5
+      ],
+      "forbidden": [],
+      "horizon": 4,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F14-zero-step-completion",
+      "nodes": [
+        0,
+        1,
+        2
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        0,
+        2
+      ],
+      "forbidden": [],
+      "horizon": 5,
+      "synthetic": true
+    },
+    {
+      "fixture_id": "MV7038R2-F15-branch-and-cross-edge",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "start": 0,
+      "targets": [
+        5
+      ],
+      "forbidden": [
+        4
+      ],
+      "horizon": 6,
+      "synthetic": true
+    }
+  ],
+  "bounds": {
+    "nodes": [
+      1,
+      8
+    ],
+    "edges": [
+      0,
+      16
+    ],
+    "horizon": [
+      0,
+      8
+    ]
+  },
+  "semantic_limit": "These are declared transition graphs; they are not actual task-service traces or evidence that a live system is safe."
+}

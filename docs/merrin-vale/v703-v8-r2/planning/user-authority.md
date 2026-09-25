@@ -1,0 +1,9 @@
+# Hamish's 25 September 2026 current authority
+
+Finish the interrupted original Merrin7038, then complete a separate solo7038(2) remaster before activating the existing Vesper Arlen task for7041. The original is now final and canonically checked once. This remaster adopts the complete formal weighted roster through Eiren7258. Contradictory informal phase examples are resolved against that explicit formal roster, whose176 remaining numbered slots end exactly at Eiren.
+
+Allowed models are gpt-5.6-sol and gpt-6-astra. Preflight them before creating a worktree, preparing a baton or starting a phase. Existing mainconfig context1000000 andcompaction400000 are already correct. Authored formats are JSON, Markdown, TXT and HTML; no authored image, PDF, screenshot, TeX, Python, lockfile or other code extension. Requested existing software updates may install their distribution files into the D-first toolchain.
+
+Five bounded native discovery/recovery attempts precede an unsent hold when recovery is needed. Up to three corrected resubmissions are available after definitive rejection before acceptance; accepted, opaque or unresolved delivery must not be blindly resent. Exact-title uniqueness, immediate direct-control reread, duplicate/pause/redirect/model/usage/privacy/evidence gates remain. Do not contact standby or later recipients early.
+
+Shared index, roster, authorization, essential operating skills and selected global tools may receive exact additive updates. Memory receives only a small additive note. Source and sibling worktrees remain read-only. The source-faithful ledger separates inherited content, owner evidence, repository state, canonical, route delivery and recipient completion. Full method and failure records live outside the baton. Broad authorization does not provide nonexistent scientific observations, rights, credentials, affected-party consent or competent public/cultural authority.
