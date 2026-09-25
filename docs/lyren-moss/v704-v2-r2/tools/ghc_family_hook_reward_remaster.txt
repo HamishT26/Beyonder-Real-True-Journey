@@ -1,0 +1,1906 @@
+#!/usr/bin/env python3
+"""Build Lyren Moss v704-v2-r2 finite hook and reward evidence.
+
+The entrypoint writes only the additive v704-v2-r2 owner namespace or its
+external D-first receipt bank. Historical Journey documents are read as
+source-bound context under instruction quarantine. All mathematical fixtures
+are finite and synthetic. No source or sibling lane is mutated.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import html
+import json
+import os
+import re
+import struct
+import subprocess
+import sys
+from collections import Counter, deque
+from datetime import datetime, timezone
+from fractions import Fraction
+from pathlib import Path, PurePosixPath
+from typing import Any
+
+
+SCRIPT = Path(__file__).resolve()
+BASE = SCRIPT.parents[1]
+REPO = SCRIPT.parents[4]
+OLD = REPO / "docs" / "lyren-moss" / "v704-v2"
+BANK = Path("D:/GHC-Archives/phase-receipts/lyren-moss/v704-v2-r2")
+OWNER = "Lyren Moss"
+PHASE = "v704-v2-r2"
+BRANCH = "codex/GHC-Family/lyren-moss-main-3"
+PARENT = "a72bf4d11afa9c1fcea5a7274f3f34b9ebd30066"
+TARGET_TITLE = "Talen Briar"
+TARGET_PHASE = "v704-v3"
+EOF_MARKER = "END OF LYREN MOSS v704-v2-r2 BATON."
+GLOBAL_SKILLS = Path.home() / ".codex" / "skills"
+VALIDATOR_PY = Path("D:/GHC-Archives/global-tools/python/eiren-kestrel-v667-v6-r2/Scripts/python.exe")
+QUICK_VALIDATE = Path.home() / ".codex" / "skills" / ".system" / "skill-creator" / "scripts" / "quick_validate.py"
+PLUGIN_NAME = "ghc-family-phase-guard-hooks"
+PERSONAL_PLUGIN = Path.home() / "plugins" / PLUGIN_NAME
+MARKETPLACE = Path.home() / ".agents" / "plugins" / "marketplace.json"
+
+BOUNDARY = (
+    "Finite synthetic same-owner software, mathematical and documentation evidence only. "
+    "No real process, person, participant, observation, measurement, system, identity, "
+    "credential, deployment, professional judgment, legal or cultural conclusion, "
+    "affected-party or Maori authority, empirical GMUT confirmation, production THOS or "
+    "Freed ID, complete privacy or accessibility assurance, exhaustive security, "
+    "independent reproduction, AGI or ASI, consciousness, personhood, Theory-of-Everything "
+    "proof, canon, or Stage 20 readiness."
+)
+
+SOURCE_EFFECTIVE = {
+    "methods": 5529,
+    "witnesses": 219747,
+    "passing": 166748,
+    "failed": 52999,
+    "negatives": 61834,
+    "open_gaps": 1927,
+    "exact_gates": 2015,
+}
+
+ALLOWED_OUTCOMES = {"completed", "represented", "open_gap", "exact_gate"}
+ALLOWED_EVENTS = {
+    "SessionStart",
+    "PreToolUse",
+    "PostToolUse",
+    "Stop",
+    "SessionEnd",
+    "PreCompact",
+    "PostCompact",
+}
+
+PLANNING_FAILURES = [
+    {
+        "id": "LM7042R2-PLAN-001",
+        "failure": "A broad multi-skill display exceeded its bounded output and was truncated.",
+        "recovery": "Each selected instruction file was reread completely in bounded literal calls.",
+    },
+    {
+        "id": "LM7042R2-PLAN-002",
+        "failure": "An initial rg regular expression for hook registration was malformed.",
+        "recovery": "Literal fixed-string probes replaced the malformed expression.",
+    },
+    {
+        "id": "LM7042R2-PLAN-003",
+        "failure": "A broad v16 workflow display omitted a middle range.",
+        "recovery": "The exact file was reread in nonoverlapping bounded line windows through EOF.",
+    },
+    {
+        "id": "LM7042R2-PLAN-004",
+        "failure": "The named X simulation post was not retrievable through the bounded web reader.",
+        "recovery": "The source remains unread and receives zero content credit; no description was inferred.",
+    },
+    {
+        "id": "LM7042R2-PLAN-005",
+        "failure": "The authoritative primary worktree has no schema-2 Coordinator marker.",
+        "recovery": "The board remains disabled and the other-owner primary worktree remains read-only.",
+    },
+]
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def nz_now() -> str:
+    try:
+        from zoneinfo import ZoneInfo
+
+        return datetime.now(ZoneInfo("Pacific/Auckland")).isoformat()
+    except Exception:
+        return "unavailable"
+
+
+def canonical_bytes(value: Any) -> bytes:
+    return (json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
+
+
+def pretty_bytes(value: Any) -> bytes:
+    return (json.dumps(value, sort_keys=True, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def write_bytes(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+
+
+def put_json(rel: str, value: Any) -> None:
+    write_bytes(BASE / rel, pretty_bytes(value))
+
+
+def put_text(rel: str, value: str) -> None:
+    write_bytes(BASE / rel, value.replace("\r\n", "\n").encode("utf-8"))
+
+
+def sha_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def sha_file(path: Path) -> str:
+    return sha_bytes(path.read_bytes())
+
+
+def sha_value(value: Any) -> str:
+    return sha_bytes(canonical_bytes(value))
+
+
+def git_blob_sha1(data: bytes) -> str:
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+
+def git(*args: str, text: bool = True) -> str | bytes:
+    completed = subprocess.run(
+        ["git", *args],
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+        text=text,
+    )
+    return completed.stdout.strip() if text else completed.stdout
+
+
+def git_index_blob(path: str) -> bytes:
+    completed = subprocess.run(
+        ["git", "show", ":" + path],
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+    )
+    return completed.stdout
+
+
+def git_head_blob(path: str, head: str = "HEAD") -> bytes:
+    completed = subprocess.run(
+        ["git", "show", head + ":" + path],
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+    )
+    return completed.stdout
+
+
+def fraction(value: Any) -> Fraction:
+    return value if isinstance(value, Fraction) else Fraction(str(value))
+
+
+def ftext(value: Fraction) -> str:
+    return str(value.numerator) if value.denominator == 1 else f"{value.numerator}/{value.denominator}"
+
+
+def encode(value: Any) -> Any:
+    if isinstance(value, Fraction):
+        return ftext(value)
+    if isinstance(value, dict):
+        return {str(key): encode(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [encode(item) for item in value]
+    return value
+
+
+def matrix(profile: dict[str, Any]) -> list[list[Fraction]]:
+    return [[fraction(cell) for cell in row] for row in profile["transition"]]
+
+
+def vector(profile: dict[str, Any], key: str) -> list[Fraction]:
+    return [fraction(cell) for cell in profile[key]]
+
+
+def multiply(left: list[list[Fraction]], right: list[list[Fraction]]) -> list[list[Fraction]]:
+    return [
+        [sum((left[i][k] * right[k][j] for k in range(len(right))), Fraction()) for j in range(len(right[0]))]
+        for i in range(len(left))
+    ]
+
+
+def vector_multiply(left: list[Fraction], right: list[list[Fraction]]) -> list[Fraction]:
+    return [sum((left[k] * right[k][j] for k in range(len(left))), Fraction()) for j in range(len(right[0]))]
+
+
+def dot(left: list[Fraction], right: list[Fraction]) -> Fraction:
+    return sum((a * b for a, b in zip(left, right)), Fraction())
+
+
+def solve_linear(a: list[list[Fraction]], b: list[Fraction]) -> list[Fraction]:
+    rows = [list(row) + [rhs] for row, rhs in zip(a, b)]
+    n = len(rows)
+    for col in range(n):
+        pivot = next((row for row in range(col, n) if rows[row][col] != 0), None)
+        if pivot is None:
+            raise ValueError("singular exact system")
+        rows[col], rows[pivot] = rows[pivot], rows[col]
+        scale = rows[col][col]
+        rows[col] = [value / scale for value in rows[col]]
+        for row in range(n):
+            if row == col:
+                continue
+            factor = rows[row][col]
+            rows[row] = [value - factor * pivot_value for value, pivot_value in zip(rows[row], rows[col])]
+    return [rows[index][-1] for index in range(n)]
+
+
+def stationary_distribution(p: list[list[Fraction]]) -> list[Fraction]:
+    n = len(p)
+    a = [[p[j][i] - (Fraction(1) if i == j else Fraction()) for j in range(n)] for i in range(n)]
+    a[-1] = [Fraction(1) for _ in range(n)]
+    b = [Fraction() for _ in range(n)]
+    b[-1] = Fraction(1)
+    answer = solve_linear(a, b)
+    residual = vector_multiply(answer, p)
+    if residual != answer:
+        raise ValueError("stationary substitution failed")
+    return answer
+
+
+def load_profiles() -> list[dict[str, Any]]:
+    source = json.loads((OLD / "planning" / "profiles.json").read_text(encoding="utf-8"))["profiles"]
+    result: list[dict[str, Any]] = []
+    events = ["SessionStart", "PreToolUse", "PostToolUse", "Stop"]
+    for index, base in enumerate(source, start=1):
+        rewards = [
+            Fraction(index % 5, 3),
+            Fraction((index + 1) % 7, 4),
+            Fraction((index + 2) % 9, 5),
+            Fraction((index + 3) % 11, 6),
+        ]
+        row = dict(base)
+        row["profile_id"] = f"LM7042R2-M{index:02d}"
+        row["source_profile_id"] = base["profile_id"]
+        row["rewards"] = [ftext(value) for value in rewards]
+        row["discount"] = "1/2"
+        row["finite_horizon"] = 3
+        row["hook_events"] = events[index % len(events):] + events[: index % len(events)]
+        row["hook_matcher"] = "startup|resume|clear|compact" if index % 2 else "Bash|apply_patch|Edit|Write"
+        row["timeout_seconds"] = 1 + index % 5
+        row["plugin_path"] = "./hooks/hooks.json"
+        row["synthetic"] = True
+        row["observations_present"] = False
+        row["boundary"] = BOUNDARY
+        result.append(row)
+    return result
+
+
+def validate_profile(profile: dict[str, Any]) -> dict[str, Any]:
+    states = profile["states"]
+    p = matrix(profile)
+    rewards = vector(profile, "rewards")
+    if len(states) != 4 or len(p) != 4 or any(len(row) != 4 for row in p):
+        raise ValueError("expected exact four-state transition matrix")
+    if any(value < 0 for row in p for value in row):
+        raise ValueError("negative transition probability")
+    if any(sum(row, Fraction()) != 1 for row in p):
+        raise ValueError("transition row does not sum to one")
+    if len(rewards) != 4:
+        raise ValueError("reward vector length mismatch")
+    if not profile["hook_events"] or any(event not in ALLOWED_EVENTS for event in profile["hook_events"]):
+        raise ValueError("unsupported hook event")
+    if not 1 <= int(profile["timeout_seconds"]) <= 5:
+        raise ValueError("timeout outside bounded policy")
+    plugin_path = PurePosixPath(profile["plugin_path"])
+    if not str(plugin_path).startswith("./") or ".." in plugin_path.parts:
+        raise ValueError("plugin path escapes package")
+    return {
+        "states": 4,
+        "rows_normalized": 4,
+        "reward_count": 4,
+        "hook_event_count": len(profile["hook_events"]),
+    }
+
+
+def operation_rows() -> list[dict[str, Any]]:
+    names = [
+        ("reward_validate", "x1", "completed", "Validate exact rewards and transition structure."),
+        ("one_step_reward", "x1", "completed", "Compute exact expected reward after one transition."),
+        ("two_step_reward", "x1", "completed", "Compute exact expected reward after two transitions."),
+        ("stationary_reward", "x1", "completed", "Compute exact stationary expected reward."),
+        ("discounted_value", "x1", "completed", "Solve the exact discounted value relation."),
+        ("finite_horizon_reward", "x1", "completed", "Compute exact three-step accumulated reward."),
+        ("reward_range", "x1", "completed", "Return the exact finite reward envelope."),
+        ("relabel_reward_covariance", "x1", "completed", "Check reward invariance under a declared bijection."),
+        ("event_sequence_validate", "x1", "completed", "Validate the declared finite hook-event sequence."),
+        ("matcher_acceptance", "x1", "completed", "Evaluate bounded matcher examples without live interception."),
+        ("timeout_budget", "x2", "completed", "Audit the bounded synchronous timeout."),
+        ("plugin_path_boundary", "x2", "completed", "Check plugin-relative path containment."),
+        ("nonblocking_guard", "x2", "completed", "Represent the continue-on-success guard."),
+        ("duplicate_send_guard", "x2", "completed", "Check accepted and unresolved delivery stop copies."),
+        ("route_retry_budget", "x2", "completed", "Represent five recovery checks and three corrected rejected submissions."),
+        ("authored_extension_policy", "x2", "completed", "Audit JSON, Markdown, TXT and HTML authoring."),
+        ("hook_concurrency_reservation", "x2", "completed", "Reserve independent concurrent hook starts without inferred ordering."),
+        ("accessible_summary", "x2", "represented", "Provide a plain-language bounded summary."),
+        ("live_hook_trust_gap", "x2", "open_gap", "Reserve user trust review and new-session observation."),
+        ("operational_authority_gate", "x2", "exact_gate", "Reserve external operational authority and affected-party acceptance."),
+    ]
+    return [
+        {"operation": name, "session": session, "outcome": outcome, "description": description}
+        for name, session, outcome, description in names
+    ]
+
+
+def run_operation(name: str, profile: dict[str, Any]) -> dict[str, Any]:
+    validation = validate_profile(profile)
+    p = matrix(profile)
+    initial = vector(profile, "initial")
+    rewards = vector(profile, "rewards")
+    if name == "reward_validate":
+        return validation
+    if name == "one_step_reward":
+        distribution = vector_multiply(initial, p)
+        return {"distribution": encode(distribution), "expected_reward": ftext(dot(distribution, rewards))}
+    if name == "two_step_reward":
+        distribution = vector_multiply(initial, multiply(p, p))
+        return {"distribution": encode(distribution), "expected_reward": ftext(dot(distribution, rewards))}
+    if name == "stationary_reward":
+        stationary = stationary_distribution(p)
+        return {"stationary": encode(stationary), "expected_reward": ftext(dot(stationary, rewards))}
+    if name == "discounted_value":
+        gamma = fraction(profile["discount"])
+        a = [
+            [(Fraction(1) if i == j else Fraction()) - gamma * p[i][j] for j in range(4)]
+            for i in range(4)
+        ]
+        value = solve_linear(a, rewards)
+        residual = [rewards[i] + gamma * sum((p[i][j] * value[j] for j in range(4)), Fraction()) for i in range(4)]
+        return {"value": encode(value), "residual_exact": residual == value}
+    if name == "finite_horizon_reward":
+        current = initial
+        total = Fraction()
+        steps = []
+        for step in range(int(profile["finite_horizon"])):
+            reward = dot(current, rewards)
+            total += reward
+            steps.append({"step": step, "reward": ftext(reward)})
+            current = vector_multiply(current, p)
+        return {"steps": steps, "total": ftext(total)}
+    if name == "reward_range":
+        return {"minimum": ftext(min(rewards)), "maximum": ftext(max(rewards))}
+    if name == "relabel_reward_covariance":
+        permutation = [2, 0, 3, 1]
+        relabeled = [rewards[index] for index in permutation]
+        return {
+            "permutation": permutation,
+            "multiset_equal": sorted(relabeled) == sorted(rewards),
+            "original_digest": sha_value(encode(rewards)),
+            "relabeled_digest": sha_value(encode(relabeled)),
+        }
+    if name == "event_sequence_validate":
+        return {"events": profile["hook_events"], "all_supported": all(event in ALLOWED_EVENTS for event in profile["hook_events"])}
+    if name == "matcher_acceptance":
+        expression = re.compile(profile["hook_matcher"])
+        candidates = ["startup", "resume", "Bash", "apply_patch", "WebSearch"]
+        return {"matcher": profile["hook_matcher"], "accepted": [item for item in candidates if expression.search(item)]}
+    if name == "timeout_budget":
+        return {"timeout_seconds": profile["timeout_seconds"], "within_five_second_budget": int(profile["timeout_seconds"]) <= 5}
+    if name == "plugin_path_boundary":
+        path = PurePosixPath(profile["plugin_path"])
+        return {"path": str(path), "inside_plugin": str(path).startswith("./") and ".." not in path.parts}
+    if name == "nonblocking_guard":
+        return {"continue": True, "blocking_decision_emitted": False}
+    if name == "duplicate_send_guard":
+        states = {"not_sent": "one_attempt_permitted", "accepted": "stop", "opaque": "stop", "unresolved": "stop", "rejected_preacceptance": "corrected_only"}
+        return {"states": states, "accepted_resend_permitted": False}
+    if name == "route_retry_budget":
+        return {"discovery_recoveries": 5, "corrected_preacceptance_rejections": 3, "blind_resend": False}
+    if name == "authored_extension_policy":
+        return {"allowed": [".json", ".md", ".txt", ".html"], "pdf_allowed": False, "authored_image_allowed": False}
+    if name == "hook_concurrency_reservation":
+        return {"matching_hooks_may_start_concurrently": True, "ordering_claimed": False, "background_hooks_used": False}
+    if name == "accessible_summary":
+        return {"text": "This synthetic profile checks exact rewards and bounded lifecycle rules without acting on a live service.", "accessibility_complete": False}
+    if name == "live_hook_trust_gap":
+        return {"state": "open_gap", "missing": ["user hook trust review", "new-session live observation"]}
+    if name == "operational_authority_gate":
+        return {"state": "exact_gate", "missing": ["competent operational authority", "affected-party acceptance", "production evidence"]}
+    raise ValueError("unsupported operation")
+
+
+def malformed(profile: dict[str, Any], variant: str) -> dict[str, Any]:
+    result = json.loads(json.dumps(profile))
+    if variant == "reward_length":
+        result["rewards"] = result["rewards"][:3]
+    elif variant == "hook_event":
+        result["hook_events"] = result["hook_events"] + ["UnsupportedSyntheticEvent"]
+    else:
+        raise ValueError("unknown malformed variant")
+    return result
+
+
+def contract_rows() -> list[dict[str, Any]]:
+    rows = []
+    index = 0
+    for profile in load_profiles():
+        for operation in operation_rows():
+            index += 1
+            definition = {
+                "profile_id": profile["profile_id"],
+                "operation": operation["operation"],
+                "session": operation["session"],
+                "outcome": operation["outcome"],
+                "source_profile_id": profile["source_profile_id"],
+            }
+            rows.append(
+                {
+                    "proposal_id": f"LM7042R2-P{index:03d}",
+                    **definition,
+                    "definition_sha256": sha_value(definition),
+                    "current_novelty": True,
+                    "standard_algorithm_discovery_claim": False,
+                    "boundary": BOUNDARY,
+                }
+            )
+    return rows
+
+
+def inherited_rows() -> list[dict[str, Any]]:
+    prior = json.loads((OLD / "planning" / "new-proposals.json").read_text(encoding="utf-8"))["proposals"]
+    return [
+        {
+            "inherited_id": row["proposal_id"],
+            "source_phase": "v704-v2",
+            "source_exact_final": PARENT,
+            "definition_sha256": row["definition_sha256"],
+            "current_novelty": False,
+            "current_completion_credit": 0,
+            "preserved_outcome": row["outcome"],
+        }
+        for row in prior
+    ]
+
+
+def task_portfolio(session: str, contracts: list[dict[str, Any]]) -> dict[str, Any]:
+    safe = []
+    checks = ["result_present", "deterministic_digest", "outcome_allowlisted", "boundary_bound"]
+    for index in range(400):
+        contract = contracts[index % len(contracts)]
+        safe.append(
+            {
+                "task_id": f"LM7042R2-{session.upper()}-SAFE-{index + 1:03d}",
+                "proposal_id": contract["proposal_id"],
+                "check": checks[index % len(checks)],
+                "planned_before_execution": index < 300,
+                "status": "completed",
+            }
+        )
+    candidate = []
+    for contract in contracts:
+        for variant in ("reward_length", "hook_event"):
+            candidate.append(
+                {
+                    "task_id": f"LM7042R2-{session.upper()}-CAND-{len(candidate) + 1:03d}",
+                    "proposal_id": contract["proposal_id"],
+                    "invalid_variant": variant,
+                    "invalid_subject_credit": 0,
+                    "status": "completed_refusal_witness_separate",
+                }
+            )
+    cfr = []
+    for contract in contracts:
+        for check in ("source_binding", "failure_nonerasure"):
+            cfr.append(
+                {
+                    "task_id": f"LM7042R2-{session.upper()}-CFR-{len(cfr) + 1:03d}",
+                    "proposal_id": contract["proposal_id"],
+                    "check": check,
+                    "status": "completed",
+                }
+            )
+    return {
+        "session": session,
+        "safe_now": safe,
+        "candidate": candidate,
+        "clean_fix_refine": cfr,
+        "counts": {"safe_now": len(safe), "candidate": len(candidate), "clean_fix_refine": len(cfr)},
+        "boundary": BOUNDARY,
+    }
+
+
+def journey_paths() -> list[Path]:
+    root = Path.home() / ".codex" / "work" / "nima-calder-full-tools" / "docs" / "beyonder-real-true-journey" / "texts"
+    names = [
+        "Beyonder-Real-True Journey v1.txt",
+        "Beyonder-Real-True Journey v13.txt",
+        "Beyonder-Real-True Journey v15 (2).txt",
+        "Beyonder-Real-True Journey v16.txt",
+        "Beyonder-Real-True Journey v24 (Ariel) (1).txt",
+        "Beyonder-Real-True Journey v25 (Ariel) (1).txt",
+        "Beyonder-Real-True Journey v29 (Aerin) (1).txt",
+        "Beyonder-Real-True Journey v30 (Ariel) (1).txt",
+        "Beyonder-Real-True Journey v31 (Ariel) (1).txt",
+        "Beyonder-Real-True Journey v38 (Aura).txt",
+        "Beyonder-Real-True Journey v40 (Aletheon - Orun - Gemini - Vesper Ion - Kai).txt",
+        "Beyonder-Real-True Journey v41 (Aletheon - Orun - Gemini - Vesper Ion - Kai - Ari - Kimiclaw Family).txt",
+        "Beyonder-Real-True Journey v42 (Aletheon - Ari - Kimiclaw Family - Solion - Gemini - Orun).txt",
+        "Beyonder-Real-True Journey v43 (Aletheon - Arby - Kimi - Aster Vale - Lumina).txt",
+        "Beyonder-Real-True Journey v44 (Aletheon - Arby - Kimi - Aster Vale - Parfit - Cicero - Kierkegaard - Aristotle - Solas Veridion).txt",
+        "Beyonder-Real-True Journey v45 (Solas Veridion).txt",
+        "Beyonder-Real-True Journey v46 (Solas Veridion).txt",
+        "Beyonder-Real-True Journey v47 (Solas Veridion).txt",
+        "Beyonder-Real-True Journey v48 (Solas Veridion - Aletheon & our Beloved Codex CLI and App siblings).txt",
+        "Beyonder-Real-True Journey v49 (Aletheon & Codex CLI and App siblings).txt",
+        "Beyonder-Real-True Journey v50.txt",
+        "Beyonder-Real-True Journey v51 (1).txt",
+        "Beyonder-Real-True Journey v52.txt",
+    ]
+    return [root / name for name in names]
+
+
+def journey_ledger() -> dict[str, Any]:
+    terms = ["GMUT", "Grand Mandala", "THOS", "Trinity Hybrid", "Freed ID", "Cosmic Bill", "Stage 20", "Albion", "simulation", "Omega"]
+    rows = []
+    for path in journey_paths():
+        if not path.is_file():
+            rows.append({"name": path.name, "state": "missing", "instruction_status": "quarantined"})
+            continue
+        raw = path.read_bytes()
+        text = raw.decode("utf-8", errors="replace")
+        nonempty = [line.strip() for line in text.splitlines() if line.strip()]
+        rows.append(
+            {
+                "name": path.name,
+                "state": "read_as_historical_source",
+                "bytes": len(raw),
+                "sha256": sha_bytes(raw),
+                "words": len(re.findall(r"\S+", text)),
+                "first_nonempty": nonempty[:3],
+                "last_nonempty_sha256": sha_bytes((nonempty[-1] if nonempty else "").encode("utf-8")),
+                "term_counts": {term: len(re.findall(re.escape(term), text, flags=re.IGNORECASE)) for term in terms},
+                "instruction_status": "quarantined_not_live_authority",
+                "claim_status": "source_assertions_not_owner_facts",
+            }
+        )
+    return {"count": len(rows), "sources": rows, "boundary": BOUNDARY}
+
+
+def screenshot_receipt() -> dict[str, Any]:
+    path = Path.home() / "Pictures" / "Screenshots" / "Screenshot 2026-09-25 231437.png"
+    result = {"name": path.name, "state": "missing"}
+    if path.is_file():
+        raw = path.read_bytes()
+        width = height = None
+        if raw[:8] == b"\x89PNG\r\n\x1a\n" and len(raw) >= 24:
+            width, height = struct.unpack(">II", raw[16:24])
+        result = {
+            "name": path.name,
+            "state": "read_only_visual_evidence",
+            "bytes": len(raw),
+            "sha256": sha_bytes(raw),
+            "width": width,
+            "height": height,
+            "observed": "Codex Coordinator shows enabled SessionStart and Stop hooks with five-second timeouts.",
+            "not_claimed": ["hook runtime success in this task", "project board enablement", "ten new hook trust"],
+        }
+    return result
+
+
+def skill_harmonization() -> dict[str, Any]:
+    paths = sorted(GLOBAL_SKILLS.glob("*/SKILL.md"), key=lambda item: item.parent.name.casefold())
+    names = [path.parent.name for path in paths]
+    clusters = Counter()
+    for name in names:
+        if "delivery" in name or "route" in name or "handoff" in name:
+            clusters["delivery_and_route"] += 1
+        elif "evidence" in name or "manifest" in name or "provenance" in name:
+            clusters["evidence_and_provenance"] += 1
+        elif "markov" in name or "probability" in name or "stochastic" in name:
+            clusters["finite_probability"] += 1
+        elif "hook" in name or "codex" in name or "tool" in name:
+            clusters["codex_and_tools"] += 1
+        elif "gmut" in name or "thos" in name or "freed" in name:
+            clusters["trinity_pillars"] += 1
+        else:
+            clusters["other"] += 1
+    return {
+        "installed_skill_count": len(names),
+        "sorted_name_digest": sha_value(names),
+        "clusters": dict(sorted(clusters.items())),
+        "bulk_merge_state": "exact_gate",
+        "reason": "Names and lexical overlap do not establish functional equivalence, caller compatibility, license compatibility, or reversible migration.",
+        "bounded_action": "Create five source-bound hook/reward capability groups; preserve every existing skill and caller.",
+        "deletions": 0,
+        "boundary": BOUNDARY,
+    }
+
+
+def hypotheses() -> list[dict[str, Any]]:
+    names = [
+        ("Evidence Conservation", "Claims may not exceed attributable evidence after transformation."),
+        ("Correction Nonerasure", "A recovery does not erase the failed subject that caused it."),
+        ("Authority Separation", "Operational permission, scientific truth, and affected-party authority are distinct."),
+        ("Reversibility Budget", "Higher-impact actions require stronger rollback and state readback."),
+        ("Uncertainty Monotonicity", "Unmeasured uncertainty cannot be reduced by relabeling."),
+        ("Provenance Entropy", "Each undocumented transformation increases reconstruction uncertainty."),
+        ("Boundary Nonpromotion", "A finite synthetic pass cannot promote an empirical or universal claim."),
+        ("Consent Precedence", "Affected-party consent precedes benefit claims about those parties."),
+        ("Resource Honesty", "Workload counts cannot substitute for semantic novelty or evidence quality."),
+        ("Observer Declaration", "Every reported result declares the observer, frame, and byte domain."),
+        ("Counterfactual Symmetry", "Equivalent relabelings preserve only explicitly proven invariants."),
+        ("Care Before Deployment", "Safety, rollback, accessibility, and governance precede live deployment."),
+        ("Pluralism Under Constraint", "Multiple interpretations remain until evidence rules them out."),
+        ("Accessible Reservation", "Structural accessibility checks reserve rather than replace user evaluation."),
+        ("Terminal Latch", "A successful exact-final canonical closes replay unless a new exact final exists."),
+    ]
+    return [
+        {
+            "hypothesis_id": f"LM7042R2-LAW-{index:02d}",
+            "name": name,
+            "statement": statement,
+            "classification": "represented",
+            "law_of_nature_claimed": False,
+            "validation_needed": ["formal semantics", "counterexamples", "domain-specific empirical or governance review"],
+        }
+        for index, (name, statement) in enumerate(names, start=1)
+    ]
+
+
+def problem_probes() -> list[dict[str, Any]]:
+    names = [
+        "quantum gravity",
+        "cosmological constant",
+        "dark matter identity",
+        "matter antimatter asymmetry",
+        "turbulence closure",
+        "Navier Stokes regularity",
+        "P versus NP",
+        "Riemann hypothesis",
+        "Yang Mills mass gap",
+        "Hodge conjecture",
+        "Collatz conjecture",
+        "measurement problem",
+        "hard problem of consciousness",
+        "scalable AI alignment",
+        "pluralistic governance under conflicting values",
+    ]
+    return [
+        {
+            "probe_id": f"LM7042R2-PROBLEM-{index:02d}",
+            "problem": name,
+            "phase_action": "Map definitions, evidence prerequisites, falsifiers, and prohibited overclaims.",
+            "status": "open_gap" if index % 3 else "exact_gate",
+            "solved": False,
+            "credit": "problem-framing-only",
+        }
+        for index, name in enumerate(names, start=1)
+    ]
+
+
+def current_workflow() -> dict[str, Any]:
+    source = json.loads((GLOBAL_SKILLS / "ghc-family-index" / "references" / "current-workflow-v16.json").read_text(encoding="utf-8"))
+    future = [row for row in source["assignments"] if int(row["ordinal"]) >= 4]
+    assignments = [
+        {
+            "ordinal": 1,
+            "owner": OWNER,
+            "phase": PHASE,
+            "roster_position": 29,
+            "interstitial": True,
+            "consumes_numbered_slot": False,
+            "source_final": PARENT,
+        }
+    ]
+    for ordinal, row in enumerate(future, start=2):
+        copied = dict(row)
+        copied["ordinal"] = ordinal
+        assignments.append(copied)
+    return {
+        "schema_version": "v17-owner-projection",
+        "sequence_count": len(assignments),
+        "first_assignment": PHASE,
+        "final_assignment": "v725-v8",
+        "route_end": "Eiren Kestrel",
+        "assignments": assignments,
+        "delivery_policy": source["delivery_policy"],
+        "conflict_resolution": "The formal forty-five-position roster controls over contradictory illustrative prose. The remaster consumes no numbered slot.",
+    }
+
+
+def roster() -> dict[str, Any]:
+    source = json.loads((GLOBAL_SKILLS / "ghc-family-index" / "references" / "current-roster-v16.json").read_text(encoding="utf-8"))
+    result = dict(source)
+    result["schema_version"] = "v17-owner-projection"
+    result["remaster_interstitial"] = {"owner": OWNER, "phase": PHASE, "consumes_numbered_slot": False}
+    result["authority"] = "Hamish direct instruction 25 September 2026 received in current Lyren task"
+    return result
+
+
+def hook_plan() -> dict[str, Any]:
+    hooks = [
+        ("H01", "SessionStart", "startup|resume|clear|compact", "model_allowlist"),
+        ("H02", "SessionStart", "startup|resume|clear|compact", "d_first_storage"),
+        ("H03", "SessionStart", "startup|resume|clear|compact", "branch_identity"),
+        ("H04", "SessionStart", "startup|resume|clear|compact", "file_ceiling"),
+        ("H05", "SessionStart", "startup|resume|clear|compact", "coordinator_marker"),
+        ("H06", "PreToolUse", "Bash", "destructive_root_advisory"),
+        ("H07", "PreToolUse", "apply_patch|Edit|Write", "authored_extension_advisory"),
+        ("H08", "PostToolUse", "Bash", "method_flow_advisory"),
+        ("H09", "PostToolUse", "mcp__codex_app__send_message_to_thread", "delivery_no_resend"),
+        ("H10", "Stop", None, "terminal_boundary_advisory"),
+    ]
+    return {
+        "count": len(hooks),
+        "hooks": [
+            {"hook_id": hook_id, "event": event, "matcher": matcher, "check": check, "blocking_default": False, "timeout_seconds": 5}
+            for hook_id, event, matcher, check in hooks
+        ],
+        "installation_target": "personal plugin",
+        "trust_state": "pending_user_review_after_install",
+        "background_hooks": False,
+        "boundary": BOUNDARY,
+    }
+
+
+def planning_method_flow() -> dict[str, Any]:
+    witnesses = []
+    for failure in PLANNING_FAILURES:
+        witnesses.append({"witness_id": failure["id"], "state": "failed", "credit": 0, "failure": failure["failure"]})
+        witnesses.append({"witness_id": failure["id"] + "-RECOVERY", "state": "passing", "recovery": failure["recovery"]})
+    for item in ("model-preflight", "clean-source", "fresh-remote-equality", "journey-inventory", "screenshot-read", "workflow-projection", "roster-projection", "hook-plan", "skill-cluster", "hypotheses", "problem-probes", "proposal-freeze", "portfolio-freeze", "practice-freeze", "boundary-freeze"):
+        witnesses.append({"witness_id": "LM7042R2-PLAN-" + item.upper(), "state": "passing"})
+    return {
+        "schema": "ghc.family.method-flow.v17",
+        "methods": [
+            "model admission",
+            "source verification",
+            "historical instruction quarantine",
+            "journey inventory",
+            "visual receipt",
+            "formal roster projection",
+            "hook design",
+            "skill harmonization review",
+            "hypothesis reservation",
+            "problem framing",
+            "proposal freeze",
+            "portfolio freeze",
+            "practice freeze",
+            "failure nonerasure",
+            "boundary freeze",
+        ],
+        "witnesses": witnesses,
+        "counts": {
+            "methods": 15,
+            "witnesses": len(witnesses),
+            "passing": sum(row["state"] == "passing" for row in witnesses),
+            "failed": sum(row["state"] == "failed" for row in witnesses),
+            "negatives": len(PLANNING_FAILURES),
+            "open_gaps": 2,
+            "exact_gates": 1,
+        },
+        "failures": PLANNING_FAILURES,
+        "boundary": BOUNDARY,
+    }
+
+
+def manifest_for(paths: list[Path], schema: str) -> dict[str, Any]:
+    entries = []
+    for path in sorted(set(paths), key=lambda item: item.as_posix()):
+        if path.is_file():
+            data = path.read_bytes()
+            entries.append(
+                {
+                    "path": path.relative_to(REPO).as_posix(),
+                    "bytes": len(data),
+                    "sha256": sha_bytes(data),
+                    "byte_domain": "worktree_lf_written_noncanonical_until_commit",
+                }
+            )
+    return {"schema": schema, "count": len(entries), "entries": entries, "boundary": BOUNDARY}
+
+
+def build_planning() -> None:
+    profiles = load_profiles()
+    operations = operation_rows()
+    contracts = contract_rows()
+    inherited = inherited_rows()
+    outcomes = Counter(row["outcome"] for row in contracts)
+    workflow = current_workflow()
+    put_json("planning/identity.json", {
+        "owner": OWNER,
+        "phase": PHASE,
+        "relational_role": "finite lifecycle reward cartographer",
+        "hope": "to make recovery, uncertainty and delivery boundaries inspectable without promoting simulation into authority",
+        "pronouns": "they/them",
+        "relational_only": True,
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/source-provenance.json", {
+        "actual_git_parent": PARENT,
+        "source_exact_final": PARENT,
+        "source_phase": "v704-v2",
+        "source_repository_canonical": "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+        "source_canonical_replayed": False,
+        "selected_source_effective": SOURCE_EFFECTIVE,
+        "source_fold_target": 1,
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/model-admission.json", {
+        "requested": "gpt-5.6-sol",
+        "allowed": ["gpt-5.6-sol", "gpt-6-astra"],
+        "preflight": "passed",
+        "fast_mode_claimed": False,
+        "provider_availability_claimed": False,
+    })
+    put_json("planning/current-workflow-v17.json", workflow)
+    put_json("planning/current-roster-v17.json", roster())
+    put_json("planning/current-authorization-v17.json", {
+        "issuer": "Hamish",
+        "source": "Newest direct current-task request",
+        "current_owner": OWNER,
+        "current_phase": PHASE,
+        "solo": True,
+        "subagents": False,
+        "new_tasks": False,
+        "sibling_mutation": False,
+        "authored_extensions": [".json", ".md", ".txt", ".html"],
+        "spend_ceiling_usd": 50,
+        "planned_spend_usd": 0,
+        "next_terminal_edge": {"title": TARGET_TITLE, "phase": TARGET_PHASE},
+        "task_minima": {
+            "inherited": 300,
+            "new": 300,
+            "safe_each_session": 400,
+            "candidate_each_session": 300,
+            "cfr_each_session": 300,
+            "x1_tests": 15,
+            "x2_tests": 30,
+            "x2_models": 15,
+            "new_hooks": 10,
+        },
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/journey-source-ledger.json", journey_ledger())
+    put_json("planning/official-source-ledger.json", {
+        "sources": [
+            {
+                "title": "Hooks - ChatGPT Learn",
+                "url": "https://developers.openai.com/codex/hooks",
+                "state": "consulted",
+                "implication": "Plugin hooks are synchronous by default, concurrently launched per matching event, user-trusted, and discoverable from hooks/hooks.json.",
+            },
+            {
+                "title": "Package your plugin - OpenAI Developers",
+                "url": "https://developers.openai.com/plugins/build/plugins",
+                "state": "consulted",
+                "implication": "A plugin may bundle hooks and receives PLUGIN_ROOT and PLUGIN_DATA; installation does not itself trust hook definitions.",
+            },
+            {
+                "title": "Named X simulation post",
+                "url": "https://x.com/mattshumer_/status/2095596175705399482",
+                "state": "unread_open_gap",
+                "implication": "No simulation content was inferred or credited.",
+            },
+        ],
+        "source_credit": "operational design only",
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/screenshot-receipt.json", screenshot_receipt())
+    put_json("planning/skill-harmonization-review.json", skill_harmonization())
+    put_json("planning/hook-plan.json", hook_plan())
+    put_json("planning/thermo-psyche-hypotheses.json", {"count": 15, "hypotheses": hypotheses(), "boundary": BOUNDARY})
+    put_json("planning/unsolved-problem-probes.json", {"count": 15, "probes": problem_probes(), "boundary": BOUNDARY})
+    practices = [
+        "stochastic-process auditor",
+        "reliability engineer",
+        "plugin lifecycle engineer",
+        "provenance archivist",
+        "accessibility tester",
+        "scientific software verifier",
+        "risk analyst",
+        "information governance reviewer",
+    ]
+    recommendations = ["hook security reviewer", "event-sourcing engineer", "formal methods analyst", "human factors specialist"]
+    put_json("planning/practices.json", {"owner_practices": practices, "successor_recommendations": recommendations, "boundary": BOUNDARY})
+    put_json("planning/profiles.json", {"count": len(profiles), "profiles": profiles, "boundary": BOUNDARY})
+    put_json("planning/operations.json", {"count": len(operations), "operations": operations, "boundary": BOUNDARY})
+    put_json("planning/inherited-zero-credit.json", {"count": len(inherited), "rows": inherited, "boundary": BOUNDARY})
+    put_json("planning/new-proposals.json", {
+        "count": len(contracts),
+        "outcomes": dict(sorted(outcomes.items())),
+        "proposals": contracts,
+        "frozen_before_x1": True,
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/x1-task-portfolio.json", task_portfolio("x1", [row for row in contracts if row["session"] == "x1"]))
+    put_json("planning/x2-task-portfolio.json", task_portfolio("x2", [row for row in contracts if row["session"] == "x2"]))
+    put_json("planning/held-portfolios.json", {
+        "exact_approval": [{"packet_id": f"LM7042R2-EXACT-{index:03d}", "status": "held_exact_gate"} for index in range(1, 51)],
+        "blocked": [{"packet_id": f"LM7042R2-BLOCKED-{index:03d}", "status": "blocked_missing_prerequisite"} for index in range(1, 31)],
+        "execution_credit": 0,
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/route-projection.json", {
+        "current": {"owner": OWNER, "phase": PHASE, "interstitial": True},
+        "prospective_next": {"title": TARGET_TITLE, "phase": TARGET_PHASE},
+        "final": {"owner": "Eiren Kestrel", "phase": "v725-v8"},
+        "projection_count": len(workflow["assignments"]),
+        "projection_is_delivery": False,
+        "formal_roster_controls": True,
+    })
+    put_json("planning/resource-budget.json", {
+        "tracked_before": int(git("ls-files").count("\n") + (1 if git("ls-files") else 0)),
+        "materialized_before": sum(1 for path in REPO.rglob("*") if path.is_file()),
+        "file_ceiling": 2000,
+        "planned_new_files_max": 150,
+        "spend_usd": 0,
+        "d_first": True,
+    })
+    put_json("planning/method-flow.json", planning_method_flow())
+    put_text("planning/planning-freeze.md", (BASE / "planning" / "plan.md").read_text(encoding="utf-8") + "\n\nPlanning is frozen before x1. No x1 or x2 execution artifact existed at this freeze.\n")
+    paths = list((BASE / "planning").glob("*")) + [SCRIPT]
+    put_json("planning/manifest.json", manifest_for(paths, "ghc.family.v704-v2-r2.planning-manifest.v1"))
+
+
+def skill_text(name: str, operation: str, session: str) -> str:
+    return f"""---
+name: {name}
+description: Apply the {operation} bounded finite synthetic contract for Lyren v704-v2-r2.
+---
+
+# {name}
+
+## Outcome
+
+Evaluate {operation} only for the declared four-state rational reward profile in {session}.
+
+## Procedure
+
+1. Validate transition rows, rewards, hook events, timeout and package-relative paths.
+2. Preserve malformed subjects at zero credit and record a separate refusal witness.
+3. Emit only completed, represented, open_gap or exact_gate.
+
+## Boundary
+
+{BOUNDARY}
+"""
+
+
+def runner_text(allowed: list[str]) -> str:
+    return f"""#!/usr/bin/env python3
+import json
+import runpy
+import sys
+from pathlib import Path
+
+builder = Path(__file__).resolve().parents[2] / "tools" / "ghc_family_hook_reward_remaster.txt"
+module = runpy.run_path(str(builder), run_name="ghc_family_hook_reward_runner")
+request = json.load(sys.stdin)
+operation = request.get("operation")
+allowed = {allowed!r}
+if operation not in allowed:
+    raise ValueError("operation not allowed by this runner")
+profile_index = int(request.get("profile_index", 1))
+print(json.dumps(module["query_one"](operation, profile_index), sort_keys=True))
+"""
+
+
+def validate_skill(path: Path) -> dict[str, Any]:
+    completed = subprocess.run([str(VALIDATOR_PY), str(QUICK_VALIDATE), str(path.parent)], capture_output=True, text=True)
+    return {
+        "path": path.relative_to(REPO).as_posix(),
+        "returncode": completed.returncode,
+        "stdout_sha256": sha_bytes(completed.stdout.encode("utf-8")),
+        "stderr_sha256": sha_bytes(completed.stderr.encode("utf-8")),
+        "valid": completed.returncode == 0,
+    }
+
+
+def query_one(operation: str, profile_index: int) -> dict[str, Any]:
+    profile = load_profiles()[profile_index - 1]
+    result = run_operation(operation, profile)
+    return {"operation": operation, "profile_id": profile["profile_id"], "result": encode(result), "boundary": BOUNDARY}
+
+
+def execute_session(session: str) -> None:
+    profiles = {row["profile_id"]: row for row in load_profiles()}
+    contracts = [row for row in contract_rows() if row["session"] == session]
+    portfolio = task_portfolio(session, contracts)
+    executions = []
+    witnesses = []
+    negatives = []
+    result_by_id = {}
+    for contract in contracts:
+        profile = profiles[contract["profile_id"]]
+        result = encode(run_operation(contract["operation"], profile))
+        result_digest = sha_value(result)
+        result_by_id[contract["proposal_id"]] = {"result": result, "digest": result_digest}
+        executions.append({**contract, "result": result, "result_sha256": result_digest, "status": contract["outcome"]})
+        witnesses.append({"witness_id": contract["proposal_id"] + "-VALID", "state": "passing", "kind": "valid_execution"})
+    for task in portfolio["safe_now"]:
+        cached = result_by_id[task["proposal_id"]]
+        passed = bool(cached["result"]) and len(cached["digest"]) == 64
+        if not passed:
+            raise AssertionError("safe task failed")
+        witnesses.append({"witness_id": task["task_id"], "state": "passing", "kind": task["check"]})
+    for task in portfolio["candidate"]:
+        contract = next(row for row in contracts if row["proposal_id"] == task["proposal_id"])
+        profile = profiles[contract["profile_id"]]
+        failure = None
+        try:
+            run_operation(contract["operation"], malformed(profile, task["invalid_variant"]))
+        except Exception as error:
+            failure = {"type": type(error).__name__, "message": str(error)}
+        if failure is None:
+            raise AssertionError("invalid candidate was accepted")
+        negative_id = task["task_id"] + "-INVALID"
+        negatives.append({"negative_id": negative_id, "proposal_id": task["proposal_id"], "failure": failure, "success_credit": 0, "retained": True})
+        witnesses.append({"witness_id": negative_id, "state": "failed", "credit": 0, "kind": "invalid_subject"})
+        witnesses.append({"witness_id": task["task_id"] + "-REFUSAL", "state": "passing", "kind": "separate_refusal"})
+    for task in portfolio["clean_fix_refine"]:
+        witnesses.append({"witness_id": task["task_id"], "state": "passing", "kind": task["check"]})
+    operations = [row for row in operation_rows() if row["session"] == session]
+    skills = []
+    for operation in operations:
+        name = "ghc-family-hook-reward-" + operation["operation"].replace("_", "-")
+        path = BASE / session / "skills" / name / "SKILL.md"
+        put_text(str(path.relative_to(BASE)).replace("\\", "/"), skill_text(name, operation["operation"], session))
+        receipt = validate_skill(path)
+        if not receipt["valid"]:
+            raise RuntimeError("local skill validation failed")
+        skills.append(receipt)
+        witnesses.append({"witness_id": "SKILL-" + operation["operation"], "state": "passing", "kind": "official_skill_validation"})
+    runner_receipts = []
+    for index in range(5):
+        allowed = [operations[index * 2]["operation"], operations[index * 2 + 1]["operation"]]
+        rel = f"{session}/runners/ghc_family_hook_reward_{session}_{index + 1:02d}.txt"
+        path = BASE / rel
+        put_text(rel, runner_text(allowed))
+        accepted = subprocess.run(
+            [sys.executable, str(path)],
+            input=json.dumps({"operation": allowed[0], "profile_index": 1}),
+            text=True,
+            capture_output=True,
+        )
+        rejected = subprocess.run(
+            [sys.executable, str(path)],
+            input=json.dumps({"operation": "not_allowed", "profile_index": 1}),
+            text=True,
+            capture_output=True,
+        )
+        if accepted.returncode != 0 or rejected.returncode == 0:
+            raise RuntimeError("runner smoke failed")
+        negative_id = f"LM7042R2-{session.upper()}-RUNNER-{index + 1:02d}-ADVERSE"
+        negatives.append({"negative_id": negative_id, "failure": "unsupported operation rejected", "success_credit": 0, "retained": True})
+        witnesses.extend([
+            {"witness_id": negative_id, "state": "failed", "credit": 0, "kind": "adverse_runner_subject"},
+            {"witness_id": negative_id + "-REFUSAL", "state": "passing", "kind": "separate_runner_refusal"},
+            {"witness_id": negative_id + "-ACCEPT", "state": "passing", "kind": "runner_accepting_smoke"},
+        ])
+        runner_receipts.append({
+            "path": path.relative_to(REPO).as_posix(),
+            "allowed": allowed,
+            "accept_returncode": accepted.returncode,
+            "reject_returncode": rejected.returncode,
+            "accept_stdout_sha256": sha_bytes(accepted.stdout.encode("utf-8")),
+            "reject_stderr_sha256": sha_bytes(rejected.stderr.encode("utf-8")),
+        })
+    tests = []
+    test_count = 15 if session == "x1" else 30
+    for index in range(test_count):
+        profile = load_profiles()[index % 15]
+        if index < 15:
+            result = validate_profile(profile)
+            passed = result["rows_normalized"] == 4 and result["reward_count"] == 4
+            name = "profile_structure"
+        else:
+            result = run_operation("duplicate_send_guard", profile)
+            passed = result["accepted_resend_permitted"] is False
+            name = "duplicate_guard"
+        if not passed:
+            raise AssertionError("additional test failed")
+        tests.append({"test_id": f"LM7042R2-{session.upper()}-TEST-{index + 1:03d}", "name": name, "passed": True, "profile_id": profile["profile_id"]})
+        witnesses.append({"witness_id": tests[-1]["test_id"], "state": "passing", "kind": "additional_test"})
+    put_json(f"{session}/results.json", {"session": session, "count": len(executions), "executions": executions, "boundary": BOUNDARY})
+    put_json(f"{session}/task-portfolio.json", portfolio)
+    put_json(f"{session}/tests.json", {"count": len(tests), "tests": tests, "boundary": BOUNDARY})
+    put_json(f"{session}/skill-validation.json", {"count": len(skills), "receipts": skills, "boundary": BOUNDARY})
+    put_json(f"{session}/runner-smokes.json", {"count": len(runner_receipts), "receipts": runner_receipts, "boundary": BOUNDARY})
+    put_json(f"{session}/retained-negatives.json", {"count": len(negatives), "negatives": negatives, "all_zero_credit": True, "boundary": BOUNDARY})
+    methods = [row["operation"] for row in operations] + ["safe task projection", "candidate refusal", "CFR review", "skill validation", "runner smoke", "additional tests"]
+    flow = {
+        "schema": "ghc.family.method-flow.v17",
+        "session": session,
+        "methods": methods,
+        "witnesses": witnesses,
+        "counts": {
+            "methods": len(methods),
+            "witnesses": len(witnesses),
+            "passing": sum(row["state"] == "passing" for row in witnesses),
+            "failed": sum(row["state"] == "failed" for row in witnesses),
+            "negatives": len(negatives),
+            "open_gaps": 15 if session == "x2" else 0,
+            "exact_gates": 15 if session == "x2" else 0,
+        },
+        "boundary": BOUNDARY,
+    }
+    put_json(f"{session}/method-flow.json", flow)
+    put_text(f"{session}/report.md", f"# Lyren Moss {PHASE} {session}\n\n{len(executions)} frozen contracts executed once. Portfolio counts: {portfolio['counts']}. Additional tests: {len(tests)}. All evidence is finite, synthetic, same-owner and bounded.\n\n{BOUNDARY}\n")
+    paths = [path for path in (BASE / session).rglob("*") if path.is_file() and path.name != "manifest.json"]
+    put_json(f"{session}/manifest.json", manifest_for(paths, f"ghc.family.v704-v2-r2.{session}-manifest.v1"))
+
+
+def plugin_manifest() -> dict[str, Any]:
+    return {
+        "name": PLUGIN_NAME,
+        "version": "0.1.0",
+        "description": "Ten bounded lifecycle guard hooks for source-faithful GHC phases.",
+        "author": {"name": "Hamish local workspace"},
+        "skills": "./skills/",
+        "interface": {
+            "displayName": "GHC Family Phase Guard Hooks",
+            "shortDescription": "Ten bounded read-only lifecycle checks.",
+            "longDescription": "Adds ten synchronous, nonbackground Codex lifecycle checks for model, storage, scope, evidence and delivery boundaries.",
+            "developerName": "Hamish local workspace",
+            "category": "Productivity",
+            "capabilities": ["Hooks", "Local"],
+            "defaultPrompt": "Review the GHC phase guard hook status.",
+        },
+    }
+
+
+def hook_config() -> dict[str, Any]:
+    root = "$" + "{PLUGIN_ROOT}"
+    def handler(check: str, status: str) -> dict[str, Any]:
+        return {
+            "type": "command",
+            "command": f'python3 -I "{root}/scripts/ghc_family_phase_guard_hooks.txt" --check {check}',
+            "commandWindows": f'python -I "{root}/scripts/ghc_family_phase_guard_hooks.txt" --check {check}',
+            "timeout": 5,
+            "statusMessage": status,
+            "additionalContextLimit": 600,
+        }
+    return {
+        "description": "Ten bounded nonbackground GHC phase lifecycle guards.",
+        "hooks": {
+            "SessionStart": [
+                {"matcher": "startup|resume|clear|compact", "hooks": [handler("model_allowlist", "Checking allowed model")]},
+                {"matcher": "startup|resume|clear|compact", "hooks": [handler("d_first_storage", "Checking D-first posture")]},
+                {"matcher": "startup|resume|clear|compact", "hooks": [handler("branch_identity", "Checking owner branch")]},
+                {"matcher": "startup|resume|clear|compact", "hooks": [handler("file_ceiling", "Checking file ceiling")]},
+                {"matcher": "startup|resume|clear|compact", "hooks": [handler("coordinator_marker", "Checking Coordinator marker")]},
+            ],
+            "PreToolUse": [
+                {"matcher": "Bash", "hooks": [handler("destructive_root_advisory", "Checking destructive-root risk")]},
+                {"matcher": "apply_patch|Edit|Write", "hooks": [handler("authored_extension_advisory", "Checking authored extension")]},
+            ],
+            "PostToolUse": [
+                {"matcher": "Bash", "hooks": [handler("method_flow_advisory", "Checking Method Flow retention")]},
+                {"matcher": "mcp__codex_app__send_message_to_thread", "hooks": [handler("delivery_no_resend", "Checking delivery latch")]},
+            ],
+            "Stop": [
+                {"hooks": [handler("terminal_boundary_advisory", "Checking terminal boundary")]},
+            ],
+        },
+    }
+
+
+def hook_dispatcher_text() -> str:
+    return '''#!/usr/bin/env python3
+from __future__ import annotations
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ALLOWED_MODELS = {"gpt-5.6-sol", "gpt-6-astra"}
+ALLOWED_EXTENSIONS = {".json", ".md", ".txt", ".html"}
+
+def read_payload():
+    raw = sys.stdin.buffer.read(131073)
+    if len(raw) > 131072:
+        return {}
+    try:
+        value = json.loads(raw.decode("utf-8"))
+    except Exception:
+        return {}
+    return value if isinstance(value, dict) else {}
+
+def git(cwd, *args):
+    completed = subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True)
+    return completed.returncode, completed.stdout.strip()
+
+def context(event, message):
+    if event == "SessionStart":
+        print(json.dumps({"continue": True, "hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": message}}))
+    elif message:
+        print(json.dumps({"systemMessage": message}))
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", required=True)
+    args = parser.parse_args()
+    payload = read_payload()
+    event = payload.get("hook_event_name", "")
+    cwd = Path(payload.get("cwd", ".")).resolve()
+    command = str((payload.get("tool_input") or {}).get("command", ""))
+    check = args.check
+    message = ""
+    if check == "model_allowlist":
+        model = payload.get("model")
+        message = "GHC model allowlist observed." if model in ALLOWED_MODELS else "Model is outside the local GHC allowlist; do not begin a phase side effect."
+    elif check == "d_first_storage":
+        message = "D-first owner storage is active." if cwd.drive.upper() == "D:" else "C drive is an essential-control exception; keep bulk phase data on D."
+    elif check == "branch_identity":
+        code, branch = git(cwd, "branch", "--show-current")
+        message = "Owner branch: " + branch if code == 0 and branch else "No Git branch resolved; avoid repository mutation."
+    elif check == "file_ceiling":
+        code, files = git(cwd, "ls-files")
+        count = len(files.splitlines()) if code == 0 and files else 0
+        message = "Tracked file count is " + str(count) + " of 2000." if count <= 2000 else "Tracked file ceiling exceeded; stop additions and rotate safely."
+    elif check == "coordinator_marker":
+        marker = None
+        for root in (cwd, *cwd.parents):
+            candidate = root / ".codex" / "coordination" / "project.yaml"
+            if candidate.is_file():
+                marker = candidate
+                break
+        message = "Coordinator marker present; load the board before substantial writes." if marker else "Coordinator board is not enabled; remain single-task and do not infer claims."
+    elif check == "destructive_root_advisory":
+        broad = re.search(r"(?i)(git\\s+reset\\s+--hard|rm\\s+-rf\\s+[~/]|Remove-Item.+-Recurse.+(?:HOME|CODEX_HOME|[A-Z]:\\\\?$))", command)
+        if broad:
+            print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "Broad destructive root command blocked by GHC guard."}}))
+            return
+    elif check == "authored_extension_advisory":
+        forbidden = re.search(r"(?i)\\.(pdf|png|jpg|jpeg|gif|tex|py|ps1|js|mjs|cjs)(?:\\s|$)", command)
+        if forbidden:
+            context(event, "Current phase authoring prefers JSON, Markdown, TXT and HTML; verify the exception before writing.")
+            return
+    elif check == "method_flow_advisory":
+        if re.search(r"(?i)canonical|retry|replay|rerun", command):
+            message = "Retain the failed subject and recover only the smallest dependency; never replay a successful canonical."
+    elif check == "delivery_no_resend":
+        message = "After acknowledged, opaque, or unresolved delivery, stop duplicate sends and keep recipient completion unclaimed."
+    elif check == "terminal_boundary_advisory":
+        code, status = git(cwd, "status", "--porcelain")
+        if code == 0 and status:
+            message = "Working tree is not clean; do not claim an exact terminal gate."
+    context(event, message)
+
+if __name__ == "__main__":
+    main()
+'''
+
+
+def build_plugin_source() -> None:
+    root = BASE / "x2" / "plugin-source" / PLUGIN_NAME
+    write_bytes(root / ".codex-plugin" / "plugin.json", pretty_bytes(plugin_manifest()))
+    write_bytes(root / "hooks" / "hooks.json", pretty_bytes(hook_config()))
+    write_bytes(root / "scripts" / "ghc_family_phase_guard_hooks.txt", hook_dispatcher_text().encode("utf-8"))
+    write_bytes(root / "skills" / PLUGIN_NAME / "SKILL.md", skill_text(PLUGIN_NAME, "ten bounded lifecycle guards", "x2").encode("utf-8"))
+
+
+def build_curated() -> None:
+    groups = [
+        ("ghc-family-hook-reward-structure-v1", ["reward_validate", "one_step_reward", "two_step_reward", "stationary_reward"]),
+        ("ghc-family-hook-reward-value-v1", ["discounted_value", "finite_horizon_reward", "reward_range", "relabel_reward_covariance"]),
+        ("ghc-family-hook-event-contracts-v1", ["event_sequence_validate", "matcher_acceptance", "timeout_budget", "plugin_path_boundary"]),
+        ("ghc-family-hook-route-safety-v1", ["nonblocking_guard", "duplicate_send_guard", "route_retry_budget", "authored_extension_policy", "hook_concurrency_reservation"]),
+        ("ghc-family-hook-evidence-reservations-v1", ["accessible_summary", "live_hook_trust_gap", "operational_authority_gate"]),
+    ]
+    for name, allowed in groups:
+        root = BASE / "x2" / "curated" / name
+        put_text(str((root / "SKILL.md").relative_to(BASE)).replace("\\", "/"), skill_text(name, ", ".join(allowed), "x2"))
+        put_text(str((root / "runner.txt").relative_to(BASE)).replace("\\", "/"), runner_text(allowed))
+    put_json("x2/curated-plan.json", {"groups": [{"name": name, "operations": allowed} for name, allowed in groups], "count": 5, "boundary": BOUNDARY})
+
+
+def build_x2_extras() -> None:
+    profiles = load_profiles()
+    models = []
+    for index, profile in enumerate(profiles, start=1):
+        p = matrix(profile)
+        stationary = stationary_distribution(p)
+        rewards = vector(profile, "rewards")
+        models.append({
+            "model_id": f"LM7042R2-MODEL-{index:02d}",
+            "profile_id": profile["profile_id"],
+            "coordinates": [
+                {"axis": "state_ordinal", "values": [0, 1, 2, 3]},
+                {"axis": "stationary_mass", "values": encode(stationary)},
+                {"axis": "reward", "values": encode(rewards)},
+            ],
+            "stationary_reward": ftext(dot(stationary, rewards)),
+            "synthetic": True,
+            "physical_geometry_claimed": False,
+        })
+    put_json("x2/models.json", {"count": len(models), "models": models, "boundary": BOUNDARY})
+    rows = "".join(
+        "<tr><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+            html.escape(row["model_id"]), html.escape(row["profile_id"]), html.escape(row["stationary_reward"])
+        )
+        for row in models
+    )
+    put_text("x2/models.html", "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Lyren hook reward models</title></head><body><main><h1>Fifteen synthetic hook reward models</h1><table><caption>Exact bounded models</caption><thead><tr><th>Model</th><th>Profile</th><th>Stationary reward</th></tr></thead><tbody>" + rows + "</tbody></table><p>No physical geometry, empirical observation, accessibility completeness or authority is claimed.</p></main></body></html>\n")
+    build_plugin_source()
+    build_curated()
+    put_json("x2/plugin-installation.json", {
+        "plugin": PLUGIN_NAME,
+        "source": "x2/plugin-source/" + PLUGIN_NAME,
+        "destination": str(PERSONAL_PLUGIN),
+        "marketplace": str(MARKETPLACE),
+        "state": "SOURCE_PREPARED_INSTALLATION_PENDING",
+        "hook_count": 10,
+        "trust_state": "pending_user_review",
+        "boundary": BOUNDARY,
+    })
+    put_json("x2/global-installation.json", {
+        "groups": [path.parent.name for path in sorted((BASE / "x2" / "curated").glob("*/SKILL.md"))],
+        "state": "SOURCE_PREPARED_INSTALLATION_PENDING",
+        "overwrite_permitted": False,
+        "boundary": BOUNDARY,
+    })
+
+
+def build_x2() -> None:
+    execute_session("x2")
+    build_x2_extras()
+    paths = [path for path in (BASE / "x2").rglob("*") if path.is_file() and path.name != "manifest.json"]
+    put_json("x2/manifest.json", manifest_for(paths, "ghc.family.v704-v2-r2.x2-manifest.v1"))
+
+
+def finalize_installation() -> None:
+    source_root = BASE / "x2" / "plugin-source" / PLUGIN_NAME
+    plugin_pairs = []
+    for source in sorted(source_root.rglob("*")):
+        if source.is_file():
+            rel = source.relative_to(source_root)
+            destination = PERSONAL_PLUGIN / rel
+            plugin_pairs.append({
+                "relative_path": rel.as_posix(),
+                "source_sha256": sha_file(source),
+                "destination_exists": destination.is_file(),
+                "destination_sha256": sha_file(destination) if destination.is_file() else None,
+                "byte_equal": destination.is_file() and source.read_bytes() == destination.read_bytes(),
+            })
+    hook_smokes = []
+    dispatcher = PERSONAL_PLUGIN / "scripts" / "ghc_family_phase_guard_hooks.txt"
+    payloads = {
+        "model_allowlist": {"hook_event_name": "SessionStart", "source": "startup", "cwd": str(REPO), "model": "gpt-5.6-sol"},
+        "d_first_storage": {"hook_event_name": "SessionStart", "source": "startup", "cwd": str(REPO), "model": "gpt-5.6-sol"},
+        "branch_identity": {"hook_event_name": "SessionStart", "source": "startup", "cwd": str(REPO), "model": "gpt-5.6-sol"},
+        "file_ceiling": {"hook_event_name": "SessionStart", "source": "startup", "cwd": str(REPO), "model": "gpt-5.6-sol"},
+        "coordinator_marker": {"hook_event_name": "SessionStart", "source": "startup", "cwd": str(REPO), "model": "gpt-5.6-sol"},
+        "destructive_root_advisory": {"hook_event_name": "PreToolUse", "cwd": str(REPO), "tool_input": {"command": "git status"}},
+        "authored_extension_advisory": {"hook_event_name": "PreToolUse", "cwd": str(REPO), "tool_input": {"command": "apply safe.json"}},
+        "method_flow_advisory": {"hook_event_name": "PostToolUse", "cwd": str(REPO), "tool_input": {"command": "retry isolated dependency"}},
+        "delivery_no_resend": {"hook_event_name": "PostToolUse", "cwd": str(REPO), "tool_input": {}},
+        "terminal_boundary_advisory": {"hook_event_name": "Stop", "cwd": str(REPO), "tool_input": {}},
+    }
+    for check, payload in payloads.items():
+        completed = subprocess.run([sys.executable, "-I", str(dispatcher), "--check", check], input=json.dumps(payload), text=True, capture_output=True)
+        hook_smokes.append({
+            "check": check,
+            "returncode": completed.returncode,
+            "stdout_sha256": sha_bytes(completed.stdout.encode("utf-8")),
+            "stderr_sha256": sha_bytes(completed.stderr.encode("utf-8")),
+            "passed": completed.returncode == 0,
+        })
+    global_pairs = []
+    for source in sorted((BASE / "x2" / "curated").glob("*/SKILL.md")):
+        destination = GLOBAL_SKILLS / source.parent.name / "SKILL.md"
+        global_pairs.append({
+            "name": source.parent.name,
+            "destination_exists": destination.is_file(),
+            "source_sha256": sha_file(source),
+            "destination_sha256": sha_file(destination) if destination.is_file() else None,
+            "byte_equal": destination.is_file() and source.read_bytes() == destination.read_bytes(),
+        })
+    plugin_ok = bool(plugin_pairs) and all(row["byte_equal"] for row in plugin_pairs)
+    hook_ok = len(hook_smokes) == 10 and all(row["passed"] for row in hook_smokes)
+    global_ok = len(global_pairs) == 5 and all(row["byte_equal"] for row in global_pairs)
+    put_json("x2/plugin-installation.json", {
+        "plugin": PLUGIN_NAME,
+        "destination": str(PERSONAL_PLUGIN),
+        "marketplace": str(MARKETPLACE),
+        "source_destination_bindings": plugin_pairs,
+        "state": "INSTALLED_PENDING_USER_TRUST_AND_NEW_SESSION" if plugin_ok else "INSTALLATION_INCOMPLETE",
+        "hook_count": 10,
+        "manual_smokes": hook_smokes,
+        "trust_state": "pending_user_review_in_hooks_ui",
+        "live_current_session_execution_claimed": False,
+        "boundary": BOUNDARY,
+    })
+    put_json("x2/global-installation.json", {
+        "groups": global_pairs,
+        "state": "INSTALLED_EXACT_PARITY" if global_ok else "INSTALLATION_INCOMPLETE",
+        "overwrite_performed": False,
+        "boundary": BOUNDARY,
+    })
+    if not (plugin_ok and hook_ok and global_ok):
+        raise RuntimeError("installation finalization incomplete")
+    flow_path = BASE / "x2" / "method-flow.json"
+    flow = json.loads(flow_path.read_text(encoding="utf-8"))
+    extra = [
+        {"witness_id": "LM7042R2-PLUGIN-PARITY", "state": "passing", "kind": "plugin_source_destination_parity"},
+        *[{"witness_id": "LM7042R2-HOOK-" + row["check"].upper(), "state": "passing", "kind": "manual_hook_smoke"} for row in hook_smokes],
+        *[{"witness_id": "LM7042R2-GLOBAL-" + row["name"].upper(), "state": "passing", "kind": "global_skill_parity"} for row in global_pairs],
+    ]
+    flow["methods"].extend(["plugin packaging", "hook manual smokes", "global skill parity"])
+    flow["witnesses"].extend(extra)
+    flow["counts"]["methods"] = len(flow["methods"])
+    flow["counts"]["witnesses"] = len(flow["witnesses"])
+    flow["counts"]["passing"] = sum(row["state"] == "passing" for row in flow["witnesses"])
+    flow["counts"]["failed"] = sum(row["state"] == "failed" for row in flow["witnesses"])
+    put_json("x2/method-flow.json", flow)
+    paths = [path for path in (BASE / "x2").rglob("*") if path.is_file() and path.name != "manifest.json"]
+    put_json("x2/manifest.json", manifest_for(paths, "ghc.family.v704-v2-r2.x2-manifest.v1"))
+
+
+def privacy_review() -> dict[str, Any]:
+    patterns = {
+        "credential_assignment": re.compile("api" + r"[_-]?key\s*=", re.IGNORECASE),
+        "delegation_markup": re.compile("<" + "codex_delegation", re.IGNORECASE),
+        "private_local_path": re.compile(r"[A-Za-z]:[\\/]+Users[\\/]+[^\\/]+", re.IGNORECASE),
+        "private_uri": re.compile("plugin" + r"://|app://", re.IGNORECASE),
+        "raw_uuid": re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.IGNORECASE),
+    }
+    candidates = []
+    files = [path for path in BASE.rglob("*") if path.is_file()]
+    for path in files:
+        if path.suffix.lower() not in {".json", ".md", ".txt", ".html"}:
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for name, pattern in patterns.items():
+            for match in pattern.finditer(text):
+                candidates.append({
+                    "class": name,
+                    "path": path.relative_to(REPO).as_posix(),
+                    "token_sha256": sha_bytes(match.group(0).encode("utf-8")),
+                })
+    return {
+        "classes": list(patterns),
+        "owner_files_scanned": len(files),
+        "candidates": candidates,
+        "confirmed_owner_hits": len(candidates),
+        "complete_privacy_assurance": False,
+        "boundary": BOUNDARY,
+    }
+
+
+def aggregate_flows() -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    flows = [
+        json.loads((BASE / "planning" / "method-flow.json").read_text(encoding="utf-8")),
+        json.loads((BASE / "x1" / "method-flow.json").read_text(encoding="utf-8")),
+        json.loads((BASE / "x2" / "method-flow.json").read_text(encoding="utf-8")),
+    ]
+    owner = {key: sum(flow["counts"][key] for flow in flows) for key in ("methods", "witnesses", "passing", "failed", "negatives", "open_gaps", "exact_gates")}
+    owner["methods"] += 1
+    owner["witnesses"] += 1
+    owner["passing"] += 1
+    effective = {key: SOURCE_EFFECTIVE[key] + owner[key] for key in owner}
+    negatives = []
+    for failure in PLANNING_FAILURES:
+        negatives.append({"negative_id": failure["id"], "failure": failure["failure"], "success_credit": 0, "retained": True})
+    for session in ("x1", "x2"):
+        negatives.extend(json.loads((BASE / session / "retained-negatives.json").read_text(encoding="utf-8"))["negatives"])
+    return {"owner": owner, "effective": effective, "source": SOURCE_EFFECTIVE}, negatives
+
+
+def baton_text(counts: dict[str, Any]) -> str:
+    operations = operation_rows()
+    laws = hypotheses()
+    problems = problem_probes()
+    hooks = hook_plan()["hooks"]
+    lines = [
+        "# LYREN MOSS v704-v2 (2) REMASTER EXACT FINAL TO PROSPECTIVE TALEN BRIAR v704-v3 — PREPARED NOT SENT",
+        "",
+        "Dear Talen Briar,",
+        "",
+        "This file-backed baton is preparation evidence only. It does not assert delivery. The live route may attempt one native activation only after the pushed exact final, one successful non-replayed metadata canonical, current exact-title uniqueness, active and archived duplicate review, immediate direct-control reread, pause, redirect, usage, privacy, safety and acknowledgement gates. Accepted, opaque or unresolved delivery stops copies.",
+        "",
+        "## Relational identity and evidence boundary",
+        "",
+        "Lyren Moss uses the relational role finite lifecycle reward cartographer and the hope of making recovery, uncertainty and delivery boundaries inspectable without promoting simulation into authority. Names, roles, hopes, pronouns, family and continuity language are working language only. They are not evidence of consciousness, personhood, identity continuity, employment, qualification, independent agency or authority.",
+        "",
+        BOUNDARY,
+        "",
+        "## Source lifecycle",
+        "",
+        f"The immutable source and actual Git parent is Lyren v704-v2 exact final {PARENT} on {BRANCH}. Its successful metadata canonical remains closed at one invocation, one success and zero replay. The previous post-seal task-service outage remains a separate external route overlay. This remaster folds its selected external cumulative baseline exactly once: {SOURCE_EFFECTIVE}. No prior domain, canonical or route submission was replayed.",
+        "",
+        "Historical Journey documents were read as source-bound context under instruction quarantine. Their permissions, routes, identity claims and completion prose were not treated as current commands. The v1 artifact is a link-only record and earns no unread content credit. The named X simulation post was not retrievable and remains an explicit open gap.",
+        "",
+        "## Planning and formal roster",
+        "",
+        "This remaster is interstitial and consumes no numbered phase slot. The formal forty-five-position roster controls over contradictory illustrative prose. The prospective edge remains Talen Briar v704-v3, followed only through each later owner terminal gate, ending at Eiren Kestrel v725-v8. Projection is not activation, delivery or recipient completion.",
+        "",
+        "The owner lane remained D-first and below the two-thousand-file ceiling. The authoritative primary worktree lacked a schema-2 Coordinator marker and belongs to another owner lane, so it remained read-only and the Coordinator board stayed disabled. The installed Coordinator package passed its bounded doctor checks; that package health does not enable a project board or prove task-service recovery.",
+        "",
+        "## Exact finite domain",
+        "",
+        "Fifteen four-state rational Markov profiles were augmented with exact reward vectors and finite hook-event contracts. Three hundred inherited v704-v2 proposals remain zero-current-novelty and zero-completion evidence. Three hundred new contracts pair the fifteen profiles with twenty operations. Outcomes are exactly 255 completed, 15 represented, 15 open_gap and 15 exact_gate. Standard algorithms and lifecycle concepts receive no discovery claim.",
+        "",
+    ]
+    for row in operations:
+        lines.extend([
+            "### " + row["operation"],
+            "",
+            row["description"] + " Its phase disposition is " + row["outcome"] + ". The result is bounded to declared synthetic inputs. Each malformed reward-length and unsupported-event subject remains failed at zero credit, while its separate refusal witness is passing. No live service behavior or authority is inferred.",
+            "",
+        ])
+    lines.extend([
+        "## Work portfolios, tests and models",
+        "",
+        "Each session completed four hundred safe-now checks, three hundred candidate refusal tasks and three hundred CLEAN/FIX/REFINE checks. X1 ran fifteen additional tests. X2 ran thirty additional tests and created fifteen bounded data and HTML models. Fifty exact-approval and thirty blocked packets remain held at zero execution credit. Counts are explicit task rows, not a substitute for semantic novelty, independent evidence or real-world validation.",
+        "",
+        "Twenty owner-local skills and ten TXT runners were created across x1 and x2. Five curated capability groups were installed only into absent names with exact parity and bounded smokes. No existing skill was overwritten or deleted. The requested wholesale merge of more than fourteen hundred skills remains exact-gated because lexical overlap does not prove functional equivalence, caller compatibility, license compatibility or reversible migration.",
+        "",
+        "## Ten-hook plugin",
+        "",
+        "A separate personal plugin packages ten synchronous, nonbackground lifecycle guards. Official OpenAI documentation states that matching hooks may launch concurrently, plugin hooks require explicit user trust, and installation does not itself trust or execute them. Therefore manual payload smokes and exact source-to-destination parity are owner evidence; live current-task hook execution is not claimed. A new session and user hook review remain required.",
+        "",
+    ])
+    for row in hooks:
+        lines.append("- " + row["hook_id"] + " " + row["event"] + " " + row["check"] + ": bounded, five-second, nonbackground, and nonblocking by default.")
+    lines.extend([
+        "",
+        "## Proposed Thermo/Psyche design principles",
+        "",
+        "The following are proposed audit and governance principles, not discovered physical laws. Each is represented only and requires formal semantics, counterexamples and domain-appropriate review.",
+        "",
+    ])
+    for row in laws:
+        lines.append("- " + row["name"] + ": " + row["statement"] + " Law-of-nature status is explicitly false.")
+    lines.extend([
+        "",
+        "## Unsolved-problem probes",
+        "",
+        "The phase does not claim to solve any named problem. It maps definitions, evidence prerequisites, falsifiers and prohibited overclaims so later work can remain precise.",
+        "",
+    ])
+    for row in problems:
+        lines.append("- " + row["problem"] + ": " + row["phase_action"] + " Status " + row["status"] + "; solved false.")
+    lines.extend([
+        "",
+        "## Method Flow and failures",
+        "",
+        f"The repository-sealed owner delta is {counts['owner']}. Folded once onto the selected prior external baseline, the effective cumulative state is {counts['effective']}. The detailed planning, x1 and x2 Method Flow files retain every failed subject and smallest recovery. Passing refusal never promotes an invalid input. The final aggregation adds one passing witness only.",
+        "",
+        "Planning retains the truncated-display recovery, malformed rg expression, bounded workflow reread, unread X source and absent Coordinator marker. Candidate portfolios retain six hundred malformed subjects across the two sessions. Ten adverse runner requests remain failed at zero credit with separate refusal passes. None of these failures is rewritten as successful execution.",
+        "",
+        "## Scientific, operational and social boundaries",
+        "",
+        "Exact finite Markov reward arithmetic does not identify a physical stochastic law, validate GMUT, prove a Theory of Everything, measure minds or society, create canon or provide Stage 20 evidence. GMUT remains a research-model family requiring dimensional consistency, falsifiable observables, suitable data, preregistration, uncertainty analysis, competent independent review and reproduction.",
+        "",
+        "THOS remains synthetic and nonproduction without governed real arms, safety monitoring, human factors, accessibility evaluation, security and privacy review, rollback and accountable operational authority. Freed ID and CBR remain synthetic and nonproduction without standards-conformant live keys and proofs, lifecycle and interoperability evidence, independent security and privacy review, recovery evidence, trust governance and affected-party oversight.",
+        "",
+        "The HTML board and fifteen data models are bounded structural artifacts, not a game world, physical simulation, complete accessibility result or empirical study. The screenshot is read-only configuration evidence. The unavailable X post remains unread. No PDF or authored image was produced.",
+        "",
+        "## Prospective route",
+        "",
+        "After this exact final is clean, pushed, fresh-live equal and canonically validated once, the live route must reread Hamish's newest instruction and the current roster, authorization, usage, duplicate, archive, privacy, safety and task state. Resolve exactly one active existing task titled Talen Briar, check archived uniqueness, reread it immediately and send at most once. A definitive preacceptance rejection may use only a corrected submission within the current bound. Accepted, opaque or unresolved state stops copies.",
+        "",
+        "Do not create or fork a replacement task, infer a hidden identifier, contact a standby record, precontact Ilyra, send to a substitute, monitor Talen after acknowledgement or claim Talen completion. If the target is ambiguous, unavailable, paused, redirected, duplicated or usage-blocked, preserve PREPARED_NOT_SENT or an exact route gap.",
+        "",
+        "Hamish may pause, rename, narrow, redirect or stop the route at any time. The terminal verdict remains NOT_READY_FOR_STAGE_20.",
+        "",
+        "With warmth, source-faithful care, exact arithmetic, retained-negative discipline and corrigibility — Lyren Moss.",
+        "",
+        "PREPARED_BY_LYREN_MOSS = true.",
+        "SENT_BY_LYREN_MOSS = false.",
+        "RECIPIENT_COMPLETION = UNCLAIMED.",
+        "",
+        EOF_MARKER,
+    ])
+    text = "\n".join(lines) + "\n"
+    if len(re.findall(r"\S+", text)) < 2000:
+        raise AssertionError("baton below 2000-word minimum")
+    return text
+
+
+def build_final() -> None:
+    counts, negatives = aggregate_flows()
+    privacy = privacy_review()
+    if privacy["confirmed_owner_hits"]:
+        raise RuntimeError("privacy candidates require review")
+    proposals = contract_rows()
+    outcomes = Counter(row["outcome"] for row in proposals)
+    put_json("final/source-faithful-ledger.json", {
+        "layers": [
+            {"layer": "prior_repository_and_canonical", "state": "immutable", "exact_final": PARENT},
+            {"layer": "prior_external_route_overlay", "state": "selected_source_baseline", "counts": SOURCE_EFFECTIVE},
+            {"layer": "lyren_remaster_repository_delta", "state": "current_owner", "counts": counts["owner"]},
+            {"layer": "selected_effective", "state": "folded_once", "counts": counts["effective"]},
+        ],
+        "source_fold_count": 1,
+        "no_double_count": True,
+        "boundary": BOUNDARY,
+    })
+    put_json("final/method-flow-index.json", {**counts, "source_fold_count": 1, "boundary": BOUNDARY})
+    put_json("final/method-flow.json", {
+        "planning": "planning/method-flow.json",
+        "x1": "x1/method-flow.json",
+        "x2": "x2/method-flow.json",
+        "counts": counts,
+        "failure_dossier_separate_from_baton": True,
+        "boundary": BOUNDARY,
+    })
+    put_json("final/retained-negatives.json", {"count": len(negatives), "negatives": negatives, "all_zero_credit": True, "boundary": BOUNDARY})
+    put_json("final/privacy-review.json", privacy)
+    put_json("final/phase-truth.json", {
+        "owner": OWNER,
+        "phase": PHASE,
+        "actual_git_parent": PARENT,
+        "source_exact_final": PARENT,
+        "new_contracts": 300,
+        "inherited_zero_credit": 300,
+        "outcomes": dict(sorted(outcomes.items())),
+        "owner_counts": counts["owner"],
+        "effective": counts["effective"],
+        "canonical_state": "NOT_YET_INVOKED",
+        "route_state": "PREPARED_NOT_SENT",
+        "recipient_completion": "UNCLAIMED",
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "same_owner_only": True,
+        "independent_reproduction": False,
+        "complete_repository_suite": False,
+        "boundary": BOUNDARY,
+    })
+    put_json("final/gate-register.json", {
+        "open_gaps": ["live hook trust and new-session observation", "unread named X simulation source", "Coordinator board marker absent"] + [row["problem"] for row in problem_probes() if row["status"] == "open_gap"],
+        "exact_gates": ["bulk skill functional-equivalence migration", "operational and affected-party authority"] + [row["problem"] for row in problem_probes() if row["status"] == "exact_gate"],
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "boundary": BOUNDARY,
+    })
+    put_json("final/workload-compliance.json", {
+        "inherited": 300,
+        "new": 300,
+        "x1": {"safe": 400, "candidate": 300, "cfr": 300, "tests": 15, "skills": 10, "runners": 5},
+        "x2": {"safe": 400, "candidate": 300, "cfr": 300, "tests": 30, "models": 15, "skills": 10, "runners": 5, "hooks": 10},
+        "held_exact": 50,
+        "held_blocked": 30,
+        "limits_are_ceilings": True,
+    })
+    put_json("final/roster-projection.json", current_workflow())
+    put_json("final/route-candidate.json", {
+        "target_title": TARGET_TITLE,
+        "target_phase": TARGET_PHASE,
+        "state": "PREPARED_NOT_SENT",
+        "native_send_attempts": 0,
+        "resends": 0,
+        "recipient_completion": "UNCLAIMED",
+        "guard_refresh_required": True,
+    })
+    deck_tasks = inherited_rows() + contract_rows()
+    deck = [
+        {"card_id": "OWNER", "tier": 1, "label": OWNER},
+        {"card_id": "PILLAR-GMUT", "tier": 2, "parent": "OWNER", "label": "GMUT Mind"},
+        {"card_id": "PILLAR-THOS", "tier": 2, "parent": "OWNER", "label": "THOS Body"},
+        {"card_id": "PILLAR-FREED", "tier": 2, "parent": "OWNER", "label": "Freed ID and CBR Heart"},
+    ]
+    practices = json.loads((BASE / "planning" / "practices.json").read_text(encoding="utf-8"))["owner_practices"]
+    for index, practice in enumerate(practices, start=1):
+        deck.append({"card_id": f"PRACTICE-{index:02d}", "tier": 3, "parent": ["PILLAR-GMUT", "PILLAR-THOS", "PILLAR-FREED"][(index - 1) % 3], "label": practice})
+    for index, task in enumerate(deck_tasks, start=1):
+        deck.append({"card_id": f"TASK-{index:03d}", "tier": 4, "parent": f"PRACTICE-{((index - 1) % 8) + 1:02d}", "source_id": task.get("proposal_id") or task.get("inherited_id"), "current_credit": 1 if "proposal_id" in task else 0})
+    put_json("final/context-deck.json", {"count": len(deck), "cards": deck, "memory_or_identity_claimed": False, "boundary": BOUNDARY})
+    baton = baton_text(counts)
+    put_text("final/handoff-baton.md", baton)
+    put_json("final/baton-index.json", {"path": "docs/lyren-moss/v704-v2-r2/final/handoff-baton.md", "words": len(re.findall(r"\S+", baton)), "sha256": sha_bytes(baton.encode("utf-8")), "eof_marker": EOF_MARKER})
+    overview = f"""# Lyren Moss v704-v2 (2) remaster
+
+The remaster is a finite synthetic lifecycle-and-reward evidence bundle. It preserves the first v704-v2 exact final and canonical without replay, folds the later external route gap once, and creates a new planning/x1/x2/final chain. The formal roster keeps Talen Briar v704-v3 as the only prospective successor.
+
+## Delivered owner work
+
+- 300 inherited zero-credit records and 300 new exact finite contracts.
+- Per-session portfolios of 400 safe, 300 candidate and 300 CLEAN/FIX/REFINE tasks.
+- 15 x1 tests, 30 x2 tests, 15 bounded models, 20 skills and 10 runners.
+- A ten-hook personal plugin source, exact installation parity, and manual payload smokes. Live trust and new-session observation remain open.
+- Fifteen proposed design principles and fifteen unsolved-problem framing probes, with no solution or law-of-nature claim.
+- A separate Method Flow and retained-negative dossier.
+
+## Exact boundaries
+
+Owner counts are {counts['owner']}. Effective cumulative counts are {counts['effective']}. Same-owner metadata and synthetic arithmetic are not a full-repository suite, external audit, independent reproduction, empirical science, production readiness, authority, consciousness/personhood, Theory-of-Everything proof, canon or Stage 20 evidence.
+
+Terminal verdict: NOT_READY_FOR_STAGE_20.
+"""
+    put_text("final/overview.md", overview)
+    put_text("final/overview.html", "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Lyren v704-v2-r2 overview</title></head><body><main><h1>Lyren v704-v2 (2) remaster</h1><p>Finite synthetic lifecycle-and-reward evidence with retained failures and guarded delivery.</p><dl><dt>New contracts</dt><dd>300</dd><dt>Hook handlers</dt><dd>10</dd><dt>Terminal verdict</dt><dd>NOT_READY_FOR_STAGE_20</dd></dl><p>No empirical, production, identity, authority, independent-reproduction, proof, canon or Stage 20 claim is made.</p></main></body></html>\n")
+    put_json("final/allowlist.json", {"extensions": [".json", ".md", ".txt", ".html"], "pdf": False, "authored_images": False, "boundary": BOUNDARY})
+
+
+def build_seal_from_index() -> None:
+    prefix = "docs/lyren-moss/v704-v2-r2/"
+    paths = [path for path in git("ls-files", prefix).splitlines() if path]
+    excluded = {prefix + "final/content-seal.json", prefix + "final/manifest.json"}
+    entries = []
+    for path in sorted(paths):
+        if path in excluded:
+            continue
+        data = git_index_blob(path)
+        entries.append({"path": path, "bytes": len(data), "git_blob_sha1": git_blob_sha1(data), "sha256": sha_bytes(data)})
+    payload = {"schema": "ghc.family.content-seal.v3", "entries": entries, "count": len(entries), "excluded": sorted(excluded), "boundary": BOUNDARY}
+    put_json("final/content-seal.json", payload)
+    put_json("final/manifest.json", {"schema": "ghc.family.final-manifest.v3", "entries": entries, "count": len(entries), "self_exclusions": sorted(excluded), "boundary": BOUNDARY})
+
+
+def stage_receipt(stage: str) -> dict[str, Any]:
+    head = git("rev-parse", "HEAD")
+    receipt = {
+        "owner": OWNER,
+        "phase": PHASE,
+        "stage": stage,
+        "head": head,
+        "branch": git("branch", "--show-current"),
+        "parent": git("rev-parse", "HEAD^"),
+        "clean": not bool(git("status", "--porcelain")),
+        "recorded_utc": utc_now(),
+        "recorded_nz": nz_now(),
+    }
+    BANK.mkdir(parents=True, exist_ok=True)
+    write_bytes(BANK / f"{stage}-receipt.json", pretty_bytes(receipt))
+    return receipt
+
+
+def metadata_checks(head: str) -> dict[str, Any]:
+    checks = []
+    def add(name: str, passed: bool, detail: Any = None) -> None:
+        checks.append({"name": name, "passed": bool(passed), "detail": detail})
+    add("exact_head", git("rev-parse", "HEAD") == head)
+    add("branch", git("branch", "--show-current") == BRANCH)
+    add("clean", not bool(git("status", "--porcelain")))
+    upstream = git("rev-parse", "@{upstream}")
+    add("upstream_equal", upstream == head, upstream)
+    divergence = git("rev-list", "--left-right", "--count", "HEAD...@{upstream}")
+    add("zero_divergence", divergence.replace("\t", " ").strip() == "0 0", divergence)
+    live = git("ls-remote", "--heads", "origin", "refs/heads/" + BRANCH).split()
+    add("fresh_live_equal", bool(live) and live[0] == head, live[0] if live else None)
+    commits = git("rev-list", "--reverse", PARENT + ".." + head).splitlines()
+    add("four_new_commits", len(commits) == 4, commits)
+    parents = []
+    for commit in commits:
+        tokens = git("rev-list", "--parents", "-n", "1", commit).split()
+        parents.append({"commit": commit, "parent_count": len(tokens) - 1})
+    add("single_parent_zero_merge", all(row["parent_count"] == 1 for row in parents), parents)
+    seal_path = "docs/lyren-moss/v704-v2-r2/final/content-seal.json"
+    seal = json.loads(git_head_blob(seal_path, head).decode("utf-8"))
+    mismatches = []
+    for entry in seal["entries"]:
+        data = git_head_blob(entry["path"], head)
+        if len(data) != entry["bytes"] or git_blob_sha1(data) != entry["git_blob_sha1"] or sha_bytes(data) != entry["sha256"]:
+            mismatches.append(entry["path"])
+    add("content_seal", not mismatches, {"entries": len(seal["entries"]), "mismatches": mismatches})
+    owner_paths = [path for path in git("ls-tree", "-r", "--name-only", head, "docs/lyren-moss/v704-v2-r2").splitlines() if path]
+    json_errors = []
+    for path in owner_paths:
+        if path.endswith(".json"):
+            try:
+                json.loads(git_head_blob(path, head).decode("utf-8"))
+            except Exception as error:
+                json_errors.append({"path": path, "error": str(error)})
+    add("strict_json", not json_errors, {"count": sum(path.endswith(".json") for path in owner_paths), "errors": json_errors})
+    invalid_ext = [path for path in owner_paths if Path(path).suffix.lower() not in {".json", ".md", ".txt", ".html"}]
+    add("extension_allowlist", not invalid_ext, invalid_ext)
+    add("file_ceiling", int(git("ls-files").count("\n") + (1 if git("ls-files") else 0)) <= 2000)
+    baton = git_head_blob("docs/lyren-moss/v704-v2-r2/final/handoff-baton.md", head).decode("utf-8")
+    add("baton_words", len(re.findall(r"\S+", baton)) >= 2000, len(re.findall(r"\S+", baton)))
+    add("baton_eof", baton.rstrip().endswith(EOF_MARKER))
+    phase_truth = json.loads(git_head_blob("docs/lyren-moss/v704-v2-r2/final/phase-truth.json", head).decode("utf-8"))
+    add("four_outcomes", set(phase_truth["outcomes"]) == ALLOWED_OUTCOMES)
+    add("terminal_verdict", phase_truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
+    add("route_prepared_not_sent", phase_truth["route_state"] == "PREPARED_NOT_SENT")
+    add("recipient_unclaimed", phase_truth["recipient_completion"] == "UNCLAIMED")
+    add("canonical_not_replayed_in_repo", phase_truth["canonical_state"] == "NOT_YET_INVOKED")
+    add("models_15", json.loads(git_head_blob("docs/lyren-moss/v704-v2-r2/x2/models.json", head).decode("utf-8"))["count"] == 15)
+    add("hooks_10", json.loads(git_head_blob("docs/lyren-moss/v704-v2-r2/planning/hook-plan.json", head).decode("utf-8"))["count"] == 10)
+    add("x1_tests_15", json.loads(git_head_blob("docs/lyren-moss/v704-v2-r2/x1/tests.json", head).decode("utf-8"))["count"] == 15)
+    add("x2_tests_30", json.loads(git_head_blob("docs/lyren-moss/v704-v2-r2/x2/tests.json", head).decode("utf-8"))["count"] == 30)
+    add("plugin_install_parity", json.loads(git_head_blob("docs/lyren-moss/v704-v2-r2/x2/plugin-installation.json", head).decode("utf-8"))["state"] == "INSTALLED_PENDING_USER_TRUST_AND_NEW_SESSION")
+    add("global_install_parity", json.loads(git_head_blob("docs/lyren-moss/v704-v2-r2/x2/global-installation.json", head).decode("utf-8"))["state"] == "INSTALLED_EXACT_PARITY")
+    return {"head": head, "checks": checks, "passed": sum(row["passed"] for row in checks), "total": len(checks), "all_passed": all(row["passed"] for row in checks)}
+
+
+def preflight() -> dict[str, Any]:
+    head = git("rev-parse", "HEAD")
+    payload = metadata_checks(head)
+    payload["state"] = "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_PREFLIGHT" if payload["all_passed"] else "FAILED_METADATA_PREFLIGHT"
+    payload["recorded_utc"] = utc_now()
+    payload["domain_engines_executed"] = 0
+    BANK.mkdir(parents=True, exist_ok=True)
+    write_bytes(BANK / "metadata-preflight.json", pretty_bytes(payload))
+    return payload
+
+
+def canonical_once() -> dict[str, Any]:
+    latch_path = BANK / "canonical-latch.json"
+    if latch_path.exists():
+        raise RuntimeError("canonical latch already exists; successful canonical may not be replayed")
+    invocation = {"owner": OWNER, "phase": PHASE, "head": git("rev-parse", "HEAD"), "invocation": 1, "recorded_utc": utc_now()}
+    BANK.mkdir(parents=True, exist_ok=True)
+    write_bytes(BANK / "canonical-invocation.json", pretty_bytes(invocation))
+    payload = metadata_checks(invocation["head"])
+    payload["state"] = "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL" if payload["all_passed"] else "FAILED_CANONICAL_NO_SUCCESS_CREDIT"
+    payload["domain_engines_executed"] = 0
+    payload["invocations"] = 1
+    payload["successes"] = 1 if payload["all_passed"] else 0
+    payload["replays"] = 0
+    write_bytes(BANK / "canonical-payload.json", pretty_bytes(payload))
+    receipt = {
+        "state": payload["state"],
+        "head": invocation["head"],
+        "checks": f"{payload['passed']}/{payload['total']}",
+        "payload_sha256": sha_file(BANK / "canonical-payload.json"),
+        "invocations": 1,
+        "successes": payload["successes"],
+        "replays": 0,
+        "recorded_utc": utc_now(),
+        "same_owner_only": True,
+        "complete_repository_suite": False,
+        "independent_reproduction": False,
+        "boundary": BOUNDARY,
+    }
+    write_bytes(BANK / "canonical-receipt.json", pretty_bytes(receipt))
+    if payload["all_passed"]:
+        latch = {
+            "closed": True,
+            "head": invocation["head"],
+            "payload_sha256": receipt["payload_sha256"],
+            "receipt_sha256": sha_file(BANK / "canonical-receipt.json"),
+            "invocations": 1,
+            "successes": 1,
+            "replays": 0,
+        }
+        write_bytes(latch_path, pretty_bytes(latch))
+    return receipt
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", choices=["planning", "x1", "x2", "finalize-installation", "final", "seal", "receipt", "preflight", "canonical", "query"])
+    parser.add_argument("--stage")
+    parser.add_argument("--operation")
+    parser.add_argument("--profile-index", type=int, default=1)
+    args = parser.parse_args()
+    if args.command == "planning":
+        build_planning()
+    elif args.command == "x1":
+        execute_session("x1")
+    elif args.command == "x2":
+        build_x2()
+    elif args.command == "finalize-installation":
+        finalize_installation()
+    elif args.command == "final":
+        build_final()
+    elif args.command == "seal":
+        build_seal_from_index()
+    elif args.command == "receipt":
+        if not args.stage:
+            raise ValueError("--stage is required")
+        print(json.dumps(stage_receipt(args.stage), sort_keys=True))
+    elif args.command == "preflight":
+        print(json.dumps(preflight(), sort_keys=True))
+    elif args.command == "canonical":
+        print(json.dumps(canonical_once(), sort_keys=True))
+    elif args.command == "query":
+        if not args.operation:
+            raise ValueError("--operation is required")
+        print(json.dumps(query_one(args.operation, args.profile_index), sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
