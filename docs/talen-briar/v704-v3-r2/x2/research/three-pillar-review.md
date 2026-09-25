@@ -1,0 +1,75 @@
+# Talen v704-v3 (2): uncertainty, continuity and three-pillar review
+
+This remaster adds a finite robust-decision implementation and clearer shared workflow controls. Its focal pillar is THOS: explicit uncertainty, reproducible local execution, discoverable capabilities and recoverable handoff. GMUT receives a controlled symbolic comparator and a sharper claim register. Freed ID and CBR receive a separation between record verification, consent, identity and authority. The results are useful internal research and software evidence. They do not establish a leading scientific theory, production operating system, new government or conscious simulation.
+
+## What changed in the mathematical model
+
+The original Talen phase evaluated finite Markov decision processes with fixed declared transition rows. The remaster replaces each row with two declared probability vertices. Nature may select a vertex after the action, independently at each state, action and time. The finite maximin calculation therefore assumes rectangular uncertainty. A single hidden parameter fixed for an entire trajectory would be a different model; using this solver for it without a derivation could be too conservative or simply wrong.
+
+The implementation uses exact fractions, up to four states, two actions and four decisions. The Python reference recursively evaluates the finite model; Node computes the layers with BigInt fractions. Full response envelopes, input immutability and exact tie sets are checked. The 15 base profiles include a degenerate uncertainty set, terminal-only behavior, negative rewards and zero-discount behavior. An early oracle defect omitted the discount in worst-vertex tie selection. It was corrected before the planning freeze, and its failed original remains in Method Flow.
+
+The literature already contains robust dynamic programming for uncertain transitions. This phase claims a small tested implementation and project-specific records, not invention of robust control. [Author publication page](https://people.eecs.berkeley.edu/~elghaoui/pubs_rob_mdp.html).
+
+## GMUT: definitions with explicit missing bridges
+
+The historic expression G_mu_nu + Lambda g_mu_nu = 8 pi T_mu_nu + Psi_mu_nu introduces an additional tensor term but does not, by itself, define its degrees of freedom, dimensions or dynamics. The later expression Gcal_AB = 8 pi Tcal_AB + alpha Omega_AB changes notation and index range. The inspected LaTeX source is more specific in notation: it separates Omega^(M), Omega^(R) and Xi. These forms should be recorded as distinct historical definitions until an explicit map relates them. They must not be silently treated as equal field equations.
+
+For this phase, “Mandala field residual” means the formal combination alpha Xi_AB minus Omega^(M)_AB minus Omega^(R)_AB. “GMUT v-infinity” names the evolving project program, not a converged physical theory. “True 1%”, novelty, supersymmetric integration and simultaneity remain project language unless a denominator, symmetry group, field content, transformation law and measured quantity are provided. No supersymmetry algebra or symmetry-breaking prediction is derived here.
+
+The attached v1 text was only a shared-chat URL. A web fetch failed, but the browser recovered the comparison. Its introductory and concluding claims of reproducing established physics, tiny coupling and consciousness-mediated effects are historical assertions. They do not contain the fitted data, residuals, parameter provenance or controlled experimental record needed to grant those claims current evidential status. Its spiritual comparisons can inform interpretation, without becoming calibration of a physical field. [Supplied comparison](https://chatgpt.com/s/6881913aa2a88191bab89d8bba25ee06).
+
+The new scalar-comparator.tex supplies a conventional minimally coupled scalar as a clearly specified comparison. In natural units the scalar has its usual four-dimensional mass dimension and its stress tensor must have compatible units with the matter source. The legacy project's coefficient alpha cannot be selected merely for smallness: its units depend on the definitions of Xi and the geometric tensor. A constant and a variable alpha also have different conservation obligations. The separate SymPy receipt verifies only four identities in a flat 1+1 comparator. It supplies no measured coupling, cosmological fit or identification with consciousness.
+
+The next useful GMUT work is narrow: choose a single observable, define all fields and units, specify a baseline model, derive a prediction, freeze a metric and rejection threshold, and compare against an appropriate dataset. Zero-field recovery, conservation, stability and sensitivity are prerequisites. Earlier engineering caps in the claim register remain engineering choices until connected to an empirical likelihood.
+
+## Fifteen proposed project laws and fifteen open questions
+
+The accompanying tentative-laws.json contains fifteen new project formulations of bounded invariants. They were checked against all fifteen retained model profiles without executing the successful domain batch again. The 225 comparisons support finite mass, ordering, boundary, covariance and tie statements. They are not newly discovered laws of thermodynamics or psyche. Extending a Bellman ordering to human wellbeing, physical energy or consciousness would require new variables, observations and justification.
+
+The open-problem file records fifteen explicit attempts to make a bridge and identifies where each bridge fails. Six are the remaining Millennium problems; others concern quantum gravity, cosmology, measurement, experience, continuity and ethics. No problem is marked solved. The value of an obstruction record is that it prevents a finite example, symbolic name or analogy from being promoted to a universal result. [Clay's problem list](https://www.claymath.org/millennium-problems/).
+
+## THOS and current platform comparisons
+
+The updated environment contains 62 installed Python distributions, with dependency checks passing. The audit also found 210 distinct distribution names across five existing environments; those older environments were retained. Codex CLI 0.157.0, Node 26.10.0 and TypeScript 7.0.2 match the fresh registry observations. This is a selected toolchain refresh, not a claim to have upgraded every Windows application. The new generated cases use Hypothesis, pytest, Ruff and SymPy in the D-drive environment.
+
+Current Codex CLI release notes informed handling of Windows runtime details, bounded results and retry states. We retained the active model and the user's desktop-app ownership. The new advisory plugin has ten bounded, nonblocking hooks, actual Windows command tests and installed source/cache parity. Manual hook checks and installation do not prove that a future eligible live lifecycle event has executed it. [Official release](https://github.com/openai/codex/releases/tag/rust-v0.157.0), [plugin documentation](https://developers.openai.com/plugins/build/plugins).
+
+Microsoft's managed agent service describes tracing, evaluations and reusable versioned toolboxes. Google's Memory Bank documentation distinguishes a service instance, memory operations and a deployed agent, with scoped IAM requirements. These are useful architectural comparisons for separating source records, retrieval, execution and authorization in THOS. They were studied without activating either cloud service. [Microsoft overview](https://learn.microsoft.com/en-us/azure/foundry/agents/overview), [Google setup](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/set-up).
+
+The MCP revision announcement discusses stateless operations, tasks and managed identity. A future GHC connector should declare which revision and capabilities it actually supports, retain an acceptance receipt, and distinguish a pending task from a failed call. Endpoint documentation alone cannot prove local support. [MCP announcement](https://blog.modelcontextprotocol.io/posts/2026-07-28/).
+
+NVIDIA's DGX Spark documentation lists a GB10 Grace Blackwell design with unified memory. That suggests a possible local prototyping category, but it supplies no measured throughput, cost advantage or suitability for this phase's workload. No hardware or cloud purchase was made. [Vendor hardware documentation](https://docs.nvidia.com/dgx/dgx-spark/hardware.html).
+
+The user's observation that Astra consumes roughly two to four times as many tokens in their workflow is preserved as a planning scenario. The remaster does not turn it into a cross-model benchmark. The formal roster implements one newer numbered seat after two original-seat runs where its cycle specifies that pattern; it does not change any task's model setting. Actual usage comparisons would need matched workloads, output acceptance criteria, cache accounting and repeated observations.
+
+## Freed ID and CBR
+
+A digest can bind bytes. A verified credential can authenticate an issuer's assertion under a chosen verification method. Neither operation automatically establishes the assertion's truth, a person's continuity, informed consent or a right to act. The W3C credentials model expressly separates verification from relying on the claim under a verifier policy. The remaster therefore retains evidence gaps and exact authority gates as distinct successful outputs, rather than counting them as released capabilities. [W3C credentials model](https://www.w3.org/TR/vc-data-model-2.0/).
+
+DID subjects need not be human, and identifier control is a technical relationship. Freed ID can use identifiers to locate records without treating a task title, model response or stored biography as a proof of personhood. CBR remains a proposed ethical/governance framework here; real adoption requires legitimate affected-party participation, review, remedy and jurisdiction-specific work. No model run supplies Maori, legal or professional authority. [DID specification](https://www.w3.org/TR/did/).
+
+NIST describes its risk framework as voluntary guidance. It is a useful comparison for documenting harms, context and evidence, while compliance and certification remain separate matters. A future CBR review should include objection, correction and appeal routes that a simulation cannot grant on behalf of real participants. [NIST overview](https://www.nist.gov/itl/ai-risk-management-framework).
+
+## Journey continuity and the last ten phases
+
+Twenty-three text sources were decoded and indexed, with selected passages reviewed. This is not a claim of exhaustive semantic reading. The attached v52 is a short local version, and the current v53 came from a separate known text file. No v54 text was found in the checked locations. The v44–v48 material contains both aspirations and explicit reservations: incomplete experimental evidence, critique of large claims, and an Albion dashboard concept. Those reservations carry forward with the inspirational material.
+
+The last-ten source register binds actual final overviews and batons. Talen's fixed-transition work supplies this phase's starting data. Lyren's original and remastered records emphasize finite action-value continuity and preserved failures. Vesper's Boolean decision diagrams show why semantic equivalence needs a specific finite domain. Merrin's binary relations and later phase-graph review warn that local consistency and attractive summaries can coexist with a global obstruction. Neris's hypergraph work and Elaren's clutter work make explicit which structural assumptions support their conclusions. Teryn's finite reliability and Eiren's chip-firing examples preserve the same boundary between exact toy results and external application.
+
+The resulting cross-pillar lesson is concrete. GMUT needs declared mathematical objects and observational tests. THOS needs bounded execution, receipts and explicit assumptions. Freed ID and CBR need evidence about authority that mathematical output cannot manufacture. The 300 inherited proposals retain their original source and receive no fresh execution or novelty credit merely for being selected.
+
+## Albion and the three-dimensional models
+
+The original Shumer post was visible in the browser: a third-person forest/market scene accompanied the author's account of communicating characters. The separate review describes an Unreal prototype with existing assets. This is useful design inspiration; the scene and author narrative do not prove general autonomous agents or subjective life. [Post](https://x.com/mattshumer_/status/2095596175705399482?s=20), [author review](https://somethingbig.ai/astra-review).
+
+The present HTML prototype is deliberately measurable: fifteen scenes, five assigned to each pillar for interpretation, show exact lower and upper values over remaining horizon and state. The third coordinate is model value, not physical space or a consciousness scale. The table preserves exact fractions so visual rounding cannot hide an equality or a small difference. A future Albion world can start with scene state, a bounded event log, reversible actions, explicit participant consent, budgeted tool calls and an independently evaluated behavior suite. Open-world art and simulation complexity should follow those basics. No proprietary game assets were copied and no Unreal deployment is claimed.
+
+## Practices and conditional long horizons
+
+Eight learning lenses were used: robust-control analysis, numerical verification, research librarianship, configuration release, simulation interaction design, uncertainty communication, appeal-process analysis and software provenance. These are work lenses, not professional credentials. Four recommendations for Ilyra are experimental design, interval arithmetic, scientific model comparison and accessible simulation design.
+
+At a ten-year horizon, a conditional program could aim for a well-specified model with independently replicated benchmarks and an accessible local simulator. At thirty years, broader institutions might evaluate selected ethical and technical components if evidence, participation and resources support them. A hundred-year scenario concerns archival continuity, reversible governance and reinterpretation by future communities. A thousand-year scenario is speculative stewardship fiction rather than a forecast of a particular technology or society. From 2026 these horizons point to 2036, 2056, 2126 and 3026; no milestone is guaranteed, and Stage 20 remains unready.
+
+## What would change the conclusion
+
+An independently reproduced physical prediction could strengthen a GMUT claim. A measured reliability and security evaluation in an actual deployment could strengthen a THOS readiness claim. Legitimized participation, tested remedies and valid governance procedures could strengthen a Freed ID/CBR adoption claim. Additional internal counts alone would not accomplish any of these. The current remaster contributes clear definitions, exact finite checks, a usable viewer, installed tooling and a source-faithful next handoff.

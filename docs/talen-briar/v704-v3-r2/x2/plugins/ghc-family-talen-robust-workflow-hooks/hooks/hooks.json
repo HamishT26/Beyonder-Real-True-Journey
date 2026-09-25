@@ -1,0 +1,139 @@
+{
+  "description": "Nonblocking constant-output checks; no payload-driven side effects.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" pdf_command",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" pdf_command",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" powershell_foreach_pipe",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" powershell_foreach_pipe",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" broad_git_stage",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" broad_git_stage",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" destructive_git",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" destructive_git",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" shell_substitution",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" shell_substitution",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" pending_tool_session",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" pending_tool_session",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" truncated_output",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" truncated_output",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" prepared_delivery",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" prepared_delivery",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" completion_scope",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" completion_scope",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/advisories.txt\" accepted_resend",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/advisories.txt\" accepted_resend",
+            "timeout": 5,
+            "async": false,
+            "statusMessage": "Checking a bounded workflow advisory"
+          }
+        ]
+      }
+    ]
+  }
+}

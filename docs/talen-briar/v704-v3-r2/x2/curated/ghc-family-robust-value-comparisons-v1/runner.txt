@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('fs'),path=require('path'),E=require(path.join(__dirname,'../runtime/x2/engine.txt'));
+const ALLOWED=new Set(["robust_policy_regret", "ambiguity_width", "robust_reward_shift", "robust_relabel_covariance"]);
+const [ip,op]=process.argv.slice(2);if(!ip||!op||process.argv.length!==4)throw new Error('Two literal paths required');let result;try{const q=E.strictParse(fs.readFileSync(ip,'utf8'));result=ALLOWED.has(q.op)?E.handle(q):{ok:false,error:'E_RUNNER_OPERATION'};}catch(e){if(e instanceof E.Fault)result={ok:false,error:e.code};else throw e;}fs.writeFileSync(op,JSON.stringify(result,null,2)+'\n',{flag:'wx'});

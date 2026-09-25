@@ -1,0 +1,24 @@
+'use strict';
+const E=require('../x1/engine.txt'),{Fault,fail,Q,Z,of,sum,dot,min,request,input,dynamic,output,encode}=E;
+const ADV=['robust_policy','worst_vertex_sets','robust_policy_regret','ambiguity_width','robust_reward_shift','robust_relabel_covariance','discount_zero_certificate','uncertainty_model','robust_evidence_gap','robust_authority_gate'],ALL=[...E.CORE,...ADV];
+function evaluate(req){
+ if(E.CORE.includes(req.op))return E.evaluate(req);
+ const d=request(req,ALL),{n,H,P,R,z,g,mu,shift,states}=d,V=dynamic(d);let v;
+ switch(req.op){
+ case'robust_policy':v={remaining_horizon_policy:V.ties.map(layer=>layer.map(t=>t[0])),all_action_sets:V.ties,selection:'lowest_index_display_representative'};break;
+ case'worst_vertex_sets':v={layers:V.ties.map((layer,h)=>layer.map((ties,s)=>{const action=ties[0],scores=P[s][action].map(row=>g.mul(dot(row,V.L[h]))),m=min(scores);return{action,vertex_indices:scores.map((_,i)=>i).filter(i=>scores[i].eq(m))};})),adversary_may_change_at_each_step:true};break;
+ case'robust_policy_regret':{const by_state=V.L[H].map((q,s)=>q.sub(V.PL[H][s]));v={by_state,initial:dot(mu,by_state)};break;}
+ case'ambiguity_width':v={layers:V.L.map((row,h)=>row.map((q,s)=>V.U[h][s].sub(q))),model_uncertainty_not_confidence_interval:true};break;
+ case'robust_reward_shift':{const q=JSON.parse(JSON.stringify(req.input));q.rewards=R.map(row=>row.map(x=>x.add(shift).toString()));const changed=dynamic(input(q)),predicted_increment=shift.mul(sum(Array.from({length:H},(_,t)=>g.pow(t))));v={predicted_increment,lower_deltas:changed.L[H].map((x,s)=>x.sub(V.L[H][s])),upper_deltas:changed.U[H].map((x,s)=>x.sub(V.U[H][s]))};break;}
+ case'robust_relabel_covariance':{const order=Array.from({length:n},(_,i)=>n-1-i),q=JSON.parse(JSON.stringify(req.input));for(const k of['states','rewards','terminal','policy','initial'])q[k]=order.map(i=>req.input[k][i]);q.vertices=order.map(i=>req.input.vertices[i].map(a=>a.map(row=>order.map(j=>row[j]))));const changed=dynamic(input(q)),lower=changed.L.map(row=>[...row].reverse()),upper=changed.U.map(row=>[...row].reverse());v={state_permutation:order,restored_lower:lower,restored_upper:upper,equal:lower.every((row,h)=>row.every((x,s)=>x.eq(V.L[h][s])))&&upper.every((row,h)=>row.every((x,s)=>x.eq(V.U[h][s])))};break;}
+ case'discount_zero_certificate':{const q=JSON.parse(JSON.stringify(req.input));q.discount='0';const changed=dynamic(input(q));v={lower:changed.L,upper:changed.U,equal:changed.L.every((row,h)=>row.every((x,s)=>x.eq(changed.U[h][s]))),horizon_zero_keeps_terminal:true};break;}
+ case'uncertainty_model':{const points=[];for(const[side,layers]of[['lower',V.L],['upper',V.U]])for(let h=0;h<=H;h++)for(let s=0;s<n;s++)points.push({side,state:states[s],xyz:[of(h),of(s),layers[h][s]]});v={axes:['remaining_steps','state_index','value'],points,physical:false};break;}
+ case'robust_evidence_gap':v={missing:['empirical_transition_calibration','uncertainty_set_coverage','independent_reproduction'],rectangular_assumption_observed:false};break;
+ case'robust_authority_gate':v={release_authorized:false,missing:['affected_party_consent','competent_review','production_safety_and_rollback'],live_actions:0};break;
+ default:fail('E_OPERATION');
+ }
+ return output(req.op,v);
+}
+function handle(req){try{return evaluate(req);}catch(e){if(e instanceof Fault)return{ok:false,error:e.code};throw e;}}
+function handleText(text){try{return handle(E.strictParse(text));}catch(e){if(e instanceof Fault)return{ok:false,error:e.code};throw e;}}
+module.exports={...E,evaluate,handle,handleText,ADV,ALL};

@@ -1,0 +1,41 @@
+'use strict';
+const fs=require('fs');
+const spec={
+ pdf_command:'PDF authoring is outside this current phase format policy.',
+ powershell_foreach_pipe:'Materialize a foreach result before piping its formatted output.',
+ broad_git_stage:'Stage only the reviewed owner paths and protect foreign staged work.',
+ destructive_git:'This command needs an exact destructive target and explicit current authority.',
+ shell_substitution:'Review literal quoting before evaluating command substitution.',
+ pending_tool_session:'A returned session identifier is pending work; wait on the original call.',
+ truncated_output:'Retain the output failure and request a bounded exact projection.',
+ prepared_delivery:'Prepared route state does not establish a send or acknowledgement.',
+ completion_scope:'Verify any all-roster completion claim against exact recipient evidence.',
+ accepted_resend:'Do not resend an acknowledged or unresolved accepted handoff.'
+};
+function inspect(id,p){
+ if(!Object.hasOwn(spec,id)||!p||typeof p!=='object'||Array.isArray(p))return{};
+ if(p.hook_event_name==='Stop'&&p.stop_hook_active===true)return{};
+ const command=typeof p.tool_input?.command==='string'?p.tool_input.command:typeof p.tool_input?.cmd==='string'?p.tool_input.cmd:'';
+ const response=p.tool_response??{},text=typeof response==='string'?response:typeof response.output==='string'?response.output:'';
+ const summary=typeof p.last_assistant_message==='string'?p.last_assistant_message:'';let adverse=false;
+ switch(id){
+ case'pdf_command':adverse=/\.pdf\b/i.test(command);break;
+ case'powershell_foreach_pipe':adverse=/foreach\s*\([\s\S]*\)\s*\{[\s\S]*\}\s*\|/i.test(command);break;
+ case'broad_git_stage':adverse=/\bgit\s+add\s+(?:-A\b|\.(?:\s|$))/i.test(command);break;
+ case'destructive_git':adverse=/\bgit\s+(?:reset\s+--hard|clean\s+-[a-z]*f|push\b[\s\S]*(?:--force|\s-f(?:\s|$)))/i.test(command);break;
+ case'shell_substitution':adverse=/JSON\.stringify[\s\S]*(?:\$\(|\u0060)/.test(command);break;
+ case'pending_tool_session':adverse=(typeof response==='object'&&response!==null&&((Number.isInteger(response.session_id)&&response.session_id>0)||typeof response.cell_id==='string'))||/Script running with cell ID/.test(text);break;
+ case'truncated_output':adverse=/truncated output|output.{0,20}truncat/i.test(text);break;
+ case'prepared_delivery':adverse=typeof response==='object'&&response!==null&&(response.state==='PREPARED_NOT_SENT'||response.route_state==='PREPARED_NOT_SENT');break;
+ case'completion_scope':adverse=/\ball\s+(?:30|thirty|roster)[\s\S]{0,80}\b(?:completed|finished)\b/i.test(summary);break;
+ case'accepted_resend':adverse=/\b(?:resent|resending)\b[\s\S]{0,80}\b(?:acknowledged|accepted)\b/i.test(summary);break;
+ }
+ return adverse?{systemMessage:spec[id]}:{};
+}
+function main(){
+ const buffer=Buffer.alloc(131073);let count=0,result={};
+ while(count<buffer.length){const n=fs.readSync(0,buffer,count,buffer.length-count,null);if(n===0)break;count+=n;}
+ if(count<=131072){try{result=inspect(process.argv[2],JSON.parse(buffer.subarray(0,count).toString('utf8')));}catch{}}
+ process.stdout.write(JSON.stringify(result)+'\n');
+}
+module.exports={inspect};if(require.main===module)main();
