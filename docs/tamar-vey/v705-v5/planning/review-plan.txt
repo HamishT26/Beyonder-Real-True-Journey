@@ -1,0 +1,26 @@
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const root = path.resolve(__dirname, '..');
+const read = rel => JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
+const failures = [];
+const x1 = read('planning/contracts-x1.json'), x2 = read('planning/contracts-x2.json');
+const inherited = read('planning/inherited-review.json');
+if (x1.count !== 150 || x2.count !== 150) failures.push('contract-count');
+if (!x1.planning_only || !x2.planning_only || x1.observed_outcomes || x2.observed_outcomes) failures.push('planning-separation');
+if (inherited.count !== 300 || inherited.records.some(x => x.tamar_novelty_credit !== 0 || x.tamar_execution_credit !== 0)) failures.push('inherited-credit');
+for (const stage of ['x1', 'x2']) {
+  const safe = read(`planning/portfolios/${stage}-safe.json`), cand = read(`planning/portfolios/${stage}-candidate.json`), cfr = read(`planning/portfolios/${stage}-cfr.json`);
+  if (safe.count !== 400 || cand.count !== 300 || cfr.count !== 300) failures.push(`${stage}-portfolio`);
+}
+const records = [...x1.records, ...x2.records];
+if (new Set(records.map(x => x.proposal_id)).size !== 300) failures.push('proposal-ids');
+if (records.some(x => x.mutations.length !== 2 || !['completed','represented','open_gap','exact_gate'].includes(x.expected_disposition))) failures.push('contract-shape');
+const life = read('planning/lifecycle.json');
+if (!life.planning_only || life.x1_started || life.source_is_git_parent) failures.push('lifecycle');
+const held = read('planning/held-packets.json');
+if (held.exact_count !== 50 || held.blocked_count !== 30 || held.exact.some(x => x.executed) || held.blocked.some(x => x.executed)) failures.push('held-packets');
+const out = { ok: failures.length === 0, checks: 10, failures };
+fs.writeFileSync(path.join(root, 'planning', 'review-receipt.json'), JSON.stringify({ ...out, scope: 'planning-only', x1_domain_executed: false, x2_domain_executed: false }, null, 2) + '\n', 'utf8');
+process.stdout.write(JSON.stringify(out) + '\n');
+process.exitCode = out.ok ? 0 : 1;

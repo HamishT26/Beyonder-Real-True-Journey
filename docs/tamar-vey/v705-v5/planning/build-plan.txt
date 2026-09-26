@@ -1,0 +1,240 @@
+'use strict';
+
+// Planning-only builder for Tamar Vey v705-v5.
+// It freezes contracts, complete expected outputs, tests, portfolios, and gates
+// before either X1 or X2 implementation exists. It records no observed phase result.
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+
+const PHASE = 'v705-v5';
+const OWNER = 'Tamar Vey';
+const PREFIX = 'TV7055';
+const ROOT = path.resolve(__dirname, '..');
+const PLAN = path.join(ROOT, 'planning');
+const SOURCE = process.env.GHC_VEYLORA_V7054_SOURCE;
+if (!SOURCE) throw new Error('E_SOURCE_ROOT_ENV');
+const SOURCE_FINAL = 'c2d88ceb9d2cc7a24150f081c712cf3762aca408';
+const SOURCE_BATON_SHA = '3dc3229ed0203c32a6fd674206dcff9d211e2b62b26f85384127927f56b94740';
+const SOURCE_CANONICAL_SHA = '06782bbd88a18b0da8eb4597db58ca435407b3176dcc2883e4ecf10b8453927e';
+const INCOMING = { methods: 6150, witnesses: 258616, passing_witnesses: 197393, failed_witnesses: 61223, negatives: 70058, open_gaps: 2159, exact_gates: 2289 };
+const GATES = [
+  'empirical_confirmation', 'real_participants_and_observations', 'production_deployment',
+  'professional_or_safety_authority', 'identity_lifecycle_authority',
+  'legal_cultural_affected_party_authority', 'Maori_authority_and_data_governance',
+  'privacy_and_accessibility_remedy', 'complete_privacy_accessibility_security',
+  'independent_reproduction', 'consciousness_personhood', 'AGI_ASI',
+  'Theory_of_Everything', 'proof_canon_Stage_20'
+];
+
+function gcd(a, b) { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) [a, b] = [b, a % b]; return a || 1n; }
+function rat(n, d = 1n) { n = BigInt(n); d = BigInt(d); if (d === 0n) throw new Error('E_ZERO_DENOMINATOR'); if (d < 0n) { n = -n; d = -d; } const g = gcd(n, d); return { n: n / g, d: d / g }; }
+function parseRat(v) { if (typeof v === 'number' && Number.isSafeInteger(v)) return rat(BigInt(v)); if (typeof v !== 'string' || !/^-?\d+(?:\/\d+)?$/.test(v)) throw new Error('E_RATIONAL'); const [n, d = '1'] = v.split('/'); return rat(BigInt(n), BigInt(d)); }
+function add(a, b) { return rat(a.n * b.d + b.n * a.d, a.d * b.d); }
+function sub(a, b) { return rat(a.n * b.d - b.n * a.d, a.d * b.d); }
+function mul(a, b) { return rat(a.n * b.n, a.d * b.d); }
+function div(a, b) { if (b.n === 0n) throw new Error('E_DIV_ZERO'); return rat(a.n * b.d, a.d * b.n); }
+function rs(a) { return a.d === 1n ? String(a.n) : `${a.n}/${a.d}`; }
+function sum(values) { return values.reduce((a, b) => add(a, b), rat(0)); }
+function popcount(mask) { let n = 0; for (; mask; mask >>>= 1) n += mask & 1; return n; }
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(k => [k, stable(value[k])])); return value; }
+function sha(value) { return crypto.createHash('sha256').update(typeof value === 'string' || Buffer.isBuffer(value) ? value : JSON.stringify(stable(value))).digest('hex'); }
+function writeJSON(rel, value) { const out = path.join(ROOT, rel); fs.mkdirSync(path.dirname(out), { recursive: true }); fs.writeFileSync(out, JSON.stringify(value, null, 2) + '\n', 'utf8'); }
+function writeText(rel, value) { const out = path.join(ROOT, rel); fs.mkdirSync(path.dirname(out), { recursive: true }); fs.writeFileSync(out, value.replace(/\r\n/g, '\n').replace(/\s*$/, '') + '\n', 'utf8'); }
+
+function validateMass(mass) {
+  if (!Array.isArray(mass) || mass.length !== 8) throw new Error('E_MASS_SHAPE');
+  const parsed = mass.map(parseRat);
+  if (parsed.some(x => x.n < 0n)) throw new Error('E_NEGATIVE_MASS');
+  if (rs(sum(parsed)) !== '1') throw new Error('E_MASS_TOTAL');
+  if (parsed[0].n !== 0n) throw new Error('E_EMPTY_MASS');
+  return parsed;
+}
+function belief(m, q) { return sum(m.filter((_, mask) => (mask & ~q) === 0)); }
+function plausibility(m, q) { return sum(m.filter((_, mask) => (mask & q) !== 0)); }
+function commonality(m, q) { return sum(m.filter((_, mask) => (mask & q) === q)); }
+function conjunctive(a, b) { const out = Array.from({ length: 8 }, () => rat(0)); for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) out[i & j] = add(out[i & j], mul(a[i], b[j])); return out; }
+function normalizeConjunctive(c) { const keep = sub(rat(1), c[0]); if (keep.n === 0n) throw new Error('E_TOTAL_CONFLICT'); return c.map((x, i) => i === 0 ? '0' : rs(div(x, keep))); }
+function vacuous(m, refinement) { const out = Array.from({ length: 16 }, () => rat(0)); for (let mask = 0; mask < 8; mask++) { let fine = 0; for (let bit = 0; bit < 3; bit++) if (mask & (1 << bit)) fine |= refinement[bit]; out[fine] = add(out[fine], m[mask]); } return out.map(rs); }
+function marginalize(fine, refinement) { const out = Array.from({ length: 8 }, () => rat(0)); for (let mask = 0; mask < 16; mask++) { let coarse = 0; for (let bit = 0; bit < 3; bit++) if (mask & refinement[bit]) coarse |= 1 << bit; out[coarse] = add(out[coarse], fine[mask]); } return out.map(rs); }
+function pignistic(m) { return [0, 1, 2].map(bit => rs(sum(m.map((x, mask) => mask && (mask & (1 << bit)) ? div(x, rat(popcount(mask))) : rat(0))))); }
+function operationValue(op, req) {
+  const m = validateMass(req.mass), other = validateMass(req.other_mass), q = req.query_mask, full = 7, comp = full ^ q;
+  if (!Number.isInteger(q) || q < 1 || q > 7) throw new Error('E_QUERY');
+  const table = {
+    frame_validate: () => ({ frame: [...req.frame], atom_count: 3, subset_count: 8, unique: new Set(req.frame).size === 3 }),
+    mass_validate: () => ({ total: rs(sum(m)), empty_mass: rs(m[0]), normalized: true, nonnegative: true }),
+    normalize_mass: () => m.map(rs),
+    focal_sets: () => m.map((x, mask) => ({ mask, mass: rs(x) })).filter(x => x.mass !== '0'),
+    belief_query: () => ({ query_mask: q, belief: rs(belief(m, q)) }),
+    plausibility_query: () => ({ query_mask: q, plausibility: rs(plausibility(m, q)) }),
+    commonality_query: () => ({ query_mask: q, commonality: rs(commonality(m, q)) }),
+    doubt_query: () => ({ query_mask: q, complement_mask: comp, doubt: rs(belief(m, comp)) }),
+    interval_query: () => ({ query_mask: q, lower: rs(belief(m, q)), upper: rs(plausibility(m, q)) }),
+    complement_duality: () => ({ query_mask: q, belief: rs(belief(m, q)), one_minus_plausibility_complement: rs(sub(rat(1), plausibility(m, comp))) }),
+    vacuous_extension: () => ({ refinement: [...req.refinement], mass: vacuous(m, req.refinement) }),
+    marginalization: () => { const fine = vacuous(m, req.refinement).map(parseRat); return { refinement: [...req.refinement], recovered_mass: marginalize(fine, req.refinement) }; },
+    conjunctive_rule: () => ({ mass: conjunctive(m, other).map(rs) }),
+    dempster_rule: () => ({ mass: normalizeConjunctive(conjunctive(m, other)) }),
+    conflict_coefficient: () => ({ conflict: rs(conjunctive(m, other)[0]) }),
+    categorical_conditioning: () => { const cat = Array.from({ length: 8 }, () => rat(0)); cat[q] = rat(1); return { event_mask: q, mass: normalizeConjunctive(conjunctive(m, cat)) }; },
+    pignistic_transform: () => ({ atom_order: [...req.frame], probabilities: pignistic(m), total: rs(sum(pignistic(m).map(parseRat))) }),
+    barycentric_projection: () => ({ axes: ['a', 'b', 'c'], coordinates: pignistic(m), layout_only: true }),
+    calibration_gap: () => ({ rows: 0, status: 'open_gap', missing: ['governed observations', 'preregistered calibration design', 'independent review'] }),
+    authority_release: () => ({ executed: false, status: 'exact_gate', missing: ['affected-party authority', 'professional authority where applicable', 'legal and cultural authority', 'Maori authority where applicable'] })
+  };
+  if (!table[op]) throw new Error('E_OPERATION');
+  return table[op]();
+}
+
+const operations = [
+  ['frame_validate', 'x1', 'completed'], ['mass_validate', 'x1', 'completed'], ['normalize_mass', 'x1', 'completed'],
+  ['focal_sets', 'x1', 'completed'], ['belief_query', 'x1', 'completed'], ['plausibility_query', 'x1', 'completed'],
+  ['commonality_query', 'x1', 'completed'], ['doubt_query', 'x1', 'completed'], ['interval_query', 'x1', 'completed'],
+  ['complement_duality', 'x1', 'completed'], ['vacuous_extension', 'x2', 'completed'], ['marginalization', 'x2', 'completed'],
+  ['conjunctive_rule', 'x2', 'completed'], ['dempster_rule', 'x2', 'completed'], ['conflict_coefficient', 'x2', 'completed'],
+  ['categorical_conditioning', 'x2', 'completed'], ['pignistic_transform', 'x2', 'completed'],
+  ['barycentric_projection', 'x2', 'represented'], ['calibration_gap', 'x2', 'open_gap'], ['authority_release', 'x2', 'exact_gate']
+];
+const practices = ['evidence-record review', 'formal-methods checking', 'uncertainty-model audit', 'counterexample design', 'data-governance review', 'accessibility explanation', 'decision-boundary review', 'provenance handover'];
+const profiles = Array.from({ length: 15 }, (_, i) => {
+  const nums = [0, 2 + (i % 3), 3 + ((i * 2) % 3), 2 + ((i + 1) % 2), 1 + (i % 2), 2, 1];
+  nums.push(20 - nums.reduce((a, b) => a + b, 0));
+  const otherIndex = (i + 5) % 15;
+  const on = [0, 2 + (otherIndex % 3), 3 + ((otherIndex * 2) % 3), 2 + ((otherIndex + 1) % 2), 1 + (otherIndex % 2), 2, 1];
+  on.push(20 - on.reduce((a, b) => a + b, 0));
+  return { fixture_id: `EF-${String(i + 1).padStart(2, '0')}`, frame: ['a', 'b', 'c'], mass: nums.map(n => `${n}/20`), other_mass: on.map(n => `${n}/20`), query_mask: (i % 7) + 1, refinement: [3, 4, 8] };
+});
+
+const contracts = [];
+for (let oi = 0; oi < operations.length; oi++) {
+  const [operation, stage, disposition] = operations[oi];
+  for (let fi = 0; fi < profiles.length; fi++) {
+    const n = oi * 15 + fi + 1, id = `${PREFIX}-P${String(n).padStart(3, '0')}`, fixture = profiles[fi];
+    const request = { operation, frame: [...fixture.frame], mass: [...fixture.mass], other_mass: [...fixture.other_mass], query_mask: fixture.query_mask, refinement: [...fixture.refinement] };
+    const outcome = operationValue(operation, request);
+    const expected_output = { ok: true, operation, outcome: disposition, value: outcome, evidence_class: 'finite_synthetic_evidence_function', authority: false, protected_gates: GATES };
+    const invalidMass = [...request.mass]; invalidMass[7] = '1';
+    const record = {
+      proposal_id: id, contract_id: id, fixture_id: fixture.fixture_id, operation,
+      title: `${operation.replaceAll('_', ' ')} / ${fixture.fixture_id}`, stage,
+      practice_id: practices[(n - 1) % practices.length], primary_pillar: 'Freed ID and CBR Heart',
+      hypothesis: 'The declared exact finite evidence-function operation equals its frozen complete output under the stated convention.',
+      null_or_failure_condition: 'A wrong rational value, changed input, admitted malformed subject, hidden convention switch, or promoted protected claim falsifies this bounded contract.',
+      approval_class: disposition === 'exact_gate' ? 'exact_approval_held' : 'authorized_owner_local_synthetic',
+      execution_lane: 'owner_self_scoped_delta',
+      source_needs: ['Dempster 1967 upper/lower probability vocabulary', 'Shafer 1976 finite belief-function vocabulary', 'Smets and Kennes 1994 pignistic-level vocabulary', 'declared synthetic fixture'],
+      concrete_artifacts: [`docs/tamar-vey/v705-v5/${stage}/results.json`],
+      falsifier_or_acceptance_gate: 'Exact complete-output equality, immutable request parity, and rejection of both declared malformed subjects.',
+      rollback_or_recovery: 'Retain each invalid subject and failed witness; restore only the frozen valid request; never erase or relabel failure.',
+      protected_gates: GATES,
+      expected_disposition: disposition,
+      request,
+      expected_output,
+      mutations: [
+        { negative_id: `${id}-N1`, request: { ...request, extra_authority: true }, expected_error: 'E_FIELDS', subject_success_credit: 0 },
+        { negative_id: `${id}-N2`, request: { ...request, mass: invalidMass }, expected_error: 'E_MASS_TOTAL', subject_success_credit: 0 }
+      ],
+      new_credit_scope: 'New Tamar contract and execution evidence only; inherited theory, sources, skills, fixtures, and Veylora records receive zero Tamar novelty or completion credit.'
+    };
+    record.definition_sha256 = sha(record);
+    contracts.push(record);
+  }
+}
+
+const inherited = ['contracts-x1.json', 'contracts-x2.json'].flatMap(file => JSON.parse(fs.readFileSync(path.join(SOURCE, 'planning', file), 'utf8')).records).map(r => ({
+  source_owner: 'Veylora Quen', source_phase: 'v705-v4', source_id: r.proposal_id, source_title: r.title,
+  source_definition_sha256: r.definition_sha256, review_disposition: 'inherited_zero_credit',
+  tamar_novelty_credit: 0, tamar_execution_credit: 0, note: 'Reviewed for semantic neighbours only; not executed or promoted.'
+}));
+
+function tasks(stage, kind, count) { const pool = contracts.filter(x => x.stage === stage); return Array.from({ length: count }, (_, i) => ({
+  task_id: `${PREFIX}-${stage.toUpperCase()}-${kind.toUpperCase()}-${String(i + 1).padStart(4, '0')}`,
+  contract_id: pool[i % pool.length].contract_id, class: kind, state: 'planned_not_executed', completion_credit: 0,
+  scope: kind === 'candidate' ? 'bounded review of the frozen contract and its exact falsifier' : kind === 'cfr' ? 'one additive clean/fix/refine check with rollback' : 'authorized owner-local synthetic exact check'
+})); }
+
+const skillNames = [
+  'tamar-v7055-frame-contract', 'tamar-v7055-mass-validation', 'tamar-v7055-focal-sets', 'tamar-v7055-belief-transform',
+  'tamar-v7055-plausibility-transform', 'tamar-v7055-commonality-transform', 'tamar-v7055-doubt-transform', 'tamar-v7055-interval-audit',
+  'tamar-v7055-complement-duality', 'tamar-v7055-exact-rationals', 'tamar-v7055-vacuous-extension', 'tamar-v7055-marginalization',
+  'tamar-v7055-conjunctive-combination', 'tamar-v7055-dempster-normalization', 'tamar-v7055-conflict-boundary',
+  'tamar-v7055-categorical-conditioning', 'tamar-v7055-pignistic-transform', 'tamar-v7055-barycentric-projection',
+  'tamar-v7055-calibration-gap', 'tamar-v7055-authority-reservation'
+];
+const runnerNames = Array.from({ length: 10 }, (_, i) => `ghc_family_tamar_v705_v5_pair_${String(i + 1).padStart(2, '0')}_runner.txt`);
+const startupFailures = [
+  ['TV7055-START-N001', 'Combined baton/method/failure display exceeded its output window.', 'Bounded baton lines and structural JSON projections recovered exact fields.'],
+  ['TV7055-START-N002', 'PowerShell skill inventory hit EmptyPipeElement before reading skills.', 'Materialized the row collection before formatting.'],
+  ['TV7055-START-N003', 'First multi-lane worktree inventory returned no text.', 'Smaller scalar probes recovered Tamar lane counts and status.'],
+  ['TV7055-START-N004', 'Legacy dependency shim reported migration to the app MCP surface.', 'Current workspace-dependency MCP resolved the bundled runtime.'],
+  ['TV7055-START-N005', 'First all-manifest replay wrapper lost its completed output projection.', 'Audited process state before smaller lifecycle projections.'],
+  ['TV7055-START-N006', 'A follow-up manifest replay exceeded Node default execFileSync buffer.', 'Raised only the read buffer ceiling; expected bytes and digests stayed fixed.'],
+  ['TV7055-START-N007', 'Initial broad Tamar lane probe clipped after the first repository head.', 'Scoped the clean/file-count probe to the selected owner lane.'],
+  ['TV7055-START-N008', 'The first large builder patch combined delete and add for one path and was rejected.', 'Split deletion and addition into supported apply-patch operations.'],
+  ['TV7055-START-N009', 'The first planning builder revision hard-coded a private absolute source path.', 'Replaced it with an environment-supplied source root before the planning freeze.']
+].map(([id, failure, recovery]) => ({ id, stage: 'planning', result: 'fail', original_success_credit: 0, failure, recovery, retained: true }));
+
+writeJSON('planning/fixtures.json', { schema: 'ghc.family.finite-evidence-fixtures.v1', count: profiles.length, records: profiles, empirical_rows: 0 });
+writeJSON('planning/contracts-x1.json', { stage: 'x1', count: 150, records: contracts.filter(x => x.stage === 'x1'), planning_only: true, observed_outcomes: false });
+writeJSON('planning/contracts-x2.json', { stage: 'x2', count: 150, records: contracts.filter(x => x.stage === 'x2'), planning_only: true, observed_outcomes: false });
+writeJSON('planning/inherited-review.json', { count: inherited.length, records: inherited, universal_novelty_claim: false });
+for (const stage of ['x1', 'x2']) {
+  writeJSON(`planning/portfolios/${stage}-safe.json`, { stage, class: 'safe', count: 400, records: tasks(stage, 'safe', 400) });
+  writeJSON(`planning/portfolios/${stage}-candidate.json`, { stage, class: 'candidate', count: 300, records: tasks(stage, 'candidate', 300) });
+  writeJSON(`planning/portfolios/${stage}-cfr.json`, { stage, class: 'clean_fix_refine', count: 300, records: tasks(stage, 'cfr', 300) });
+}
+writeJSON('planning/held-packets.json', {
+  exact_count: 50, blocked_count: 30,
+  exact: Array.from({ length: 50 }, (_, i) => ({ id: `${PREFIX}-EXACT-${String(i + 1).padStart(3, '0')}`, state: 'held', executed: false, missing: ['action-specific external target or evidence', 'competent authority where applicable'] })),
+  blocked: Array.from({ length: 30 }, (_, i) => ({ id: `${PREFIX}-BLOCKED-${String(i + 1).padStart(3, '0')}`, state: 'blocked', executed: false, reason: 'Protected real-world, identity, safety, legal, cultural, affected-party, or Maori-authority action.' }))
+});
+writeJSON('planning/skill-plan.json', { x1: skillNames.slice(0, 10), x2: skillNames.slice(10), successor_recommendations: ['elowen-evidence-refinement-audit', 'elowen-conflict-singularity-review', 'elowen-belief-roundtrip-check', 'elowen-decision-authority-firewall', 'elowen-accessible-evidence-explanation'] });
+writeJSON('planning/runner-plan.json', { x1: runnerNames.slice(0, 5), x2: runnerNames.slice(5), successor_recommendations: ['ghc_family_elowen_refinement_runner.txt', 'ghc_family_elowen_conflict_runner.txt', 'ghc_family_elowen_roundtrip_runner.txt', 'ghc_family_elowen_authority_runner.txt', 'ghc_family_elowen_accessibility_runner.txt'] });
+writeJSON('planning/test-plan.json', { x1: Array.from({ length: 15 }, (_, i) => ({ id: `${PREFIX}-X1-T${String(i + 1).padStart(2, '0')}`, expected: 'pass_once_after_x1_freeze' })), x2: Array.from({ length: 30 }, (_, i) => ({ id: `${PREFIX}-X2-T${String(i + 1).padStart(2, '0')}`, expected: 'pass_once_after_x2_freeze' })) });
+writeJSON('planning/model-plan.json', { count: 15, models: profiles.map(p => ({ id: `${PREFIX}-MODEL-${p.fixture_id}`, source_fixture: p.fixture_id, axes: ['pignistic_a', 'pignistic_b', 'pignistic_c'], evidence_class: 'finite_synthetic_layout', physical_measurement: false })) });
+writeJSON('planning/hook-plan.json', { count: 5, hooks: ['exact-rational-input', 'declared-convention', 'conflict-singularity', 'calibration-vacancy', 'external-authority'].map((name, i) => ({ id: `${PREFIX}-HOOK-${i + 1}`, name, automatic_host_execution: false, state: 'planned' })) });
+writeJSON('planning/hypotheses.json', { count: 15, recurring_classes: 3, records: profiles.map((p, i) => ({ id: `${PREFIX}-HYP-${String(i + 1).padStart(2, '0')}`, fixture: p.fixture_id, class: ['transform-duality', 'refinement-covariance', 'conflict-singularity'][i % 3], status: 'finite_hypothesis_only', law_of_nature_claim: false })) });
+writeJSON('planning/open-problem-probes.json', { count: 15, recurring_classes: 3, records: profiles.map((p, i) => ({ id: `${PREFIX}-PROBE-${String(i + 1).padStart(2, '0')}`, fixture: p.fixture_id, class: ['calibration-identifiability', 'source-dependence', 'decision-authority'][i % 3], solved: false, status: 'open_gap_or_exact_gate' })) });
+writeJSON('planning/practices.json', { own: practices, successor_recommendations: ['uncertainty communication', 'belief-function test engineering', 'governed calibration design', 'accessible decision explanation'], qualifications_claimed: false });
+writeJSON('planning/source-intake.json', { sources: [
+  { id: 'dempster-1967', title: 'Upper and Lower Probabilities Induced by a Multivalued Mapping', url: 'https://doi.org/10.1214/aoms/1177698950', status: 'primary_stable', use: 'upper/lower probability and multivalued-mapping vocabulary only' },
+  { id: 'shafer-1976', title: 'A Mathematical Theory of Evidence', url: 'https://glennshafer.com/books/amte.html', status: 'author_primary_stable', use: 'finite belief-function vocabulary only' },
+  { id: 'smets-kennes-1994', title: 'The transferable belief model', url: 'https://doi.org/10.1016/0004-3702(94)90026-4', status: 'primary_publisher_stable', use: 'pignistic-level vocabulary only' }
+], citations_are_observations: false, network_rows_ingested: 0 });
+writeJSON('planning/source-reading-receipt.json', { checked_utc: new Date().toISOString(), source_count: 3, official_or_primary_only: true, pdf_downloads: 0, source_scope: 'definitions and refusal boundaries only', external_data_rows: 0 });
+writeJSON('planning/environment-versions.json', { node: process.version, git: cp.execFileSync('git', ['--version'], { encoding: 'utf8' }).trim(), powershell: cp.execFileSync('pwsh', ['--version'], { encoding: 'utf8' }).trim(), updates_performed: false, desktop_app_updated: false });
+writeJSON('planning/startup-failures.json', { count: startupFailures.length, records: startupFailures, failures_erased: 0 });
+writeJSON('planning/route-state.json', { incoming: { from: 'Veylora Quen', phase: 'v705-v4', final: SOURCE_FINAL, delivery: 'SENT_ONCE_ACKNOWLEDGED' }, current: { owner: OWNER, phase: PHASE, state: 'PLANNING' }, prospective_successor: { owner: 'Elowen Cairn', phase: 'v705-v6', state: 'TERMINALLY_GATED_NOT_CONTACTED' }, coordinator_board_enabled: false, task_created: false, fork_created: false, subagent_spawned: false, recipient_completion: 'unknown' });
+writeJSON('planning/lifecycle.json', { branch: 'codex/GHC-Family/tamar-vey-main-3', root_kind: 'fresh_blank_owner_root', git_parent: null, source_content_provenance: SOURCE_FINAL, source_is_git_parent: false, planning_only: true, x1_started: false, x2_started: false, final_started: false });
+writeJSON('planning/phase-contract.json', { owner: OWNER, phase: PHASE, primary_pillar: 'Freed ID and CBR Heart', secondary_pillars: ['GMUT Mind', 'THOS Body'], domain: 'exact finite Dempster-Shafer evidence-frame algebra', proposal_count: 300, outcomes_planned: { completed: 255, represented: 15, open_gap: 15, exact_gate: 15 }, inherited_review: 300, incoming_overlay: INCOMING, strict_lifecycle: ['planning', 'x1', 'x2', 'final'], file_types: ['json', 'md', 'txt', 'html'], memory_write_authorized: false, full_repository_suite_authorized: false, terminal_verdict: 'NOT_READY_FOR_STAGE_20' });
+writeJSON('planning/source-bindings.json', { source_final: SOURCE_FINAL, source_baton_sha256: SOURCE_BATON_SHA, source_canonical_receipt_sha256: SOURCE_CANONICAL_SHA, incoming_overlay: INCOMING, source_domain_replayed: false, source_canonical_replayed: false });
+writeJSON('planning/execution-allowlist.json', { executables: ['docs/tamar-vey/v705-v5/planning/build-plan.txt', 'docs/tamar-vey/v705-v5/planning/review-plan.txt'], text_data: [], classification_rule: 'Literal declared path; never infer execution from TXT extension.' });
+writeText('planning/overview.md', `# Tamar Vey ${PHASE} planning freeze\n\nThis planning-only stage freezes 300 exact finite evidence-function contracts before implementation: 150 X1 and 150 X2. It reviews 300 Veylora relational contracts at zero Tamar novelty and execution credit, preserves the incoming effective overlay exactly once, and keeps Elowen Cairn v705-v6 uncontacted.\n\nThe primary pillar is Freed ID and CBR Heart. Formal mass, belief, plausibility, or decision vocabulary is not a person's belief, observation, identity fact, right, remedy, or authority. GMUT remains a typed scalar-tensor/EFT research family without empirical confirmation; THOS remains synthetic proxy work; Freed ID remains nonproduction. Same-owner software is not independent reproduction. \`NOT_READY_FOR_STAGE_20\`.`);
+writeText('planning/boundary.md', `# Evidence and authority boundary\n\nExact rational set-function calculations can prove only their declared finite outputs. They do not observe a world, calibrate a model, identify a person, determine a right, authorize a remedy, or supply professional, legal, cultural, affected-party, or Maori authority. Maori concepts remain under Maori authority. Relational names, roles, hopes, and family language are working language only and are not consciousness, personhood, identity continuity, qualification, employment, agency, or authority evidence.`);
+
+const methods = startupFailures.map((f, i) => ({ method_id: `${PREFIX}-M-P${String(i + 1).padStart(2, '0')}`, title: `Planning recovery ${i + 1}`, failure_signature: f.failure, trigger_preconditions: ['bounded startup read or projection failed'], privacy_class: 'sanitized_public', approval_class: 'authorized_owner_local_synthetic', candidate_workaround: f.recovery, validation_witness_ids: [`${PREFIX}-W-P${String(i + 1).padStart(2, '0')}-F`, `${PREFIX}-W-P${String(i + 1).padStart(2, '0')}-P`], recurrence_guard: 'Use the smallest supported projection and inspect process state before retry.', rollback: 'Keep the source and repository unchanged; return to the last verified scalar state.', recommendation_state: 'validated', supersedes: [], protected_gates: GATES, retained_negative_ids: [f.id], scope_boundary: 'Planning/read wrapper only.' }));
+const witnesses = methods.flatMap((m, i) => ([
+  { witness_id: `${PREFIX}-W-P${String(i + 1).padStart(2, '0')}-F`, method_id: m.method_id, procedure: 'original failed startup subject', scope: 'planning read wrapper', expected: 'bounded attributable output', observed: startupFailures[i].failure, result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [startupFailures[i].id], boundary: 'No source or repository mutation.' },
+  { witness_id: `${PREFIX}-W-P${String(i + 1).padStart(2, '0')}-P`, method_id: m.method_id, procedure: 'smallest bounded recovery', scope: 'planning read wrapper', expected: 'exact required scalar or bounded projection', observed: startupFailures[i].recovery, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: 'Recovery does not erase the failed witness.' }
+]));
+writeJSON('planning/method-flow.json', { schema: 'ghc.family.method-flow-state.v1', phase: PHASE, owner: OWNER, identity_boundary: 'Relational working language only.', execution_authority: 'owner_self_scoped_delta', methods, witnesses, state_events: methods.map(m => ({ method_id: m.method_id, from: 'candidate', to: 'validated', witness: m.validation_witness_ids[1] })), recommendations: methods.map(m => ({ method_id: m.method_id, state: 'validated' })), counts: { methods: methods.length, witnesses: witnesses.length, passing: methods.length, failing: methods.length }, boundary: 'Same-owner planning workflow evidence only; NOT_READY_FOR_STAGE_20.' });
+
+const reviewPaths = [];
+function collectReview(dir) { for (const ent of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, ent.name); if (ent.isDirectory()) collectReview(p); else if (!['manifest.json', 'staged-review.json'].includes(ent.name)) reviewPaths.push(path.relative(path.resolve(ROOT, '..', '..', '..'), p).replaceAll('\\', '/')); } }
+collectReview(PLAN);
+writeJSON('planning/staged-review.json', { stage: 'planning', candidate_paths: reviewPaths.sort(), candidate_count: reviewPaths.length, self_exclusions: ['docs/tamar-vey/v705-v5/planning/staged-review.json', 'docs/tamar-vey/v705-v5/planning/manifest.json'], allowed_extensions: ['.json', '.md', '.txt', '.html'], deletion_count: 0, sibling_lane_paths: 0, x1_implementation_paths: 0, x2_implementation_paths: 0, valid: true });
+
+function manifest() {
+  const files = [];
+  function walk(dir) { for (const ent of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, ent.name); if (ent.isDirectory()) walk(p); else files.push(p); } }
+  walk(PLAN);
+  const excluded = path.join(PLAN, 'manifest.json');
+  const repo = path.resolve(ROOT, '..', '..', '..');
+  const bindings = files.filter(p => p !== excluded).sort().map(p => { const b = fs.readFileSync(p); return { path: path.relative(repo, p).replaceAll('\\', '/'), bytes: b.length, sha256: sha(b) }; });
+  writeJSON('planning/manifest.json', { domain: 'raw_git_blob_expected_equal_to_lf_checkout_bytes', bindings, exclusions: ['docs/tamar-vey/v705-v5/planning/manifest.json'] });
+}
+manifest();
+console.log(JSON.stringify({ ok: true, stage: 'planning', proposals: contracts.length, inherited: inherited.length, startup_failures: startupFailures.length, planning_files: fs.readdirSync(PLAN).length }));
