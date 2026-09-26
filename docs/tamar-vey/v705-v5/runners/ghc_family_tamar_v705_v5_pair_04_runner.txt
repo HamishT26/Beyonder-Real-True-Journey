@@ -1,0 +1,3 @@
+'use strict';
+const core=require('../engine/evidence-core.txt'); const allowed=new Set(['commonality_query','doubt_query']);
+let raw=''; process.stdin.setEncoding('utf8'); process.stdin.on('data',x=>raw+=x); process.stdin.on('end',()=>{try{const req=core.scanJson(raw);if(!allowed.has(req.operation))throw new Error('E_RUNNER_SCOPE');process.stdout.write(JSON.stringify(core.execute(req))+'\n');}catch(e){process.stdout.write(JSON.stringify({ok:false,code:e.message,boundary:'invalid subject has zero credit'})+'\n');process.exitCode=2;}});

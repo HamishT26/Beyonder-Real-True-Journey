@@ -1,0 +1,13 @@
+'use strict';
+const fs=require('fs'),path=require('path'); const ROOT=path.resolve(__dirname,'..');
+const names=JSON.parse(fs.readFileSync(path.join(ROOT,'planning/skill-plan.json'),'utf8')).x1;
+const ops=['frame_validate','mass_validate','focal_sets','belief_query','plausibility_query','commonality_query','doubt_query','interval_query','complement_duality','normalize_mass'];
+const fixture=JSON.parse(fs.readFileSync(path.join(ROOT,'planning/fixtures.json'),'utf8')).records[0];
+for(let i=0;i<names.length;i++){const name=names[i],op=ops[i],dir=path.join(ROOT,'skills',name),ref=path.join(dir,'references');fs.mkdirSync(ref,{recursive:true});
+ const md=`---\nname: ${name}\ndescription: Apply the ${op.replaceAll('_',' ')} contract to a declared three-atom exact finite evidence frame; do not use it for real observation, identity, or authority claims.\n---\n\n# ${name}\n\nUse this owner-local guide for the \`${op}\` operation in Tamar Vey v705-v5 X1.\n\n## Method\n\n1. Read [the exact contract](references/contract.json).\n2. Require the six-field request, exact rational masses, zero empty-set mass, and total mass one.\n3. Invoke the paired phase runner and compare the complete typed envelope with the frozen expected output.\n4. Retain malformed subjects at zero credit; a passing refusal never makes the subject successful.\n5. Preserve the source, calibration, identity, professional, legal, cultural, affected-party, Maori-authority, privacy, accessibility, security, independent-reproduction, consciousness, AGI/ASI, Theory-of-Everything, canon, and Stage 20 gates.\n\n## Boundary\n\nThis is finite same-owner synthetic software evidence. Mathematical belief vocabulary is not evidence of a person's belief or a real observation. Relational names and family language are working language only. \`NOT_READY_FOR_STAGE_20\`.\n`;
+ fs.writeFileSync(path.join(dir,'SKILL.md'),md,'utf8');
+ const request={operation:op,frame:[...fixture.frame],mass:[...fixture.mass],other_mass:[...fixture.other_mass],query_mask:fixture.query_mask,refinement:[...fixture.refinement]};
+ fs.writeFileSync(path.join(ref,'contract.json'),JSON.stringify({operation:op,stage:'x1',request_shape:Object.keys(request).sort(),evidence_class:'finite_synthetic_evidence_function',authority:false},null,2)+'\n','utf8');
+ fs.writeFileSync(path.join(ref,'accepting.json'),JSON.stringify(request,null,2)+'\n','utf8');
+ fs.writeFileSync(path.join(ref,'adverse.json'),JSON.stringify({...request,extra_authority:true},null,2)+'\n','utf8'); }
+console.log(JSON.stringify({ok:true,skills:names.length}));

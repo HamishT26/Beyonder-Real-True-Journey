@@ -1,0 +1,8 @@
+'use strict';
+const fs=require('fs'),path=require('path'),cp=require('child_process'); const ROOT=path.resolve(__dirname,'..');
+const py=process.env.CODEX_PYTHON,validator=process.env.CODEX_SKILL_VALIDATOR;if(!py||!validator)throw new Error('E_VALIDATOR_ENV');
+const names=JSON.parse(fs.readFileSync(path.join(ROOT,'planning/skill-plan.json'),'utf8')).x1;const records=[];
+for(const name of names){const dir=path.join(ROOT,'skills',name),skill=path.join(dir,'SKILL.md');const content=fs.readFileSync(skill,'utf8');const q=cp.spawnSync(py,[validator,dir],{encoding:'utf8'});records.push({name,read_through_eof:content.endsWith('\n'),bytes:Buffer.byteLength(content),quick_validate_status:q.status,quick_validate_pass:q.status===0,quick_validate_output:(q.stdout||q.stderr).trim().slice(0,500)});}
+const receiptPath=path.join(ROOT,'x1/skill-validation.json');
+if(fs.existsSync(receiptPath)){const prior=JSON.parse(fs.readFileSync(receiptPath,'utf8'));if(prior.passed<prior.count&&!fs.existsSync(path.join(ROOT,'x1/skill-validation-first-failure.json')))fs.writeFileSync(path.join(ROOT,'x1/skill-validation-first-failure.json'),JSON.stringify(prior,null,2)+'\n','utf8');}
+const receipt={stage:'x1',count:records.length,passed:records.filter(x=>x.read_through_eof&&x.quick_validate_pass).length,records};fs.writeFileSync(receiptPath,JSON.stringify(receipt,null,2)+'\n','utf8');console.log(JSON.stringify(receipt));process.exitCode=receipt.passed===receipt.count?0:1;
