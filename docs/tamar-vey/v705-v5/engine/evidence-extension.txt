@@ -1,0 +1,27 @@
+'use strict';
+const core = require('./evidence-core.txt');
+const X2 = new Set(['vacuous_extension','marginalization','conjunctive_rule','dempster_rule','conflict_coefficient','categorical_conditioning','pignistic_transform','barycentric_projection','calibration_gap','authority_release']);
+function gcd(a,b){a=a<0n?-a:a;b=b<0n?-b:b;while(b)[a,b]=[b,a%b];return a||1n}
+function rat(n,d=1n){n=BigInt(n);d=BigInt(d);if(d===0n)throw new Error('E_ZERO_DENOMINATOR');if(d<0n){n=-n;d=-d}const g=gcd(n,d);return{n:n/g,d:d/g}}
+function add(a,b){return rat(a.n*b.d+b.n*a.d,a.d*b.d)} function sub(a,b){return rat(a.n*b.d-b.n*a.d,a.d*b.d)}
+function mul(a,b){return rat(a.n*b.n,a.d*b.d)} function div(a,b){if(b.n===0n)throw new Error('E_DIV_ZERO');return rat(a.n*b.d,a.d*b.n)}
+function rs(a){return a.d===1n?String(a.n):`${a.n}/${a.d}`} function sum(xs){return xs.reduce((a,b)=>add(a,b),rat(0))}
+function popcount(mask){let n=0;for(;mask;mask>>>=1)n+=mask&1;return n}
+function vacuous(m,refinement){const out=Array.from({length:16},()=>rat(0));for(let mask=0;mask<8;mask++){let fine=0;for(let bit=0;bit<3;bit++)if(mask&(1<<bit))fine|=refinement[bit];out[fine]=add(out[fine],m[mask])}return out}
+function marginalize(fine,refinement){const out=Array.from({length:8},()=>rat(0));for(let mask=0;mask<16;mask++){let coarse=0;for(let bit=0;bit<3;bit++)if(mask&refinement[bit])coarse|=1<<bit;out[coarse]=add(out[coarse],fine[mask])}return out}
+function conjunctive(a,b){const out=Array.from({length:8},()=>rat(0));for(let i=0;i<8;i++)for(let j=0;j<8;j++)out[i&j]=add(out[i&j],mul(a[i],b[j]));return out}
+function normalize(c){const keep=sub(rat(1),c[0]);if(keep.n===0n)throw new Error('E_TOTAL_CONFLICT');return c.map((x,i)=>i===0?'0':rs(div(x,keep)))}
+function pignistic(m){return[0,1,2].map(bit=>rs(sum(m.map((x,mask)=>mask&&(mask&(1<<bit))?div(x,rat(popcount(mask))):rat(0)))))}
+function execute(raw){const req=core.validateRequest(raw);if(!X2.has(req.operation))throw new Error('E_OPERATION_SCOPE');const m=req.mass,other=req.other,q=req.query_mask;const table={
+ vacuous_extension:()=>({refinement:[...req.refinement],mass:vacuous(m,req.refinement).map(rs)}),
+ marginalization:()=>({refinement:[...req.refinement],recovered_mass:marginalize(vacuous(m,req.refinement),req.refinement).map(rs)}),
+ conjunctive_rule:()=>({mass:conjunctive(m,other).map(rs)}),
+ dempster_rule:()=>({mass:normalize(conjunctive(m,other))}),
+ conflict_coefficient:()=>({conflict:rs(conjunctive(m,other)[0])}),
+ categorical_conditioning:()=>{const cat=Array.from({length:8},()=>rat(0));cat[q]=rat(1);return{event_mask:q,mass:normalize(conjunctive(m,cat))}},
+ pignistic_transform:()=>({atom_order:[...req.frame],probabilities:pignistic(m),total:rs(sum(pignistic(m).map(core.parseRat)))}),
+ barycentric_projection:()=>({axes:['a','b','c'],coordinates:pignistic(m),layout_only:true}),
+ calibration_gap:()=>({rows:0,status:'open_gap',missing:['governed observations','preregistered calibration design','independent review']}),
+ authority_release:()=>({executed:false,status:'exact_gate',missing:['affected-party authority','professional authority where applicable','legal and cultural authority','Maori authority where applicable']})
+};const disposition=req.operation==='barycentric_projection'?'represented':req.operation==='calibration_gap'?'open_gap':req.operation==='authority_release'?'exact_gate':'completed';return{ok:true,operation:req.operation,outcome:disposition,value:table[req.operation](),evidence_class:'finite_synthetic_evidence_function',authority:false,protected_gates:core.GATES}}
+module.exports={X2,rat,add,sub,mul,div,rs,sum,popcount,vacuous,marginalize,conjunctive,normalize,pignistic,execute};

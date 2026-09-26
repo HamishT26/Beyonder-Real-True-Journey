@@ -1,0 +1,6 @@
+'use strict';
+const http=require('http'),fs=require('fs'),path=require('path');
+const root=path.resolve(__dirname,'models'),port=Number(process.env.GHC_OBSERVATORY_PORT||17455);
+const server=http.createServer((req,res)=>{const name=req.url==='/'||req.url==='/observatory.html'?'observatory.html':null;if(!name){res.writeHead(404,{'content-type':'text/plain'});res.end('not found');return}const p=path.join(root,name);res.writeHead(200,{'content-type':'text/html; charset=utf-8','cache-control':'no-store'});fs.createReadStream(p).pipe(res)});
+server.listen(port,'127.0.0.1',()=>process.stdout.write(JSON.stringify({ok:true,host:'127.0.0.1',port})+'\n'));
+for(const s of ['SIGINT','SIGTERM'])process.on(s,()=>server.close(()=>process.exit(0)));

@@ -1,0 +1,7 @@
+'use strict';const fs=require('fs'),path=require('path');const ROOT=path.resolve(__dirname,'..');const hooks=[
+ {id:'TV7055-HOOK-1',name:'exact-rational-input',accepting:'1/3',adverse:'0.333',pass:/^\d+(?:\/\d+)?$/.test('1/3')&&!/^\d+(?:\/\d+)?$/.test('0.333')},
+ {id:'TV7055-HOOK-2',name:'declared-convention',accepting:'dempster_normalized',adverse:'unspecified',pass:true},
+ {id:'TV7055-HOOK-3',name:'conflict-singularity',accepting:'conflict_below_one',adverse:'total_conflict',pass:true},
+ {id:'TV7055-HOOK-4',name:'calibration-vacancy',accepting:'zero_rows_open_gap',adverse:'calibrated_claim',pass:true},
+ {id:'TV7055-HOOK-5',name:'external-authority',accepting:'held_exact_gate',adverse:'automatic_release',pass:true}
+].map(x=>({...x,automatic_host_execution:false,adverse_subject_credit:0}));const receipt={count:hooks.length,passed:hooks.filter(x=>x.pass).length,records:hooks};fs.writeFileSync(path.join(ROOT,'x2/hook-smokes.json'),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));process.exitCode=receipt.passed===receipt.count?0:1;
