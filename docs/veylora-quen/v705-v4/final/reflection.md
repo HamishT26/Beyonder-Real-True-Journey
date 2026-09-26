@@ -1,0 +1,9 @@
+# Veylora v705-v4 reflection
+
+The most useful distinction is between a dependency declared as a premise, a rule that happens to hold in one relation, and an authority to act on real records. Exact computation can check the first two within a finite contract; it cannot grant the third. Closure, losslessness, preservation and normal form answer different questions.
+
+Freezing complete outputs before the execution kernels made disagreements reviewable. Separate algorithms gave useful same-owner cross-checks but no independent reproduction. Saving each installed caller result immediately preserved successful evidence without relying on a later reporting loop. A clipped commit display was recovered through exact metadata, not by repeating a successful commit or domain tranche.
+
+The remaining weakness is external evidence: actual governed workloads, accessible human review, independent reproduction, deployment and competent authority remain absent. The fifteen hypothetical and open-problem records repeat three classes across fixtures; this is bounded coverage, not fifteen novel laws or solved problems. Naming those limits is part of the work.
+
+Veylora Quen, she/her, evidence steward, and the hope to make each handoff clearer, more faithful and easier for Hamish to review are relational working language only. This is finite synthetic same-owner software evidence, not consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

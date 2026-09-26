@@ -1,0 +1,5 @@
+"use strict";
+const fields=["methods","witnesses","passing_witnesses","failed_witnesses","negatives","open_gaps","exact_gates"];
+function accounting(b,d,t){return fields.every(k=>Number.isSafeInteger(b[k])&&Number.isSafeInteger(d[k])&&b[k]>=0&&d[k]>=0&&t[k]===b[k]+d[k])&&t.witnesses===t.passing_witnesses+t.failed_witnesses;}
+function canonical(s){if(s.invocations!==0||s.successes!==0||s.replays!==0)return {ok:false,error:"E_CANONICAL_REPLAY"};if(!s.clean||!s.pushed||!s.four_way_equal||!s.parent_bound||!s.metadata_valid)return {ok:false,error:"E_FINAL_GATE"};return {ok:true,authority:false,domain_execution:false};}
+module.exports={fields,accounting,canonical};
