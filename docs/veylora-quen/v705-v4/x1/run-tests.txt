@@ -1,0 +1,23 @@
+"use strict";
+const fs=require("fs"),c=require("./core.txt"),D="docs/veylora-quen/v705-v4/x1",e=require("./evidence-ledger.txt").open("x1",c),base=JSON.parse(fs.readFileSync("docs/veylora-quen/v705-v4/planning/contracts-x1.json")).records[0].request,q=(operation,patch={})=>({...c.clone(base),operation,...patch}),chain=[[1,2],[2,4],[4,8]];
+if(process.env.GHC_MODEL_GUARD!=="v16")throw Error("Admitted launcher required");
+const definitions=[
+ {name:"chain closure",request:q("rel_attribute_closure",{dependencies:chain,determinant:1}),expected:{closure:15}},
+ {name:"empty dependency keys",request:q("rel_candidate_keys",{dependencies:[]}),expected:{keys:[15],superkey_count:1}},
+ {name:"empty determinant constant",request:q("rel_attribute_closure",{dependencies:[[0,1],[2,4]],determinant:0}),expected:{closure:1}},
+ {name:"exact tuple violation",request:q("rel_fd_instance_audit",{dependencies:[[1,2]],tuples:[[0,0,0,0],[0,1,0,0]]}),expected:{holds_on_declared_instance:false,violations:[{left:0,right:1,determinant:1,consequent:2}],semantic_rule_inferred:false}},
+ {name:"tuple set normalization",request:q("rel_tuple_normal_form",{tuples:[[1,0,0,0],[0,0,0,0],[1,0,0,0]]}),expected:{rows:[[0,0,0,0],[1,0,0,0]],duplicates_removed:1,unique_rows:2}},
+ {name:"chain candidate key",request:q("rel_candidate_keys",{dependencies:chain}),expected:{keys:[1],superkey_count:8}},
+ {name:"entailed dependency",request:q("rel_fd_implication",{dependencies:chain,determinant:1,consequent:8}),expected:{entailed:true,closure:15}},
+ {name:"unentailed dependency",request:q("rel_fd_implication",{dependencies:[],determinant:1,consequent:2}),expected:{entailed:false,closure:1}},
+ {name:"closed set family",request:q("rel_closed_set_family",{dependencies:chain}),expected:{closed_sets:[0,8,12,14,15]}},
+ {name:"minimal cover",request:q("rel_minimal_cover",{dependencies:[[1,6],[2,4],[1,2]]}),expected:{cover:[[1,2],[2,4]],equivalent:true,unique_cover_claim:false}},
+ {name:"projected dependency",request:q("rel_projected_basis",{dependencies:chain,projection:5}),expected:{basis:[[1,4]]}},
+ {name:"binary lossless true",request:q("rel_binary_lossless",{dependencies:[[2,12]],decomposition:[3,14]}),expected:{intersection:2,closure:14,lossless:true}},
+ {name:"binary lossless false",request:q("rel_binary_lossless",{dependencies:[],decomposition:[3,14]}),expected:{intersection:2,closure:2,lossless:false}},
+ {name:"duplicate JSON refusal",json_text:'{"operation":"rel_schema_domain","operation":"rel_schema_domain"}',expected_error:"E_JSON_DUPLICATE"},
+ {name:"mask refusal",request:q("rel_attribute_closure",{determinant:16}),expected_error:"E_MASK"}
+].map((d,i)=>({id:"VQ7054-X1-TEST-"+String(i+1).padStart(2,"0"),...d}));
+fs.writeFileSync(D+"/evidence/test-definitions.json",JSON.stringify({defined_before_execution:true,definitions},null,2)+"\n",{flag:"wx"});const m=e.method("Fifteen hand-calculated finite cases and parser refusals",D+"/run-tests.txt"),rows=[];
+for(const d of definitions){let out,error=null,pass=false;try{if(d.json_text){try{c.parseJSON(d.json_text);out={ok:true};}catch(ex){out=c.reject(ex);}}else out=c.evaluate(c.clone(d.request));pass=d.expected_error?out.ok===false&&out.error===d.expected_error:out.ok===true&&out.authority===false&&Object.entries(d.expected).every(([k,v])=>c.canon(out.value[k])===c.canon(v));}catch(ex){error=String(ex.message);}if(d.expected_error){const id=d.id+"-SUBJECT";e.negative(m,id,d.request??d.json_text,"Malformed input remains a failed subject.",D+"/evidence/test-definitions.json");e.witness(m,id,"fail","retained_invalid_test_subject",{error:out?.error,subject_success_credit:0},[id]);}e.witness(m,d.id,pass?"pass":"fail","declared_hand_case_or_refusal",{name:d.name,output:out,error});rows.push({id:d.id,name:d.name,pass,error});}
+const receipt={total:15,passed:rows.filter(r=>r.pass).length,valid:rows.every(r=>r.pass),rows};fs.writeFileSync(D+"/evidence/tests.json",JSON.stringify(receipt,null,2)+"\n",{flag:"wx"});e.truth.tests=15;const counts=e.save();console.log(JSON.stringify({tests:15,passed:receipt.passed,counts}));if(!receipt.valid)process.exitCode=2;
