@@ -1,0 +1,2006 @@
+{
+  "defined_before_execution": true,
+  "definitions": [
+    {
+      "id": "VQ7054-X2-TEST-01",
+      "name": "preserved chain decomposition",
+      "request": {
+        "operation": "rel_dependency_preservation",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          6,
+          12
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "preserved": true,
+        "lost_dependencies": []
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-02",
+      "name": "nonpreserved dependency",
+      "request": {
+        "operation": "rel_dependency_preservation",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            2
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          5,
+          6,
+          9
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "preserved": false,
+        "lost_dependencies": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-03",
+      "name": "spurious join witness",
+      "request": {
+        "operation": "rel_join_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "spurious": [
+          [
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0
+          ]
+        ],
+        "instance_lossless": false,
+        "semantic_losslessness_inferred": false
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-04",
+      "name": "full projection identity",
+      "request": {
+        "operation": "rel_join_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          15,
+          1
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "joined": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ]
+        ],
+        "spurious": [],
+        "instance_lossless": true
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-05",
+      "name": "BCNF empty dependencies",
+      "request": {
+        "operation": "rel_bcnf_audit",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "bcnf": true,
+        "violations": []
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-06",
+      "name": "BCNF chain violation",
+      "request": {
+        "operation": "rel_bcnf_audit",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "bcnf": false
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-07",
+      "name": "3NF all-prime example",
+      "request": {
+        "operation": "rel_third_normal_form",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            8
+          ],
+          [
+            8,
+            4
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "third_normal_form": true,
+        "prime_mask": 15,
+        "keys": [
+          5,
+          6,
+          9,
+          10
+        ],
+        "violations": []
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-08",
+      "name": "3NF chain violation",
+      "request": {
+        "operation": "rel_third_normal_form",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "third_normal_form": false,
+        "prime_mask": 1
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-09",
+      "name": "renaming covariance",
+      "request": {
+        "operation": "rel_renaming_covariance",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          1,
+          2,
+          3,
+          0
+        ]
+      },
+      "expected": {
+        "commutes": true
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-10",
+      "name": "binary chase true",
+      "request": {
+        "operation": "rel_lossless_chase",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "lossless": true,
+        "distinguished_rows": [
+          0
+        ],
+        "equality_merges": 2
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-11",
+      "name": "chase no dependencies false",
+      "request": {
+        "operation": "rel_lossless_chase",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          12
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "lossless": false,
+        "distinguished_rows": [],
+        "equality_merges": 0
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-12",
+      "name": "three-way chase true",
+      "request": {
+        "operation": "rel_lossless_chase",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          6,
+          12
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "lossless": true,
+        "distinguished_rows": [
+          0
+        ],
+        "equality_merges": 3
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-13",
+      "name": "entailed counterexample absence",
+      "request": {
+        "operation": "rel_nonimplication_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 8,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "entailed": true,
+        "counterexample": null,
+        "holds_dependencies": null,
+        "violates_query": null
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-14",
+      "name": "unentailed two-tuple witness",
+      "request": {
+        "operation": "rel_nonimplication_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 4,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "entailed": false,
+        "closure": 3,
+        "counterexample": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "holds_dependencies": true,
+        "violates_query": true
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-15",
+      "name": "instance vs universal semantics",
+      "request": {
+        "operation": "rel_fd_instance_audit",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "holds_on_declared_instance": true,
+        "semantic_rule_inferred": false
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-16",
+      "name": "empty determinant implication",
+      "request": {
+        "operation": "rel_fd_implication",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            0,
+            1
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 0,
+        "consequent": 1,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "entailed": true,
+        "closure": 1
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-17",
+      "name": "cover equivalence",
+      "request": {
+        "operation": "rel_minimal_cover",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            3,
+            12
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "cover": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "equivalent": true
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-18",
+      "name": "singleton instance vs schema",
+      "request": {
+        "operation": "rel_join_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "counterpart": {
+        "operation": "rel_binary_lossless",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "property": "instance_and_schema_distinction"
+    },
+    {
+      "id": "VQ7054-X2-TEST-19",
+      "name": "empty relation join",
+      "request": {
+        "operation": "rel_join_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "original": [],
+        "joined": [],
+        "spurious": [],
+        "instance_lossless": true
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-20",
+      "name": "reverse permutation covariance",
+      "request": {
+        "operation": "rel_renaming_covariance",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          3,
+          2,
+          1,
+          0
+        ]
+      },
+      "expected": {
+        "commutes": true
+      }
+    },
+    {
+      "id": "VQ7054-X2-TEST-21",
+      "name": "tuple order invariance",
+      "request": {
+        "operation": "rel_join_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "property": "tuple_order_invariance"
+    },
+    {
+      "id": "VQ7054-X2-TEST-22",
+      "name": "dependency order invariance",
+      "request": {
+        "operation": "rel_bcnf_audit",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "property": "dependency_order_invariance"
+    },
+    {
+      "id": "VQ7054-X2-TEST-23",
+      "name": "chase stable result",
+      "request": {
+        "operation": "rel_lossless_chase",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          6,
+          12
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "property": "tableau_satisfies_all_dependencies"
+    },
+    {
+      "id": "VQ7054-X2-TEST-24",
+      "name": "decomposition refusal",
+      "request": {
+        "operation": "rel_lossless_chase",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          1,
+          2
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected_error": "E_DECOMPOSITION"
+    },
+    {
+      "id": "VQ7054-X2-TEST-25",
+      "name": "tuple value refusal",
+      "request": {
+        "operation": "rel_join_witness",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            4,
+            0,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected_error": "E_VALUE"
+    },
+    {
+      "id": "VQ7054-X2-TEST-26",
+      "name": "dependency refusal",
+      "request": {
+        "operation": "rel_dependency_preservation",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            0
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected_error": "E_FD"
+    },
+    {
+      "id": "VQ7054-X2-TEST-27",
+      "name": "permutation refusal",
+      "request": {
+        "operation": "rel_renaming_covariance",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          0,
+          2,
+          3
+        ]
+      },
+      "expected_error": "E_PERMUTATION"
+    },
+    {
+      "id": "VQ7054-X2-TEST-28",
+      "name": "represented projection",
+      "request": {
+        "operation": "rel_schema_projection",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "projection_only": true,
+        "coordinates": [
+          3,
+          1,
+          4
+        ]
+      },
+      "expected_outcome": "represented"
+    },
+    {
+      "id": "VQ7054-X2-TEST-29",
+      "name": "workload gap",
+      "request": {
+        "operation": "rel_workload_gap",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "observations": 0,
+        "production_benchmark": false
+      },
+      "expected_outcome": "open_gap"
+    },
+    {
+      "id": "VQ7054-X2-TEST-30",
+      "name": "authority hold",
+      "request": {
+        "operation": "rel_data_authority_hold",
+        "attributes": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "dependencies": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            4,
+            8
+          ]
+        ],
+        "tuples": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ]
+        ],
+        "determinant": 1,
+        "consequent": 2,
+        "projection": 3,
+        "decomposition": [
+          3,
+          14
+        ],
+        "permutation": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "expected": {
+        "authorized": false,
+        "external_actions": 0,
+        "status": "held"
+      },
+      "expected_outcome": "exact_gate"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Bounded caller contract
+
+First admit the complete schema and value domain, then normalize duplicate tuples before comparing pairs. Instance violations concern only the supplied finite tuples. Attribute closure instead uses the declared dependencies; it does not infer those dependencies from agreement in a sample. Select the operation matching that distinction.
+
+Exactly nine fields: operation, attributes, dependencies, tuples, determinant, consequent, projection, decomposition, permutation. Attributes are a,b,c,d. Dependencies contain at most twelve mask pairs; the left mask is0..15 and the right mask1..15. At most sixteen tuples contain four integer values0..3 each. Nulls are outside this profile. The projection is nonempty; a decomposition has two to four distinct nonempty masks covering all attributes. The permutation is a bijection of0..3. JSON is bounded to one MiB and depth32; duplicate keys and invalid UTF-8 are refused. The binary lossless operation additionally requires two components.
+
+Exit0 means a syntactically valid envelope, whose outcome still controls interpretation. Exit2 denotes a refusal. Retain malformed subjects at zero success credit and separately record a successful guard. No live database connection or migration occurs. Rollback means stop selecting this additive package while preserving the prior packages and all evidence. The local launcher allowlist is not provider identity attestation.

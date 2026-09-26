@@ -1,0 +1,38 @@
+"use strict";
+const fs=require("fs"),c=require("../x1/core.txt"),r=require("./extension.txt").createRuntime(c),D="docs/veylora-quen/v705-v4/x2",e=require("../x1/evidence-ledger.txt").open("x2",c),base=JSON.parse(fs.readFileSync("docs/veylora-quen/v705-v4/planning/contracts-x2.json")).records[0].request,q=(operation,patch={})=>({...c.clone(base),operation,...patch}),chain=[[1,2],[2,4],[4,8]],example=[[0,0,0,0],[1,0,1,0]];
+if(process.env.GHC_MODEL_GUARD!=="v16")throw Error("Admitted launcher required");
+const definitions=[
+ {name:"preserved chain decomposition",request:q("rel_dependency_preservation",{dependencies:chain,decomposition:[3,6,12]}),expected:{preserved:true,lost_dependencies:[]}},
+ {name:"nonpreserved dependency",request:q("rel_dependency_preservation",{dependencies:[[3,4],[4,2]],decomposition:[5,6,9]}),expected:{preserved:false,lost_dependencies:[[3,4]]}},
+ {name:"spurious join witness",request:q("rel_join_witness",{dependencies:[],tuples:example,decomposition:[3,14]}),expected:{spurious:[[0,0,1,0],[1,0,0,0]],instance_lossless:false,semantic_losslessness_inferred:false}},
+ {name:"full projection identity",request:q("rel_join_witness",{tuples:example,decomposition:[15,1]}),expected:{joined:example,spurious:[],instance_lossless:true}},
+ {name:"BCNF empty dependencies",request:q("rel_bcnf_audit",{dependencies:[]}),expected:{bcnf:true,violations:[]}},
+ {name:"BCNF chain violation",request:q("rel_bcnf_audit",{dependencies:chain}),expected:{bcnf:false}},
+ {name:"3NF all-prime example",request:q("rel_third_normal_form",{dependencies:[[1,2],[2,1],[4,8],[8,4]]}),expected:{third_normal_form:true,prime_mask:15,keys:[5,6,9,10],violations:[]}},
+ {name:"3NF chain violation",request:q("rel_third_normal_form",{dependencies:chain}),expected:{third_normal_form:false,prime_mask:1}},
+ {name:"renaming covariance",request:q("rel_renaming_covariance",{dependencies:chain,permutation:[1,2,3,0]}),expected:{commutes:true}},
+ {name:"binary chase true",request:q("rel_lossless_chase",{dependencies:chain,decomposition:[3,14]}),expected:{lossless:true,distinguished_rows:[0],equality_merges:2}},
+ {name:"chase no dependencies false",request:q("rel_lossless_chase",{dependencies:[],decomposition:[3,12]}),expected:{lossless:false,distinguished_rows:[],equality_merges:0}},
+ {name:"three-way chase true",request:q("rel_lossless_chase",{dependencies:chain,decomposition:[3,6,12]}),expected:{lossless:true,distinguished_rows:[0],equality_merges:3}},
+ {name:"entailed counterexample absence",request:q("rel_nonimplication_witness",{dependencies:chain,determinant:1,consequent:8}),expected:{entailed:true,counterexample:null,holds_dependencies:null,violates_query:null}},
+ {name:"unentailed two-tuple witness",request:q("rel_nonimplication_witness",{dependencies:[[1,2]],determinant:1,consequent:4}),expected:{entailed:false,closure:3,counterexample:[[0,0,0,0],[0,0,1,1]],holds_dependencies:true,violates_query:true}},
+ {name:"instance vs universal semantics",request:q("rel_fd_instance_audit",{dependencies:[[1,2]],tuples:[[0,0,0,0]]}),expected:{holds_on_declared_instance:true,semantic_rule_inferred:false}},
+ {name:"empty determinant implication",request:q("rel_fd_implication",{dependencies:[[0,1]],determinant:0,consequent:1}),expected:{entailed:true,closure:1}},
+ {name:"cover equivalence",request:q("rel_minimal_cover",{dependencies:[[3,12],[1,2],[1,4],[4,8]]}),expected:{cover:[[1,2],[1,4],[4,8]],equivalent:true}},
+ {name:"singleton instance vs schema",request:q("rel_join_witness",{dependencies:[],tuples:[[0,0,0,0]],decomposition:[3,14]}),counterpart:q("rel_binary_lossless",{dependencies:[],tuples:[[0,0,0,0]],decomposition:[3,14]}),property:"instance_and_schema_distinction"},
+ {name:"empty relation join",request:q("rel_join_witness",{tuples:[]}),expected:{original:[],joined:[],spurious:[],instance_lossless:true}},
+ {name:"reverse permutation covariance",request:q("rel_renaming_covariance",{dependencies:[[1,2],[2,1],[4,8]],permutation:[3,2,1,0]}),expected:{commutes:true}},
+ {name:"tuple order invariance",request:q("rel_join_witness",{tuples:example}),property:"tuple_order_invariance"},
+ {name:"dependency order invariance",request:q("rel_bcnf_audit",{dependencies:chain}),property:"dependency_order_invariance"},
+ {name:"chase stable result",request:q("rel_lossless_chase",{dependencies:[[1,2],[2,4],[4,8]],decomposition:[3,6,12]}),property:"tableau_satisfies_all_dependencies"},
+ {name:"decomposition refusal",request:q("rel_lossless_chase",{decomposition:[1,2]}),expected_error:"E_DECOMPOSITION"},
+ {name:"tuple value refusal",request:q("rel_join_witness",{tuples:[[4,0,0,0]]}),expected_error:"E_VALUE"},
+ {name:"dependency refusal",request:q("rel_dependency_preservation",{dependencies:[[1,0]]}),expected_error:"E_FD"},
+ {name:"permutation refusal",request:q("rel_renaming_covariance",{permutation:[0,0,2,3]}),expected_error:"E_PERMUTATION"},
+ {name:"represented projection",request:q("rel_schema_projection",{dependencies:chain}),expected:{projection_only:true,coordinates:[3,1,4]},expected_outcome:"represented"},
+ {name:"workload gap",request:q("rel_workload_gap"),expected:{observations:0,production_benchmark:false},expected_outcome:"open_gap"},
+ {name:"authority hold",request:q("rel_data_authority_hold"),expected:{authorized:false,external_actions:0,status:"held"},expected_outcome:"exact_gate"}
+].map((d,i)=>({id:"VQ7054-X2-TEST-"+String(i+1).padStart(2,"0"),...d}));
+fs.writeFileSync(D+"/evidence/test-definitions.json",JSON.stringify({defined_before_execution:true,definitions},null,2)+"\n",{flag:"wx"});const m=e.method("Thirty finite decomposition, chase and boundary probes",D+"/run-tests.txt"),rows=[];
+for(const d of definitions){let out,error=null,pass=false,extra=null;try{const input=c.clone(d.request),before=c.canon(input);out=r.evaluate(input);if(d.expected_error)pass=out.ok===false&&out.error===d.expected_error;else if(d.property==="instance_and_schema_distinction"){extra=r.evaluate(d.counterpart);pass=out.ok&&out.value.instance_lossless&&extra.ok&&!extra.value.lossless;}else if(d.property==="tuple_order_invariance"){extra=r.evaluate({...c.clone(d.request),tuples:c.clone(d.request.tuples).reverse()});pass=out.ok&&c.canon(out)===c.canon(extra);}else if(d.property==="dependency_order_invariance"){extra=r.evaluate({...c.clone(d.request),dependencies:c.clone(d.request.dependencies).reverse()});pass=out.ok&&c.canon(out)===c.canon(extra);}else if(d.property==="tableau_satisfies_all_dependencies"){const t=out.value.tableau;pass=out.ok&&d.request.dependencies.every(([lhs,rhs])=>t.every(a=>t.every(b=>!c.bits(lhs).every(bit=>a[Math.log2(bit)]===b[Math.log2(bit)])||c.bits(rhs).every(bit=>a[Math.log2(bit)]===b[Math.log2(bit)]))));}else pass=out.ok&&Object.entries(d.expected).every(([k,v])=>c.canon(out.value[k])===c.canon(v))&&(!d.expected_outcome||out.outcome===d.expected_outcome);pass=!!pass&&out.authority===false&&before===c.canon(input);}catch(ex){error=String(ex.message);}if(d.expected_error){const id=d.id+"-SUBJECT";e.negative(m,id,d.request,"Malformed additional-test subject remains failed.",D+"/evidence/test-definitions.json");e.witness(m,id,"fail","retained_invalid_test_subject",{error:out?.error,subject_success_credit:0},[id]);}e.witness(m,d.id,pass?"pass":"fail","declared_decomposition_or_boundary_test",{name:d.name,output:out,extra,error});rows.push({id:d.id,name:d.name,pass,error});}
+const result={total:30,passed:rows.filter(x=>x.pass).length,valid:rows.every(x=>x.pass),rows};fs.writeFileSync(D+"/evidence/tests.json",JSON.stringify(result,null,2)+"\n",{flag:"wx"});e.truth.tests=30;const counts=e.save();console.log(JSON.stringify({tests:30,passed:result.passed,failed:rows.filter(x=>!x.pass),counts}));if(!result.valid)process.exitCode=2;

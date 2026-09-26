@@ -1,0 +1,7 @@
+# Bounded caller contract
+
+BCNF requires every nontrivial implied determinant to be a superkey. Third normal form additionally admits prime consequent attributes. Renaming transports masks through a bijection and must commute with closure. The general chase unifies tableau symbols under functional dependencies until saturation. Its result is conditional on those supplied dependencies.
+
+Exactly nine fields: operation, attributes, dependencies, tuples, determinant, consequent, projection, decomposition, permutation. Attributes are a,b,c,d. Dependencies contain at most twelve mask pairs; the left mask is0..15 and the right mask1..15. At most sixteen tuples contain four integer values0..3 each. Nulls are outside this profile. The projection is nonempty; a decomposition has two to four distinct nonempty masks covering all attributes. The permutation is a bijection of0..3. JSON is bounded to one MiB and depth32; duplicate keys and invalid UTF-8 are refused. The binary lossless operation additionally requires two components.
+
+Exit0 means a syntactically valid envelope, whose outcome still controls interpretation. Exit2 denotes a refusal. Retain malformed subjects at zero success credit and separately record a successful guard. No live database connection or migration occurs. Rollback means stop selecting this additive package while preserving the prior packages and all evidence. The local launcher allowlist is not provider identity attestation.
