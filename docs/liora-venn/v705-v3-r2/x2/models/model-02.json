@@ -1,0 +1,112 @@
+{
+  "schema": "ghc.family.event-workflow.3d-model.v1",
+  "model_id": "LV7053R2-MODEL-02",
+  "fixture_id": "LEW-02",
+  "title": "retry-then-success",
+  "coordinate_system": "synthetic_cartesian_unitless",
+  "nodes": [
+    {
+      "id": "prepared",
+      "x": 2.10794,
+      "y": 0.47138,
+      "z": -0.06,
+      "kind": "declared_state"
+    },
+    {
+      "id": "running",
+      "x": 0.20308,
+      "y": 2.15043,
+      "z": 0.49,
+      "kind": "declared_state"
+    },
+    {
+      "id": "failed",
+      "x": -1.98243,
+      "y": 0.85766,
+      "z": 1.04,
+      "kind": "declared_state"
+    },
+    {
+      "id": "succeeded",
+      "x": -1.42829,
+      "y": -1.62037,
+      "z": 1.59,
+      "kind": "declared_state"
+    },
+    {
+      "id": "acknowledged",
+      "x": 1.09969,
+      "y": -1.85911,
+      "z": 2.14,
+      "kind": "declared_state"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-1",
+      "source": "prepared",
+      "target": "running",
+      "event_type": "workflow.running"
+    },
+    {
+      "id": "e-2",
+      "source": "running",
+      "target": "failed",
+      "event_type": "workflow.failed"
+    },
+    {
+      "id": "e-3",
+      "source": "failed",
+      "target": "running",
+      "event_type": "workflow.running"
+    },
+    {
+      "id": "e-4",
+      "source": "running",
+      "target": "succeeded",
+      "event_type": "workflow.succeeded"
+    },
+    {
+      "id": "e-5",
+      "source": "succeeded",
+      "target": "acknowledged",
+      "event_type": "workflow.acknowledged"
+    }
+  ],
+  "simulation_steps": [
+    {
+      "seq": 1,
+      "source": "prepared",
+      "target": "running",
+      "attempt": 1
+    },
+    {
+      "seq": 2,
+      "source": "running",
+      "target": "failed",
+      "attempt": 1
+    },
+    {
+      "seq": 3,
+      "source": "failed",
+      "target": "running",
+      "attempt": 2
+    },
+    {
+      "seq": 4,
+      "source": "running",
+      "target": "succeeded",
+      "attempt": 2
+    },
+    {
+      "seq": 5,
+      "source": "succeeded",
+      "target": "acknowledged",
+      "attempt": 2
+    }
+  ],
+  "real_world_rows": 0,
+  "external_actions": 0,
+  "authority_actions": 0,
+  "boundary": "Finite synthetic same-owner event-workflow and 3D graph-model evidence only. No live service, real participant, external action, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility, exhaustive security, professional, legal, cultural, affected-party or Maori authority, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

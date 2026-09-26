@@ -1,0 +1,81 @@
+{
+  "schema": "ghc.family.event-workflow.3d-model.v1",
+  "model_id": "LV7053R2-MODEL-15",
+  "fixture_id": "LEW-15",
+  "title": "canonical-success-latch",
+  "coordinate_system": "synthetic_cartesian_unitless",
+  "nodes": [
+    {
+      "id": "prepared",
+      "x": -0.25319,
+      "y": 3.18997,
+      "z": -0.45,
+      "kind": "declared_state"
+    },
+    {
+      "id": "running",
+      "x": -3.18997,
+      "y": -0.25319,
+      "z": 0.1,
+      "kind": "declared_state"
+    },
+    {
+      "id": "succeeded",
+      "x": 0.25319,
+      "y": -3.18997,
+      "z": 0.65,
+      "kind": "declared_state"
+    },
+    {
+      "id": "acknowledged",
+      "x": 3.18997,
+      "y": 0.25319,
+      "z": 1.2,
+      "kind": "declared_state"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-1",
+      "source": "prepared",
+      "target": "running",
+      "event_type": "workflow.running"
+    },
+    {
+      "id": "e-2",
+      "source": "running",
+      "target": "succeeded",
+      "event_type": "workflow.succeeded"
+    },
+    {
+      "id": "e-3",
+      "source": "succeeded",
+      "target": "acknowledged",
+      "event_type": "workflow.acknowledged"
+    }
+  ],
+  "simulation_steps": [
+    {
+      "seq": 1,
+      "source": "prepared",
+      "target": "running",
+      "attempt": 1
+    },
+    {
+      "seq": 2,
+      "source": "running",
+      "target": "succeeded",
+      "attempt": 1
+    },
+    {
+      "seq": 3,
+      "source": "succeeded",
+      "target": "acknowledged",
+      "attempt": 1
+    }
+  ],
+  "real_world_rows": 0,
+  "external_actions": 0,
+  "authority_actions": 0,
+  "boundary": "Finite synthetic same-owner event-workflow and 3D graph-model evidence only. No live service, real participant, external action, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility, exhaustive security, professional, legal, cultural, affected-party or Maori authority, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

@@ -1,0 +1,72 @@
+{
+  "description": "Five nonblocking constant-output advisories; no payload-driven side effects.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/hook_advisory.js\" source_head",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/hook_advisory.js\" source_head",
+            "timeout": 5,
+            "statusMessage": "Checking source and lifecycle posture"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/hook_advisory.js\" action_scope",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/hook_advisory.js\" action_scope",
+            "timeout": 5,
+            "statusMessage": "Checking bounded action scope"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/hook_advisory.js\" pending_session",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/hook_advisory.js\" pending_session",
+            "timeout": 5,
+            "statusMessage": "Checking pending-session continuation"
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/hook_advisory.js\" retain_failure",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/hook_advisory.js\" retain_failure",
+            "timeout": 5,
+            "statusMessage": "Checking failure retention"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/hook_advisory.js\" terminal_gate",
+            "commandWindows": "node \"$env:PLUGIN_ROOT/scripts/hook_advisory.js\" terminal_gate",
+            "timeout": 5,
+            "statusMessage": "Checking terminal workflow gate"
+          }
+        ]
+      }
+    ]
+  }
+}
