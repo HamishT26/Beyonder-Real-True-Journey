@@ -1,0 +1,10 @@
+import re
+FIELDS={'owner','phase','scope','head','expected_head','clean','pushed','prior_attempts','prior_successes'}
+def admission(r):
+ if type(r) is not dict or set(r)!=FIELDS:return {'admitted':False,'reason':'closed_fields'}
+ if r['owner']!='Tessarin Reed' or r['phase']!='v705-v7' or r['scope']!='metadata_only_owner_delta':return {'admitted':False,'reason':'scope'}
+ if any(type(r[k]) is not str or re.fullmatch('[0-9a-f]{40}',r[k]) is None for k in ['head','expected_head']):return {'admitted':False,'reason':'head_shape'}
+ if r['head']!=r['expected_head']:return {'admitted':False,'reason':'head_mismatch'}
+ if r['clean'] is not True or r['pushed'] is not True:return {'admitted':False,'reason':'publication_gate'}
+ if type(r['prior_attempts']) is not int or type(r['prior_successes']) is not int or r['prior_attempts']!=0 or r['prior_successes']!=0:return {'admitted':False,'reason':'nonreplay_latch'}
+ return {'admitted':True,'reason':'metadata_preconditions_only'}
