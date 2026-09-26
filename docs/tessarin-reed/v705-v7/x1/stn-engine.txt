@@ -1,0 +1,103 @@
+import json,sys,copy
+BOUNDARY='Finite synthetic quantitative time-constraint evidence; same-owner software validation only. NOT_READY_FOR_STAGE_20.'
+BASE=[[0,i,2] for i in range(1,4)]+[[i,0,2] for i in range(1,4)]
+FIELDS={'stn_record':[],'constraint_normalize':[],'adjacency_dbm':[],'bounded_path_weights':['max_edges'],'distance_closure':[],'feasibility_certificate':[],'assignment_check':['assignment'],'tight_bounds':[],'difference_entailment':['query'],'lattice_assignments':[]}
+def integer(x,lo,hi):return type(x) is int and lo<=x<=hi
+def edge(e):return type(e) is list and len(e)==3 and integer(e[0],0,3) and integer(e[1],0,3) and integer(e[2],-8,8)
+def edges_ok(e):return type(e) is list and 6<=len(e)<=32 and all(edge(x) for x in e) and all(x in e for x in BASE)
+def normalize(edges):
+ d={}
+ for u,v,w in edges:d[u,v]=min(w,d.get((u,v),w))
+ return [[u,v,d[u,v]] for u,v in sorted(d)]
+def direct(edges):
+ d=[[0 if u==v else None for v in range(4)] for u in range(4)]
+ for u,v,w in edges:d[u][v]=w if d[u][v] is None else min(d[u][v],w)
+ return d
+def negative_cycle(edges):
+ es={(u,v):w for u,v,w in normalize(edges)};found={}
+ def visit(start,path,total):
+  u=path[-1]
+  for v in range(4):
+   if (u,v) not in es:continue
+   weight=es[u,v]
+   if v==start and total+weight<0:
+    seq=tuple(path);canonical=min(seq[k:]+seq[:k] for k in range(len(seq)));closed=canonical+(canonical[0],);weights=[es[closed[i],closed[i+1]] for i in range(len(canonical))]
+    found[canonical]={'nodes':list(closed),'weights':weights,'total':sum(weights)}
+   elif v not in path:visit(start,path+[v],total+weight)
+ for start in range(4):visit(start,[start],0)
+ return found[min(found)] if found else None
+def closure(edges):
+ d=direct(edges)
+ for k in range(4):
+  for u in range(4):
+   for v in range(4):
+    if d[u][k] is not None and d[k][v] is not None:
+     z=d[u][k]+d[k][v]
+     if d[u][v] is None or z<d[u][v]:d[u][v]=z
+ bad=any(d[u][u]<0 for u in range(4))
+ return {'consistent':not bad,'matrix':None if bad else d,'negative_cycle':negative_cycle(edges) if bad else None}
+def points(edges):
+ out=[]
+ def descend(a):
+  if any(v<len(a) and u<len(a) and a[v]-a[u]>w for u,v,w in edges):return
+  if len(a)==4:out.append(a[1:]);return
+  for x in range(-2,3):descend(a+[x])
+ descend([0]);return out
+def walk_weights(edges,k):
+ d=[[0 if u==v else None for v in range(4)] for u in range(4)]
+ for _ in range(k):
+  n=copy.deepcopy(d)
+  for s in range(4):
+   for u,v,w in edges:
+    if d[s][u] is not None:
+     z=d[s][u]+w
+     if n[s][v] is None or z<n[s][v]:n[s][v]=z
+  d=n
+ return d
+def assignment_ok(a):return type(a) is list and len(a)==4 and a[0]==0 and all(integer(x,-8,8) for x in a)
+def violations(edges,a):return [{'edge_index':i,'edge':list(e),'difference':a[e[1]]-a[e[0]],'excess':a[e[1]]-a[e[0]]-e[2]} for i,e in enumerate(edges) if a[e[1]]-a[e[0]]>e[2]]
+def validate(r,fields=FIELDS):
+ if type(r) is not dict or type(r.get('op')) is not str or r['op'] not in fields:raise ValueError('operation')
+ if set(r)!={'op','edges',*fields[r['op']]}:raise ValueError('fields')
+ if not edges_ok(r['edges']):raise ValueError('edges')
+ if 'assignment' in r and not assignment_ok(r['assignment']):raise ValueError('assignment')
+ if 'max_edges' in r and not integer(r['max_edges'],0,4):raise ValueError('max_edges')
+ if 'query' in r and not edge(r['query']):raise ValueError('query')
+def envelope(value=None,error=None,disposition='completed'):
+ return {'ok':error is None,'value':value,'error':error,'disposition':disposition if error is None else 'refused','boundary':BOUNDARY}
+def evaluate(r):
+ try:
+  validate(r);e=r['edges'];op=r['op']
+  if op=='stn_record':v={'variables':[0,1,2,3],'anchor':0,'edges':copy.deepcopy(e),'constraint_count':len(e)}
+  elif op=='constraint_normalize':v={'edges':normalize(e)}
+  elif op=='adjacency_dbm':v={'matrix':direct(e)}
+  elif op=='bounded_path_weights':v={'max_edges':r['max_edges'],'matrix':walk_weights(e,r['max_edges'])}
+  elif op=='distance_closure':v=closure(e)
+  elif op=='feasibility_certificate':
+   s=closure(e);ps=points(e) if s['consistent'] else [];v={'consistent':s['consistent'],'assignment':[0]+ps[0] if ps else None,'negative_cycle':s['negative_cycle']}
+  elif op=='assignment_check':
+   bad=violations(e,r['assignment']);v={'feasible':not bad,'assignment':list(r['assignment']),'violations':bad}
+  elif op=='tight_bounds':
+   s=closure(e);d=s['matrix'];v={'consistent':s['consistent'],'bounds':[[i,-d[i][0],d[0][i]] for i in range(1,4)] if d else None,'negative_cycle':s['negative_cycle']}
+  elif op=='difference_entailment':
+   s=closure(e);u,vv,w=r['query'];t=s['matrix'][u][vv] if s['consistent'] else None;v={'available':s['consistent'],'query':list(r['query']),'tight_bound':t,'entailed':t<=w if t is not None else None,'negative_cycle':s['negative_cycle']}
+  elif op=='lattice_assignments':
+   ps=points(e);v={'consistent':bool(ps),'points':ps,'count':len(ps),'negative_cycle':None if ps else negative_cycle(e)}
+  return envelope(v)
+ except ValueError as ex:return envelope(error=str(ex))
+def parse_request(text):
+ def obj(pairs):
+  d={}
+  for k,v in pairs:
+   if k in d:raise ValueError('duplicate_fields')
+   d[k]=v
+  return d
+ return json.loads(text,object_pairs_hook=obj,parse_constant=lambda _:(_ for _ in ()).throw(ValueError('nonfinite')))
+def main(evaluator=evaluate):
+ try:
+  t=sys.stdin.read(1048577)
+  if len(t)>1048576:raise ValueError('size')
+  r=evaluator(parse_request(t))
+ except (ValueError,TypeError) as ex:r=envelope(error=str(ex))
+ print(json.dumps(r,sort_keys=True,allow_nan=False))
+if __name__=='__main__':main()

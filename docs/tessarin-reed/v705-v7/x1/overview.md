@@ -1,0 +1,5 @@
+# X1 quantitative constraint results
+
+The first ten operation families were evaluated on fifteen frozen synthetic networks. Exact min-plus graph calculations were compared with a separate direct enumeration of all 125 candidate assignments and explicit bounded walks. Every complete envelope, input hash and evidence disposition was checked. The 300 malformed candidate subjects remain failures at zero credit beside their passing refusal guards. The local guides and paired callers remain uninstalled outside this owner phase.
+
+Finite synthetic quantitative time-constraint and same-owner software evidence only. No real scheduling, participant, employer, legal-deadline, clock, sensor, credential or production input. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, consciousness, personhood, identity continuity, qualification, agency, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, Theory-of-Everything, canon or Stage 20 claim. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

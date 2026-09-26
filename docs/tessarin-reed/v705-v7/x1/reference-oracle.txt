@@ -1,0 +1,61 @@
+import itertools,copy
+BOUNDARY='Finite synthetic quantitative time-constraint evidence; same-owner software validation only. NOT_READY_FOR_STAGE_20.'
+def normalized(e):return [[u,v,min(w for a,b,w in e if (a,b)==(u,v))] for u in range(4) for v in range(4) if any((a,b)==(u,v) for a,b,w in e)]
+def feasible(e):return [list(p) for p in itertools.product(range(-2,3),repeat=3) if all(([0,*p][v]-[0,*p][u])<=w for u,v,w in e)]
+def cycle(e):
+ es={(u,v):w for u,v,w in normalized(e)};candidates=[]
+ for n in range(1,5):
+  for p in itertools.permutations(range(4),n):
+   if p!=min(p[i:]+p[:i] for i in range(n)):continue
+   pairs=list(zip(p,p[1:]+p[:1]))
+   if all(x in es for x in pairs):
+    ws=[es[x] for x in pairs]
+    if sum(ws)<0:candidates.append((p,{'nodes':list(p+p[:1]),'weights':ws,'total':sum(ws)}))
+ return min(candidates,key=lambda x:x[0])[1] if candidates else None
+def state(e):
+ ps=feasible(e)
+ return {'consistent':bool(ps),'matrix':[[max([0,*p][v]-[0,*p][u] for p in ps) for v in range(4)] for u in range(4)] if ps else None,'negative_cycle':None if ps else cycle(e)}
+def adjacency(e):
+ out=[]
+ for u in range(4):
+  row=[]
+  for v in range(4):
+   weights=[w for a,b,w in e if (a,b)==(u,v)]+([0] if u==v else []);row.append(min(weights) if weights else None)
+  out.append(row)
+ return out
+def walks(e,k):
+ d=[[0 if u==v else None for v in range(4)] for u in range(4)]
+ for n in range(1,k+1):
+  for p in itertools.product(range(4),repeat=n+1):
+   weights=[]
+   for a,b in zip(p,p[1:]):
+    ws=[w for u,v,w in e if u==a and v==b]
+    if not ws:break
+    weights.append(min(ws))
+   if len(weights)==n:
+    z=sum(weights);a,b=p[0],p[-1]
+    if d[a][b] is None or z<d[a][b]:d[a][b]=z
+ return d
+def expected(r):
+ e=r['edges'];op=r['op']
+ if op=='stn_record':v={'variables':[0,1,2,3],'anchor':0,'edges':copy.deepcopy(e),'constraint_count':len(e)}
+ elif op=='constraint_normalize':v={'edges':normalized(e)}
+ elif op=='adjacency_dbm':v={'matrix':adjacency(e)}
+ elif op=='bounded_path_weights':v={'max_edges':r['max_edges'],'matrix':walks(e,r['max_edges'])}
+ elif op=='distance_closure':v=state(e)
+ elif op=='feasibility_certificate':
+  ps=feasible(e);v={'consistent':bool(ps),'assignment':[0]+ps[0] if ps else None,'negative_cycle':None if ps else cycle(e)}
+ elif op=='assignment_check':
+  a=r['assignment'];bad=[]
+  for i,(u,vv,w) in enumerate(e):
+   delta=a[vv]-a[u]
+   if delta>w:bad.append({'edge_index':i,'edge':[u,vv,w],'difference':delta,'excess':delta-w})
+  v={'feasible':not bad,'assignment':list(a),'violations':bad}
+ elif op=='tight_bounds':
+  ps=feasible(e);v={'consistent':bool(ps),'bounds':[[i,min(p[i-1] for p in ps),max(p[i-1] for p in ps)] for i in range(1,4)] if ps else None,'negative_cycle':None if ps else cycle(e)}
+ elif op=='difference_entailment':
+  ps=feasible(e);u,vv,w=r['query'];t=max([0,*p][vv]-[0,*p][u] for p in ps) if ps else None;v={'available':bool(ps),'query':list(r['query']),'tight_bound':t,'entailed':t<=w if ps else None,'negative_cycle':None if ps else cycle(e)}
+ elif op=='lattice_assignments':
+  ps=feasible(e);v={'consistent':bool(ps),'points':ps,'count':len(ps),'negative_cycle':None if ps else cycle(e)}
+ else:raise ValueError(op)
+ return {'ok':True,'value':v,'error':None,'disposition':'completed','boundary':BOUNDARY}
