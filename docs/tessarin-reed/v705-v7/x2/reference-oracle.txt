@@ -1,0 +1,33 @@
+import pathlib,runpy
+from fractions import Fraction
+b=runpy.run_path(str(pathlib.Path(__file__).resolve().parents[1]/'x1/reference-oracle.txt'))
+feasible=b['feasible'];state=b['state'];normalized=b['normalized'];cycle=b['cycle'];BOUNDARY=b['BOUNDARY']
+def expected(r):
+ op=r['op'];e=r['edges'];disposition='completed'
+ if op=='incremental_tightening':
+  combined=e+[r['constraint']];s=state(combined);v={**s,'constraint':r['constraint'],'update_method':'rank_one' if feasible(e) and s['consistent'] else 'explicit_inconsistency'}
+ elif op=='network_intersection':
+  combined=e+r['other_edges'];v={**state(combined),'edges':normalized(combined)}
+ elif op=='variable_projection':
+  ps=feasible(e);keep=r['keep'];projected=sorted(set(tuple([0,*p][i] for i in keep if i!=0) for p in ps));matrix=[[max([0,*p][j]-[0,*p][i] for p in ps) for j in keep] for i in keep] if ps else None;v={'consistent':bool(ps),'keep':keep,'matrix':matrix,'points':[list(p) for p in projected],'count':len(projected),'negative_cycle':None if ps else cycle(e)}
+ elif op=='reference_rebase':
+  ps=feasible(e);k=r['new_reference'];order=list(i for i in range(4) if i!=k);out=[]
+  for p in ps:
+   a=dict(enumerate([0,*p]));out.append([a[i]-a[k] for i in order])
+  v={'consistent':bool(ps),'new_reference':k,'coordinate_order':order,'points':sorted(out),'count':len(out),'negative_cycle':None if ps else cycle(e)}
+ elif op=='unit_rescale':
+  f=Fraction(r['factor']);ps=feasible(e);c=cycle(e) if not ps else None
+  if c:c={'nodes':c['nodes'],'weights':[str(Fraction(w)*f) for w in c['weights']],'total':str(Fraction(c['total'])*f)}
+  v={'consistent':bool(ps),'factor':str(f),'units':'scaled rational coordinates; mapped original lattice only','edges':[[u,vv,str(Fraction(w)*f)] for u,vv,w in normalized(e)],'points':[[str(Fraction(x)*f) for x in p] for p in ps],'count':len(ps),'negative_cycle':c}
+ elif op=='equality_quotient':
+  ps=feasible(e);classes=[];unused=set(range(4))
+  while ps and unused:
+   u=min(unused);group=sorted(v for v in unused if all([0,*p][u]==[0,*p][v] for p in ps));classes.append(group);unused.difference_update(group)
+  v={'consistent':bool(ps),'classes':classes,'negative_cycle':None if ps else cycle(e)}
+ elif op=='slack_profile':
+  a=r['assignment'];slacks=[bound+a[source]-a[target] for source,target,bound in e];v={'assignment':a,'slacks':slacks,'feasible':min(slacks)>=0}
+ elif op=='stn_trinity_bridge':disposition='represented';v={'register':r['register'],'network_consistent':bool(feasible(e)),'THOS':'finite dependency timing analogy','GMUT':'typed equation ordering analogy only','Freed_ID':'evidence expiry ordering analogy only','empirical_confirmation':False,'identity_claim':False}
+ elif op=='stn_observation_gap':disposition='open_gap';v={'claim':r['claim'],'established':False,'required_evidence':'Claim-specific external evidence and independent review','completion_credit':0}
+ elif op=='stn_authority_gate':disposition='exact_gate';v={'action':r['action'],'executed':False,'competent_authority':'missing','completion_credit':0}
+ else:raise ValueError(op)
+ return {'ok':True,'value':v,'error':None,'disposition':disposition,'boundary':BOUNDARY}

@@ -1,0 +1,9 @@
+# X2 quantitative representations and evidence limits
+
+The ten additional operation families cover constraint tightening, network intersection, projection, reference changes, positive rational unit changes, forced equality and slack, followed by explicit analogy, observation-gap and authority-hold records. Complete outputs were compared with direct finite reference constructions for all 150 frozen contracts. Thirty additional tests cover representation inverses, invalid factors, missing references and exact authority refusal.
+
+Fifteen saved three-coordinate models were inspected in the native browser. Three inconsistent networks correctly show zero feasible points. Five control checks completed after retaining the failed AX-diff and click wrappers and an initially insufficient table-visibility check. These checks are bounded software observations, not a complete accessibility evaluation.
+
+The catalogue contains 20 local guides, 10 paired runners and five manual metadata hooks. The 312-card context deck has one owner anchor, three pillars, eight practices and 300 proposal cards. Catalogue selection grants no installation or routing authority. Fifteen finite property checks passed; fifteen external or broader obligations remain open.
+
+Finite synthetic quantitative time-constraint and same-owner software evidence only. No real scheduling, participant, employer, legal-deadline, clock, sensor, credential or production input. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, consciousness, personhood, identity continuity, qualification, agency, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, Theory-of-Everything, canon or Stage 20 claim. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

@@ -1,0 +1,11 @@
+import json,sys
+FIELDS={'planning_admission':{'committed','pushed','clean'},'x1_dependency_gate':{'planning_frozen','source_bound'},'x2_dependency_gate':{'x1_frozen','planning_bound'},'failure_retention_gate':{'failed_subjects','retained_negatives','erased'},'terminal_metadata_gate':{'final_ready','canonical_ready','route_ready'}}
+def evaluate(r):
+ if type(r) is not dict or set(r)!={'operation','metadata'} or type(r['operation']) is not str or r['operation'] not in FIELDS:return {'ok':False,'error':'fields','admitted':False,'automatic_host_execution':False}
+ op=r['operation'];m=r['metadata']
+ if type(m) is not dict or set(m)!=FIELDS[op]:return {'ok':False,'error':'metadata','admitted':False,'automatic_host_execution':False}
+ if op=='failure_retention_gate':
+  valid=all(type(x) is int and x>=0 for x in m.values());admitted=valid and m['failed_subjects']==m['retained_negatives'] and m['erased']==0
+ else:valid=all(type(x) is bool for x in m.values());admitted=valid and all(m.values())
+ return {'ok':valid,'error':None if valid else 'types','admitted':bool(admitted),'automatic_host_execution':False}
+if __name__=='__main__':print(json.dumps(evaluate(json.load(sys.stdin)),sort_keys=True))

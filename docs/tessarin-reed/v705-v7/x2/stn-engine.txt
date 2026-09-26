@@ -1,0 +1,61 @@
+import pathlib,runpy,copy,json,sys
+from fractions import Fraction
+b=runpy.run_path(str(pathlib.Path(__file__).resolve().parents[1]/'x1/stn-engine.txt'))
+for key in ['BOUNDARY','BASE','integer','edge','edges_ok','normalize','closure','points','envelope','assignment_ok','parse_request']:globals()[key]=b[key]
+FIELDS={'incremental_tightening':['constraint'],'network_intersection':['other_edges'],'variable_projection':['keep'],'reference_rebase':['new_reference'],'unit_rescale':['factor'],'equality_quotient':[],'slack_profile':['assignment'],'stn_trinity_bridge':['register'],'stn_observation_gap':['claim'],'stn_authority_gate':['action','execute']}
+def validate(r):
+ b['validate'](r,FIELDS);op=r['op']
+ if op=='incremental_tightening' and not edge(r['constraint']):raise ValueError('constraint')
+ if op=='network_intersection' and not edges_ok(r['other_edges']):raise ValueError('other_edges')
+ if op=='variable_projection':
+  k=r['keep']
+  if type(k) is not list or not 2<=len(k)<=4 or not all(integer(x,0,3) for x in k) or len(set(k))!=len(k) or 0 not in k:raise ValueError('keep')
+ if op=='reference_rebase' and not integer(r['new_reference'],0,3):raise ValueError('new_reference')
+ if op=='unit_rescale':
+  s=r['factor']
+  if type(s) is not str:raise ValueError('factor')
+  try:f=Fraction(s)
+  except (ValueError,ZeroDivisionError):raise ValueError('factor')
+  if str(f)!=s or not 0<f<=4 or f.numerator>8 or f.denominator>4:raise ValueError('factor')
+ if op=='stn_trinity_bridge' and r['register']!='structural_analogy_only':raise ValueError('register')
+ if op=='stn_observation_gap' and (type(r['claim']) is not str or r['claim'] not in ['real_clock_observation','uncertainty_calibration','independent_reproduction']):raise ValueError('claim')
+ if op=='stn_authority_gate' and (type(r['action']) is not str or r['action'] not in ['approve_schedule','interpret_legal_deadline','promote_stage20'] or r['execute'] is not False):raise ValueError('authority')
+def evaluate(r):
+ try:
+  validate(r);op=r['op'];e=r['edges'];disposition='completed'
+  if op=='incremental_tightening':
+   old=closure(e);u,vv,w=r['constraint'];combined=e+[r['constraint']]
+   if old['consistent'] and old['matrix'][vv][u]+w>=0:
+    d=old['matrix'];s={'consistent':True,'matrix':[[min(d[i][j],d[i][u]+w+d[vv][j]) for j in range(4)] for i in range(4)],'negative_cycle':None};kind='rank_one'
+   else:s=closure(combined);kind='explicit_inconsistency'
+   v={**s,'constraint':list(r['constraint']),'update_method':kind}
+  elif op=='network_intersection':v={**closure(e+r['other_edges']),'edges':normalize(e+r['other_edges'])}
+  elif op=='variable_projection':
+   s=closure(e);keep=r['keep'];ps=sorted({tuple(p[i-1] for i in keep if i!=0) for p in points(e)})
+   v={'consistent':s['consistent'],'keep':list(keep),'matrix':[[s['matrix'][i][j] for j in keep] for i in keep] if s['consistent'] else None,'points':[list(p) for p in ps],'count':len(ps),'negative_cycle':s['negative_cycle']}
+  elif op=='reference_rebase':
+   k=r['new_reference'];order=[i for i in range(4) if i!=k];ps=points(e);out=sorted([[a[i]-a[k] for i in order] for a in ([0]+p for p in ps)])
+   v={'consistent':bool(ps),'new_reference':k,'coordinate_order':order,'points':out,'count':len(out),'negative_cycle':None if ps else closure(e)['negative_cycle']}
+  elif op=='unit_rescale':
+   f=Fraction(r['factor']);ps=points(e);c=closure(e)['negative_cycle'];c=None if c is None else {'nodes':c['nodes'],'weights':[str(f*w) for w in c['weights']],'total':str(f*c['total'])}
+   v={'consistent':bool(ps),'factor':str(f),'units':'scaled rational coordinates; mapped original lattice only','edges':[[u,vv,str(f*w)] for u,vv,w in normalize(e)],'points':[[str(f*x) for x in p] for p in ps],'count':len(ps),'negative_cycle':c}
+  elif op=='equality_quotient':
+   s=closure(e);groups=[];seen=set()
+   if s['consistent']:
+    d=s['matrix']
+    for u in range(4):
+     if u not in seen:
+      group=[v for v in range(4) if d[u][v]==0 and d[v][u]==0];seen.update(group);groups.append(group)
+   v={'consistent':s['consistent'],'classes':groups,'negative_cycle':s['negative_cycle']}
+  elif op=='slack_profile':
+   a=r['assignment'];slacks=[w-(a[vv]-a[u]) for u,vv,w in e];v={'assignment':list(a),'slacks':slacks,'feasible':all(x>=0 for x in slacks)}
+  elif op=='stn_trinity_bridge':
+   disposition='represented';v={'register':r['register'],'network_consistent':closure(e)['consistent'],'THOS':'finite dependency timing analogy','GMUT':'typed equation ordering analogy only','Freed_ID':'evidence expiry ordering analogy only','empirical_confirmation':False,'identity_claim':False}
+  elif op=='stn_observation_gap':
+   disposition='open_gap';v={'claim':r['claim'],'established':False,'required_evidence':'Claim-specific external evidence and independent review','completion_credit':0}
+  elif op=='stn_authority_gate':
+   disposition='exact_gate';v={'action':r['action'],'executed':False,'competent_authority':'missing','completion_credit':0}
+  return envelope(v,disposition=disposition)
+ except ValueError as ex:return envelope(error=str(ex))
+def main(evaluator=evaluate):b['main'](evaluator)
+if __name__=='__main__':main()
