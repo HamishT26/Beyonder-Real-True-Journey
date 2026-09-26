@@ -1,0 +1,1854 @@
+[
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-01",
+    "label": "clean-launch",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "succeeded",
+      "acknowledged"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "b9fb2c7d99e8e2d78df4db2aa2a2a22886223edf29c799d5de12846f23ad4add",
+        "previous_digest": "GENESIS",
+        "digest": "e273821b3555ac23078cf214d66de0b0c146063736fe5602c20d9a2987efa77f"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 1,
+        "subject_hash": "d2900a5d132df27e9115f736d71b967186cc030c50a286bf27f51eb90372605c",
+        "previous_digest": "e273821b3555ac23078cf214d66de0b0c146063736fe5602c20d9a2987efa77f",
+        "digest": "8103c28421a227fb2704bee08a32ec9befca4ec8bec64aeb43f60203a02d861b"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.acknowledged",
+        "source_state": "succeeded",
+        "target_state": "acknowledged",
+        "attempt": 1,
+        "subject_hash": "f9cb28a0bf9f715f245057e6f105e5a1840aaaeee2e0ae18e755640b8b2e7579",
+        "previous_digest": "8103c28421a227fb2704bee08a32ec9befca4ec8bec64aeb43f60203a02d861b",
+        "digest": "76b415e7639c86721adba33bdaf597d43914145ece25ecb964ce310cace6a846"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-01",
+        "payload_hash": "daeea49eded96fb262e2d5cbbf45dec8b992a30d45f6f96079854d95898b2e3a",
+        "state": "acknowledged"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope",
+      "exact_target"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-01",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-01/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1401,
+      "max_files": 2000,
+      "words": 2000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-01",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "acknowledged",
+    "fixture_sha256": "914a6455f54b09fd713e933d3514dbe3e8f8dffbd2552f5b3ebc5d5df204f5f7"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-02",
+    "label": "retry-then-success",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "failed",
+      "running",
+      "succeeded",
+      "acknowledged"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "0b2f73a3d13ff7d787143660cbd4dac622141be7a9529c6b53efdf6784210d41",
+        "previous_digest": "GENESIS",
+        "digest": "74150c9d6396c7fe162e347f72dd4265cad8817ed6c995b969c7a82e26d5168d"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.failed",
+        "source_state": "running",
+        "target_state": "failed",
+        "attempt": 1,
+        "subject_hash": "39bdf7f91d449be9e194089b59fe8b85fbbc7d1d97a924af3007f6ae4e06f7ae",
+        "previous_digest": "74150c9d6396c7fe162e347f72dd4265cad8817ed6c995b969c7a82e26d5168d",
+        "digest": "f00d60a2a1586d0f8ce17e2fde5ddc6d6b839502387e2ecc315d1e7e33d9ed49"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.running",
+        "source_state": "failed",
+        "target_state": "running",
+        "attempt": 2,
+        "subject_hash": "23b818d22ba8542245b2bb2d9e99a50fa664a93698c1a05722582d2de36e1595",
+        "previous_digest": "f00d60a2a1586d0f8ce17e2fde5ddc6d6b839502387e2ecc315d1e7e33d9ed49",
+        "digest": "7dee13431f1dd3e8f9a5312134ebb75bc5aa3dfccb35bef4ac0e7beb47fa7c6b"
+      },
+      {
+        "seq": 4,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 2,
+        "subject_hash": "a08b43da26e6db32892a76a92ed03135ef327764f4e7099d5035957ac97bafbf",
+        "previous_digest": "7dee13431f1dd3e8f9a5312134ebb75bc5aa3dfccb35bef4ac0e7beb47fa7c6b",
+        "digest": "8d4558d89489ef30f618ad9ca9f59faca9dfb6c4dbd0313cf32eb42e8e835e9e"
+      },
+      {
+        "seq": 5,
+        "type": "workflow.acknowledged",
+        "source_state": "succeeded",
+        "target_state": "acknowledged",
+        "attempt": 2,
+        "subject_hash": "a04b561c6f7971b087f9ea5d254ef58006937b5106d349918b13726657833cc0",
+        "previous_digest": "8d4558d89489ef30f618ad9ca9f59faca9dfb6c4dbd0313cf32eb42e8e835e9e",
+        "digest": "0667248f48cad1b6353337a6bf0620a8ae1d64b84e5eaf44c73dacf57d3e29fc"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-02",
+        "payload_hash": "0498e41d6a0776331c264264814c789252a3332bf0d4600799811603543a03f1",
+        "state": "acknowledged"
+      },
+      {
+        "request_id": "REQ-02",
+        "payload_hash": "0498e41d6a0776331c264264814c789252a3332bf0d4600799811603543a03f1",
+        "state": "acknowledged"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope",
+      "exact_target"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-02",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-02/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1402,
+      "max_files": 2000,
+      "words": 4000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-02",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "acknowledged",
+    "fixture_sha256": "6faf53c1a611b3aacf8a31d85ffe75f8230763f0f39eb4e3cd52978c8a73743c"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-03",
+    "label": "definite-preacceptance-rejection",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "failed",
+      "held"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "0eecf0b044609e19ef23fa88830b91c0518f24009d8e3da593e2273b5fcedf7e",
+        "previous_digest": "GENESIS",
+        "digest": "bdf00c096b0c38afff839752bdd3cb5eefb4f96e5172797c785c09a1c42fbe6d"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.failed",
+        "source_state": "running",
+        "target_state": "failed",
+        "attempt": 1,
+        "subject_hash": "2f014c4f190c02dde4e4b2937b0ae357032b6aafebb6bdbec1d901c277352dcc",
+        "previous_digest": "bdf00c096b0c38afff839752bdd3cb5eefb4f96e5172797c785c09a1c42fbe6d",
+        "digest": "36551ffc600553d475545e898dbbbaf0a5edeabce1e93ab97ced0df4b0d68c41"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.held",
+        "source_state": "failed",
+        "target_state": "held",
+        "attempt": 2,
+        "subject_hash": "d7a949ec105fefa577cec94dbb6338fbaec387d10f027c38b6b97e10c35ceddf",
+        "previous_digest": "36551ffc600553d475545e898dbbbaf0a5edeabce1e93ab97ced0df4b0d68c41",
+        "digest": "6d545d48997e0bc48027ca78165cc805b25e4e28a6bd6323051603277779a3b7"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 1,
+    "submissions": [
+      {
+        "request_id": "REQ-03",
+        "payload_hash": "5b7cd999e631d5695ef346a02e43454088b5632b8bf5615d553518ee0394d8ae",
+        "state": "held"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-03",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-03/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1403,
+      "max_files": 2000,
+      "words": 6000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-03",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "held",
+    "fixture_sha256": "2a77702de9973e052188c0e5cf9cf914af7798d6119423e252d9b14f9e4f17d3"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-04",
+    "label": "unresolved-timeout",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "held"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "f7208066937169968413aa883434f4d6bf0679d1a85391444da10d9ac8f75ea1",
+        "previous_digest": "GENESIS",
+        "digest": "2c99b1c5243915850b8cd76248e884153f8a32d5a395345b4425f698b58f261b"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.held",
+        "source_state": "running",
+        "target_state": "held",
+        "attempt": 1,
+        "subject_hash": "53dbe0a0e7bff8791220516ce1be25b0a3664369b85e0b0a0b39b45b67bfd0e4",
+        "previous_digest": "2c99b1c5243915850b8cd76248e884153f8a32d5a395345b4425f698b58f261b",
+        "digest": "b5885882fa90be0c92806a6ebe5536c562a3d040dd54bf5c8b1c37a28d11e65d"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 1,
+    "submissions": [
+      {
+        "request_id": "REQ-04",
+        "payload_hash": "f7043e282fcea3736bdce657ed6602907f34b69ab3dd55dfac8aeb0d4f4a5f66",
+        "state": "held"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-04",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-04/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1404,
+      "max_files": 2000,
+      "words": 8000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-04",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "held",
+    "fixture_sha256": "2ca387c3138c6c0353f12329f21783cb8056028f7e4ba7c476310694edd54d5a"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-05",
+    "label": "acknowledged-send",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "succeeded",
+      "acknowledged"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "e430ace8c617a049ce8517e0a2882e9eb57604f0a576799dfc4275db9560da58",
+        "previous_digest": "GENESIS",
+        "digest": "d9796cdfeb27a3b1f661ff8d548597f25c2627b726ca865b3a78aada00699995"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 1,
+        "subject_hash": "6bfbd314d774e43305b8796a6278b06a61ddfe3d21929b9d5cac24513fa57108",
+        "previous_digest": "d9796cdfeb27a3b1f661ff8d548597f25c2627b726ca865b3a78aada00699995",
+        "digest": "423639b1305ca47d72c95745b06b35523670b382f71ca802937441f2d70cf7b2"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.acknowledged",
+        "source_state": "succeeded",
+        "target_state": "acknowledged",
+        "attempt": 1,
+        "subject_hash": "9ece2f268f05bda6c9277fbb1fc4d7101f1b7868d5049fcbec7e100271dd67b6",
+        "previous_digest": "423639b1305ca47d72c95745b06b35523670b382f71ca802937441f2d70cf7b2",
+        "digest": "ab6b0094d0c792cac59dee2148957e5ea29115ac2b082673057b4e9bee4de232"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-05",
+        "payload_hash": "f22fbabf44d4aaffe6f40271124eee286593a2e6081fac0d42d11a291ab3cc96",
+        "state": "acknowledged"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope",
+      "exact_target"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-05",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-05/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1405,
+      "max_files": 2000,
+      "words": 10000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-05",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "acknowledged",
+    "fixture_sha256": "1f10fe34e6866934bf662eb4a537741f03d541a7dd9276a995e020af969bf5fa"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-06",
+    "label": "rollback-after-failure",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "failed",
+      "rolled_back"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "76bdaaf012c22efd976978768dcd7dc1c1e84eda5d868683d22976770eef6165",
+        "previous_digest": "GENESIS",
+        "digest": "a10ce168c6cab3ae08990fcfff09a977459f9b87868f3752049359ad7b347277"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.failed",
+        "source_state": "running",
+        "target_state": "failed",
+        "attempt": 1,
+        "subject_hash": "6d748c282a856ec72569b09c3ee7391cbcb5d5c7cfdb64c51fbb88fa64a40f03",
+        "previous_digest": "a10ce168c6cab3ae08990fcfff09a977459f9b87868f3752049359ad7b347277",
+        "digest": "4ff5af5aae71984bcc2e51c272626383d4dcc31d2b60c11389e19ed6f57f3a25"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.rolled_back",
+        "source_state": "failed",
+        "target_state": "rolled_back",
+        "attempt": 2,
+        "subject_hash": "f236c8ae576d9919a3dc1d4a1443a10d0650378fbfe789619cf8f1decfdeb07a",
+        "previous_digest": "4ff5af5aae71984bcc2e51c272626383d4dcc31d2b60c11389e19ed6f57f3a25",
+        "digest": "615911da354e9919c27aa1d92f83b169c7c6a72b71cfab98fb7a9beaab70b86a"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-06",
+        "payload_hash": "0b490292e95ac88a016b1ac91705d915a8dbafa16ef418b2a31e70391ebc1243",
+        "state": "rolled_back"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-06",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-06/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1406,
+      "max_files": 2000,
+      "words": 12000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-06",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "rolled_back",
+    "fixture_sha256": "a72760e488cd5d3851134c2271b50c8813e014023a097424360ee7ab00fe1100"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-07",
+    "label": "duplicate-attempt",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "succeeded",
+      "acknowledged"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "e60ecd3abfc215f424437744eca72741c7b1bc840dff1ad82b1521d06f0e406c",
+        "previous_digest": "GENESIS",
+        "digest": "a43c0a523e572ebdd821a613ba0d95f31bf77a9e2bcef22275689a002ddf652b"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 1,
+        "subject_hash": "6bbc351960f9b268453554b7c1c2df37c0c449667ac27970c7871b297e055f70",
+        "previous_digest": "a43c0a523e572ebdd821a613ba0d95f31bf77a9e2bcef22275689a002ddf652b",
+        "digest": "ccc5e45986d5fc1ef4bec0627453c4d3d51d4a9bd739068bcead9e9cd78b6dbf"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.acknowledged",
+        "source_state": "succeeded",
+        "target_state": "acknowledged",
+        "attempt": 1,
+        "subject_hash": "ae99a7c913dd3e1cbdc3a0a9747761cf480a4423465d45fa2ed24c86e5f95754",
+        "previous_digest": "ccc5e45986d5fc1ef4bec0627453c4d3d51d4a9bd739068bcead9e9cd78b6dbf",
+        "digest": "6efb81d8dde358c9d6f74ec08ccbb1939113d40b41a540c0f6481bc68cc40616"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-07",
+        "payload_hash": "e1e36ba40f2a5beb3a785bb56d3d099fe2621db7518cf46ff40059508c16c95e",
+        "state": "acknowledged"
+      },
+      {
+        "request_id": "REQ-07",
+        "payload_hash": "e1e36ba40f2a5beb3a785bb56d3d099fe2621db7518cf46ff40059508c16c95e",
+        "state": "acknowledged"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-07",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-07/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1407,
+      "max_files": 2000,
+      "words": 14000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-07",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "acknowledged",
+    "fixture_sha256": "7d4d122e1d60576d02268323face977d22422181b045dc158521cec6c11c12b8"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-08",
+    "label": "capability-denial",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "held"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.held",
+        "source_state": "prepared",
+        "target_state": "held",
+        "attempt": 1,
+        "subject_hash": "954483929cc173b6d7f13fa93e77ba6b5017f98f8930c6c69ff09c4715ca6dc8",
+        "previous_digest": "GENESIS",
+        "digest": "48b3fd27e9a80dd494e50e026e080bd8f22bd90365332333da902fa9f8f9ddad"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-08",
+        "payload_hash": "bb8165bda935879388090e3feee2eecfe849c3a6d45101ae733a9f1c7a4d9887",
+        "state": "held"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-08",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-08/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1408,
+      "max_files": 2000,
+      "words": 16000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-08",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "held",
+    "fixture_sha256": "bf8cd449dd5ebdecb4e90794bebf456f2dfa13ed4a1af4eb558bd1be39dbf778"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-09",
+    "label": "privacy-hold",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "held"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "5e55848c4d06131f2b5277a3ba0a1b4a908c610a679834d9f78b1db57605ed71",
+        "previous_digest": "GENESIS",
+        "digest": "2640d93b70b530d85c2338af44d267e21196b7323242f17d6ff309aa546695be"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.held",
+        "source_state": "running",
+        "target_state": "held",
+        "attempt": 1,
+        "subject_hash": "ed4e9af87f924a25f02f1814f8e94ba758c42e9f96d40aa9a153b8d7479336d3",
+        "previous_digest": "2640d93b70b530d85c2338af44d267e21196b7323242f17d6ff309aa546695be",
+        "digest": "c6064e8ddc9cfd1b94b5f74d6cc93c31c094cfacdfad1be43243d239374a7d0c"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-09",
+        "payload_hash": "ca658b2851b12345101f44cdd4548ca1a073265f93afd27cb8175152fd095210",
+        "state": "held"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-09",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-09/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1409,
+      "max_files": 2000,
+      "words": 18000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-09",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "held",
+    "fixture_sha256": "7c787043738b2ec79bb57370f8a392ff23d352d94594598e39fc031d1f2ac3df"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-10",
+    "label": "claim-overlap-warning",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "succeeded"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "8be5187b48667123f0ce54a527d1a3275cb0928dd38e904cab43c4c2ca6c5a7b",
+        "previous_digest": "GENESIS",
+        "digest": "6459e6bd3a41d489fe1c9771803698464fa38f089b3e96a6d8e144150a2170e7"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 1,
+        "subject_hash": "21cf8b09a7d59ad71ac65f87bb79a5285c89dff31690b57aa39cfb4f6dc95793",
+        "previous_digest": "6459e6bd3a41d489fe1c9771803698464fa38f089b3e96a6d8e144150a2170e7",
+        "digest": "f32708eedb94c8744b1e616a6efe1b2918bf332967aa65022d2ec9a5480e9100"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-10",
+        "payload_hash": "d27e6a274fe5d04663a12f125c5e8b7caa1962259d7e7a31aa167cfd28f01cd3",
+        "state": "succeeded"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-10",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-10/report",
+        "exclusive_action": "release-product"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1410,
+      "max_files": 2000,
+      "words": 20000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-10",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "succeeded",
+    "fixture_sha256": "70304fad170861a7ad3bba513cba6a54b559b7b14c6376ec6a4a5d5307c56a76"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-11",
+    "label": "artifact-budget-near-limit",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "succeeded"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "8ea48c72d207187a05c9d05c6a8d49ced889b8c8675dd48510aca1dbd6460a34",
+        "previous_digest": "GENESIS",
+        "digest": "7ba8929774c044d333172b9a339786e9c6013c1a6511ec5da988243c0cd94c33"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 1,
+        "subject_hash": "bba34419c838ee924937d729472af6b82205a825c5f56be61007c5cb59e70d4e",
+        "previous_digest": "7ba8929774c044d333172b9a339786e9c6013c1a6511ec5da988243c0cd94c33",
+        "digest": "c220f7a43be5fae9238a235d799e2e86e412edc551d776ec6ea6e3d5ecfa21e4"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-11",
+        "payload_hash": "ebc83c64225d7d6dba35b85b3e7c8613cabb682bb10814d9af41420c68dff8d9",
+        "state": "succeeded"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-11",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-11/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1411,
+      "max_files": 2000,
+      "words": 22000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-11",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "succeeded",
+    "fixture_sha256": "fe9ebeaaa40c1af7e4f42083fb2d1f9264d554f619b649b99a2a6b119ef1cdff"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-12",
+    "label": "route-ambiguity",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "held"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.held",
+        "source_state": "prepared",
+        "target_state": "held",
+        "attempt": 1,
+        "subject_hash": "0310c7a6522242ca363c2bfcc1dbd78f25928af32b344b3357a72b3187d6b50f",
+        "previous_digest": "GENESIS",
+        "digest": "e444a26bb6efd10be9ff9b6c21b2f778c4e99d1c5f3fdbd3f75ab176e834fd2a"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-12",
+        "payload_hash": "aad9030e95f5f64db09bcd44ea6709da640f9f3eb93d8eae2e70acf3b53c4c3b",
+        "state": "held"
+      },
+      {
+        "request_id": "REQ-12",
+        "payload_hash": "aad9030e95f5f64db09bcd44ea6709da640f9f3eb93d8eae2e70acf3b53c4c3b",
+        "state": "held"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-12",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-12/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1412,
+      "max_files": 2000,
+      "words": 24000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-12",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "held",
+    "fixture_sha256": "e227c31a878964ab0720046a459086366adae8cc680e8d01f00acb6be708cc8a"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-13",
+    "label": "authority-vacancy",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "held"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.held",
+        "source_state": "prepared",
+        "target_state": "held",
+        "attempt": 1,
+        "subject_hash": "acbe5c8ada3eb8e61353b50c7cb17ca12766b0a0bfd63a8ab448ebd61d89f8fb",
+        "previous_digest": "GENESIS",
+        "digest": "870f469268567d3faa3927c7bb3fa1f642db75310885592a108300a1108af935"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-13",
+        "payload_hash": "ff1f968a848b70943cd6ccb5698477825c6eb6425a3111ab4a6027f3034846cb",
+        "state": "held"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-13",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-13/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1413,
+      "max_files": 2000,
+      "words": 26000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-13",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "held",
+    "fixture_sha256": "ed83eb3b56f054a20bcd71c9566814a5ef12dbb5d617dfef75b8342583076d22"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-14",
+    "label": "stop-guard-release",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "succeeded",
+      "acknowledged"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "a063cfe0526880f049a8212535449a66216faa42727c438838f74a8b2083137b",
+        "previous_digest": "GENESIS",
+        "digest": "f788b5bae19cd05472af489663e5ea75261d7cdfac752a7743ebc2450cd767c4"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 1,
+        "subject_hash": "3963c60b8263cf734097ef1f365c7ca55c96d01b8e19235facf9cb2e8cf15d33",
+        "previous_digest": "f788b5bae19cd05472af489663e5ea75261d7cdfac752a7743ebc2450cd767c4",
+        "digest": "46b1245dcd687446d111101770762ea1b360501c16343401edba9b2f9da4f210"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.acknowledged",
+        "source_state": "succeeded",
+        "target_state": "acknowledged",
+        "attempt": 1,
+        "subject_hash": "b4839b58faf330fd943d131e08d08dc741e75192d234244f80030f682c6ee590",
+        "previous_digest": "46b1245dcd687446d111101770762ea1b360501c16343401edba9b2f9da4f210",
+        "digest": "afb007bb49633df609547838d09ea209adb608273c9d133f21268cb07ce31003"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-14",
+        "payload_hash": "b70e76b025d2a716c377294ea098e4bc2492ced610f5c58db6dd51d9e41f5d71",
+        "state": "acknowledged"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope",
+      "exact_target"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-14",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-14/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1414,
+      "max_files": 2000,
+      "words": 28000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-14",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "acknowledged",
+    "fixture_sha256": "5395019e1351e3f154ff568819ccea2804bf44555940810b65f38edd63b08094"
+  },
+  {
+    "schema": "ghc.family.event-workflow.fixture.v1",
+    "fixture_id": "LEW-15",
+    "label": "canonical-success-latch",
+    "purpose": "public_synthetic",
+    "states": [
+      "prepared",
+      "running",
+      "succeeded",
+      "acknowledged"
+    ],
+    "events": [
+      {
+        "seq": 1,
+        "type": "workflow.running",
+        "source_state": "prepared",
+        "target_state": "running",
+        "attempt": 1,
+        "subject_hash": "227d1c19cab81b4ef99e881ea259679a1bc5d1787837b85b2466b84f54bf84c2",
+        "previous_digest": "GENESIS",
+        "digest": "c30f25bbd48c5ac7943986bc68c919ab13212e68b25b62fa7bfb846bb9c976ce"
+      },
+      {
+        "seq": 2,
+        "type": "workflow.succeeded",
+        "source_state": "running",
+        "target_state": "succeeded",
+        "attempt": 1,
+        "subject_hash": "aff5d49db960b9f7d8c08716bd755cd2d21897b7f5c86bfbbf67a0b4e3055832",
+        "previous_digest": "c30f25bbd48c5ac7943986bc68c919ab13212e68b25b62fa7bfb846bb9c976ce",
+        "digest": "304d8a1525709f78ef7184995c120f92fa2a01e7217658385c53f1eac9799150"
+      },
+      {
+        "seq": 3,
+        "type": "workflow.acknowledged",
+        "source_state": "succeeded",
+        "target_state": "acknowledged",
+        "attempt": 1,
+        "subject_hash": "82dc2ea5acc6758f31976aeaf79ab87014cfc915fbb41b71cc2420123c5e8b35",
+        "previous_digest": "304d8a1525709f78ef7184995c120f92fa2a01e7217658385c53f1eac9799150",
+        "digest": "be5ae8e6f5a72d046a61150101093ebb31dffaed339e3f3b1a824489b7ab3d16"
+      }
+    ],
+    "allowed_transitions": {
+      "prepared": [
+        "running",
+        "held"
+      ],
+      "running": [
+        "succeeded",
+        "failed",
+        "held"
+      ],
+      "failed": [
+        "running",
+        "rolled_back",
+        "held"
+      ],
+      "succeeded": [
+        "acknowledged",
+        "rolled_back"
+      ],
+      "acknowledged": [],
+      "held": [
+        "running",
+        "rolled_back"
+      ],
+      "rolled_back": []
+    },
+    "max_attempts": 3,
+    "submissions": [
+      {
+        "request_id": "REQ-15",
+        "payload_hash": "a788d17b09f78160281f724d6e2cbf3857d2b57cf9d1a556e7e55dd060c40f67",
+        "state": "acknowledged"
+      }
+    ],
+    "requested_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "allowed_capabilities": [
+      "read_owner",
+      "write_owner",
+      "send_native"
+    ],
+    "authority_required": [
+      "owner_scope",
+      "exact_target",
+      "competent_review"
+    ],
+    "authority_present": [
+      "owner_scope",
+      "exact_target"
+    ],
+    "hook_sequence": [
+      "SessionStart",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "claims": [
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-15",
+        "exclusive_action": "none"
+      },
+      {
+        "path": "docs/liora-venn/v705-v3-r2/fixture-15/report",
+        "exclusive_action": "none"
+      }
+    ],
+    "artifact_usage": {
+      "files": 1415,
+      "max_files": 2000,
+      "words": 30000,
+      "max_words": 100000
+    },
+    "public_record": {
+      "privacy_class": "sanitized_public",
+      "subject": "LEW-15",
+      "private_identifier_present": false,
+      "secret_material_present": false,
+      "participant_record_present": false
+    },
+    "external_observations": [],
+    "authority_actions": [],
+    "terminal_state": "acknowledged",
+    "fixture_sha256": "1c5112ce73eb33ba74b1e837592f345de2da5eac2b3a8e4a6dff5b6c9eccd1eb"
+  }
+]
