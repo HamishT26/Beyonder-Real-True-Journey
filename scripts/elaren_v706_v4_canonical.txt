@@ -1,0 +1,137 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const vm = require("vm");
+
+const ROOT = process.cwd();
+const PHASE = "v706-v4";
+const OWNER = "Elaren Kestrel";
+const BRANCH = "codex/GHC-Family/elaren-kestrel-main-2";
+const OWNER_BASE = "bd2b1832d4dda9039d5beac971318404343d8932";
+const PLANNING = "f49549c3031524f2bf40fd29f1a9596ef2a6b703";
+const X1 = "2f062beb8e9bed071dac09e0da00d65be3510879";
+const X2 = "f10dd8ca84bd222f874ef2df11e0aa6ee39ed2b4";
+const SOURCE = "6b7189a71c0f2c8616d6a3f713ac31de25128df8";
+const outPath = process.argv[2];
+if (!outPath) throw new Error("usage: node canonical.txt <external-receipt-path>");
+
+function sha(value) { return crypto.createHash("sha256").update(value).digest("hex"); }
+function git(args, buffer = false) { return cp.execFileSync("git", args, { cwd: ROOT, encoding: buffer ? null : "utf8", maxBuffer: 256 * 1024 * 1024 }); }
+function readJson(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8")); }
+function blob(commit, rel) { return git(["show", commit + ":" + rel], true); }
+function verifyManifest(commit, rel) {
+  const manifest = JSON.parse(blob(commit, rel).toString("utf8"));
+  const errors = [];
+  for (const entry of manifest.entries) {
+    const data = blob(commit, entry.path);
+    if (data.length !== entry.bytes || sha(data) !== entry.sha256) errors.push(entry.path);
+  }
+  return { entries: manifest.entries.length, errors };
+}
+function check(name, passed, detail) { return { name, passed: Boolean(passed), detail }; }
+
+const head = git(["rev-parse", "HEAD"]).trim();
+const upstream = git(["rev-parse", "@{u}"]).trim();
+const tracking = git(["rev-parse", "refs/remotes/origin/" + BRANCH]).trim();
+const liveLine = git(["ls-remote", "origin", "refs/heads/" + BRANCH]).trim();
+const live = liveLine.split(/\s+/)[0];
+const status = git(["status", "--porcelain=v1"]).trim();
+const divergence = git(["rev-list", "--left-right", "--count", "HEAD...@{u}"]).trim().split(/\s+/).map(Number);
+const parent = git(["rev-parse", "HEAD^"]).trim();
+const phasePath = path.join(ROOT, "docs", "elaren-kestrel", PHASE);
+const allPhaseFiles = [];
+function walk(dir) { for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const abs = path.join(dir, entry.name); if (entry.isDirectory()) walk(abs); else allPhaseFiles.push(abs); } }
+walk(phasePath);
+const jsonFiles = allPhaseFiles.filter(p => p.endsWith(".json"));
+const txtFiles = allPhaseFiles.filter(p => p.endsWith(".txt"));
+const markdownFiles = allPhaseFiles.filter(p => p.endsWith(".md"));
+const htmlFiles = allPhaseFiles.filter(p => p.endsWith(".html"));
+const scriptFiles = fs.readdirSync(path.join(ROOT, "scripts")).filter(n => n.startsWith("elaren_v706_v4_") && n.endsWith(".txt")).map(n => path.join(ROOT, "scripts", n));
+const jsonErrors = [];
+for (const p of jsonFiles) { try { JSON.parse(fs.readFileSync(p, "utf8")); } catch (error) { jsonErrors.push(path.relative(ROOT, p)); } }
+const syntaxErrors = [];
+for (const p of [...txtFiles, ...scriptFiles]) { try { new vm.Script(fs.readFileSync(p, "utf8"), { filename: path.relative(ROOT, p) }); } catch (error) { syntaxErrors.push(path.relative(ROOT, p)); } }
+const forbidden = [/\b[A-Za-z]:\\[^"'\s]/g, /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/ig, /\b(?:ghp_|github_pat_|sk-)[A-Za-z0-9_-]{12,}\b/g, /Bearer\s+[A-Za-z0-9._-]{12,}/ig];
+const privacyCandidates = [];
+for (const p of [...allPhaseFiles, ...scriptFiles]) {
+  const text = fs.readFileSync(p, "utf8");
+  for (const pattern of forbidden) { pattern.lastIndex = 0; if (pattern.test(text)) privacyCandidates.push(path.relative(ROOT, p)); }
+}
+const wordRows = [...allPhaseFiles, ...scriptFiles].map(p => ({ path: path.relative(ROOT, p), words: (fs.readFileSync(p, "utf8").match(/\S+/g) || []).length }));
+const maxWord = wordRows.sort((a, b) => b.words - a.words)[0];
+const treeList = git(["ls-tree", "-r", "--name-only", "HEAD"]).trim();
+const treeFiles = treeList ? treeList.split(/\r?\n/).length : 0;
+const phaseFiles = allPhaseFiles.length;
+const planningManifest = verifyManifest(PLANNING, "docs/elaren-kestrel/" + PHASE + "/planning/manifest.json");
+const x1Manifest = verifyManifest(X1, "docs/elaren-kestrel/" + PHASE + "/x1/manifest.json");
+const x2Manifest = verifyManifest(X2, "docs/elaren-kestrel/" + PHASE + "/x2/manifest.json");
+const finalManifest = verifyManifest(head, "docs/elaren-kestrel/" + PHASE + "/final/manifest.json");
+const seal = readJson("docs/elaren-kestrel/" + PHASE + "/final/content-seal.json");
+const sealErrors = [];
+for (const entry of seal.entries) { const data = blob(head, entry.path); if (data.length !== entry.bytes || sha(data) !== entry.sha256) sealErrors.push(entry.path); }
+const accounting = readJson("docs/elaren-kestrel/" + PHASE + "/final/accounting.json");
+const methodFlow = readJson("docs/elaren-kestrel/" + PHASE + "/final/method-flow-final.json");
+const baton = fs.readFileSync(path.join(phasePath, "final", "baton.md"), "utf8");
+const batonWords = (baton.match(/\S+/g) || []).length;
+const checks = [
+  check("exact_head_present", /^[0-9a-f]{40}$/.test(head), head),
+  check("final_parent_x2", parent === X2, parent),
+  check("x2_parent_x1", git(["rev-parse", X2 + "^"]).trim() === X1, X1),
+  check("x1_parent_planning", git(["rev-parse", X1 + "^"]).trim() === PLANNING, PLANNING),
+  check("planning_parent_owner_base", git(["rev-parse", PLANNING + "^"]).trim() === OWNER_BASE, OWNER_BASE),
+  check("four_phase_commits", Number(git(["rev-list", "--count", OWNER_BASE + ".." + head]).trim()) === 4, "4"),
+  check("zero_phase_merges", Number(git(["rev-list", "--merges", "--count", OWNER_BASE + ".." + head]).trim()) === 0, "0"),
+  check("clean_worktree", status === "", status),
+  check("zero_divergence", divergence[0] === 0 && divergence[1] === 0, divergence.join("/")),
+  check("local_equals_upstream", head === upstream, upstream),
+  check("local_equals_tracking", head === tracking, tracking),
+  check("local_equals_live", head === live, live),
+  check("json_parses", jsonErrors.length === 0, String(jsonFiles.length)),
+  check("txt_syntax", syntaxErrors.length === 0, String(txtFiles.length + scriptFiles.length)),
+  check("markdown_present", markdownFiles.length > 0, String(markdownFiles.length)),
+  check("html_present", htmlFiles.length > 0, String(htmlFiles.length)),
+  check("privacy_candidates_zero", privacyCandidates.length === 0, String(privacyCandidates.length)),
+  check("tree_file_ceiling", treeFiles < 2000, String(treeFiles)),
+  check("phase_file_ceiling", phaseFiles < 2000, String(phaseFiles)),
+  check("word_ceiling", maxWord.words <= 100000, maxWord.path + ":" + maxWord.words),
+  check("baton_minimum", batonWords >= 2000, String(batonWords)),
+  check("baton_maximum", batonWords <= 100000, String(batonWords)),
+  check("baton_literal_eof", baton.trim().endsWith("LITERAL_EOF_ELAREN_V706_V4"), "literal eof"),
+  check("planning_manifest", planningManifest.errors.length === 0, String(planningManifest.entries)),
+  check("x1_manifest", x1Manifest.errors.length === 0, String(x1Manifest.entries)),
+  check("x2_manifest", x2Manifest.errors.length === 0, String(x2Manifest.entries)),
+  check("final_manifest", finalManifest.errors.length === 0, String(finalManifest.entries)),
+  check("content_seal", sealErrors.length === 0, String(seal.entries.length)),
+  check("outcomes_exact", accounting.core_outcomes.completed === 255 && accounting.core_outcomes.represented === 15 && accounting.core_outcomes.open_gap === 15 && accounting.core_outcomes.exact_gate === 15, JSON.stringify(accounting.core_outcomes)),
+  check("held_unexecuted", accounting.held_packets.executed === 0, "0"),
+  check("method_count_exact", methodFlow.owner_counts.methods === accounting.owner_delta.methods, String(methodFlow.owner_counts.methods)),
+  check("witness_count_exact", methodFlow.owner_counts.witnesses === accounting.owner_delta.witnesses, String(methodFlow.owner_counts.witnesses)),
+  check("negative_count_exact", methodFlow.owner_counts.negatives === accounting.owner_delta.negatives, String(methodFlow.owner_counts.negatives)),
+  check("source_not_parent", SOURCE !== OWNER_BASE, "content provenance only"),
+  check("route_prepared_not_sent", readJson("docs/elaren-kestrel/" + PHASE + "/final/route-candidate.json").state === "PREPARED_NOT_SENT", "PREPARED_NOT_SENT"),
+  check("terminal_verdict", readJson("docs/elaren-kestrel/" + PHASE + "/final/phase-truth.json").terminal_verdict === "NOT_READY_FOR_STAGE_20", "NOT_READY_FOR_STAGE_20")
+];
+const failed = checks.filter(c => !c.passed);
+const payloadBase = {
+  schema: "ghc.family.exact-final-owner-canonical.payload.v19", owner: OWNER, phase: PHASE,
+  status: failed.length ? "INVALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL" : "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+  exact_final: head, content_source: SOURCE,
+  git_parentage: { owner_base: OWNER_BASE, planning: PLANNING, x1: X1, x2: X2, final: head },
+  branch: BRANCH, passed: checks.length - failed.length, failed: failed.length,
+  owner_files: phaseFiles, whole_tree_files: treeFiles, strict_json: jsonFiles.length,
+  txt_syntax: txtFiles.length + scriptFiles.length,
+  bindings: planningManifest.entries + x1Manifest.entries + x2Manifest.entries + finalManifest.entries + seal.entries.length,
+  max_document_words: maxWord.words, baton_words: batonWords, privacy_confirmed_hits: privacyCandidates.length,
+  owner_delta: accounting.owner_delta, domain_execution: false, source_replay: false, full_repository_suite: false,
+  boundary: "Same-owner metadata only; no independent reproduction, empirical, production, identity, legal, professional, cultural, Maori authority, consciousness, personhood or Stage 20 claim.",
+  invocations: 1, successes: failed.length ? 0 : 1, replays: 0, checks
+};
+const payloadSha = sha(Buffer.from(JSON.stringify(payloadBase), "utf8"));
+const payload = { ...payloadBase, payload_sha256: payloadSha };
+fs.mkdirSync(path.dirname(outPath), { recursive: true });
+fs.writeFileSync(outPath, JSON.stringify(payload, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ status: payload.status, passed: payload.passed, failed: payload.failed, exact_final: head, payload_sha256: payloadSha, receipt_path_written: true }) + "\n");
+process.exitCode = failed.length ? 2 : 0;

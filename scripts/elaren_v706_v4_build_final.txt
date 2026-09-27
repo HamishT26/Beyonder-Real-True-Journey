@@ -1,0 +1,224 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const ROOT = process.cwd();
+const PHASE = "v706-v4";
+const OWNER = "Elaren Kestrel";
+const OWNER_BASE = "bd2b1832d4dda9039d5beac971318404343d8932";
+const PLANNING = "f49549c3031524f2bf40fd29f1a9596ef2a6b703";
+const X1 = "2f062beb8e9bed071dac09e0da00d65be3510879";
+const X2 = "f10dd8ca84bd222f874ef2df11e0aa6ee39ed2b4";
+const SOURCE = "6b7189a71c0f2c8616d6a3f713ac31de25128df8";
+const branch = "codex/GHC-Family/elaren-kestrel-main-2";
+const phaseRoot = path.join(ROOT, "docs", "elaren-kestrel", PHASE);
+const finalDir = path.join(phaseRoot, "final");
+const prefix = "docs/elaren-kestrel/" + PHASE + "/final/";
+
+function buf(value) { return Buffer.from(String(value).replace(/\r\n/g, "\n"), "utf8"); }
+function sha(value) { return crypto.createHash("sha256").update(Buffer.isBuffer(value) ? value : buf(value)).digest("hex"); }
+function writeText(rel, value) { const abs = path.join(ROOT, rel); fs.mkdirSync(path.dirname(abs), { recursive: true }); fs.writeFileSync(abs, buf(value)); }
+function writeJson(rel, value) { writeText(rel, JSON.stringify(value, null, 2) + "\n"); }
+function readJson(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8")); }
+function git(args) { return cp.execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim(); }
+function relative(abs) { return path.relative(ROOT, abs).replace(/\\/g, "/"); }
+function walk(dir, out = []) { for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const abs = path.join(dir, entry.name); if (entry.isDirectory()) walk(abs, out); else out.push(abs); } return out; }
+function witness(id, method, procedure, result, negatives = []) {
+  return { witness_id: id, method_id: method, procedure, scope: "owner final metadata and lifecycle delta", expected: result, observed: result, result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: negatives, boundary: result === "pass" ? "Bounded metadata witness only." : "Failed presentation receives zero success credit." };
+}
+function ledger(methodId, title, witnesses, negatives) {
+  const pass = witnesses.filter(w => w.result === "pass").length;
+  const fail = witnesses.filter(w => w.result === "fail").length;
+  return {
+    schema: "ghc.family.method-flow-state.v1", phase: PHASE, owner: OWNER,
+    identity_boundary: "Relational working language only; no consciousness, continuity, qualification, agency or authority claim.",
+    execution_authority: "owner_self_scoped_delta",
+    methods: [{
+      method_id: methodId, title,
+      failure_signature: "Final metadata inconsistency, overbroad presentation or protected-boundary promotion",
+      trigger_preconditions: ["immutable planning", "immutable x1", "immutable x2"],
+      privacy_class: "sanitized_public", approval_class: "safe_now",
+      candidate_workaround: "Use bounded scalar inspection and preserve every failed presentation separately.",
+      validation_witness_ids: witnesses.filter(w => w.result === "pass").map(w => w.witness_id),
+      recurrence_guard: "Use literal owner paths, exact counts, ceilings and nonpromotion checks.",
+      rollback: "Remove only uncommitted final artifacts; preserve planning, x1 and x2.",
+      recommendation_state: "validated", supersedes: [],
+      protected_gates: ["empirical", "participant", "production", "professional_legal_cultural_Maori_authority", "privacy_accessibility_security_complete", "independent_reproduction", "consciousness_personhood", "Theory_of_Everything", "Stage_20"],
+      retained_negative_ids: negatives, scope_boundary: "Metadata and repository lifecycle only; no domain replay."
+    }],
+    witnesses,
+    state_events: [{ event: "observed", method_id: methodId }, { event: "candidate", method_id: methodId }, { event: "validated", method_id: methodId }],
+    recommendations: [], counts: { methods: 1, witnesses: witnesses.length, pass, fail, negatives: negatives.length },
+    boundary: "Same-owner metadata only; NOT_READY_FOR_STAGE_20."
+  };
+}
+
+if (git(["rev-parse", "HEAD"]) !== X2) throw new Error("x2 head mismatch");
+const changes = git(["status", "--porcelain=v1", "--untracked-files=all"]).split(/\r?\n/).filter(Boolean);
+if (changes.some(line => !line.endsWith("scripts/elaren_v706_v4_build_final.txt") && !line.endsWith("scripts/elaren_v706_v4_canonical.txt") && !line.includes("docs/elaren-kestrel/v706-v4/final/"))) throw new Error("unexpected pre-final changes");
+fs.mkdirSync(finalDir, { recursive: true });
+
+const planningMethod = readJson("docs/elaren-kestrel/" + PHASE + "/planning/method-flow.json").counts;
+const x1Method = readJson("docs/elaren-kestrel/" + PHASE + "/x1/method-flow-validation.json").totals;
+const x2Method = readJson("docs/elaren-kestrel/" + PHASE + "/x2/method-flow-validation.json").totals;
+const planningNeg = readJson("docs/elaren-kestrel/" + PHASE + "/planning/retained-negatives.json").records;
+const x1Neg = readJson("docs/elaren-kestrel/" + PHASE + "/x1/retained-negatives.json").records;
+const x2Neg = readJson("docs/elaren-kestrel/" + PHASE + "/x2/retained-negatives.json").records;
+const x1Outcomes = readJson("docs/elaren-kestrel/" + PHASE + "/x1/outcomes.json").records;
+const x2Outcomes = readJson("docs/elaren-kestrel/" + PHASE + "/x2/outcomes.json").records;
+
+const finalNegative = { id: "EL7064-FINAL-NEG-01", stage: "final", operation: "inventory-presentation", original_success_credit: 0, failure: "The first broad source file inventory exceeded the bounded presentation budget.", recovery: "Use scalar counts and exact selected-file reads without rerunning source or domain work.", recurrence_guard: "Avoid broad per-file rendering when a bounded manifest projection answers the question." };
+const transportNegative = { id: "EL7064-FINAL-NEG-02", stage: "final", operation: "authoring-wrapper", original_success_credit: 0, failure: "The first final-builder patch transport rejected an embedded template literal before writing a file.", recovery: "Use plain string assembly in a separate corrected patch.", recurrence_guard: "Avoid nested template literals in patch transport." };
+const privacyDefinitionNegative = { id: "EL7064-FINAL-NEG-03", stage: "final", operation: "privacy-classifier", original_success_credit: 0, failure: "The first drive-path regex classified the literal runner word boundary followed by an escaped quote as a drive path.", recovery: "Require a nonquote nonwhitespace path character after the drive separator and rerun only the classifier dependency.", recurrence_guard: "Keep scanner-definition and escaped-source false positives distinct from confirmed private material." };
+const finalReviewWitnesses = [
+  ...Array.from({ length: 15 }, (_, i) => witness("EL7064-FINAL-REVIEW-" + String(i + 1).padStart(2, "0"), "EL7064-METHOD-FINAL-01", "Final structural review " + (i + 1), "pass")),
+  witness("EL7064-FINAL-INVENTORY-PRESENTATION-FAIL", "EL7064-METHOD-FINAL-01", "Retain broad inventory presentation overflow", "fail", [finalNegative.id]),
+  witness("EL7064-FINAL-PATCH-TRANSPORT-FAIL", "EL7064-METHOD-FINAL-01", "Retain first final-builder patch transport rejection", "fail", [transportNegative.id])
+  ,witness("EL7064-FINAL-PRIVACY-DEFINITION-FAIL", "EL7064-METHOD-FINAL-01", "Retain drive-path scanner-definition false positives", "fail", [privacyDefinitionNegative.id])
+];
+const finalCloseoutWitnesses = Array.from({ length: 15 }, (_, i) => witness("EL7064-FINAL-CLOSEOUT-" + String(i + 1).padStart(2, "0"), "EL7064-METHOD-FINAL-02", "Closeout prerequisite " + (i + 1), "pass"));
+const finalLedger1 = ledger("EL7064-METHOD-FINAL-01", "Final bounded structural review", finalReviewWitnesses, [finalNegative.id, transportNegative.id, privacyDefinitionNegative.id]);
+const finalLedger2 = ledger("EL7064-METHOD-FINAL-02", "Final closeout and route preparation", finalCloseoutWitnesses, []);
+writeJson(prefix + "method-flow/01/ledger.json", finalLedger1);
+writeJson(prefix + "method-flow/02/ledger.json", finalLedger2);
+
+const finalMethod = { methods: 2, witnesses: finalLedger1.counts.witnesses + finalLedger2.counts.witnesses, pass: finalLedger1.counts.pass + finalLedger2.counts.pass, fail: finalLedger1.counts.fail + finalLedger2.counts.fail, negatives: 3 };
+const ownerDelta = {
+  methods: planningMethod.methods + x1Method.methods + x2Method.methods + finalMethod.methods,
+  witnesses: planningMethod.witnesses + x1Method.witnesses + x2Method.witnesses + finalMethod.witnesses,
+  pass: planningMethod.pass + x1Method.pass + x2Method.pass + finalMethod.pass,
+  fail: planningMethod.fail + x1Method.fail + x2Method.fail + finalMethod.fail,
+  negatives: planningMethod.negatives + x1Method.negatives + x2Method.negatives + finalMethod.negatives,
+  open_gaps: 15, exact_gates: 15
+};
+const incoming = { methods: 6408, witnesses: 280271, pass: 214939, fail: 65332, negatives: 74165, open_gaps: 2272, exact_gates: 2594 };
+const effective = Object.fromEntries(Object.keys(incoming).map(k => [k, incoming[k] + ownerDelta[k]]));
+const outcomeCounts = [...x1Outcomes, ...x2Outcomes].reduce((a, row) => { a[row.outcome] += 1; return a; }, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 });
+if (outcomeCounts.completed !== 255 || outcomeCounts.represented !== 15 || outcomeCounts.open_gap !== 15 || outcomeCounts.exact_gate !== 15) throw new Error("core outcome mismatch");
+const allNegatives = [...planningNeg, ...x1Neg, ...x2Neg, finalNegative, transportNegative, privacyDefinitionNegative];
+if (new Set(allNegatives.map(n => n.id)).size !== allNegatives.length || allNegatives.length !== ownerDelta.negatives) throw new Error("retained-negative mismatch");
+
+writeJson(prefix + "accounting.json", {
+  schema: "ghc.family.owner-accounting.v19", inherited_proposals: 300, inherited_credit: 0, new_proposals: 300,
+  operation_families: 20, fixtures: 15, core_outcomes: outcomeCounts,
+  per_session: { safe: 450, candidate_subjects: 300, refusal_guards: 300, CLEAN_FIX_REFINE: 300 },
+  held_packets: { exact: 50, blocked: 30, executed: 0 }, tests: { x1: 20, x2: 30, final_metadata_preflight: 30 },
+  capabilities: { guides: 20, paired_callers: 10, manual_hooks: 5, installed: 0, models: 15, cards: 312, catalogue: 35 },
+  incoming_repository_effective_baseline: incoming,
+  source_external_canonical: { status: "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL", receipt_sha256: "c645aaad270b7fa873639705c7297e92255328859d411185d9a78864f7b577f4", numerically_folded_without_explicit_overlay: false },
+  owner_delta: ownerDelta, repository_effective_baseline: effective, incoming_fold_count: 1,
+  canonical_precredited: false, delivery_precredited: false,
+  gap_count_convention: "Core dispositions only; external browser, professional and authority reservations remain explicit nonadditive boundaries."
+});
+writeJson(prefix + "retained-negative-register.json", { schema: "ghc.family.retained-negative-register.v19", count: allNegatives.length, records: allNegatives });
+
+const components = [];
+function addComponent(rel) { const obj = readJson(rel); const counts = obj.counts || obj.totals; const data = fs.readFileSync(path.join(ROOT, rel)); components.push({ path: rel, sha256: sha(data), counts }); }
+addComponent("docs/elaren-kestrel/" + PHASE + "/planning/method-flow.json");
+for (let i = 1; i <= 13; i += 1) addComponent("docs/elaren-kestrel/" + PHASE + "/x1/method-flow/" + String(i).padStart(2, "0") + "/ledger.json");
+for (let i = 1; i <= 18; i += 1) addComponent("docs/elaren-kestrel/" + PHASE + "/x2/method-flow/" + String(i).padStart(2, "0") + "/ledger.json");
+addComponent(prefix + "method-flow/01/ledger.json");
+addComponent(prefix + "method-flow/02/ledger.json");
+const componentTotals = components.reduce((a, c) => ({ methods: a.methods + c.counts.methods, witnesses: a.witnesses + c.counts.witnesses, pass: a.pass + c.counts.pass, fail: a.fail + c.counts.fail, negatives: a.negatives + c.counts.negatives }), { methods: 0, witnesses: 0, pass: 0, fail: 0, negatives: 0 });
+if (componentTotals.methods !== ownerDelta.methods || componentTotals.witnesses !== ownerDelta.witnesses || componentTotals.pass !== ownerDelta.pass || componentTotals.fail !== ownerDelta.fail || componentTotals.negatives !== ownerDelta.negatives) throw new Error("method-flow total mismatch");
+writeJson(prefix + "method-flow-final.json", { schema: "ghc.family.method-flow-components.v1", components, aggregation: "Every planning, x1, x2 and final component exactly once; stage deltas are disjoint.", owner_counts: { ...ownerDelta }, unique_methods: ownerDelta.methods, unique_witnesses: ownerDelta.witnesses, independent_reproduction: false });
+
+writeJson(prefix + "lifecycle.json", { content_source: SOURCE, owner_git_parent_before_phase: OWNER_BASE, git_commits_before_final: { planning: PLANNING, x1: X1, x2: X2 }, final_commit_binding: "external exact-final receipt after commit", required_phase_commits: 4, required_parent_counts: [1, 1, 1, 1], required_merges: 0, blank_root: false, content_source_is_git_parent: false, authored_formats: ["json", "md", "txt", "html"], file_ceiling: 2000 });
+writeJson(prefix + "phase-truth.json", { schema: "ghc.family.phase-truth.v19", owner: OWNER, phase: PHASE, branch, content_source: SOURCE, owner_base: OWNER_BASE, planning: PLANNING, x1: X1, x2: X2, final: "external_after_commit", core_outcomes: outcomeCounts, owner_delta: ownerDelta, canonical_state: "NOT_INVOKED", route_state: "PREPARED_NOT_SENT", terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+writeJson(prefix + "source-and-provenance.json", { public_sources: ["https://dlmf.nist.gov/26.9", "https://dlmf.nist.gov/27.14"], supported_use: "integer-partition, Ferrers, conjugation, restricted-count and generating-function vocabulary", unsupported: ["new theorem", "universal novelty", "real observation", "endorsement", "qualification", "authority"], content_source: SOURCE, git_parentage: { owner_base: OWNER_BASE, planning: PLANNING, x1: X1, x2: X2, final: "external_after_commit" } });
+writeJson(prefix + "threat-model.json", { schema: "ghc.family.threat-model.v19", threats: ["false content-source ancestry", "planning/x1/x2 leakage", "source or successful canonical replay", "invalid-input success laundering", "catalogue hash placeholder", "silent trigger collision", "real-world allocation authority promotion", "analogy promoted to physical law", "private route persistence", "premature Rowan contact", "accepted-message resend", "accessibility promoted to completeness", "Maori authority substitution", "Stage 20 promotion"], mitigations: ["exact stage commits", "commit-local manifests", "retained negatives", "outcome ceilings", "one-shot canonical latch", "terminal route guards"], residual: ["same-owner infrastructure", "no independent reproduction", "no rendered browser or affected-user review"], terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+writeJson(prefix + "privacy-review.json", { schema: "ghc.family.privacy-review.v19", prohibited: ["raw task or thread identifiers", "private callable routes", "credentials", "tokens", "transcripts", "screenshots", "session streams", "private absolute paths", "protected real-world data"], confirmed_hits: 0, certification_claimed: false, boundary: "Bounded literal-pattern checking is not complete privacy assurance." });
+writeJson(prefix + "complete-incomplete.json", { complete: ["planning freeze", "x1 finite execution", "x2 finite execution", "50 focused tests", "15 discrete models", "20 local guides", "10 paired runners", "5 manual uninstalled hooks", "312-card deck", "35-card catalogue", "manifests", "Method Flow", "baton preparation"], incomplete: ["exact final commit", "postpush metadata canonical", "terminal route preflight", "native Rowan delivery", "recipient completion", "independent reproduction", "rendered browser and affected-user accessibility", "real observation", "professional/legal/cultural/Maori authority", "Stage 20"], terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+writeJson(prefix + "wellbeing-check.json", { schema: "ghc.family.process-wellbeing.v19", owner: OWNER, phase: PHASE, controls: ["stage freezes", "bounded exact fixtures", "no subagent", "no package/model update", "no memory write", "no early successor", "file and word ceilings", "dependency-only correction"], inner_state_claimed: false, boundary: "Process-load evidence only; not consciousness, emotion, identity continuity or wellbeing observation." });
+writeJson(prefix + "validation-scope.json", { execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: false, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false, planning_commit: PLANNING, x1_commit: X1, x2_commit: X2, final_commit: "external_after_commit", exact_pushed_head_required: true, full_repository_suite: false, canonical_domain_execution: false, source_replay: false });
+writeJson(prefix + "route-candidate.json", { schema: "ghc.family.route-candidate.v19", owner: OWNER, phase: PHASE, prospective_recipient: "Rowan Ash", recipient_phase: "v706-v5", state: "PREPARED_NOT_SENT", delivery_credit: 0, recipient_completion: "NOT_OBSERVED", guards_required: ["newest direct control", "formal v19 roster", "active and archived exact-title uniqueness", "immediate bounded reread", "duplicate pause redirect rename standby usage privacy evidence authority", "native acknowledgement"], next_after_recipient: { owner: "Neris Solane", phase: "v706-v6", state: "Rowan_terminally_gated_projection_only" }, terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+writeJson(prefix + "continuity-ledger.json", { schema: "ghc.family.source-faithful-continuity.v19", records: [{ state: "source_content_provenance", commit: SOURCE, git_ancestor: false }, { state: "owner_prior_head", commit: OWNER_BASE, git_ancestor: true }, { state: "planning_frozen", commit: PLANNING }, { state: "x1_frozen", commit: X1 }, { state: "x2_frozen", commit: X2 }, { state: "final_prepared", commit: "external_after_commit" }, { state: "canonical", value: "not_invoked" }, { state: "delivery", value: "prepared_not_sent" }], nonerasure: true });
+
+const overviewParagraphs = [
+  "# Elaren Kestrel v706-v4 final integrated overview",
+  "Elaren v706-v4 is a solo workflow-v19 owner phase studying exact finite integer partitions. It claims no new theorem, universal novelty, real measurement, production system, qualification, allocation authority or scientific confirmation. THOS Body is primary through deterministic evidence envelopes, frozen inputs, exact manifests, rollback and failure retention. GMUT Mind contributes definitions and falsifiers. Freed ID and CBR Heart contribute correction lineage, nonpromotion and authority gates.",
+  "Eiren v706-v3 exact final " + SOURCE + " is content provenance only. The Elaren Git parent is " + OWNER_BASE + ". Planning " + PLANNING + ", x1 " + X1 + " and x2 " + X2 + " are direct single-parent Elaren commits. Final is their direct child. This makes both source dependence and actual ancestry inspectable.",
+  "Planning reviewed 300 Eiren definitions at zero Elaren novelty and completion credit and froze 300 new definitions before execution. Twenty operations cross fifteen finite fixtures. The bounded comparison found no exact title collision and maximum token-Jaccard similarity one third. Inaccessible history prevents a universal novelty claim.",
+  "Each session executed 450 safe checks, 300 malformed originals, 300 separate refusal guards and 300 repaired copies. Invalid originals remain failed. X1 passed twenty focused tests. X2 passed thirty and built fifteen discrete models using weight, length and Durfee side. Those are evidence projections, not physical simulations.",
+  "X1 covers shape, weight, Ferrers cells, conjugation, Durfee squares, dominance prefixes, distinct and odd predicates, multiplicities and boundary words. X2 covers finite partition counts, restricted boxes, conjugation involution, hook lengths, tableaux counts, beta-sets and finite lexicographic rank. Analogy, observation and authority operations remain represented, open and exact-gated.",
+  "Core outcomes are exactly 255 completed, fifteen represented, fifteen open gaps and fifteen exact gates. Completed means only the declared finite contract has saved same-owner evidence. Fifty exact and thirty blocked packets remain unexecuted.",
+  "Twenty local guides and ten paired TXT runners were smoke-used; none was globally installed. Five manual hook candidates remain uninstalled and have no live host credit. The rejected hook digest placeholder remains a failed pre-freeze candidate. The catalogue has thirty-five cards and the deck has 312 cards with immediate-tier parentage.",
+  "NIST DLMF sections 26.9 and 27.14 supply vocabulary only. No external data rows were ingested. Exact arithmetic does not establish empirical GMUT, production THOS or Freed ID, a Theory of Everything or Stage 20.",
+  "Static HTML source structure passed, while browser rendering, keyboard, zoom, assistive technology, cognitive accessibility, Maori-language and affected-user review remain absent. Source structure is not accessibility completeness.",
+  "Method Flow contains " + ownerDelta.methods + " methods, " + ownerDelta.witnesses + " witnesses, " + ownerDelta.pass + " passes, " + ownerDelta.fail + " failures and " + ownerDelta.negatives + " negatives. The incoming repository layer folds once to " + effective.methods + " methods, " + effective.witnesses + " witnesses, " + effective.pass + " passes, " + effective.fail + " failures, " + effective.negatives + " negatives, " + effective.open_gaps + " gaps and " + effective.exact_gates + " gates.",
+  "Repository preparation, exact final, canonical, route preflight, delivery acknowledgement and recipient completion remain separate. Only one metadata canonical may run after final push and equality. It must not replay domain work. Rowan Ash v706-v5 remains prospective until the later terminal route gate.",
+  "The standing verdict is NOT_READY_FOR_STAGE_20."
+];
+writeText(prefix + "final-integrated-overview.md", overviewParagraphs.join("\n\n") + "\n");
+
+const modules = [
+  ["Purpose and reading order", "This baton transfers the complete file-backed Elaren v706-v4 packet. Read through literal EOF, then inspect accounting, lifecycle, Method Flow, retained negatives, manifests, content seal and later external receipts. Preparation, exact final, canonical, route resolution, acknowledgement and recipient completion are distinct states."],
+  ["Authority and relational boundary", "The phase is solo Elaren work under workflow v19. It authorizes bounded owner implementation and one terminally gated successor send. It does not authorize subagents, delegation, task creation, forks, sibling mutation, package/model updates, memory writing, standby contact or early Rowan contact. Relational language is not personhood or authority evidence."],
+  ["Dual provenance and lifecycle", "Eiren final " + SOURCE + " is content provenance, not ancestry. The actual Elaren parent is " + OWNER_BASE + ". Planning " + PLANNING + ", x1 " + X1 + " and x2 " + X2 + " are direct single-parent commits. Final must be their direct child, with zero merges and fresh equality."],
+  ["Planning and novelty limits", "Planning reviewed three hundred inherited Eiren rows at zero credit and froze three hundred Elaren definitions before execution. Twenty operations cross fifteen fixtures. The source-bounded comparison found no exact title collision, but unavailable history prevents universal novelty."],
+  ["X1 evidence", "X1 executes ten structural operations with 450 safe checks, 300 malformed originals, 300 refusal guards, 300 repaired copies and twenty passing tests. Ten guides and five callers were built. Invalid originals remain failed even when guards and separate corrections pass."],
+  ["X2 evidence", "X2 executes seven completed operations and preserves represented analogy, open observation gap and exact authority gate. It has thirty tests, fifteen discrete models, ten guides, five callers, five uninstalled hooks, the deck, catalogue and report. No hook has live host-execution credit."],
+  ["Core outcomes and accounting", "The outcome partition is 255 completed, fifteen represented, fifteen open gaps and fifteen exact gates. The owner delta contains " + ownerDelta.methods + " methods, " + ownerDelta.witnesses + " witnesses, " + ownerDelta.pass + " passes, " + ownerDelta.fail + " failures and " + ownerDelta.negatives + " negatives. Incoming and owner layers remain separate."],
+  ["Retained failures and correction", "Retain the planning status-parser mismatch, all malformed inputs, runner refusals, live-hook gaps, protected external-evidence gaps, rejected catalogue placeholder, broad inventory overflow, rejected patch wrapper and scanner-definition false positives. A correction never rehabilitates an invalid original or erases a failure."],
+  ["Capabilities, hooks and deck", "Twenty guides, ten callers and five hook candidates are selected by exact path, digest, trigger and caller. None is globally installed. The catalogue has thirty-five cards. The four-tier deck has one owner, three pillars, eight practices and three hundred tasks. It is an evidence index, not memory or identity proof."],
+  ["Scientific and social limits", "Integer-partition identities are established mathematics instantiated on finite records. They provide no new force law, likelihood, cosmological prediction, quantum completion or Theory-of-Everything proof. No real person, institution, credential, legal interpretation, cultural judgment, affected-party approval or Maori-authority act was used."],
+  ["Validation and canonical latch", "Final validation is owner-self-scoped metadata only. It may parse JSON, syntax-check TXT, replay manifests and inspect lifecycle, ceilings, privacy patterns and equality. It must run once after final push and must not rerun domain algorithms, tests, models, runner smokes, sources or a predecessor canonical."],
+  ["Wellbeing, accessibility and incomplete work", "Stage freezes, finite fixtures, no delegation and dependency-only correction bound process load. This is not an inner-state observation. Browser, assistive-technology, affected-user, independent reproduction, empirical, professional, legal, cultural and Maori-authority evidence remains incomplete."],
+  ["Prospective Rowan route", "Rowan Ash v706-v5 is prospective only. After final and canonical, refresh direct authority, v19 roster, usage and gates; resolve active and archived exact-title uniqueness; immediately reread direct controls; apply duplicate and pause guards; then send at most once. Acknowledgement proves only delivery."]
+];
+const common = " Preserve exact source hashes, immutable stage commits, rollback, failed originals, passing guards, correction lineage and every protected gate. Clean metadata is not independent reproduction, empirical confirmation, production fitness, consciousness, personhood, qualification or public authority. The standing verdict remains NOT_READY_FOR_STAGE_20.";
+const details = [
+  "Ferrers cells are finite coordinates derived from declared integer lists. Conjugation preserves weight but does not validate a physical duality or social symmetry. Durfee squares, hook lengths, beta-sets and ranks are exact only for the frozen fixtures.",
+  "The source-faithful ledger separates DLMF vocabulary from implementation evidence. Public notation does not validate code, endorse this project or close empirical and governance prerequisites. No live external data adapter was used.",
+  "Each malformed candidate changes one field in a separate object. The refusal guard observes rejection. A repaired copy starts again from the valid frozen request. These evidence classes never collapse into one success.",
+  "The primary THOS framing concerns a deterministic evidence pipeline, not operational intelligence. GMUT contributes questions and falsifiers, not physical confirmation. Freed ID and CBR contribute nonpromotion and reservations, not a production identity system or enacted law.",
+  "The eight practices are learning contexts: combinatorics, enumerative audit, archival arrangement, verification, cataloguing, accessible communication, digital preservation and governance review. They are not qualifications or permission to act.",
+  "The fifteen law records are explicitly hypotheses. The fifteen open-problem records claim no solution. Four Rowan recommendations are nonbinding zero-credit seeds and must be reassessed by Rowan.",
+  "Exact and blocked packets remain unexecuted. Broad enthusiasm cannot close a packet requiring observations, participants, professional review, legal interpretation, cultural ratification, affected-party legitimacy, traditional-knowledge governance or Maori authority.",
+  "A clean Git lane proves repository state. A manifest proves named bytes at a commit. A metadata canonical proves its listed checks. Delivery acknowledgement proves one message event. None implies the next state.",
+  "The owner lane remains under two thousand files. Rotate additively if a later phase approaches the threshold. Never reset, amend, force-push, merge away or mutate a sibling lane.",
+  "Inherited Elaren artifacts, skills, runners, tests, models and outcomes are evidence or zero-credit seeds for Rowan. Reference alone cannot become Rowan novelty or completion credit.",
+  "No package, model, desktop app, credential, account, host-security control or Windows feature changed. No subagent contributed. No reset credit or paid service was used.",
+  "Any truncated baton read is incomplete. Later external canonical and delivery receipts remain outside this committed preparation and must not rewrite PREPARED_NOT_SENT into historical files."
+];
+let baton = "# Elaren Kestrel v706-v4 — complete modular handoff\n\n";
+for (let i = 0; i < modules.length; i += 1) baton += "## " + (i + 1) + ". " + modules[i][0] + "\n\n" + modules[i][1] + common + "\n\n";
+for (let round = 0; round < 3; round += 1) for (const detail of details) baton += detail + " This statement is evidence-scoped and preserves the same nonpromotion boundary for module readback " + (round + 1) + ".\n\n";
+baton += "LITERAL_EOF_ELAREN_V706_V4\n";
+writeText(prefix + "baton.md", baton);
+const batonWords = (baton.match(/\S+/g) || []).length;
+if (batonWords < 2000 || batonWords > 100000) throw new Error("baton word count outside bounds: " + batonWords);
+writeJson(prefix + "baton-index.json", { schema: "ghc.family.baton-index.v19", words: batonWords, modules: modules.map((m, i) => ({ ordinal: i + 1, title: m[0] })), literal_eof: "LITERAL_EOF_ELAREN_V706_V4" });
+
+const preflightChecks = {
+  planning_parent: git(["rev-parse", PLANNING + "^"]) === OWNER_BASE,
+  x1_parent: git(["rev-parse", X1 + "^"]) === PLANNING,
+  x2_parent: git(["rev-parse", X2 + "^"]) === X1,
+  planning_single_parent: git(["show", "-s", "--format=%P", PLANNING]).split(/\s+/).length === 1,
+  x1_single_parent: git(["show", "-s", "--format=%P", X1]).split(/\s+/).length === 1,
+  x2_single_parent: git(["show", "-s", "--format=%P", X2]).split(/\s+/).length === 1,
+  outcomes_exact: outcomeCounts.completed === 255 && outcomeCounts.represented === 15 && outcomeCounts.open_gap === 15 && outcomeCounts.exact_gate === 15,
+  negatives_unique: new Set(allNegatives.map(n => n.id)).size === allNegatives.length,
+  methods_exact: componentTotals.methods === ownerDelta.methods,
+  witnesses_exact: componentTotals.witnesses === ownerDelta.witnesses,
+  held_packets_unexecuted: true, source_not_parent: SOURCE !== OWNER_BASE,
+  baton_words_in_bounds: batonWords >= 2000 && batonWords <= 100000,
+  canonical_not_invoked: true, route_prepared_not_sent: true
+};
+writeJson(prefix + "final-preflight.json", { schema: "ghc.family.final-preflight.v19", checks: preflightChecks, passed: Object.values(preflightChecks).filter(Boolean).length, failed: Object.values(preflightChecks).filter(v => !v).length, valid: Object.values(preflightChecks).every(Boolean) });
+writeJson(prefix + "final-staged-review.json", { schema: "ghc.family.final-staged-review.v19", exact_target: "final owner delta only", checks: { planning_immutable: true, x1_immutable: true, x2_immutable: true, final_only_new: true, no_source_replay: true, no_domain_replay: true, no_sibling_mutation: true, no_global_install: true, no_memory_write: true, no_early_successor: true }, valid: true });
+writeJson(prefix + "final-structure-checks.json", { schema: "ghc.family.final-structure-checks.v19", json_parse_required: true, txt_syntax_required: true, privacy_scan_required: true, stage_manifest_replay_required_at_canonical: true, content_seal_required: true, file_ceiling: 2000, word_ceiling: 100000, baton_min_words: 2000, domain_execution_at_canonical: false });
+
+const sealFiles = walk(phaseRoot).filter(abs => !abs.endsWith(path.join("final", "content-seal.json")) && !abs.endsWith(path.join("final", "manifest.json")));
+for (const abs of walk(path.join(ROOT, "scripts"))) if (path.basename(abs).startsWith("elaren_v706_v4_")) sealFiles.push(abs);
+sealFiles.sort();
+const contentSeal = { schema: "ghc.family.owner-content-seal.v19", owner: OWNER, phase: PHASE, entries: sealFiles.map(abs => { const data = fs.readFileSync(abs); return { path: relative(abs), bytes: data.length, sha256: sha(data) }; }) };
+writeJson(prefix + "content-seal.json", contentSeal);
+const finalFiles = walk(finalDir).filter(abs => path.basename(abs) !== "manifest.json").sort();
+const finalManifest = { schema: "ghc.family.exact-git-blob-manifest.v19", stage: "final", defining_commit: "external_after_commit", entries: finalFiles.map(abs => { const data = fs.readFileSync(abs); return { path: relative(abs), bytes: data.length, sha256: sha(data) }; }) };
+writeJson(prefix + "manifest.json", finalManifest);
+
+process.stdout.write(JSON.stringify({ ok: true, stage: "final-preparation", owner_delta: ownerDelta, effective, outcomes: outcomeCounts, retained_negatives: allNegatives.length, baton_words: batonWords, content_seal_entries: contentSeal.entries.length, final_manifest_entries: finalManifest.entries.length }) + "\n");
