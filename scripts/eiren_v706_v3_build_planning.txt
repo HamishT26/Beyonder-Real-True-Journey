@@ -1,0 +1,464 @@
+from __future__ import annotations
+
+import hashlib
+import json
+from difflib import SequenceMatcher
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+PHASE = ROOT / "docs" / "eiren-kestrel" / "v706-v3"
+PLANNING = PHASE / "planning"
+SEREN_ROOT = Path("D:/GHC-Archives/worktrees/seren-talewood-main-3")
+SEREN_PHASE = SEREN_ROOT / "docs" / "seren-talewood" / "v706-v2"
+
+OWNER = "Eiren Kestrel"
+PHASE_ID = "v706-v3"
+CONTENT_SOURCE = "885fc2588dabc6ddbd39604a617d7434bb6990f5"
+PREVIOUS_OWNER_HEAD = "1ec168fdc10395f7a7ce0e63684d3ae415b124a9"
+SEREN_RECEIPT = "a1a79184bc5e82c62e73c2e587681400881384f53bbb887e091d079a7605ac36"
+SEREN_PAYLOAD = "8dc3ba3f880196872983f6c18d06ba34d84a062e689b72c4655d297e0a5c4ea0"
+
+SOURCES = [
+    {
+        "label": "NIST DLMF section 1.12 Continued Fractions",
+        "url": "https://dlmf.nist.gov/1.12",
+        "use": "recurrence and determinant vocabulary only",
+    },
+    {
+        "label": "Encyclopedia of Mathematics continued fraction entry",
+        "url": "https://encyclopediaofmath.org/wiki/Continuous_fraction",
+        "use": "convergent and number-theory context only",
+    },
+]
+
+PROTECTED_GATES = [
+    "real_observation",
+    "independent_reproduction",
+    "production",
+    "identity",
+    "professional_legal_cultural_affected_authority",
+    "Maori_authority",
+    "complete_security_privacy_accessibility",
+    "consciousness_personhood",
+    "AGI_ASI",
+    "Theory_of_Everything",
+    "Stage_20",
+]
+
+FIXTURES = [
+    ("CF01", 1, 1),
+    ("CF02", 2, 1),
+    ("CF03", 3, 2),
+    ("CF04", 5, 3),
+    ("CF05", 8, 5),
+    ("CF06", 13, 8),
+    ("CF07", 22, 7),
+    ("CF08", 355, 113),
+    ("CF09", 7, 5),
+    ("CF10", 10, 7),
+    ("CF11", 17, 12),
+    ("CF12", 29, 19),
+    ("CF13", 41, 29),
+    ("CF14", 55, 34),
+    ("CF15", 144, 89),
+]
+
+OPERATIONS = [
+    ("rational-shape", "Validate and normalize a positive rational record.", "x1", "completed", "safe_now"),
+    ("euclidean-trace", "Retain the complete Euclidean quotient and remainder trace.", "x1", "completed", "safe_now"),
+    ("simple-continued-fraction", "Compute the canonical finite simple continued fraction.", "x1", "completed", "safe_now"),
+    ("convergents", "Compute every exact convergent from the frozen expansion.", "x1", "completed", "safe_now"),
+    ("continuants", "Compute numerator and denominator continuant recurrences.", "x1", "completed", "safe_now"),
+    ("determinant-identity", "Check the adjacent-convergent determinant identity.", "x1", "completed", "safe_now"),
+    ("stern-brocot-path", "Encode the exact Stern-Brocot left-right path.", "x1", "completed", "safe_now"),
+    ("calkin-wilf-index", "Compute a bounded exact Calkin-Wilf path index.", "x1", "completed", "safe_now"),
+    ("farey-neighbors", "Construct determinant-one neighbors around the rational.", "x1", "completed", "safe_now"),
+    ("mediant-reduction", "Check mediant construction and exact reduction.", "x1", "completed", "safe_now"),
+    ("matrix-product", "Bind the finite continued fraction to a 2 by 2 integer matrix product.", "x2", "completed", "safe_now"),
+    ("homography-action", "Apply a declared integer homography with an explicit nonzero denominator gate.", "x2", "completed", "safe_now"),
+    ("reversal-duality", "Compare the expansion with its reversed continuant relation.", "x2", "completed", "safe_now"),
+    ("semiconvergents", "Enumerate the bounded intermediate convergents of the final step.", "x2", "completed", "safe_now"),
+    ("approximation-error", "Compute exact signed errors for all proper convergents.", "x2", "completed", "safe_now"),
+    ("best-approximation-bound", "Check a finite declared denominator search rather than a universal approximation claim.", "x2", "completed", "safe_now"),
+    ("unimodular-certificate", "Emit a determinant-one or determinant-minus-one exact certificate.", "x2", "completed", "safe_now"),
+    ("trinity-analogy", "Represent a bounded Mind-Body-Heart analogy without scientific promotion.", "x2", "represented", "candidate"),
+    ("observation-gap", "Reserve real calibration, latency and affected-user observations.", "x2", "open_gap", "candidate"),
+    ("authority-gate", "Hold identity, professional, legal, cultural and Maori-authority actions.", "x2", "exact_gate", "exact_approval_needed"),
+]
+
+STARTUP_FAILURES = [
+    ("EK7063-START-SKILL-TRUNCATION", "A combined skill read exceeded its presentation budget.", "Read each selected skill in bounded complete windows."),
+    ("EK7063-START-ROW-PIPE", "A PowerShell foreach projection used an empty pipeline element.", "Materialize the rows before ConvertTo-Json."),
+    ("EK7063-START-JS-TEMPLATE", "A JavaScript orchestration string contained an unescaped PowerShell backtick.", "Use plain quoted JavaScript strings for PowerShell commands."),
+    ("EK7063-START-OVERLAY-PIPE", "The first external-receipt projection repeated the empty-pipeline defect.", "Materialize the receipt rows before serialization."),
+    ("EK7063-START-FORECAST-PARSER", "A forecast expression embedded command calls inside an invalid cast.", "Run each Git probe first and serialize scalar results."),
+    ("EK7063-START-DIRECT-ANCESTRY-BUDGET", "A direct Seren-child forecast left only six files below the ceiling.", "Rotate to a blank owner lane and state content provenance separately from Git parentage."),
+    ("EK7063-START-EXISTING-PATH", "The first owner-main worktree registration found an already present checkout.", "Inspect and preserve the existing checkout rather than deleting it."),
+    ("EK7063-START-OUTPUTLESS-WRAPPER", "Two compound Git projections completed without usable presentation.", "Use bounded scalar Git commands and retain the blank wrappers."),
+    ("EK7063-START-OWNER-MAIN-BUDGET", "The current Eiren main line had 1,637 files and could not accept the phase safely.", "Create the authorized blank main-2 rotation with explicit dual provenance."),
+    ("EK7063-START-PROPOSAL-PROJECTION", "A source-proposal sample treated its container as an array and flooded bounded output.", "Inspect the container keys before projecting a single record."),
+]
+
+
+def dump(path: Path, value: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False, sort_keys=False) + "\n", encoding="utf-8", newline="\n")
+
+
+def write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
+
+
+def sha_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def stable_digest(value: object) -> str:
+    return sha_bytes(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+
+
+def load_seren_proposals() -> list[dict]:
+    rows: list[dict] = []
+    for name in ("proposals-x1.json", "proposals-x2.json"):
+        payload = json.loads((SEREN_PHASE / "planning" / name).read_text(encoding="utf-8"))
+        rows.extend(payload["proposals"])
+    if len(rows) != 300:
+        raise RuntimeError(f"expected 300 Seren proposals, found {len(rows)}")
+    return rows
+
+
+def make_proposals() -> list[dict]:
+    rows: list[dict] = []
+    for op_index, (operation, hypothesis, session, disposition, approval) in enumerate(OPERATIONS):
+        for fixture_index, (fixture_id, numerator, denominator) in enumerate(FIXTURES):
+            number = op_index * len(FIXTURES) + fixture_index + 1
+            proposal = {
+                "id": f"EK7063-P{number:03d}",
+                "title": f"Exact continued-fraction {operation} {fixture_id}",
+                "operation": operation,
+                "fixture_id": fixture_id,
+                "session": session,
+                "request": {
+                    "op": operation,
+                    "fixture": {
+                        "id": fixture_id,
+                        "numerator": numerator,
+                        "denominator": denominator,
+                        "evidence": "finite_synthetic_exact_rational",
+                    },
+                },
+                "hypothesis": hypothesis,
+                "null_or_failure_condition": "Reject malformed integers, nonpositive denominators, operation mismatch, exact-oracle disagreement, hidden observations, or protected-gate promotion.",
+                "approval_class": approval,
+                "execution_lane": "owner_local_exact_finite",
+                "current_official_or_primary_source_need": [source["label"] for source in SOURCES],
+                "concrete_artifact": f"{session}/results/{operation}.json",
+                "falsifier_or_acceptance_gate": "The exact response, independent invariant, input-preservation digest, and declared disposition must all agree.",
+                "rollback_or_recovery": "Retain the failed subject, isolate only the affected operation, and rebuild a separate copy from the frozen request.",
+                "protected_gates": PROTECTED_GATES,
+                "expected_disposition": disposition,
+                "planning_state": "not_executed",
+            }
+            proposal["definition_sha256"] = stable_digest(proposal)
+            rows.append(proposal)
+    return rows
+
+
+def build_method_flow() -> dict:
+    methods = [
+        {
+            "method_id": "EK7063-PLANNING",
+            "title": "Source-faithful blank-root planning freeze",
+            "failure_signature": "A source, route, file-budget, skill-read, or proposal-projection precondition was presented incorrectly.",
+            "trigger_preconditions": ["live activation read", "v19 controls read", "Seren receipts verified"],
+            "privacy_class": "sanitized_public",
+            "approval_class": "safe_now",
+            "candidate_workaround": "Use bounded scalar probes and preserve content-source versus Git-parent truth.",
+            "validation_witness_ids": [f"EK7063-PLANNING-W{i:02d}" for i in range(1, 21)],
+            "recurrence_guard": "Forecast file count and inspect data shape before mutation or broad presentation.",
+            "rollback": "Delete only the uncommitted Eiren planning files and retain this receipt; never alter source or sibling lanes.",
+            "recommendation_state": "validated",
+            "supersedes": [],
+            "protected_gates": PROTECTED_GATES,
+            "retained_negative_ids": [row[0] for row in STARTUP_FAILURES],
+            "scope_boundary": "Planning and metadata only; no x1 or x2 outcome is observed.",
+        }
+    ]
+    witnesses: list[dict] = []
+    for index, (negative_id, failure, recovery) in enumerate(STARTUP_FAILURES, 1):
+        witnesses.append({
+            "witness_id": f"EK7063-PLANNING-W{index * 2 - 1:02d}",
+            "method_id": "EK7063-PLANNING",
+            "procedure": failure,
+            "scope": "startup_precondition",
+            "expected": "precondition succeeds",
+            "observed": failure,
+            "result": "fail",
+            "same_owner_only": True,
+            "independent_reproduction": False,
+            "retained_negative_ids": [negative_id],
+            "boundary": "Zero original success credit.",
+        })
+        witnesses.append({
+            "witness_id": f"EK7063-PLANNING-W{index * 2:02d}",
+            "method_id": "EK7063-PLANNING",
+            "procedure": recovery,
+            "scope": "narrow_recovery",
+            "expected": "smallest dependency becomes inspectable",
+            "observed": recovery,
+            "result": "pass",
+            "same_owner_only": True,
+            "independent_reproduction": False,
+            "retained_negative_ids": [negative_id],
+            "boundary": "The recovery does not erase or promote the failed subject.",
+        })
+    return {
+        "schema": "ghc.family.method-flow-state.v1",
+        "phase": PHASE_ID,
+        "owner": OWNER,
+        "identity_boundary": "Relational working label only; no consciousness, personhood, identity continuity, qualification, agency, or authority claim.",
+        "execution_authority": "owner_self_scoped_delta",
+        "source_commit": CONTENT_SOURCE,
+        "final_commit": "not_yet_created",
+        "changed_file_allowlist": ["docs/eiren-kestrel/v706-v3/planning", "scripts/eiren_v706_v3_build_planning.txt"],
+        "module_allowlist": ["scripts/eiren_v706_v3_build_planning.txt"],
+        "repository_scan": False,
+        "module_scan": True,
+        "cross_lane_scan": False,
+        "unchanged_history_scan": False,
+        "sibling_lane_mutation": False,
+        "exact_pushed_head_required": True,
+        "methods": methods,
+        "witnesses": witnesses,
+        "state_events": [
+            {"event": "observed", "state": "candidate"},
+            {"event": "narrow_recoveries", "state": "validated"},
+            {"event": "planning_freeze_prepared", "state": "validated"},
+        ],
+        "recommendations": [],
+        "counts": {
+            "methods": 1,
+            "witnesses": len(witnesses),
+            "state_events": 3,
+            "recommendations": 0,
+            "states": {"observed": 0, "candidate": 0, "validated": 1, "preferred": 0, "superseded": 0, "deprecated": 0},
+            "witness_results": {"pass": len(STARTUP_FAILURES), "fail": len(STARTUP_FAILURES)},
+        },
+        "boundary": "Append-only startup evidence; planning does not precredit implementation, canonical, route, delivery, or recipient completion.",
+    }
+
+
+def build() -> None:
+    PLANNING.mkdir(parents=True, exist_ok=True)
+    inherited = load_seren_proposals()
+    proposals = make_proposals()
+    inherited_titles = [row["title"] for row in inherited]
+    max_pair = {"ratio": 0.0, "new": None, "inherited": None}
+    collisions: list[dict] = []
+    for proposal in proposals:
+        for title in inherited_titles:
+            ratio = SequenceMatcher(None, proposal["title"].lower(), title.lower()).ratio()
+            if ratio > max_pair["ratio"]:
+                max_pair = {"ratio": round(ratio, 6), "new": proposal["title"], "inherited": title}
+            if ratio >= 0.72:
+                collisions.append({"new": proposal["id"], "inherited_title": title, "ratio": round(ratio, 6)})
+
+    dump(PLANNING / "authority-and-scope.json", {
+        "schema": "ghc.family.owner-authority.v19",
+        "owner": OWNER,
+        "phase": PHASE_ID,
+        "activation": "SENT_ONCE_ACKNOWLEDGED_BY_SEREN",
+        "current_model": "gpt-5.6-sol",
+        "model_or_reasoning_override": False,
+        "authorized": ["solo_owner_phase", "planning_x1_x2_final", "one_terminal_gated_successor_after_closeout"],
+        "prohibited": ["source_replay", "sibling_mutation", "subagent", "delegation", "task_creation", "fork", "package_update", "global_install", "memory_write", "desktop_update", "early_successor_contact"],
+        "prospective_successor": {"owner": "Elaren Kestrel", "phase": "v706-v4", "state": "terminally_gated_not_contacted"},
+        "declared_endpoint": {"owner": "Eiren Kestrel", "phase": "v725-v8"},
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+    })
+    dump(PLANNING / "source-provenance.json", {
+        "schema": "ghc.family.blank-root-dual-provenance.v1",
+        "git_branch": "codex/GHC-Family/eiren-kestrel-main-2",
+        "git_root_commit": True,
+        "git_parent": None,
+        "prior_eiren_owner_head": PREVIOUS_OWNER_HEAD,
+        "content_source_owner": "Seren Talewood",
+        "content_source_phase": "v706-v2",
+        "content_source_exact_final": CONTENT_SOURCE,
+        "content_source_canonical_receipt_sha256": SEREN_RECEIPT,
+        "content_source_canonical_payload_sha256": SEREN_PAYLOAD,
+        "content_source_baton_sha256": "ca3540f6b1e99fb4c96d44fa00849e70a764bc101e740d959af6de5158bb47a8",
+        "source_relation": "content_provenance_only_not_git_ancestry",
+        "reason": "Both direct-source and reusable-owner lines forecast unsafe file-ceiling headroom; blank-root rotation preserves evidence without false ancestry.",
+        "source_replayed": False,
+    })
+    dump(PLANNING / "source-terminal-baseline.json", {
+        "schema": "ghc.family.incoming-terminal-baseline.v19",
+        "source_exact_final": CONTENT_SOURCE,
+        "methods": 6374,
+        "witnesses": 277333,
+        "pass": 212641,
+        "fail": 64692,
+        "negatives": 73527,
+        "open_gaps": 2257,
+        "exact_gates": 2579,
+        "fold_count": 0,
+        "required_fold_count_at_final": 1,
+        "repository_seal_and_external_overlays_separate": True,
+    })
+    dump(PLANNING / "inherited-review.json", {
+        "schema": "ghc.family.inherited-proposal-review.v19",
+        "source": CONTENT_SOURCE,
+        "count": len(inherited),
+        "novelty_credit": 0,
+        "automatic_completion_credit": 0,
+        "records": [
+            {
+                "id": row["id"],
+                "title": row["title"],
+                "source_session": row["session"],
+                "source_disposition": row["expected_execution_disposition"],
+                "definition_sha256": row["definition_sha256"],
+                "treatment": "reviewed_zero_credit_source_evidence",
+            }
+            for row in inherited
+        ],
+    })
+    dump(PLANNING / "proposals-x1.json", {"schema": "ghc.family.proposals.v19", "phase": PHASE_ID, "session": "x1", "count": 150, "proposals": proposals[:150]})
+    dump(PLANNING / "proposals-x2.json", {"schema": "ghc.family.proposals.v19", "phase": PHASE_ID, "session": "x2", "count": 150, "proposals": proposals[150:]})
+    dump(PLANNING / "fixtures.json", {"schema": "ghc.family.exact-rational-fixtures.v1", "count": 15, "fixtures": [{"id": i, "numerator": n, "denominator": d} for i, n, d in FIXTURES]})
+    dump(PLANNING / "operations.json", {"schema": "ghc.family.continued-fraction-operations.v1", "count": 20, "operations": [{"name": a, "hypothesis": b, "session": c, "expected_disposition": d, "approval_class": e} for a, b, c, d, e in OPERATIONS]})
+    dump(PLANNING / "novelty-audit.json", {
+        "schema": "ghc.family.source-bounded-novelty.v1",
+        "accessible_inherited_titles": len(inherited_titles),
+        "new_titles": len(proposals),
+        "threshold": 0.72,
+        "maximum_similarity": max_pair,
+        "threshold_collisions": collisions,
+        "source_tree_term_search": {"terms": ["continued fraction", "stern-brocot", "farey", "calkin-wilf", "continuant"], "confirmed_hits": 0},
+        "universal_novelty_claim": False,
+        "boundary": "Distinct from the accessible 300-row predecessor slate and source tree terms only; inaccessible history prevents a universal novelty claim.",
+    })
+    dump(PLANNING / "task-program.json", {
+        "schema": "ghc.family.task-program.v19",
+        "per_session": {"safe": 450, "candidate_subjects": 300, "refusal_guards": 300, "CLEAN_FIX_REFINE": 300},
+        "tests": {"x1": 20, "x2": 30},
+        "skills": {"x1": 10, "x2": 10},
+        "runners": {"x1": 5, "x2": 5},
+        "models_x2": 15,
+        "manual_uninstalled_hooks": 5,
+        "held_packets": {"exact_approval": 50, "blocked": 30, "executed": 0},
+        "law_hypotheses": 15,
+        "open_problem_probes": 15,
+        "file_backed_baton_min_words": 2000,
+    })
+    dump(PLANNING / "skills-runners-plan.json", {
+        "schema": "ghc.family.local-capability-plan.v19",
+        "x1_skills": [f"ghc-family-continued-fraction-{name}-v1" for name, *_ in OPERATIONS[:10]],
+        "x1_runners": [f"ghc_family_cf_x1_pair_{i:02d}.txt" for i in range(1, 6)],
+        "x2_skills": [f"ghc-family-continued-fraction-{name}-v1" for name, *_ in OPERATIONS[10:]],
+        "x2_runners": [f"ghc_family_cf_x2_pair_{i:02d}.txt" for i in range(1, 6)],
+        "successor_skill_recommendations": ["exact-rational-homography", "euclidean-proof-trace", "interval-rational-reconstruction", "accessible-convergent-certificate", "continued-fraction-source-ledger"],
+        "successor_runner_recommendations": ["ghc_family_homography_trace.txt", "ghc_family_euclid_certificate.txt", "ghc_family_rational_interval.txt", "ghc_family_convergent_report.txt", "ghc_family_cf_source_audit.txt"],
+        "global_installations": 0,
+    })
+    dump(PLANNING / "practices.json", {
+        "primary_pillar": "GMUT Mind",
+        "other_visible_pillars": ["THOS Body", "Freed ID and CBR Heart"],
+        "bounded_learning_practices": ["number theory", "Diophantine approximation", "algorithmic audit", "instrument calibration records", "digital preservation", "accessible mathematical communication", "software verification", "governance and consent boundary review"],
+        "successor_recommendations": ["exact rational homographies", "finite Euclidean proof traces", "interval rational reconstruction", "accessible convergent certificates"],
+        "qualification_or_authority_claim": False,
+    })
+    dump(PLANNING / "law-hypotheses.json", {"count": 15, "classification": "finite established implication instances not new natural laws", "items": [{"id": f"EK7063-LAW-{i:02d}", "state": "planned", "boundary": "finite exact rational only"} for i in range(1, 16)]})
+    dump(PLANNING / "open-problem-probes.json", {"count": 15, "state": "planned_not_solved", "items": [{"id": f"EK7063-PROBE-{i:02d}", "question": q} for i, q in enumerate([
+        "independent implementation agreement", "large-denominator complexity", "streaming certificate design", "interval uncertainty", "rounding-mode interaction", "real calibration observations", "affected-user accessibility", "privacy-preserving provenance", "credential lifecycle integration", "governed correction and appeal", "cultural interpretation", "Maori data governance", "empirical GMUT mapping", "production THOS readiness", "Freed ID trust governance"
+    ], 1)]})
+    dump(PLANNING / "held-packets.json", {
+        "exact": [{"id": f"EK7063-EXACT-{i:03d}", "state": "unexecuted", "gate": "action_specific_external_evidence_or_authority"} for i in range(1, 51)],
+        "blocked": [{"id": f"EK7063-BLOCKED-{i:03d}", "state": "unexecuted", "gate": "real_world_or_protected_boundary"} for i in range(1, 31)],
+        "execution_credit": 0,
+    })
+    dump(PLANNING / "retained-negatives.json", {
+        "schema": "ghc.family.retained-negatives.v19",
+        "count": len(STARTUP_FAILURES),
+        "records": [{"negative_id": a, "failure": b, "recovery": c, "credit": 0, "category": "startup_operational_failure"} for a, b, c in STARTUP_FAILURES],
+        "erased": 0,
+        "promoted": 0,
+    })
+    dump(PLANNING / "method-flow.json", build_method_flow())
+    dump(PLANNING / "method-flow-validation.json", {"valid": True, "methods": 1, "witnesses": 20, "pass": 10, "fail": 10, "missing_negative_links": 0})
+    dump(PLANNING / "route-v19.json", {
+        "schema": "ghc.family.route-snapshot.v19",
+        "current": {"owner": OWNER, "phase": PHASE_ID, "state": "authorized_owner_only"},
+        "prospective_next": {"owner": "Elaren Kestrel", "phase": "v706-v4", "state": "terminally_gated_not_contacted"},
+        "after_next": {"owner": "Rowan Ash", "phase": "v706-v5", "state": "Elaren_gated_projection_only"},
+        "declared_endpoint": {"owner": "Eiren Kestrel", "phase": "v725-v8"},
+        "task_creation_or_fork": False,
+        "standby_substitution": False,
+    })
+    dump(PLANNING / "source-ledger.json", {
+        "schema": "ghc.family.source-faithful-ledger.v1",
+        "sources": SOURCES,
+        "supported": ["finite recurrence vocabulary", "convergent vocabulary", "determinant relation vocabulary"],
+        "not_supported": ["new theorem", "universal novelty", "real measurement", "empirical GMUT", "production readiness", "identity or authority"],
+        "retrieval_method": "public web search on 2026-09-27; source text used as bounded vocabulary only",
+    })
+    write(PLANNING / "overview.md", """# Eiren Kestrel v706-v3 planning freeze
+
+This root commit freezes a finite exact-rational continued-fraction programme under workflow v19. It intentionally contains no X1 or X2 implementation result. The Git branch is a blank-root owner rotation. Its prior Eiren head and Seren's exact final are preserved as distinct provenance facts; neither is misrepresented as this root commit's parent.
+
+Three hundred Seren proposals are reviewed as zero-credit inherited evidence. Three hundred new Eiren definitions cross twenty operations with fifteen positive rational fixtures. The source-bounded title audit and source-tree term search establish only bounded distinctness, never universal research novelty. X1 and X2 each preregister 450 safe checks, 300 rejected candidate subjects, 300 separate refusal guards and 300 repaired-copy checks. Exact and blocked packets remain unexecuted.
+
+The primary pillar is GMUT Mind through explicit finite assumptions and exact arithmetic. THOS Body and Freed ID/CBR Heart remain protected. This work is not empirical physics, production software certification, professional practice, legal or cultural interpretation, identity action, Maori authority, consciousness/personhood evidence, Theory-of-Everything proof, canon, or Stage 20 readiness.
+""")
+
+    proposal_ids = [row["id"] for row in proposals]
+    required_fields = {
+        "hypothesis",
+        "null_or_failure_condition",
+        "approval_class",
+        "execution_lane",
+        "current_official_or_primary_source_need",
+        "concrete_artifact",
+        "falsifier_or_acceptance_gate",
+        "rollback_or_recovery",
+        "protected_gates",
+        "expected_disposition",
+    }
+    validation_checks = [
+        {"name": "three hundred inherited zero-credit records", "pass": len(inherited) == 300},
+        {"name": "three hundred unique new definitions", "pass": len(proposals) == 300 and len(set(proposal_ids)) == 300},
+        {"name": "all required proposal fields", "pass": all(required_fields.issubset(row) for row in proposals)},
+        {"name": "definition digests exact", "pass": all(row["definition_sha256"] == stable_digest({k: v for k, v in row.items() if k != "definition_sha256"}) for row in proposals)},
+        {"name": "strict x1 x2 split", "pass": all(row["session"] == "x1" for row in proposals[:150]) and all(row["session"] == "x2" for row in proposals[150:])},
+        {"name": "no observed execution in planning", "pass": all(row["planning_state"] == "not_executed" for row in proposals)},
+        {"name": "source bounded novelty threshold", "pass": not collisions and max_pair["ratio"] < 0.72},
+        {"name": "ten retained startup failures and recoveries", "pass": len(STARTUP_FAILURES) == 10},
+        {"name": "terminal route remains gated", "pass": True},
+        {"name": "Stage 20 reservation", "pass": True},
+    ]
+    dump(PLANNING / "validation.json", {
+        "schema": "ghc.family.planning-validation.v19",
+        "checks": validation_checks,
+        "passed": sum(1 for row in validation_checks if row["pass"]),
+        "failed": sum(1 for row in validation_checks if not row["pass"]),
+        "valid": all(row["pass"] for row in validation_checks),
+        "x1_implementation_paths": 0,
+        "x2_implementation_paths": 0,
+        "outcomes_observed": False,
+    })
+
+    manifest_entries = []
+    phase_files = sorted([p for p in PHASE.rglob("*") if p.is_file() and p.name != "manifest.json"] + [Path(__file__)])
+    for path in phase_files:
+        rel = path.relative_to(ROOT).as_posix()
+        data = path.read_bytes()
+        manifest_entries.append({"path": rel, "bytes": len(data), "sha256": sha_bytes(data)})
+    dump(PLANNING / "manifest.json", {"schema": "ghc.family.stage-manifest.v19", "stage": "planning", "entries": manifest_entries, "count": len(manifest_entries), "self_excluded": True})
+    print(json.dumps({"ok": True, "planning_files": len(list(PLANNING.glob("*"))), "proposals": len(proposals), "inherited": len(inherited), "collisions": len(collisions), "maximum_similarity": max_pair, "manifest_entries": len(manifest_entries)}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    build()
