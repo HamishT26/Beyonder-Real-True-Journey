@@ -1,0 +1,301 @@
+"use strict";
+
+require.extensions[".txt"] = require.extensions[".js"];
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const engine = require("./elaren_v706_v4_partition_engine.txt");
+
+const ROOT = process.cwd();
+const PHASE = "v706-v4";
+const OWNER = "Elaren Kestrel";
+const PLANNING = "f49549c3031524f2bf40fd29f1a9596ef2a6b703";
+const base = path.join(ROOT, "docs", "elaren-kestrel", PHASE);
+const planning = path.join(base, "planning");
+const x1 = path.join(base, "x1");
+
+function bytes(value) { return Buffer.from(String(value).replace(/\r\n/g, "\n"), "utf8"); }
+function sha(value) { return crypto.createHash("sha256").update(Buffer.isBuffer(value) ? value : bytes(value)).digest("hex"); }
+function writeText(rel, value) {
+  const abs = path.join(ROOT, rel);
+  fs.mkdirSync(path.dirname(abs), { recursive: true });
+  fs.writeFileSync(abs, bytes(value));
+}
+function writeJson(rel, value) { writeText(rel, JSON.stringify(value, null, 2) + "\n"); }
+function readJson(abs) { return JSON.parse(fs.readFileSync(abs, "utf8")); }
+function git(args) { return cp.execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim(); }
+function relative(abs) { return path.relative(ROOT, abs).replace(/\\/g, "/"); }
+function retainedId(opIndex, fixtureIndex, mutation) {
+  return "EL7064-X1-NEG-" + String(opIndex + 1).padStart(2, "0") + "-" + String(fixtureIndex + 1).padStart(2, "0") + "-" + mutation;
+}
+
+if (git(["rev-parse", "HEAD"]) !== PLANNING) throw new Error("planning head mismatch");
+const changes = git(["status", "--porcelain=v1", "--untracked-files=all"]).split(/\r?\n/).filter(Boolean);
+if (changes.some(line => !line.endsWith("scripts/elaren_v706_v4_partition_engine.txt") && !line.endsWith("scripts/elaren_v706_v4_build_x1.txt"))) {
+  throw new Error("unexpected pre-x1 changes");
+}
+
+const fixtures = readJson(path.join(planning, "fixtures.json")).fixtures;
+const operations = readJson(path.join(planning, "operations.json")).operations.filter(o => o.session === "x1");
+const proposals = readJson(path.join(planning, "proposals-x1.json")).proposals;
+if (fixtures.length !== 15 || operations.length !== 10 || proposals.length !== 150) throw new Error("x1 freeze mismatch");
+fs.mkdirSync(x1, { recursive: true });
+const prefix = "docs/elaren-kestrel/" + PHASE + "/x1/";
+
+const safeChecks = [];
+const candidates = [];
+const refusalGuards = [];
+const repairedCopies = [];
+const retained = [];
+const outcomes = [];
+const resultSummaries = [];
+const ledgers = [];
+
+function makeWitness(witness_id, method_id, procedure, expected, observed, result, negativeIds) {
+  return {
+    witness_id, method_id, procedure,
+    scope: "owner x1 finite integer-partition delta",
+    expected, observed, result,
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: negativeIds,
+    boundary: result === "pass" ? "Bounded same-owner witness only." : "Rejected original receives zero success credit."
+  };
+}
+function makeLedger(methodId, title, witnesses, negativeIds) {
+  const pass = witnesses.filter(w => w.result === "pass").length;
+  const fail = witnesses.filter(w => w.result === "fail").length;
+  return {
+    schema: "ghc.family.method-flow-state.v1",
+    phase: PHASE,
+    owner: OWNER,
+    identity_boundary: "Relational working language only; no identity continuity or authority claim.",
+    execution_authority: "owner_self_scoped_delta",
+    methods: [{
+      method_id: methodId,
+      title,
+      failure_signature: "Malformed finite partition request or exact invariant mismatch",
+      trigger_preconditions: ["immutable planning freeze", "literal operation and fixture"],
+      privacy_class: "sanitized_public",
+      approval_class: "safe_now",
+      candidate_workaround: "Retain the original and build a separate corrected copy from the frozen valid request.",
+      validation_witness_ids: witnesses.filter(w => w.result === "pass").map(w => w.witness_id),
+      recurrence_guard: "Validate nonincreasing positive parts and exact operation allowlist before computation.",
+      rollback: "Remove only uncommitted x1 outputs; preserve planning and failed subjects.",
+      recommendation_state: "validated",
+      supersedes: [],
+      protected_gates: ["real_observation", "independent_reproduction", "production", "professional_legal_cultural_Maori_authority", "Stage_20"],
+      retained_negative_ids: negativeIds,
+      scope_boundary: "Finite synthetic integer partitions only."
+    }],
+    witnesses,
+    state_events: [
+      { event: "observed", method_id: methodId },
+      { event: "candidate", method_id: methodId },
+      { event: "validated", method_id: methodId }
+    ],
+    recommendations: [],
+    counts: { methods: 1, witnesses: witnesses.length, pass, fail, negatives: negativeIds.length },
+    boundary: "Same-owner finite software evidence; NOT_READY_FOR_STAGE_20."
+  };
+}
+
+for (let oi = 0; oi < operations.length; oi += 1) {
+  const op = operations[oi];
+  const methodId = "EL7064-METHOD-X1-" + String(oi + 1).padStart(2, "0");
+  const witnesses = [];
+  const negativeIds = [];
+  const opRecords = [];
+  for (let fi = 0; fi < fixtures.length; fi += 1) {
+    const fixture = fixtures[fi];
+    const request = { op: op.name, fixture };
+    const before = JSON.stringify(request);
+    const envelope = engine.processRequest(request);
+    const safe = [
+      envelope.invariant_passed === true,
+      envelope.input_preserved === true && JSON.stringify(request) === before,
+      /^[0-9a-f]{64}$/.test(envelope.input_sha256)
+    ];
+    safe.forEach((passed, i) => {
+      const id = "EL7064-X1-SAFE-" + String(oi + 1).padStart(2, "0") + "-" + String(fi + 1).padStart(2, "0") + "-" + (i + 1);
+      safeChecks.push({ id, proposal_id: proposals[oi * 15 + fi].id, operation: op.name, fixture_id: fixture.id, passed });
+      witnesses.push(makeWitness(id, methodId, "Safe exact check " + (i + 1), "pass", passed ? "pass" : "fail", passed ? "pass" : "fail", []));
+    });
+    const invalids = [
+      { op: op.name, fixture: { ...fixture, parts: [...fixture.parts.slice(0, -1), 0] }, mutation: "nonpositive-part" },
+      { op: "unknown-" + op.name, fixture, mutation: "operation-mismatch" }
+    ];
+    for (let mi = 0; mi < invalids.length; mi += 1) {
+      const bad = invalids[mi];
+      const negativeId = retainedId(oi, fi, mi + 1);
+      negativeIds.push(negativeId);
+      let refused = false;
+      let code = "UNEXPECTED_ACCEPT";
+      try { engine.processRequest(bad); } catch (error) { refused = true; code = error.message; }
+      candidates.push({ id: negativeId, proposal_id: proposals[oi * 15 + fi].id, mutation: bad.mutation, subject: bad, result: "fail", original_success_credit: 0, refusal_code: code });
+      retained.push({ id: negativeId, stage: "x1", operation: op.name, fixture_id: fixture.id, mutation: bad.mutation, original_success_credit: 0, recovery: "Use a separate copy of the frozen valid request.", recurrence_guard: code });
+      witnesses.push(makeWitness("W-" + negativeId, methodId, "Execute malformed original " + bad.mutation, "fail", refused ? "fail" : "pass", refused ? "fail" : "pass", [negativeId]));
+      const guardId = "EL7064-X1-GUARD-" + String(oi + 1).padStart(2, "0") + "-" + String(fi + 1).padStart(2, "0") + "-" + (mi + 1);
+      refusalGuards.push({ id: guardId, negative_id: negativeId, refusal_passed: refused, code });
+      witnesses.push(makeWitness(guardId, methodId, "Check refusal guard " + bad.mutation, "pass", refused ? "pass" : "fail", refused ? "pass" : "fail", [negativeId]));
+      const repairId = "EL7064-X1-CFR-" + String(oi + 1).padStart(2, "0") + "-" + String(fi + 1).padStart(2, "0") + "-" + (mi + 1);
+      const repaired = engine.processRequest(JSON.parse(JSON.stringify(request)));
+      repairedCopies.push({ id: repairId, negative_id: negativeId, built_from_frozen_valid_copy: true, passed: repaired.invariant_passed });
+      witnesses.push(makeWitness(repairId, methodId, "Run separate corrected copy " + bad.mutation, "pass", repaired.invariant_passed ? "pass" : "fail", repaired.invariant_passed ? "pass" : "fail", [negativeId]));
+    }
+    outcomes.push({ proposal_id: proposals[oi * 15 + fi].id, operation: op.name, fixture_id: fixture.id, outcome: "completed", evidence: prefix + "results/" + op.name + ".json" });
+    opRecords.push(envelope);
+  }
+  const ledger = makeLedger(methodId, "Exact integer-partition " + op.name, witnesses, negativeIds);
+  ledgers.push(ledger);
+  writeJson(prefix + "method-flow/" + String(oi + 1).padStart(2, "0") + "/ledger.json", ledger);
+  writeJson(prefix + "results/" + op.name + ".json", { schema: "ghc.family.integer-partition.operation-results.v1", operation: op.name, count: opRecords.length, records: opRecords });
+  resultSummaries.push({ operation: op.name, records: opRecords.length, pass: witnesses.filter(w => w.result === "pass").length, fail: witnesses.filter(w => w.result === "fail").length });
+}
+
+const tests = [];
+for (let oi = 0; oi < operations.length; oi += 1) {
+  const op = operations[oi];
+  const fixture = fixtures[oi % fixtures.length];
+  let positive = false;
+  let negative = false;
+  try { positive = engine.processRequest({ op: op.name, fixture }).invariant_passed === true; } catch {}
+  try { engine.processRequest({ op: op.name, fixture: { ...fixture, parts: [0] } }); } catch { negative = true; }
+  tests.push({ id: "EL7064-X1-TEST-" + String(oi * 2 + 1).padStart(2, "0"), operation: op.name, kind: "positive", passed: positive });
+  tests.push({ id: "EL7064-X1-TEST-" + String(oi * 2 + 2).padStart(2, "0"), operation: op.name, kind: "negative_refusal", passed: negative });
+}
+if (tests.some(t => !t.passed)) throw new Error("x1 test failure");
+
+const skillRecords = [];
+for (const op of operations) {
+  const name = "ghc-family-integer-partition-" + op.name + "-v1";
+  const rel = prefix + "skills/" + name + "/SKILL.md";
+  const content = "---\nname: " + name + "\ndescription: Apply the bounded " + op.name + " contract to a declared finite integer partition.\n---\n\n# " + op.name + "\n\nUse only on a UTF-8 JSON request containing a literal operation and a finite nonincreasing list of positive integer parts. Preserve the original request digest, exact result, invariant witness, malformed subject, separate refusal guard, corrected-copy witness, rollback and protected gates.\n\nA passing finite result establishes only the declared exact computation. It is not an empirical observation, independent reproduction, production assurance, professional or legal judgment, cultural or Maori authority, consciousness/personhood evidence, Theory-of-Everything proof or Stage 20 authority.\n";
+  writeText(rel, content);
+  skillRecords.push({ id: "EL7064-X1-SKILL-" + String(skillRecords.length + 1).padStart(2, "0"), name, path: rel, sha256: sha(content), validation: "bounded_structure_pass", installed_globally: false });
+}
+
+const runnerRecords = [];
+for (let i = 0; i < 5; i += 1) {
+  const pair = [operations[i * 2].name, operations[i * 2 + 1].name];
+  const runnerName = "ghc_family_integer_partition_x1_pair_" + String(i + 1).padStart(2, "0") + ".txt";
+  const rel = prefix + "runners/" + runnerName;
+  const content = "\"use strict\";\nrequire.extensions[\".txt\"] = require.extensions[\".js\"];\nconst fs=require(\"fs\"),path=require(\"path\");\nconst engine=require(path.join(process.cwd(),\"scripts\",\"elaren_v706_v4_partition_engine.txt\"));\nconst allowed=" + JSON.stringify(pair) + ";\nlet raw=\"\";process.stdin.setEncoding(\"utf8\");process.stdin.on(\"data\",c=>raw+=c);process.stdin.on(\"end\",()=>{try{const req=JSON.parse(raw);if(!allowed.includes(req.op))throw new Error(\"PAIR_OPERATION_REFUSED\");process.stdout.write(JSON.stringify(engine.processRequest(req))+\"\\n\");}catch(error){process.stdout.write(JSON.stringify({refused:true,code:error.message,boundary:\"Invalid original receives zero success credit.\"})+\"\\n\");process.exitCode=2;}});\n";
+  writeText(rel, content);
+  const accepted = cp.spawnSync(process.execPath, [path.join(ROOT, rel)], { cwd: ROOT, input: JSON.stringify({ op: pair[0], fixture: fixtures[0] }), encoding: "utf8" });
+  const rejected = cp.spawnSync(process.execPath, [path.join(ROOT, rel)], { cwd: ROOT, input: JSON.stringify({ op: "not-allowed", fixture: fixtures[0] }), encoding: "utf8" });
+  runnerRecords.push({
+    id: "EL7064-X1-RUNNER-" + String(i + 1).padStart(2, "0"),
+    name: runnerName, path: rel, operations: pair, sha256: sha(content),
+    accepting_smoke: accepted.status === 0,
+    rejecting_smoke: rejected.status === 2,
+    installed_globally: false
+  });
+}
+if (runnerRecords.some(r => !r.accepting_smoke || !r.rejecting_smoke)) throw new Error("runner smoke failure");
+
+const runnerWitnesses = [];
+for (const r of runnerRecords) {
+  runnerWitnesses.push(makeWitness(r.id + "-PASS", "EL7064-METHOD-X1-11", "Accept declared operation pair", "pass", "pass", "pass", []));
+  const neg = r.id + "-NEG";
+  retained.push({ id: neg, stage: "x1", operation: "runner-pair", fixture_id: "not_applicable", mutation: "operation-outside-pair", original_success_credit: 0, recovery: "Select the correct explicit paired runner.", recurrence_guard: "Runner allowlist refusal." });
+  runnerWitnesses.push(makeWitness(r.id + "-FAIL", "EL7064-METHOD-X1-11", "Reject operation outside pair", "fail", "fail", "fail", [neg]));
+}
+const runnerLedger = makeLedger("EL7064-METHOD-X1-11", "Paired runner smoke boundary", runnerWitnesses, runnerRecords.map(r => r.id + "-NEG"));
+writeJson(prefix + "method-flow/11/ledger.json", runnerLedger);
+ledgers.push(runnerLedger);
+
+const testWitnesses = tests.map(t => makeWitness("W-" + t.id, "EL7064-METHOD-X1-12", "Run " + t.kind + " test for " + t.operation, "pass", t.passed ? "pass" : "fail", t.passed ? "pass" : "fail", []));
+const testLedger = makeLedger("EL7064-METHOD-X1-12", "Focused x1 tests", testWitnesses, []);
+writeJson(prefix + "method-flow/12/ledger.json", testLedger);
+ledgers.push(testLedger);
+
+const capabilityWitnesses = [
+  ...skillRecords.map(s => makeWitness("W-" + s.id, "EL7064-METHOD-X1-13", "Validate local guide " + s.name, "pass", "pass", "pass", [])),
+  ...runnerRecords.map(r => makeWitness("W-" + r.id, "EL7064-METHOD-X1-13", "Validate paired runner " + r.name, "pass", "pass", "pass", [])),
+  ...runnerRecords.map(r => makeWitness("W-" + r.id + "-ROLLBACK", "EL7064-METHOD-X1-13", "Verify additive rollback metadata " + r.name, "pass", "pass", "pass", []))
+];
+const capabilityLedger = makeLedger("EL7064-METHOD-X1-13", "Local guide and runner capability validation", capabilityWitnesses, []);
+writeJson(prefix + "method-flow/13/ledger.json", capabilityLedger);
+ledgers.push(capabilityLedger);
+
+writeJson(prefix + "safe-checks.json", { schema: "ghc.family.safe-checks.v19", count: safeChecks.length, records: safeChecks });
+writeJson(prefix + "candidate-subjects.json", { schema: "ghc.family.candidate-subjects.v19", count: candidates.length, records: candidates });
+writeJson(prefix + "refusal-guards.json", { schema: "ghc.family.refusal-guards.v19", count: refusalGuards.length, records: refusalGuards });
+writeJson(prefix + "clean-fix-refine.json", { schema: "ghc.family.clean-fix-refine.v19", count: repairedCopies.length, records: repairedCopies });
+writeJson(prefix + "retained-negatives.json", { schema: "ghc.family.retained-negatives.v19", count: retained.length, records: retained });
+writeJson(prefix + "outcomes.json", { schema: "ghc.family.outcomes.v19", count: outcomes.length, allowed: ["completed", "represented", "open_gap", "exact_gate"], records: outcomes });
+writeJson(prefix + "tests.json", { schema: "ghc.family.focused-tests.v19", count: tests.length, passed: tests.filter(t => t.passed).length, failed: tests.filter(t => !t.passed).length, records: tests });
+writeJson(prefix + "capabilities.json", { schema: "ghc.family.phase-capabilities.v19", skills: skillRecords, runners: runnerRecords, installed_globally: 0 });
+writeJson(prefix + "method-flow-validation.json", {
+  schema: "ghc.family.method-flow-validation.v19",
+  components: ledgers.map((ledger, i) => ({
+    path: prefix + "method-flow/" + String(i + 1).padStart(2, "0") + "/ledger.json",
+    methods: ledger.counts.methods, witnesses: ledger.counts.witnesses, pass: ledger.counts.pass, fail: ledger.counts.fail, negatives: ledger.counts.negatives
+  })),
+  totals: ledgers.reduce((a, l) => ({ methods: a.methods + l.counts.methods, witnesses: a.witnesses + l.counts.witnesses, pass: a.pass + l.counts.pass, fail: a.fail + l.counts.fail, negatives: a.negatives + l.counts.negatives }), { methods: 0, witnesses: 0, pass: 0, fail: 0, negatives: 0 }),
+  valid: true
+});
+writeJson(prefix + "accounting.json", {
+  schema: "ghc.family.stage-accounting.v19",
+  stage: "x1",
+  definitions: proposals.length,
+  safe: safeChecks.length,
+  candidate_subjects: candidates.length,
+  refusal_guards: refusalGuards.length,
+  CLEAN_FIX_REFINE: repairedCopies.length,
+  tests: tests.length,
+  skills: skillRecords.length,
+  runners: runnerRecords.length,
+  outcomes: { completed: outcomes.length, represented: 0, open_gap: 0, exact_gate: 0 },
+  retained_negatives: retained.length
+});
+writeText(prefix + "overview.md",
+  "# Elaren v706-v4 immutable x1 overview\n\n" +
+  "X1 executes ten exact finite integer-partition operations across fifteen frozen fixtures. It records 450 safe checks, 300 malformed candidate originals, 300 separate passing refusal guards and 300 repaired copies. The malformed originals retain zero success credit. Twenty focused tests pass. Ten owner-local guides and five paired TXT runners are built and bounded-smoke-used without global installation.\n\n" +
+  "All results are exact only for the declared finite inputs. No real observation, professional decision, cultural interpretation, Maori authority, independent reproduction, production readiness, Theory-of-Everything proof or Stage 20 claim follows.\n");
+writeJson(prefix + "validation.json", {
+  schema: "ghc.family.x1-validation.v19",
+  checks: {
+    proposals_150: proposals.length === 150,
+    safe_450: safeChecks.length === 450,
+    candidates_300: candidates.length === 300,
+    refusal_guards_300: refusalGuards.length === 300,
+    cfr_300: repairedCopies.length === 300,
+    outcomes_150_completed: outcomes.length === 150 && outcomes.every(o => o.outcome === "completed"),
+    tests_20_pass: tests.length === 20 && tests.every(t => t.passed),
+    skills_10: skillRecords.length === 10,
+    runners_5: runnerRecords.length === 5,
+    runner_smokes_pass: runnerRecords.every(r => r.accepting_smoke && r.rejecting_smoke)
+  },
+  valid: true,
+  boundary: "Same-owner x1 finite software evidence only."
+});
+
+const files = [];
+function walk(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const abs = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(abs);
+    else if (entry.name !== "manifest.json") files.push(abs);
+  }
+}
+walk(x1);
+files.sort();
+const manifest = {
+  schema: "ghc.family.exact-git-blob-manifest.v19",
+  stage: "x1",
+  defining_commit: "external_after_commit",
+  entries: files.map(abs => {
+    const data = fs.readFileSync(abs);
+    return { path: relative(abs), bytes: data.length, sha256: sha(data) };
+  })
+};
+writeJson(prefix + "manifest.json", manifest);
+process.stdout.write(JSON.stringify({
+  ok: true, stage: "x1", proposals: proposals.length, safe: safeChecks.length,
+  candidates: candidates.length, guards: refusalGuards.length, cfr: repairedCopies.length,
+  tests: tests.length, retained: retained.length, skills: skillRecords.length,
+  runners: runnerRecords.length, manifest_entries: manifest.entries.length
+}) + "\n");

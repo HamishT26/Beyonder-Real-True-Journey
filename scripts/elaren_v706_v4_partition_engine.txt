@@ -1,0 +1,129 @@
+"use strict";
+
+const crypto = require("crypto");
+
+const X1_OPS = [
+  "partition-shape", "weight-length", "ferrers-cells", "conjugate-partition",
+  "durfee-square", "dominance-prefix", "distinct-parts", "odd-parts",
+  "multiplicity-vector", "boundary-path"
+];
+
+function sha(value) {
+  return crypto.createHash("sha256").update(Buffer.from(JSON.stringify(value), "utf8")).digest("hex");
+}
+function assertPartition(parts) {
+  if (!Array.isArray(parts) || parts.length === 0) throw new Error("PARTS_REQUIRED");
+  for (let i = 0; i < parts.length; i += 1) {
+    if (!Number.isSafeInteger(parts[i]) || parts[i] <= 0) throw new Error("PART_NOT_POSITIVE_INTEGER");
+    if (i > 0 && parts[i - 1] < parts[i]) throw new Error("PARTS_NOT_NONINCREASING");
+  }
+}
+function weight(parts) {
+  return parts.reduce((a, b) => a + b, 0);
+}
+function cells(parts) {
+  const out = [];
+  for (let r = 0; r < parts.length; r += 1) {
+    for (let c = 0; c < parts[r]; c += 1) out.push([r + 1, c + 1]);
+  }
+  return out;
+}
+function conjugate(parts) {
+  const out = [];
+  for (let c = 1; c <= parts[0]; c += 1) out.push(parts.filter(p => p >= c).length);
+  return out;
+}
+function durfee(parts) {
+  let d = 0;
+  for (let i = 0; i < parts.length; i += 1) if (parts[i] >= i + 1) d = i + 1;
+  return d;
+}
+function prefix(parts) {
+  let sum = 0;
+  return parts.map(p => (sum += p));
+}
+function multiplicities(parts) {
+  const map = {};
+  for (const p of parts) map[String(p)] = (map[String(p)] || 0) + 1;
+  return Object.fromEntries(Object.entries(map).sort((a, b) => Number(b[0]) - Number(a[0])));
+}
+function boundary(parts) {
+  let word = "";
+  for (let i = 0; i < parts.length; i += 1) {
+    const next = i + 1 < parts.length ? parts[i + 1] : 0;
+    word += "E".repeat(parts[i] - next) + "S";
+  }
+  return word;
+}
+function compute(op, parts) {
+  switch (op) {
+    case "partition-shape":
+      return { normalized_parts: [...parts], valid: true };
+    case "weight-length":
+      return { weight: weight(parts), length: parts.length, largest_part: parts[0] };
+    case "ferrers-cells":
+      return { cells: cells(parts), cell_count: weight(parts) };
+    case "conjugate-partition":
+      return { conjugate: conjugate(parts), conserved_weight: weight(conjugate(parts)) };
+    case "durfee-square":
+      return { side: durfee(parts), area: durfee(parts) ** 2 };
+    case "dominance-prefix":
+      return { prefix_sums: prefix(parts), terminal_weight: weight(parts) };
+    case "distinct-parts":
+      return { all_distinct: new Set(parts).size === parts.length };
+    case "odd-parts":
+      return { all_odd: parts.every(p => p % 2 === 1) };
+    case "multiplicity-vector":
+      return { multiplicities: multiplicities(parts) };
+    case "boundary-path":
+      return { word: boundary(parts), east_steps: parts[0], south_steps: parts.length };
+    default:
+      throw new Error("UNKNOWN_OPERATION");
+  }
+}
+function verify(op, parts, result) {
+  const n = weight(parts);
+  switch (op) {
+    case "partition-shape": return JSON.stringify(result.normalized_parts) === JSON.stringify(parts) && result.valid;
+    case "weight-length": return result.weight === n && result.length === parts.length && result.largest_part === parts[0];
+    case "ferrers-cells": return result.cell_count === n && result.cells.length === n;
+    case "conjugate-partition": return result.conserved_weight === n && JSON.stringify(conjugate(result.conjugate)) === JSON.stringify(parts);
+    case "durfee-square": return result.side === durfee(parts) && result.area === result.side * result.side;
+    case "dominance-prefix": return result.terminal_weight === n && result.prefix_sums.length === parts.length;
+    case "distinct-parts": return result.all_distinct === (new Set(parts).size === parts.length);
+    case "odd-parts": return result.all_odd === parts.every(p => p % 2 === 1);
+    case "multiplicity-vector": {
+      const entries = Object.entries(result.multiplicities);
+      return entries.reduce((s, [, m]) => s + m, 0) === parts.length &&
+        entries.reduce((s, [p, m]) => s + Number(p) * m, 0) === n;
+    }
+    case "boundary-path": return [...result.word].filter(x => x === "E").length === parts[0] &&
+      [...result.word].filter(x => x === "S").length === parts.length;
+    default: return false;
+  }
+}
+function processRequest(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) throw new Error("OBJECT_REQUIRED");
+  if (!X1_OPS.includes(request.op)) throw new Error("UNKNOWN_OPERATION");
+  if (!request.fixture || typeof request.fixture !== "object") throw new Error("FIXTURE_REQUIRED");
+  assertPartition(request.fixture.parts);
+  const frozenInput = JSON.parse(JSON.stringify(request));
+  const result = compute(request.op, frozenInput.fixture.parts);
+  if (!verify(request.op, frozenInput.fixture.parts, result)) throw new Error("INVARIANT_MISMATCH");
+  return {
+    schema: "ghc.family.integer-partition.result.v1",
+    operation: request.op,
+    fixture_id: request.fixture.id,
+    input_sha256: sha(frozenInput),
+    input_preserved: JSON.stringify(request) === JSON.stringify(frozenInput),
+    result,
+    invariant_passed: true,
+    evidence_scope: "finite_synthetic_exact_integer_partition",
+    boundary: "Same-owner finite arithmetic only; no empirical, professional, production or authority claim."
+  };
+}
+
+module.exports = {
+  X1_OPS, assertPartition, weight, cells, conjugate, durfee, prefix,
+  multiplicities, boundary, compute, verify, processRequest, sha
+};
