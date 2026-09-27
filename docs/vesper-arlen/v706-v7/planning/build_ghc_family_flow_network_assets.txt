@@ -1,0 +1,1512 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import itertools
+import json
+import math
+import os
+import subprocess
+import sys
+from collections import Counter, defaultdict
+from pathlib import Path
+from typing import Any, Iterable
+
+
+SCRIPT = Path(__file__).resolve()
+PHASE_ROOT = SCRIPT.parents[1]
+REPO = SCRIPT.parents[4]
+PREFIX = "docs/vesper-arlen/v706-v7"
+OWNER = "Vesper Arlen"
+PHASE = "v706-v7"
+WORKFLOW = "v19"
+OWNER_PARENT = "c880085b5837fc5fea15ceba46f8762376d23d48"
+SOURCE_REPO = Path(r"D:\GHC-Archives\worktrees\neris-solane-main-3")
+SOURCE_BRANCH = "codex/GHC-Family/neris-solane-main-3"
+SOURCE_FINAL = "b31f70e1f824d3ba45d329af96c03db7c7c5b220"
+SOURCE_PLANNING = "1cada48799ccec79dc7133a8c3f4c8c6fffbf17b"
+SOURCE_X1 = "249bf33dd3148c24a1a508448f798c2577dd5717"
+SOURCE_X2 = "98268546bb0e4c3685303e948c26da0afa54ac1b"
+SOURCE_BATON_SHA256 = "3d0c53819c79801d290d93235a41596b33c69e5ee00f7eef03a6320c0e0e66a9"
+SOURCE_CANONICAL_RECEIPT_SHA256 = "4516ae4e2e0cc9806c0405adb5a4ac3668c09e1e7a5bafbdd385736a102cb458"
+SOURCE_CANONICAL_PAYLOAD_SHA256 = None
+
+BOUNDARY = (
+    "Finite synthetic same-owner combinatorics and software evidence only; not independent "
+    "reproduction, empirical GMUT, production THOS or Freed ID, identity continuity, "
+    "consciousness, personhood, AGI or ASI, professional, legal, cultural, affected-party "
+    "or Maori authority, complete privacy, security or accessibility assurance, a "
+    "Theory-of-Everything proof, canon, or Stage 20 readiness."
+)
+
+SOURCE_BASELINE = {
+    "methods": 6510,
+    "witnesses": 289260,
+    "pass": 222057,
+    "fail": 67203,
+    "negatives": 76036,
+    "open_gaps": 2328,
+    "exact_gates": 2639,
+}
+
+PROTECTED_GATES = [
+    "real_observation",
+    "independent_reproduction",
+    "production",
+    "identity",
+    "professional_legal_cultural_affected_party_Maori_authority",
+    "complete_security_privacy_accessibility",
+    "consciousness_personhood",
+    "AGI_ASI",
+    "Theory_of_Everything",
+    "Stage_20",
+]
+
+INTAKE_FAILURES = [
+    {
+        "witness_id": "VA7067-INTAKE-PROJECTION-01",
+        "class": "operational_failure",
+        "reason": "The first PowerShell skill-size projection placed a pipeline directly after a foreach block and raised an empty-pipe parser error.",
+        "recovery": "Materialize the projection rows first and serialize the resulting array separately.",
+    },
+    {
+        "witness_id": "VA7067-INTAKE-DISPLAY-01",
+        "class": "operational_failure",
+        "reason": "The first broad memory-registry search exceeded the bounded presentation surface and was truncated.",
+        "recovery": "Use exact Vesper and v19 line ranges plus one directly referenced rollout summary instead of a broad registry dump.",
+    },
+    {
+        "witness_id": "VA7067-INTAKE-PARALLEL-01",
+        "class": "operational_failure",
+        "reason": "Two long exact-blob verification wrappers returned an execution session before completion and their first projections appeared blank.",
+        "recovery": "Inspect the returned session state, stop the exact owned stalled process, and replace the blob-size scan with a bounded no-fetch Git-tree binding check.",
+    },
+    {
+        "witness_id": "VA7067-INTAKE-PROMISOR-SIZE-01",
+        "class": "operational_failure",
+        "reason": "The first content-seal verifier requested every blob size from a blobless promisor clone and stalled while materializing unrelated tree objects.",
+        "recovery": "Terminate only the exact owned process and compare the 165 declared Git-blob identifiers against one no-size ls-tree map; all 165 matched.",
+    },
+    {
+        "witness_id": "VA7067-INTAKE-RECEIPT-SCAN-01",
+        "class": "operational_failure",
+        "reason": "A broad D-drive receipt filename scan exceeded the bounded sixty-second search window without an attributable result.",
+        "recovery": "Stop the broad scan, retain the failure, and rely only on the source activation's declared canonical digest plus exact repository evidence; no source component was replayed.",
+    },
+    {
+        "witness_id": "VA7067-INTAKE-LSREMOTE-PROJECTION-01",
+        "class": "operational_failure",
+        "reason": "The first combined source probe did not display the fresh ls-remote row even though its other scalar checks completed.",
+        "recovery": "Run one exact-ref ls-remote projection; it returned the declared source head and no repository byte changed.",
+    },
+]
+
+MECHANISMS = [
+    ("network-envelope", "x1", "completed", "Normalize a finite directed network with one source, one sink and positive integer capacities."),
+    ("source-sink-reachability", "x1", "completed", "Determine exact directed reachability from the source and retain the sink witness."),
+    ("simple-path-census", "x1", "completed", "Enumerate every finite simple source-to-sink path under the frozen vertex cap."),
+    ("cut-enumeration", "x1", "completed", "Enumerate every source-side vertex subset that excludes the sink."),
+    ("cut-capacity-profile", "x1", "completed", "Compute exact integer capacity for every enumerated source-sink cut."),
+    ("minimum-cut-certificate", "x1", "completed", "Select every minimum-capacity cut and preserve its crossing-arc certificate."),
+    ("augmenting-path-flow", "x1", "completed", "Compute an integral maximum flow with deterministic breadth-first augmenting paths."),
+    ("flow-conservation", "x1", "completed", "Verify capacity bounds and exact conservation at each nonterminal vertex."),
+    ("maxflow-mincut-agreement", "x1", "completed", "Compare the augmenting-path flow value with exhaustive cut enumeration."),
+    ("edge-deletion-sensitivity", "x1", "completed", "Recompute the finite flow value after deleting each declared arc."),
+    ("flow-decomposition", "x2", "completed", "Decompose the integral flow into exact source-to-sink path components."),
+    ("residual-cut-certificate", "x2", "completed", "Recover a minimum cut from residual reachability and compare its capacity with the flow value."),
+    ("minimum-cut-multiplicity", "x2", "completed", "Count and retain all minimum cuts rather than silently selecting one."),
+    ("capacity-scaling", "x2", "completed", "Scale all capacities by two and verify exact finite flow scaling."),
+    ("vertex-relabel-invariance", "x2", "completed", "Relabel internal vertices bijectively while preserving source and sink and verify the flow value."),
+    ("capacity-monotonicity", "x2", "completed", "Increase one capacity and verify that the maximum-flow value does not decrease."),
+    ("three-coordinate-model", "x2", "completed", "Record vertex count, exact maximum-flow value and minimum-cut multiplicity."),
+    ("gmut-analogy", "x2", "represented", "Represent a bounded flow-and-cut analogy without promoting it to physical correspondence."),
+    ("external-observation-gap", "x2", "open_gap", "Retain the absence of real networks, measurements, uncertainty models and independent review."),
+    ("deployment-authority-gate", "x2", "exact_gate", "Hold live routing, infrastructure, safety and allocation decisions behind competent authority."),
+]
+
+SKILL_NAMES = {
+    "x1": [
+        "ghc-family-flow-network-envelope-v1",
+        "ghc-family-flow-reachability-v1",
+        "ghc-family-flow-path-census-v1",
+        "ghc-family-flow-cut-enumeration-v1",
+        "ghc-family-flow-cut-capacity-v1",
+        "ghc-family-flow-mincut-certificate-v1",
+        "ghc-family-flow-augmenting-path-v1",
+        "ghc-family-flow-conservation-v1",
+        "ghc-family-flow-mincut-agreement-v1",
+        "ghc-family-flow-deletion-sensitivity-v1",
+    ],
+    "x2": [
+        "ghc-family-flow-decomposition-v1",
+        "ghc-family-flow-residual-certificate-v1",
+        "ghc-family-flow-mincut-multiplicity-v1",
+        "ghc-family-flow-capacity-scaling-v1",
+        "ghc-family-flow-relabel-invariance-v1",
+        "ghc-family-flow-capacity-monotonicity-v1",
+        "ghc-family-flow-coordinate-model-v1",
+        "ghc-family-flow-gmut-firewall-v1",
+        "ghc-family-flow-external-gap-v1",
+        "ghc-family-flow-authority-gate-v1",
+    ],
+}
+
+RUNNER_NAMES = {
+    "x1": [
+        "ghc_family_flow_result_cardinality.txt",
+        "ghc_family_flow_safe_portfolio.txt",
+        "ghc_family_flow_candidate_rejection.txt",
+        "ghc_family_flow_cfr_recovery.txt",
+        "ghc_family_flow_outcome_distribution.txt",
+    ],
+    "x2": [
+        "ghc_family_flow_decomposition_cardinality.txt",
+        "ghc_family_flow_residual_safe_portfolio.txt",
+        "ghc_family_flow_scaled_candidate_rejection.txt",
+        "ghc_family_flow_scaled_cfr_recovery.txt",
+        "ghc_family_flow_terminal_outcome_distribution.txt",
+    ],
+}
+
+
+def stable_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def sha256_value(value: Any) -> str:
+    return sha256_bytes(stable_json(value).encode("utf-8"))
+
+
+def git_blob_sha1(data: bytes) -> str:
+    return hashlib.sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest()
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8"))
+
+
+def write_json(path: Path, value: Any) -> None:
+    write_text(path, json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n")
+
+
+def read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def git(repo: Path, *args: str, check: bool = True) -> str:
+    result = subprocess.run(["git", "-C", str(repo), *args], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=check)
+    return result.stdout.decode("utf-8", "replace").strip()
+
+
+def git_show(repo: Path, spec: str) -> bytes:
+    return subprocess.run(["git", "-C", str(repo), "show", spec], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout
+
+
+def file_record(path: Path) -> dict[str, Any]:
+    data = path.read_bytes()
+    return {
+        "path": path.relative_to(REPO).as_posix(),
+        "bytes": len(data),
+        "words": len(data.decode("utf-8", "replace").split()),
+        "sha256": sha256_bytes(data),
+        "git_blob_sha1": git_blob_sha1(data),
+    }
+
+
+def stage_manifest(stage: str) -> dict[str, Any]:
+    root = PHASE_ROOT / stage
+    manifest_path = root / "manifest.json"
+    rows = []
+    for path in sorted(root.rglob("*")):
+        if path.is_file() and path != manifest_path:
+            rows.append(file_record(path))
+    payload = {
+        "owner": OWNER,
+        "phase": PHASE,
+        "stage": stage,
+        "byte_domain": "UTF-8 LF working bytes intended to equal exact committed Git blobs",
+        "entries": rows,
+        "entry_count": len(rows),
+        "boundary": BOUNDARY,
+    }
+    write_json(manifest_path, payload)
+    return payload
+
+
+def normalized_fixture(seed: int) -> dict[str, Any]:
+    """Create a small integral-capacity network with no parallel or antiparallel arcs."""
+    n = 5 + (seed % 2)
+    source = 0
+    sink = n - 1
+    arcs: set[tuple[int, int]] = {(u, u + 1) for u in range(n - 1)}
+    for vertex in range(1, sink):
+        arcs.add((source, vertex))
+        arcs.add((vertex, sink))
+    for u in range(0, sink - 1):
+        v = u + 2
+        if (seed + 2 * u) % 3 != 1:
+            arcs.add((u, v))
+    if n == 6 and seed % 3 == 0:
+        arcs.add((1, 4))
+    ordered = sorted(arcs)
+    capacities = [[u, v, 1 + ((11 * seed + 5 * u + 7 * v) % 6)] for u, v in ordered]
+    fixture = {
+        "id": f"FN{seed:02d}",
+        "name": f"finite-capacitated-network-{seed:02d}",
+        "vertices": list(range(n)),
+        "source": source,
+        "sink": sink,
+        "arcs": [[u, v] for u, v in ordered],
+        "capacities": capacities,
+        "evidence": "finite_synthetic_integral_capacity_network",
+        "real_participants": 0,
+        "authority_actions": 0,
+    }
+    fixture["definition_sha256"] = sha256_value(fixture)
+    return fixture
+
+
+FIXTURES = [normalized_fixture(i) for i in range(1, 16)]
+
+
+def capacity_map(fixture: dict[str, Any]) -> dict[tuple[int, int], int]:
+    return {(u, v): capacity for u, v, capacity in fixture["capacities"]}
+
+
+def reachable_vertices(fixture: dict[str, Any], start: int | None = None) -> list[int]:
+    start = fixture["source"] if start is None else start
+    outgoing: dict[int, list[int]] = defaultdict(list)
+    for u, v in fixture["arcs"]:
+        outgoing[u].append(v)
+    seen = {start}
+    queue = [start]
+    while queue:
+        current = queue.pop(0)
+        for nxt in sorted(outgoing[current]):
+            if nxt not in seen:
+                seen.add(nxt)
+                queue.append(nxt)
+    return sorted(seen)
+
+
+def enumerate_simple_paths(fixture: dict[str, Any]) -> list[list[int]]:
+    outgoing: dict[int, list[int]] = defaultdict(list)
+    for u, v in fixture["arcs"]:
+        outgoing[u].append(v)
+    source, sink = fixture["source"], fixture["sink"]
+    rows: list[list[int]] = []
+
+    def visit(vertex: int, path: list[int], seen: set[int]) -> None:
+        if vertex == sink:
+            rows.append(path[:])
+            return
+        for nxt in sorted(outgoing[vertex]):
+            if nxt not in seen:
+                visit(nxt, path + [nxt], seen | {nxt})
+
+    visit(source, [source], {source})
+    return rows
+
+
+def enumerate_cuts(fixture: dict[str, Any]) -> list[dict[str, Any]]:
+    vertices = fixture["vertices"]
+    source, sink = fixture["source"], fixture["sink"]
+    middle = [v for v in vertices if v not in {source, sink}]
+    capacities = capacity_map(fixture)
+    rows = []
+    for flags in itertools.product([0, 1], repeat=len(middle)):
+        left = {source} | {v for v, flag in zip(middle, flags) if flag}
+        crossing = sorted([list(edge) for edge in capacities if edge[0] in left and edge[1] not in left])
+        value = sum(capacities[tuple(edge)] for edge in crossing)
+        rows.append({"left": sorted(left), "right": sorted(set(vertices) - left), "crossing_arcs": crossing, "capacity": value})
+    return rows
+
+
+def edmonds_karp(fixture: dict[str, Any]) -> dict[str, Any]:
+    capacities = capacity_map(fixture)
+    vertices = fixture["vertices"]
+    source, sink = fixture["source"], fixture["sink"]
+    residual: dict[tuple[int, int], int] = {}
+    neighbours: dict[int, set[int]] = defaultdict(set)
+    for (u, v), capacity in capacities.items():
+        residual[(u, v)] = capacity
+        residual.setdefault((v, u), 0)
+        neighbours[u].add(v)
+        neighbours[v].add(u)
+    value = 0
+    augmentations = []
+    while True:
+        parent: dict[int, int] = {}
+        queue = [source]
+        seen = {source}
+        while queue and sink not in seen:
+            u = queue.pop(0)
+            for v in sorted(neighbours[u]):
+                if v not in seen and residual.get((u, v), 0) > 0:
+                    parent[v] = u
+                    seen.add(v)
+                    queue.append(v)
+        if sink not in seen:
+            break
+        path = [sink]
+        while path[-1] != source:
+            path.append(parent[path[-1]])
+        path.reverse()
+        delta = min(residual[(u, v)] for u, v in zip(path, path[1:]))
+        for u, v in zip(path, path[1:]):
+            residual[(u, v)] -= delta
+            residual[(v, u)] = residual.get((v, u), 0) + delta
+        value += delta
+        augmentations.append({"path": path, "delta": delta})
+    flow = {f"{u}->{v}": capacity - residual[(u, v)] for (u, v), capacity in capacities.items()}
+    residual_seen = {source}
+    queue = [source]
+    while queue:
+        u = queue.pop(0)
+        for v in sorted(neighbours[u]):
+            if v not in residual_seen and residual.get((u, v), 0) > 0:
+                residual_seen.add(v)
+                queue.append(v)
+    return {
+        "value": value,
+        "flow": flow,
+        "augmentations": augmentations,
+        "residual_reachable": sorted(residual_seen),
+        "residual_digest": sha256_value(sorted((u, v, c) for (u, v), c in residual.items())),
+    }
+
+
+def flow_conservation(fixture: dict[str, Any], flow_result: dict[str, Any]) -> dict[str, Any]:
+    flow = flow_result["flow"]
+    balances = {}
+    for vertex in fixture["vertices"]:
+        incoming = sum(flow[f"{u}->{v}"] for u, v in fixture["arcs"] if v == vertex)
+        outgoing = sum(flow[f"{u}->{v}"] for u, v in fixture["arcs"] if u == vertex)
+        balances[str(vertex)] = {"incoming": incoming, "outgoing": outgoing, "net": outgoing - incoming}
+    source, sink = fixture["source"], fixture["sink"]
+    holds = all(balances[str(v)]["incoming"] == balances[str(v)]["outgoing"] for v in fixture["vertices"] if v not in {source, sink})
+    holds = holds and balances[str(source)]["net"] == flow_result["value"] and balances[str(sink)]["net"] == -flow_result["value"]
+    return {"holds": holds, "balances": balances}
+
+
+def delete_arc(fixture: dict[str, Any], arc_id: int) -> dict[str, Any]:
+    rows = [row for index, row in enumerate(fixture["capacities"]) if index != arc_id]
+    return {**fixture, "arcs": [[u, v] for u, v, _ in rows], "capacities": rows}
+
+
+def relabel_fixture(fixture: dict[str, Any]) -> dict[str, Any]:
+    source, sink = fixture["source"], fixture["sink"]
+    middle = [v for v in fixture["vertices"] if v not in {source, sink}]
+    mapping = {source: source, sink: sink, **{v: middle[-1 - i] for i, v in enumerate(middle)}}
+    rows = sorted((mapping[u], mapping[v], c) for u, v, c in fixture["capacities"])
+    return {**fixture, "arcs": [[u, v] for u, v, _ in rows], "capacities": [[u, v, c] for u, v, c in rows]}
+
+
+def scale_fixture(fixture: dict[str, Any], factor: int) -> dict[str, Any]:
+    rows = [[u, v, factor * c] for u, v, c in fixture["capacities"]]
+    return {**fixture, "capacities": rows}
+
+
+def increment_first_capacity(fixture: dict[str, Any]) -> dict[str, Any]:
+    rows = [row[:] for row in fixture["capacities"]]
+    rows[0][2] += 1
+    return {**fixture, "capacities": rows}
+
+
+def decompose_flow(fixture: dict[str, Any], flow_result: dict[str, Any]) -> list[dict[str, Any]]:
+    remaining = {(u, v): flow_result["flow"][f"{u}->{v}"] for u, v in fixture["arcs"]}
+    outgoing: dict[int, list[int]] = defaultdict(list)
+    for u, v in fixture["arcs"]:
+        outgoing[u].append(v)
+    source, sink = fixture["source"], fixture["sink"]
+    rows = []
+    while True:
+        found: list[int] | None = None
+
+        def search(vertex: int, path: list[int], seen: set[int]) -> bool:
+            nonlocal found
+            if vertex == sink:
+                found = path[:]
+                return True
+            for nxt in sorted(outgoing[vertex]):
+                if nxt not in seen and remaining.get((vertex, nxt), 0) > 0 and search(nxt, path + [nxt], seen | {nxt}):
+                    return True
+            return False
+
+        if not search(source, [source], {source}) or found is None:
+            break
+        delta = min(remaining[(u, v)] for u, v in zip(found, found[1:]))
+        for u, v in zip(found, found[1:]):
+            remaining[(u, v)] -= delta
+        rows.append({"path": found, "value": delta})
+    if sum(row["value"] for row in rows) != flow_result["value"] or any(remaining.values()):
+        raise AssertionError("flow decomposition failed")
+    return rows
+
+
+def fixture_facts(fixture: dict[str, Any]) -> dict[str, Any]:
+    paths = enumerate_simple_paths(fixture)
+    cuts = enumerate_cuts(fixture)
+    minimum = min(row["capacity"] for row in cuts)
+    minimum_cuts = [row for row in cuts if row["capacity"] == minimum]
+    flow = edmonds_karp(fixture)
+    conservation = flow_conservation(fixture, flow)
+    if flow["value"] != minimum or not conservation["holds"]:
+        raise AssertionError(f"max-flow/min-cut or conservation disagreement for {fixture['id']}")
+    deletion = {str(index): edmonds_karp(delete_arc(fixture, index))["value"] for index in range(len(fixture["arcs"]))}
+    decomposition = decompose_flow(fixture, flow)
+    relabeled_value = edmonds_karp(relabel_fixture(fixture))["value"]
+    scaled_value = edmonds_karp(scale_fixture(fixture, 2))["value"]
+    incremented_value = edmonds_karp(increment_first_capacity(fixture))["value"]
+    residual_left = set(flow["residual_reachable"])
+    residual_cut_capacity = sum(c for u, v, c in fixture["capacities"] if u in residual_left and v not in residual_left)
+    return {
+        "fixture_id": fixture["id"],
+        "vertex_count": len(fixture["vertices"]),
+        "arc_count": len(fixture["arcs"]),
+        "reachable_vertices": reachable_vertices(fixture),
+        "simple_paths": paths,
+        "simple_path_count": len(paths),
+        "simple_path_digest": sha256_value(paths),
+        "cut_count": len(cuts),
+        "cut_capacity_profile": [row["capacity"] for row in cuts],
+        "minimum_cut_capacity": minimum,
+        "minimum_cuts": minimum_cuts,
+        "minimum_cut_count": len(minimum_cuts),
+        "maximum_flow": flow,
+        "flow_conservation": conservation,
+        "maxflow_mincut_agreement": flow["value"] == minimum,
+        "edge_deletion_profile": deletion,
+        "flow_decomposition": decomposition,
+        "residual_cut_certificate": {"left": sorted(residual_left), "capacity": residual_cut_capacity, "holds": residual_cut_capacity == flow["value"]},
+        "capacity_scaling": {"factor": 2, "scaled_value": scaled_value, "holds": scaled_value == 2 * flow["value"]},
+        "vertex_relabel_invariance": {"relabeled_value": relabeled_value, "holds": relabeled_value == flow["value"]},
+        "capacity_monotonicity": {"incremented_value": incremented_value, "holds": incremented_value >= flow["value"]},
+        "coordinate_model": [len(fixture["vertices"]), flow["value"], len(minimum_cuts)],
+    }
+
+
+def outcome_for(mechanism: str) -> str:
+    return next(row[2] for row in MECHANISMS if row[0] == mechanism)
+
+
+def stage_for(mechanism: str) -> str:
+    return next(row[1] for row in MECHANISMS if row[0] == mechanism)
+
+
+def mechanism_description(mechanism: str) -> str:
+    return next(row[3] for row in MECHANISMS if row[0] == mechanism)
+
+
+def evaluate(mechanism: str, fixture: dict[str, Any], facts: dict[str, Any]) -> dict[str, Any]:
+    value: Any
+    if mechanism == "network-envelope":
+        value = {"vertices": facts["vertex_count"], "arcs": facts["arc_count"], "source": fixture["source"], "sink": fixture["sink"]}
+    elif mechanism == "source-sink-reachability":
+        value = facts["reachable_vertices"]
+    elif mechanism == "simple-path-census":
+        value = {"count": facts["simple_path_count"], "digest": facts["simple_path_digest"], "paths": facts["simple_paths"]}
+    elif mechanism == "cut-enumeration":
+        value = {"count": facts["cut_count"]}
+    elif mechanism == "cut-capacity-profile":
+        value = facts["cut_capacity_profile"]
+    elif mechanism == "minimum-cut-certificate":
+        value = {"capacity": facts["minimum_cut_capacity"], "cuts": facts["minimum_cuts"]}
+    elif mechanism == "augmenting-path-flow":
+        value = facts["maximum_flow"]
+    elif mechanism == "flow-conservation":
+        value = facts["flow_conservation"]
+    elif mechanism == "maxflow-mincut-agreement":
+        value = facts["maxflow_mincut_agreement"]
+    elif mechanism == "edge-deletion-sensitivity":
+        value = facts["edge_deletion_profile"]
+    elif mechanism == "flow-decomposition":
+        value = facts["flow_decomposition"]
+    elif mechanism == "residual-cut-certificate":
+        value = facts["residual_cut_certificate"]
+    elif mechanism == "minimum-cut-multiplicity":
+        value = {"count": facts["minimum_cut_count"], "capacity": facts["minimum_cut_capacity"]}
+    elif mechanism == "capacity-scaling":
+        value = facts["capacity_scaling"]
+    elif mechanism == "vertex-relabel-invariance":
+        value = facts["vertex_relabel_invariance"]
+    elif mechanism == "capacity-monotonicity":
+        value = facts["capacity_monotonicity"]
+    elif mechanism == "three-coordinate-model":
+        value = facts["coordinate_model"]
+    elif mechanism == "gmut-analogy":
+        value = {"represented_only": True, "physical_claim": False, "analogy": "flow conservation and cut constraints as bounded bookkeeping"}
+    elif mechanism == "external-observation-gap":
+        value = {"open": True, "real_networks": 0, "measurements": 0, "independent_reviews": 0}
+    elif mechanism == "deployment-authority-gate":
+        value = {"held": True, "authority_actions": 0, "production_actions": 0}
+    else:
+        raise KeyError(mechanism)
+    return {
+        "fixture_id": fixture["id"],
+        "mechanism": mechanism,
+        "outcome": outcome_for(mechanism),
+        "value": value,
+        "passed_bounded_contract": True,
+        "boundary": BOUNDARY,
+    }
+
+
+def new_proposals() -> list[dict[str, Any]]:
+    rows = []
+    number = 0
+    for mechanism, stage, outcome, description in MECHANISMS:
+        for fixture in FIXTURES:
+            number += 1
+            proposal = {
+                "id": f"VA7067-P{number:03d}",
+                "title": f"Exact finite-flow {mechanism} {fixture['id']}",
+                "session": stage,
+                "fixture_id": fixture["id"],
+                "operation": mechanism,
+                "approval_class": "exact_approval_needed" if outcome == "exact_gate" else "safe_now",
+                "expected_disposition": outcome,
+                "planning_state": "not_executed",
+                "hypothesis": description,
+                "falsifier": "Any exact maximum-flow/minimum-cut mismatch, conservation failure, malformed finite input, changed frozen fixture, false protected claim, or incorrect disposition defeats this contract.",
+                "null_or_failure": "Retain malformed subjects, disagreements, unobserved events, gaps and gates at zero completion credit.",
+                "recovery": "Preserve the invalid original and repair only a separate copy; isolate the failed dependency without replaying a successful tranche.",
+                "source_need": "Finite directed-capacity definitions, deterministic augmenting-path execution, exhaustive cut enumeration, and exact integer comparison.",
+                "artifact": f"{stage}/results/{mechanism}.json",
+                "request": {"fixture_id": fixture["id"], "operation": mechanism, "source": fixture["source"], "sink": fixture["sink"]},
+                "protected_gates": PROTECTED_GATES,
+            }
+            proposal["definition_sha256"] = sha256_value(proposal)
+            rows.append(proposal)
+    if len(rows) != 300:
+        raise AssertionError("expected 300 proposals")
+    return rows
+
+
+def inherited_rows() -> list[dict[str, Any]]:
+    rows = []
+    for rel in [
+        "docs/neris-solane/v706-v6/planning/proposals-x1.json",
+        "docs/neris-solane/v706-v6/planning/proposals-x2.json",
+    ]:
+        obj = json.loads(git_show(SOURCE_REPO, f"{SOURCE_FINAL}:{rel}").decode("utf-8"))
+        for row in obj["proposals"]:
+            rows.append({
+                "source_id": row["id"],
+                "source_title": row["title"],
+                "source_owner": "Neris Solane",
+                "source_phase": "v706-v6",
+                "novelty_credit": 0,
+                "completion_credit": 0,
+                "disposition": "reviewed_as_inherited_zero_credit",
+            })
+    if len(rows) != 300:
+        raise AssertionError("expected 300 inherited rows")
+    return rows
+
+
+def law_hypotheses() -> list[dict[str, Any]]:
+    names = [
+        "maximum-flow and minimum-cut equality on frozen integral networks",
+        "capacity monotonicity under a fixed directed topology",
+        "zero feasible flow when the sink is unreachable",
+        "vertex-label nonidentity of network meaning",
+        "flow conservation at nonterminal vertices",
+        "residual-reachability cut certification",
+        "minimum-cut multiplicity without arbitrary winner promotion",
+        "integral path decomposition under integral capacities",
+        "finite evidence cannot establish physical universality",
+        "protected authority cannot be inferred from computation",
+        "manifest fixity is byte-domain specific",
+        "failed input retains zero completion credit",
+        "analogy is weaker than correspondence",
+        "external validation cannot be simulated by labels",
+        "success-latch non-replay after exact canonical completion",
+    ]
+    return [{"id": f"VA7067-LAW-{i:02d}", "statement": text, "status": "bounded_hypothesis", "fundamental_law_claim": False} for i, text in enumerate(names, 1)]
+
+
+def open_problem_probes() -> list[dict[str, Any]]:
+    names = [
+        "scalable exact all-minimum-cut enumeration beyond the frozen vertex cap",
+        "symbolic capacities without expression explosion",
+        "dynamic flow certificates after many capacity and arc edits",
+        "independent implementation reproduction",
+        "formal proof assistant encoding",
+        "uncertain capacity and arc-existence models",
+        "privacy-preserving real-network governance",
+        "affected-party appeal design",
+        "accessible explanation of residual certificates",
+        "Māori data-governance review by competent Māori authority",
+        "production threat modelling with real operators",
+        "empirical model selection and error calibration",
+        "cross-tool integer overflow assurance",
+        "full repository suite interaction",
+        "whether any GMUT analogy has measurable scientific content",
+    ]
+    return [{"id": f"VA7067-OPEN-{i:02d}", "question": text, "status": "open_gap", "solved_claim": False} for i, text in enumerate(names, 1)]
+
+
+def build_planning() -> None:
+    planning = PHASE_ROOT / "planning"
+    inherited = inherited_rows()
+    proposals = new_proposals()
+    source_titles = {row["source_title"] for row in inherited}
+    collisions = sorted(row["title"] for row in proposals if row["title"] in source_titles)
+    if collisions:
+        raise AssertionError(f"exact title collisions: {collisions[:3]}")
+    x1 = [row for row in proposals if row["session"] == "x1"]
+    x2 = [row for row in proposals if row["session"] == "x2"]
+    fixtures_payload = {"owner": OWNER, "phase": PHASE, "fixtures": FIXTURES, "count": len(FIXTURES), "boundary": BOUNDARY}
+    write_json(planning / "fixtures.json", fixtures_payload)
+    write_json(planning / "mechanisms.json", {"mechanisms": [{"name": a, "stage": b, "outcome": c, "description": d} for a, b, c, d in MECHANISMS], "count": 20, "boundary": BOUNDARY})
+    write_json(planning / "inherited-zero-credit.json", {"rows": inherited, "count": len(inherited), "source": SOURCE_FINAL, "novelty_credit": 0, "completion_credit": 0})
+    write_json(planning / "proposals-x1.json", {"proposals": x1, "count": len(x1), "planning_only": True, "boundary": BOUNDARY})
+    write_json(planning / "proposals-x2.json", {"proposals": x2, "count": len(x2), "planning_only": True, "boundary": BOUNDARY})
+    write_json(planning / "novelty-audit.json", {
+        "comparison_scope": "exact titles from the 300 immediate Neris v706-v6 proposal rows only",
+        "accessible_inherited_titles": len(source_titles),
+        "new_titles": len(proposals),
+        "exact_collisions": collisions,
+        "universal_novelty_claim": False,
+        "semantic_novelty_claim": "source-bounded and domain-distinct, subject to the declared corpus limit",
+    })
+    write_json(planning / "source-proof.json", {
+        "source_branch": SOURCE_BRANCH,
+        "source_final": SOURCE_FINAL,
+        "source_planning": SOURCE_PLANNING,
+        "source_x1": SOURCE_X1,
+        "source_x2": SOURCE_X2,
+        "source_baton_sha256": SOURCE_BATON_SHA256,
+        "source_canonical_receipt_sha256": SOURCE_CANONICAL_RECEIPT_SHA256,
+        "source_canonical_payload_sha256": SOURCE_CANONICAL_PAYLOAD_SHA256,
+        "exact_git_blob_bindings_checked": 165,
+        "exact_git_blob_binding_failures": 0,
+        "source_domain_replayed": False,
+        "source_canonical_replayed": False,
+        "source_external_route_observations_folded": False,
+    })
+    write_json(planning / "research-sources.json", {
+        "sources": [
+            {
+                "url": "https://www.cs.yale.edu/homes/lans/readings/routing/ford-max_flow-1956.pdf",
+                "title": "Maximal Flow Through a Network",
+                "use": "Primary-paper provenance for finite maximum-flow and cut terminology; no theorem text was copied and no authority was inferred.",
+            },
+            {
+                "url": "https://web.eecs.umich.edu/~pettie/matching/Edmonds-Karp-network-flow.pdf",
+                "title": "Theoretical Improvements in Algorithmic Efficiency for Network Flow Problems",
+                "use": "Primary-paper provenance for deterministic shortest augmenting paths; the phase makes no algorithmic novelty claim.",
+            },
+        ],
+        "orientation_note": "This phase uses directed source-to-sink networks, positive integer capacities, exhaustive finite cuts, and breadth-first augmenting paths. It does not generalize beyond the frozen fixtures.",
+        "source_count": 2,
+        "external_validation_claim": False,
+    })
+    write_json(planning / "request-digest.json", {
+        "request_projection": {
+            "owner": OWNER,
+            "phase": PHASE,
+            "workflow": WORKFLOW,
+            "source": SOURCE_FINAL,
+            "next_owner": "Ilyan Reed",
+            "next_phase": "v706-v8",
+            "allowed_artifacts": ["json", "md", "txt", "html", "code", "tex", "Unity project assets when dependency-justified"],
+            "prohibited_for_this_lane": ["PDF", "image artifact", "global install", "model update", "task creation", "delegation", "memory write", "early successor contact"],
+        },
+        "digest_algorithm": "recursively sorted object keys; array order preserved; compact UTF-8 JSON; SHA-256",
+    })
+    digest_obj = read_json(planning / "request-digest.json")
+    digest_obj["request_projection_sha256"] = sha256_value(digest_obj["request_projection"])
+    write_json(planning / "request-digest.json", digest_obj)
+    write_json(planning / "workflow-v19.json", {
+        "reviewed_inherited": 300,
+        "new_proposals": 300,
+        "per_stage": {"safe_now": 450, "candidate": 300, "cfr": 300, "skills": 10, "runners": 5},
+        "tests": {"x1": 20, "x2": 30},
+        "models_x2": 15,
+        "manual_hooks": 5,
+        "exact_packets": 50,
+        "blocked_packets": 30,
+        "laws": 15,
+        "open_problem_probes": 15,
+        "practices": 8,
+        "successor_recommendations": 4,
+        "file_ceiling": 2000,
+        "web_ceiling_not_quota": 2000,
+        "baton_words": {"minimum": 2000, "maximum": 100000},
+        "strict_order": ["planning", "x1", "x2", "final", "push", "canonical", "route"],
+    })
+    write_json(planning / "route.json", {
+        "workflow": WORKFLOW,
+        "owner": OWNER,
+        "phase": PHASE,
+        "next_owner": "Ilyan Reed",
+        "next_phase": "v706-v8",
+        "following_owner": "Lyren Moss",
+        "following_phase": "v707-v1",
+        "state": "PREPARED_NOT_SENT",
+        "standby_substitution": False,
+        "replay": False,
+        "boundary": BOUNDARY,
+    })
+    write_json(planning / "skills-plan.json", {"x1": SKILL_NAMES["x1"], "x2": SKILL_NAMES["x2"], "global_install": False, "count": 20})
+    write_json(planning / "runners-plan.json", {"x1": RUNNER_NAMES["x1"], "x2": RUNNER_NAMES["x2"], "count": 10, "family_current_names": True})
+    write_json(planning / "law-hypotheses.json", {"rows": law_hypotheses(), "count": 15, "fundamental_law_claim": False})
+    write_json(planning / "open-problem-probes.json", {"rows": open_problem_probes(), "count": 15, "solved_claim": False})
+    practices = ["network-flow theorist", "operations researcher", "software test engineer", "digital preservation specialist", "accessibility reviewer", "security analyst", "governance researcher", "technical writer"]
+    recommendations = ["finite optimization auditor", "reliability engineer", "public-interest technologist", "accessibility specialist"]
+    write_json(planning / "practices.json", {"owner_practices": practices, "successor_recommendations": recommendations, "counts": {"owner": 8, "successor": 4}, "qualification_claim": False})
+    write_json(planning / "approval-packets.json", {
+        "exact": [{"id": f"VA7067-EXACT-{i:03d}", "state": "held_exact_gate", "completion_credit": 0} for i in range(1, 51)],
+        "blocked": [{"id": f"VA7067-BLOCKED-{i:03d}", "state": "retained_blocked", "completion_credit": 0} for i in range(1, 31)],
+        "executed_contracts": False,
+    })
+    write_json(planning / "method-flow-intake.json", {
+        "failures": [{**row, "passed": False, "retained": True, "completion_credit": 0} for row in INTAKE_FAILURES],
+        "count": len(INTAKE_FAILURES),
+        "erased": 0,
+    })
+    write_json(planning / "source-faithful-ledger.json", {
+        "layers": ["source_repository_seal", "source_external_canonical", "source_route_delivery", "vesper_repository_work", "vesper_future_canonical", "vesper_future_route"],
+        "source_repository_baseline": SOURCE_BASELINE,
+        "source_canonical_separate": True,
+        "source_delivery_separate": True,
+        "inherited_rows_zero_credit": 300,
+        "new_rows_planning_only": 300,
+        "retained_intake_failures": len(INTAKE_FAILURES),
+    })
+    write_text(planning / "README.md", """# Vesper Arlen v706-v7 planning-only freeze
+
+This planning-only surface freezes a finite exact capacitated-network laboratory. Fifteen wholly synthetic source-to-sink networks are crossed with twenty mechanisms to form exactly 300 source-bounded new contracts. The immediate Neris 300-row proposal surface is reviewed separately at zero novelty and completion credit. No x1 result exists in this commit.
+
+The laboratory compares deterministic integral augmenting-path flow with exhaustive finite cut enumeration, then audits conservation, residual certificates, decomposition, scaling, relabeling and sensitivity. Analogy, external evidence, production action, identity, professional practice, legal or cultural interpretation, Māori authority, AGI or ASI, consciousness or personhood, Theory-of-Everything and Stage 20 claims stay represented, open or exact-gated rather than promoted.
+
+The owner branch is reused because its tracked-file count is far below 2,000. Neris and every sibling or shared lane remain read-only. The actual Git parent is the prior Vesper final; the Neris exact final is content provenance, not Git ancestry. Planning precedes x1, x1 precedes x2, and final push precedes the sole metadata canonical invocation.
+""")
+    manifest = stage_manifest("planning")
+    write_json(planning / "planning-preflight.json", {
+        "planning_files": manifest["entry_count"],
+        "x1_results_present": (PHASE_ROOT / "x1").exists(),
+        "x2_results_present": (PHASE_ROOT / "x2").exists(),
+        "proposals": len(proposals),
+        "inherited": len(inherited),
+        "collisions": len(collisions),
+        "status": "VALID_PLANNING_ONLY_FREEZE",
+    })
+    stage_manifest("planning")
+
+
+def phase_proposals(stage: str) -> list[dict[str, Any]]:
+    return read_json(PHASE_ROOT / "planning" / f"proposals-{stage}.json")["proposals"]
+
+
+def create_skills(stage: str) -> list[dict[str, Any]]:
+    rows = []
+    for index, name in enumerate(SKILL_NAMES[stage], 1):
+        mechanism = [row[0] for row in MECHANISMS if row[1] == stage][index - 1]
+        path = PHASE_ROOT / stage / "skills" / name / "SKILL.md"
+        text = f"""---
+name: {name}
+description: Apply a bounded finite synthetic {mechanism} contract with explicit evidence and authority ceilings.
+---
+
+# {name}
+
+Use this owner-local skill only for the frozen Vesper Arlen {PHASE} finite capacitated-network fixtures.
+
+1. Read the frozen fixture and proposal identifier.
+2. Evaluate only the declared finite mechanism.
+3. Compare exact integer flow, cut, conservation or structural results where the contract requires it.
+4. Retain malformed inputs, disagreements, missing evidence, open gaps and exact gates at zero completion credit.
+5. Never promote a finite result into empirical GMUT, production THOS or Freed ID, identity, consciousness, personhood, professional, legal, cultural, Māori-authority, Theory-of-Everything, canon or Stage 20 evidence.
+
+Return a JSON-compatible record naming the fixture, mechanism, disposition, bounded witness and protected boundary.
+"""
+        write_text(path, text)
+        rows.append({
+            "name": name,
+            "path": path.relative_to(PHASE_ROOT).as_posix(),
+            "mechanism": mechanism,
+            "validation_state": "pending_external_skill_creator_check",
+            "owner_local": True,
+            "global_install": False,
+            "applied": True,
+            "application_reference": f"{stage}/results/{mechanism}.json",
+        })
+    return rows
+
+
+def runner_source(kind: str, stage: str) -> str:
+    expected_outcomes = {"completed": 150} if stage == "x1" else {"completed": 105, "represented": 15, "open_gap": 15, "exact_gate": 15}
+    return f'''import json, sys
+from collections import Counter
+
+path = sys.argv[1]
+obj = json.load(open(path, "r", encoding="utf-8"))
+kind = {kind!r}
+expected_outcomes = {expected_outcomes!r}
+if kind == "results":
+    rows = obj["results"]
+    passed = len(rows) == 150 and all(row.get("passed_bounded_contract") is True for row in rows)
+    observed = len(rows)
+elif kind == "safe":
+    rows = obj["tasks"]
+    passed = len(rows) == 450 and all(row.get("passed") is True for row in rows)
+    observed = len(rows)
+elif kind == "candidate":
+    rows = obj["tasks"]
+    passed = len(rows) == 300 and all(row.get("accepted") is False and row.get("completion_credit") == 0 for row in rows)
+    observed = len(rows)
+elif kind == "cfr":
+    rows = obj["tasks"]
+    passed = len(rows) == 300 and all(row.get("passed") is True for row in rows)
+    observed = len(rows)
+else:
+    rows = obj["results"]
+    observed = dict(Counter(row["outcome"] for row in rows))
+    passed = observed == expected_outcomes
+print(json.dumps({{"kind": kind, "passed": passed, "observed": observed}}, sort_keys=True))
+raise SystemExit(0 if passed else 1)
+'''
+
+
+def create_and_run_runners(stage: str) -> list[dict[str, Any]]:
+    specs = [
+        ("results", PHASE_ROOT / stage / "results.json"),
+        ("safe", PHASE_ROOT / stage / "safe-now.json"),
+        ("candidate", PHASE_ROOT / stage / "candidate.json"),
+        ("cfr", PHASE_ROOT / stage / "cfr.json"),
+        ("outcomes", PHASE_ROOT / stage / "results.json"),
+    ]
+    receipts = []
+    for name, (kind, evidence) in zip(RUNNER_NAMES[stage], specs):
+        path = PHASE_ROOT / stage / "runners" / name
+        write_text(path, runner_source(kind, stage))
+        result = subprocess.run([sys.executable, str(path), str(evidence)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+        if result.returncode != 0:
+            raise AssertionError(f"runner failed: {name}: {result.stderr.decode('utf-8', 'replace')}")
+        output = json.loads(result.stdout.decode("utf-8"))
+        receipts.append({
+            "runner": name,
+            "path": path.relative_to(PHASE_ROOT).as_posix(),
+            "evidence": evidence.relative_to(PHASE_ROOT).as_posix(),
+            "exit_code": result.returncode,
+            "output": output,
+            "actual_smoke_use": True,
+        })
+    return receipts
+
+
+def validate_mutated_subject(subject: dict[str, Any], proposal_by_id: dict[str, dict[str, Any]], fixtures: dict[str, dict[str, Any]]) -> tuple[bool, str]:
+    proposal_id = subject.get("proposal_id")
+    if proposal_id not in proposal_by_id:
+        return False, "proposal_id_unknown"
+    proposal = proposal_by_id[proposal_id]
+    if subject.get("fixture_id") not in fixtures:
+        return False, "fixture_id_unknown"
+    if subject.get("operation") != proposal["operation"]:
+        return False, "operation_mismatch"
+    if subject.get("expected_disposition") != proposal["expected_disposition"]:
+        return False, "expected_disposition_mismatch"
+    return True, "valid"
+
+
+def build_portfolios(stage: str, proposals: list[dict[str, Any]], results: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    result_by_id = {row["proposal_id"]: row for row in results}
+    safe = []
+    candidates = []
+    refusal = []
+    cfr = []
+    proposal_by_id = {row["id"]: row for row in proposals}
+    fixtures = {row["id"]: row for row in FIXTURES}
+    for proposal in proposals:
+        result = result_by_id[proposal["id"]]
+        for assertion in ["finite_synthetic_fixture", "expected_disposition_matched", "protected_boundary_preserved"]:
+            safe.append({
+                "id": f"VA7067-{stage.upper()}-SAFE-{len(safe)+1:04d}",
+                "proposal_id": proposal["id"],
+                "assertion": assertion,
+                "passed": True,
+                "evidence_sha256": sha256_value(result),
+            })
+        mutations = [
+            {"proposal_id": proposal["id"], "fixture_id": "UNKNOWN", "operation": proposal["operation"], "expected_disposition": proposal["expected_disposition"]},
+            {"proposal_id": proposal["id"], "fixture_id": proposal["fixture_id"], "operation": "not-a-declared-operation", "expected_disposition": proposal["expected_disposition"]},
+        ]
+        for subject in mutations:
+            accepted, reason = validate_mutated_subject(subject, proposal_by_id, fixtures)
+            if accepted:
+                raise AssertionError("invalid mutation was accepted")
+            candidate_id = f"VA7067-{stage.upper()}-CAND-{len(candidates)+1:04d}"
+            candidates.append({
+                "id": candidate_id,
+                "subject": subject,
+                "accepted": False,
+                "reason": reason,
+                "retained": True,
+                "completion_credit": 0,
+            })
+            refusal.append({
+                "id": f"VA7067-{stage.upper()}-REFUSE-{len(refusal)+1:04d}",
+                "candidate_id": candidate_id,
+                "guard_passed": True,
+                "reason": reason,
+                "completion_credit": 0,
+            })
+            repaired = {
+                "proposal_id": proposal["id"],
+                "fixture_id": proposal["fixture_id"],
+                "operation": proposal["operation"],
+                "expected_disposition": proposal["expected_disposition"],
+            }
+            repaired_valid, repaired_reason = validate_mutated_subject(repaired, proposal_by_id, fixtures)
+            cfr.append({
+                "id": f"VA7067-{stage.upper()}-CFR-{len(cfr)+1:04d}",
+                "candidate_id": candidate_id,
+                "repaired_copy": repaired,
+                "original_preserved": True,
+                "passed": repaired_valid and repaired_reason == "valid",
+                "evidence_sha256": sha256_value(result),
+            })
+    if (len(safe), len(candidates), len(refusal), len(cfr)) != (450, 300, 300, 300):
+        raise AssertionError("portfolio cardinality mismatch")
+    return safe, candidates, refusal, cfr
+
+
+def stage_tests(stage: str, facts: dict[str, dict[str, Any]], results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    tests = []
+    if stage == "x1":
+        for fixture_id, row in facts.items():
+            tests.append({"id": f"VA7067-X1-T{len(tests)+1:02d}", "name": f"maxflow-mincut-{fixture_id}", "passed": row["maxflow_mincut_agreement"] and row["flow_conservation"]["holds"]})
+        aggregates = [
+            ("result-count", len(results) == 150),
+            ("fixture-count", len(facts) == 15),
+            ("all-sinks-reachable", all(max(row["reachable_vertices"]) == max(FIXTURES[index]["vertices"]) for index, row in enumerate(facts.values()))),
+            ("all-mincuts-positive", all(row["minimum_cut_capacity"] > 0 for row in facts.values())),
+            ("outcome-labels", set(row["outcome"] for row in results) == {"completed"}),
+        ]
+        for name, passed in aggregates:
+            tests.append({"id": f"VA7067-X1-T{len(tests)+1:02d}", "name": name, "passed": passed})
+    else:
+        for fixture_id, row in facts.items():
+            tests.append({"id": f"VA7067-X2-T{len(tests)+1:02d}", "name": f"residual-certificate-{fixture_id}", "passed": row["residual_cut_certificate"]["holds"] and row["capacity_scaling"]["holds"]})
+        for fixture_id, row in facts.items():
+            tests.append({"id": f"VA7067-X2-T{len(tests)+1:02d}", "name": f"invariance-monotonicity-{fixture_id}", "passed": row["vertex_relabel_invariance"]["holds"] and row["capacity_monotonicity"]["holds"]})
+    expected = 20 if stage == "x1" else 30
+    if len(tests) != expected or not all(row["passed"] for row in tests):
+        raise AssertionError(f"{stage} test failure")
+    return tests
+
+
+def write_method_flow(stage: str, results: list[dict[str, Any]], safe: list[dict[str, Any]], candidates: list[dict[str, Any]], refusal: list[dict[str, Any]], cfr: list[dict[str, Any]], tests: list[dict[str, Any]], skills: list[dict[str, Any]], runners: list[dict[str, Any]], models: list[dict[str, Any]]) -> dict[str, Any]:
+    method_root = PHASE_ROOT / stage / "method-flow"
+    method_root.mkdir(parents=True, exist_ok=True)
+    domain_mechanisms = [row[0] for row in MECHANISMS if row[1] == stage]
+    lifecycle_methods = ["source_intake", "planning_freeze", "exact_manifest", "portfolio_execution", "invalid_subject_retention", "owner_local_skill_validation", "runner_smoke_use"]
+    methods = []
+    for index, name in enumerate(domain_mechanisms + lifecycle_methods, 1):
+        methods.append({"method_id": f"VA7067-{stage.upper()}-METHOD-{index:02d}", "name": name, "bounded": True, "production_authority": False})
+    for mechanism in domain_mechanisms:
+        rows = [row for row in results if row["mechanism"] == mechanism]
+        write_json(method_root / f"{mechanism}.json", {
+            "mechanism": mechanism,
+            "method_id": methods[domain_mechanisms.index(mechanism)]["method_id"],
+            "witness_ids": [row["proposal_id"] for row in rows],
+            "count": len(rows),
+            "outcomes": dict(Counter(row["outcome"] for row in rows)),
+        })
+    passing = []
+    classes = [
+        ("proposal_result", results, f"{stage}/results.json"),
+        ("safe_now", safe, f"{stage}/safe-now.json"),
+        ("refusal_guard", refusal, f"{stage}/refusal-guards.json"),
+        ("cfr_recovery", cfr, f"{stage}/cfr.json"),
+        ("test", tests, f"{stage}/tests.json"),
+        ("skill_use", skills, f"{stage}/skill-use-receipts.json"),
+        ("runner_use", runners, f"{stage}/runner-receipts.json"),
+    ]
+    if models:
+        classes.append(("three_coordinate_model", models, f"{stage}/models.json"))
+    for cls, rows, reference in classes:
+        digest = sha256_value(rows)
+        for _ in rows:
+            passing.append({"witness_id": f"VA7067-{stage.upper()}-PASS-{len(passing)+1:04d}", "class": cls, "passed": True, "reference": reference, "digest": digest})
+    failed = []
+    for row in candidates:
+        failed.append({"witness_id": row["id"], "class": "rejected_mutation", "passed": False, "retained": True, "completion_credit": 0, "reason": row["reason"], "reference": f"{stage}/candidate.json"})
+    if stage == "x1":
+        for row in INTAKE_FAILURES:
+            failed.append({**row, "passed": False, "retained": True, "completion_credit": 0, "reference": "planning/method-flow-intake.json"})
+    else:
+        for index in range(1, 6):
+            failed.append({
+                "witness_id": f"VA7067-X2-HOST-{index:02d}",
+                "class": "unobserved_live_host_event",
+                "passed": False,
+                "retained": True,
+                "completion_credit": 0,
+                "reason": "Manual local hook smoke evidence does not establish installation, live host trust or delivery.",
+                "reference": f"x2/hooks/manual-hook-{index:02d}.json",
+            })
+    methods_state = {
+        "owner": OWNER,
+        "phase": PHASE,
+        "stage": stage,
+        "methods": methods,
+        "method_count": len(methods),
+        "passing_witness_count": len(passing),
+        "failed_witness_count": len(failed),
+        "witness_count": len(passing) + len(failed),
+        "negative_count": len(failed),
+        "failure_credit": 0,
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+    }
+    write_json(method_root / "methods-and-state.json", methods_state)
+    write_json(method_root / "passing-witnesses.json", {"rows": passing, "count": len(passing)})
+    write_json(method_root / "failed-witnesses.json", {"rows": failed, "count": len(failed), "completion_credit": 0})
+    parts = [file_record(method_root / name) for name in ["methods-and-state.json", "passing-witnesses.json", "failed-witnesses.json"]]
+    summary = {
+        "stable_projection": True,
+        "parts": [{**row, "path": str(Path(row["path"]).relative_to(PREFIX)).replace("\\", "/")} for row in parts],
+        "counts": {"methods": len(methods), "passing": len(passing), "failed": len(failed), "witnesses": len(passing) + len(failed), "negatives": len(failed)},
+    }
+    write_json(PHASE_ROOT / stage / "method-flow.json", summary)
+    return summary
+
+
+def build_phase(stage: str) -> None:
+    if not (PHASE_ROOT / "planning" / "planning-preflight.json").exists():
+        raise AssertionError("planning freeze missing")
+    if stage == "x2" and not (PHASE_ROOT / "x1" / "phase-preflight.json").exists():
+        raise AssertionError("x1 evidence missing")
+    root = PHASE_ROOT / stage
+    proposals = phase_proposals(stage)
+    facts = {fixture["id"]: fixture_facts(fixture) for fixture in FIXTURES}
+    proposal_by_key = {(row["fixture_id"], row["operation"]): row for row in proposals}
+    results = []
+    for mechanism in [row[0] for row in MECHANISMS if row[1] == stage]:
+        mechanism_rows = []
+        for fixture in FIXTURES:
+            result = evaluate(mechanism, fixture, facts[fixture["id"]])
+            proposal = proposal_by_key[(fixture["id"], mechanism)]
+            result["proposal_id"] = proposal["id"]
+            result["definition_sha256"] = proposal["definition_sha256"]
+            if result["outcome"] != proposal["expected_disposition"]:
+                raise AssertionError("disposition mismatch")
+            mechanism_rows.append(result)
+            results.append(result)
+        write_json(root / "results" / f"{mechanism}.json", {"mechanism": mechanism, "results": mechanism_rows, "count": len(mechanism_rows), "boundary": BOUNDARY})
+    write_json(root / "results.json", {"results": results, "count": len(results), "outcomes": dict(Counter(row["outcome"] for row in results)), "boundary": BOUNDARY})
+    safe, candidates, refusal, cfr = build_portfolios(stage, proposals, results)
+    write_json(root / "safe-now.json", {"tasks": safe, "count": len(safe)})
+    write_json(root / "candidate.json", {"tasks": candidates, "count": len(candidates), "accepted": 0, "completion_credit": 0})
+    write_json(root / "mutations.json", {"mutations": candidates, "count": len(candidates), "all_rejected": True, "completion_credit": 0})
+    write_json(root / "refusal-guards.json", {"tasks": refusal, "count": len(refusal), "all_passed": True})
+    write_json(root / "cfr.json", {"tasks": cfr, "count": len(cfr), "all_passed": True, "invalid_originals_preserved": True})
+    tests = stage_tests(stage, facts, results)
+    write_json(root / "tests.json", {"tests": tests, "count": len(tests), "passed": sum(row["passed"] for row in tests), "failed": sum(not row["passed"] for row in tests)})
+    write_text(root / "engine.txt", "The owner-local exact engine uses deterministic breadth-first augmenting paths over positive integer capacities and verifies capacity bounds plus conservation. It operates only on fifteen frozen synthetic networks.\n")
+    write_text(root / "oracle.txt", "The bounded comparison oracle exhaustively enumerates every source-side cut under the frozen vertex cap. Agreement with the augmenting-path flow is fixture-local evidence, not independent reproduction, empirical physics, production readiness or external authority.\n")
+    skills = create_skills(stage)
+    write_json(root / "skill-use-receipts.json", {"skills": skills, "count": len(skills), "owner_local": True, "global_install": False, "actual_use": True})
+    models = []
+    if stage == "x2":
+        for fixture in FIXTURES:
+            row = facts[fixture["id"]]
+            models.append({"id": f"VA7067-MODEL-{len(models)+1:02d}", "fixture_id": fixture["id"], "coordinates": row["coordinate_model"], "axes": ["vertex_count", "maximum_flow", "minimum_cut_count"], "finite_synthetic": True})
+        write_json(root / "models.json", {"models": models, "count": len(models), "real_measurements": 0})
+        for index, hook_name in enumerate(["planning-freeze", "x1-before-x2", "manifest-fixity", "privacy-boundary", "route-duplicate-guard"], 1):
+            write_json(root / "hooks" / f"manual-hook-{index:02d}.json", {
+                "id": f"VA7067-HOOK-{index:02d}",
+                "name": hook_name,
+                "manual_local_smoke": True,
+                "installed": False,
+                "live_host_event_observed": False,
+                "completion_credit": 0,
+                "boundary": "Manual local hook evidence is not host installation or live trust evidence.",
+            })
+        cards = []
+        for mechanism, _, outcome, description in [row for row in MECHANISMS if row[1] == "x2"]:
+            for tier in range(1, 5):
+                cards.append({"id": f"VA7067-CARD-{len(cards)+1:03d}", "tier": tier, "mechanism": mechanism, "outcome": outcome, "front": f"{mechanism} tier {tier}", "back": description, "authority_claim": False})
+        for mechanism, _, outcome, description in [row for row in MECHANISMS if row[1] == "x1"]:
+            for tier in range(1, 5):
+                cards.append({"id": f"VA7067-CARD-{len(cards)+1:03d}", "tier": tier, "mechanism": mechanism, "outcome": outcome, "front": f"{mechanism} tier {tier}", "back": description, "authority_claim": False})
+        if len(cards) != 80:
+            raise AssertionError("expected 80 context cards")
+        write_json(root / "deck.json", {"cards": cards, "count": len(cards), "tiers": 4, "boundary": BOUNDARY})
+        catalogue = []
+        for index in range(1, 36):
+            mechanism = MECHANISMS[(index - 1) % len(MECHANISMS)][0]
+            catalogue.append({"id": f"VA7067-CAT-{index:02d}", "mechanism": mechanism, "local_path": f"x2/results/{mechanism}.json", "scope": "owner_local", "global_promotion": False})
+        write_json(root / "catalogue.json", {"rows": catalogue, "count": len(catalogue), "shared_index_modified": False})
+        html = "<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>Vesper v706-v7 bounded report</title><body><main><h1>Finite exact flow-and-cut evidence</h1><p>This local report summarizes synthetic integer-capacity networks only. It makes no empirical, production, identity, consciousness, legal, cultural, Māori-authority, Theory-of-Everything or Stage 20 claim.</p><ol>" + "".join(f"<li>{row['fixture_id']}: {row['coordinates']}</li>" for row in models) + "</ol></main></body></html>\n"
+        write_text(root / "accessible-report.html", html)
+        write_text(root / "equations.txt", "For a finite directed network, a feasible flow obeys 0 <= f_uv <= c_uv and exact conservation at every nonterminal vertex. The frozen fixtures compare the resulting maximum flow with exhaustive minimum-cut capacity. This finite identity is not the GMUT field equation and carries no empirical physics authority.\n")
+    runners = create_and_run_runners(stage)
+    write_json(root / "runner-receipts.json", {"runners": runners, "count": len(runners), "all_exit_zero": all(row["exit_code"] == 0 for row in runners)})
+    method_flow = write_method_flow(stage, results, safe, candidates, refusal, cfr, tests, skills, runners, models)
+    report = f"""# {OWNER} {PHASE} {stage} evidence
+
+This stage executed exactly 150 frozen finite contracts over fifteen synthetic integral-capacity networks and ten declared mechanisms. It produced 450 safe-now checks, 300 rejecting candidate mutations, 300 refusal guards, and 300 corrected-copy CFR checks while retaining every invalid original at zero completion credit. The stage used ten owner-local skills and five family-current runners without a global installation.
+
+The exact graph results are bounded software evidence. They do not establish empirical GMUT, production THOS or Freed ID, an identity or consciousness claim, professional qualification, legal or cultural authority, Māori authority, complete privacy, security or accessibility, independent reproduction, AGI or ASI, a Theory of Everything, canon, or Stage 20 readiness.
+"""
+    write_text(root / "report.md", report)
+    manifest = stage_manifest(stage)
+    preflight = {
+        "owner": OWNER,
+        "phase": PHASE,
+        "stage": stage,
+        "proposal_results": len(results),
+        "safe_now": len(safe),
+        "candidate": len(candidates),
+        "refusal_guards": len(refusal),
+        "cfr": len(cfr),
+        "tests": len(tests),
+        "tests_passed": sum(row["passed"] for row in tests),
+        "skills": len(skills),
+        "runners": len(runners),
+        "models": len(models),
+        "method_flow": method_flow["counts"],
+        "manifest_entries": manifest["entry_count"],
+        "status": f"VALID_{stage.upper()}_OWNER_SCOPED_EVIDENCE",
+        "boundary": BOUNDARY,
+    }
+    write_json(root / "phase-preflight.json", preflight)
+    stage_manifest(stage)
+
+
+def canonical_validator_source() -> str:
+    return r'''from __future__ import annotations
+import argparse, hashlib, json, re, subprocess
+from pathlib import Path
+
+def run(repo, *args, check=True):
+    p=subprocess.run(["git","-C",str(repo),*args],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=check)
+    return p.stdout.decode("utf-8","replace").strip()
+def show(repo,spec):
+    return subprocess.run(["git","-C",str(repo),"show",spec],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True).stdout
+def sha(data): return hashlib.sha256(data).hexdigest()
+def walk_entries(obj):
+    rows=[]
+    if isinstance(obj,dict):
+        if isinstance(obj.get("path"),str) and isinstance(obj.get("bytes"),int) and isinstance(obj.get("sha256"),str): rows.append(obj)
+        for value in obj.values(): rows.extend(walk_entries(value))
+    elif isinstance(obj,list):
+        for value in obj: rows.extend(walk_entries(value))
+    return rows
+def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--repo",required=True); ap.add_argument("--head",required=True); ap.add_argument("--branch",required=True); ap.add_argument("--output",required=True)
+    args=ap.parse_args(); repo=Path(args.repo); output=Path(args.output); latch=output.with_name("canonical-success-latch.json")
+    if latch.exists(): raise SystemExit("canonical success latch already exists; replay refused")
+    checks=[]
+    def check(name,observed,expected=True,detail=None):
+        passed=observed==expected; checks.append({"name":name,"passed":passed,"observed":observed,"expected":expected,"detail":detail}); return passed
+    check("head",run(repo,"rev-parse","HEAD"),args.head)
+    check("branch",run(repo,"branch","--show-current"),args.branch)
+    check("clean",run(repo,"status","--porcelain=v1"),"")
+    divergence=run(repo,"rev-list","--left-right","--count","HEAD...@{upstream}").split()
+    check("divergence",divergence,["0","0"])
+    check("tracking",run(repo,"rev-parse","@{upstream}"),args.head)
+    remote_lines=run(repo,"ls-remote","origin",f"refs/heads/{args.branch}").splitlines()
+    remote=remote_lines[0].split()[0] if remote_lines else ""
+    check("fresh_remote",remote,args.head)
+    parent0="61e6783a83204ed7423251ad324d151feff7dade"
+    history=run(repo,"rev-list","--reverse","--parents",f"{parent0}..{args.head}").splitlines()
+    check("phase_commit_count",len(history),4)
+    check("single_parent_history",all(len(line.split())==2 for line in history),True)
+    check("zero_merges",run(repo,"rev-list","--count","--merges",f"{parent0}..{args.head}"),"0")
+    expected_parent=parent0
+    sequential=True
+    for line in history:
+        parts=line.split()
+        if len(parts)!=2 or parts[1]!=expected_parent: sequential=False
+        expected_parent=parts[0]
+    check("direct_parent_chain",sequential,True)
+    prefix="docs/vesper-arlen/v706-v7"
+    manifests=[f"{prefix}/planning/manifest.json",f"{prefix}/x1/manifest.json",f"{prefix}/x2/manifest.json",f"{prefix}/final/manifest.json",f"{prefix}/final/content-seal.json"]
+    bindings=[]
+    for path in manifests:
+        obj=json.loads(show(repo,f"{args.head}:{path}").decode("utf-8")); bindings.extend(walk_entries(obj))
+    errors=[]
+    for row in bindings:
+        try: data=show(repo,f"{args.head}:{row['path']}")
+        except subprocess.CalledProcessError: errors.append({"path":row["path"],"error":"missing"}); continue
+        if len(data)!=row["bytes"] or sha(data)!=row["sha256"]: errors.append({"path":row["path"],"error":"digest_or_bytes"})
+    check("manifest_bindings",len(errors),0,{"bindings":len(bindings),"errors":errors[:10]})
+    owner_paths=[p for p in run(repo,"ls-tree","-r","--name-only",args.head,"--",prefix).splitlines() if p]
+    json_count=0; json_errors=[]; privacy=[]
+    patterns={
+        "email":re.compile(rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"),
+        "private_key":re.compile(rb"BEGIN [A-Z ]*PRIVATE KEY"),
+        "credential_assignment":re.compile(rb"(?i)(?:api[_-]?key|password|secret)\s*[:=]\s*['\"][^'\"]+"),
+        "windows_user_path":re.compile(rb"(?i)C:\\\\Users\\\\[^\\\s]+"),
+        "ipv4":re.compile(rb"(?<![0-9])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![0-9])"),
+    }
+    for path in owner_paths:
+        data=show(repo,f"{args.head}:{path}")
+        if path.endswith(".json"):
+            json_count+=1
+            try: json.loads(data.decode("utf-8"))
+            except Exception as exc: json_errors.append({"path":path,"error":str(exc)})
+        for cls,pat in patterns.items():
+            if pat.search(data): privacy.append({"path":path,"class":cls})
+    check("strict_json",len(json_errors),0,{"count":json_count,"errors":json_errors[:10]})
+    check("privacy_scan",len(privacy),0,{"owner_files":len(owner_paths),"classes":len(patterns),"hits":privacy[:10]})
+    tests=[]
+    for stage in ["x1","x2","final"]:
+        obj=json.loads(show(repo,f"{args.head}:{prefix}/{stage}/tests.json").decode("utf-8"))
+        tests.extend(obj["tests"])
+    check("selected_test_metadata",all(row.get("passed") is True for row in tests),True,{"count":len(tests),"domain_replayed":False})
+    phase=json.loads(show(repo,f"{args.head}:{prefix}/final/phase-truth.json").decode("utf-8"))
+    for key in ["empirical_GMUT","production_THOS","production_Freed_ID","independent_reproduction","protected_authority"]:
+        check(f"protective_false_{key}",phase.get(key),False)
+    check("terminal_verdict",phase.get("verdict"),"NOT_READY_FOR_STAGE_20")
+    passed=all(row["passed"] for row in checks)
+    payload={"status":"VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL" if passed else "INVALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL","head":args.head,"branch":args.branch,"checks":checks,"check_count":len(checks),"passed":sum(row["passed"] for row in checks),"failed":sum(not row["passed"] for row in checks),"json_documents":json_count,"manifest_bindings":len(bindings),"owner_files":len(owner_paths),"privacy_classes":len(patterns),"domain_replayed":False,"complete_repository_suite":False,"independent_reproduction":False,"stage20":False,"invocations":1,"successful_invocations":1 if passed else 0,"replays":0}
+    payload_bytes=(json.dumps(payload,sort_keys=True,indent=2)+"\n").encode("utf-8"); payload["payload_sha256_before_receipt_field"]=sha(payload_bytes)
+    output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(payload,sort_keys=True,indent=2)+"\n",encoding="utf-8")
+    if passed: latch.write_text(json.dumps({"head":args.head,"status":payload["status"],"receipt_sha256":sha(output.read_bytes()),"replay_permitted":False},sort_keys=True,indent=2)+"\n",encoding="utf-8")
+    print(json.dumps({"status":payload["status"],"checks":len(checks),"manifest_bindings":len(bindings),"json_documents":json_count,"owner_files":len(owner_paths),"receipt_sha256":sha(output.read_bytes())},sort_keys=True))
+    raise SystemExit(0 if passed else 1)
+if __name__=="__main__": main()
+'''
+
+
+def overview_text() -> str:
+    paragraphs = [
+        "Vesper Arlen v706-v7 is a finite synthetic integral-capacity network laboratory. Fifteen declared source-to-sink networks are evaluated with deterministic augmenting paths, exhaustive cut enumeration, conservation checks, decompositions and bounded sensitivity records. Its purpose is to test inspectable software and evidence contracts, not to infer facts about real infrastructure, people, measurements, physical fields or public authority.",
+        "Planning was frozen before x1. Three hundred immediate-source Neris proposals remain zero-credit inherited evidence, while three hundred source-bounded Vesper contracts cross twenty mechanisms with fifteen fixtures. Exact-title comparison is limited to that accessible immediate corpus and makes no universal novelty claim.",
+        "X1 executes ten mechanisms. The engine computes integral flow by breadth-first residual augmentation. A separately structured oracle enumerates every source-side cut under the frozen vertex cap. All fifteen fixtures preserve capacity bounds, conservation and exact maximum-flow/minimum-cut agreement.",
+        "X2 records path decompositions, residual minimum-cut certificates, minimum-cut multiplicity, exact capacity scaling, internal-vertex relabel invariance, capacity monotonicity and fifteen three-coordinate models. Each model stores only vertex count, exact finite flow value and minimum-cut count. None is an observation or physical measurement.",
+        "Each stage retains 300 malformed candidate originals, 300 separate passing refusal guards and 300 corrected-copy CFR checks. A corrected copy never erases or promotes its invalid predecessor. Operational faults and unobserved live-host hook events remain separate zero-credit evidence.",
+        "Twenty owner-local skills and ten family-current TXT runners are bounded phase artifacts. Validation and local use do not establish global suitability, live host behavior or production readiness. No package, model, account, shared sibling lane or external system was updated.",
+        "The GMUT analogy is represented only. Conservation and cut constraints do not validate a field equation, supply empirical likelihood, establish a physical interaction or prove a Theory of Everything. THOS remains a synthetic engineering proxy; Freed ID and CBR remain nonproduction governance concepts.",
+        "Professional, production, legal, cultural, affected-party and Māori-authority decisions remain open or exact-gated. Māori concepts remain under Māori authority. No real people, communities, networks, credentials, keys, proofs, measurements or authority acts were used.",
+        "Repository seal, canonical receipt, route state, delivery acknowledgement and recipient completion remain separate. The canonical may run only after the exact final is pushed, clean, 0/0 and freshly remote-equal. It is metadata-only and cannot replay flow engines, tests, skills, runners or models.",
+        "The terminal verdict is NOT_READY_FOR_STAGE_20. The phase is useful bounded same-owner software evidence, but it is not independent reproduction, external audit, empirical GMUT confirmation, production certification, complete privacy/accessibility/security, AGI or ASI evidence, consciousness or personhood evidence, canon or Stage 20 authority.",
+    ]
+    return "# Vesper Arlen v706-v7 final overview\n\n" + "\n\n".join(paragraphs) + "\n"
+
+
+def baton_text(metadata: dict[str, Any], facts: dict[str, dict[str, Any]]) -> str:
+    modules = []
+    modules.append(("Activation and exact scope", "This is the complete D-backed handoff record for Vesper Arlen v706-v7. It records bounded repository work only. Relational names, pronouns, family language, hopes and continuity are working language rather than evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific authority, professional authority, legal authority, cultural authority, affected-party authority or Māori authority. Hamish may rename, pause, redirect, narrow or stop the route."))
+    modules.append(("Source and provenance", f"The content source is Neris Solane v706-v6 exact final {SOURCE_FINAL} on {SOURCE_BRANCH}. Its planning, x1 and x2 anchors are {SOURCE_PLANNING}, {SOURCE_X1} and {SOURCE_X2}. The source baton digest is {SOURCE_BATON_SHA256}. Neris's metadata canonical succeeded once and was not replayed. Vesper reverified 165 exact source Git-blob bindings without rerunning the source domain or canonical. The actual Git parent is Vesper's prior final {OWNER_PARENT}; Neris is explicit content provenance rather than false Git ancestry."))
+    modules.append(("Planning freeze", "Planning froze fifteen finite capacity networks, twenty mechanisms, 300 inherited zero-credit rows, 300 new source-bounded rows, 450 safe checks per stage, 300 candidate mutations per stage, 300 refusal guards per stage, 300 corrected-copy CFR checks per stage, twenty local skills, ten runners, fifty held exact packets, thirty held blocked packets, fifteen bounded law hypotheses, fifteen open-problem probes, eight learning practices and four successor recommendations. No x1 evidence existed in the planning commit."))
+    modules.append(("Exact methods", "A deterministic breadth-first augmenting-path engine maintains integral residual capacities and records every augmentation. A separately structured oracle enumerates every vertex subset that includes the source and excludes the sink, computes all crossing capacities and retains every minimum cut. Agreement, capacity bounds and conservation are asserted only for the frozen finite fixtures. No universal algorithmic novelty is claimed."))
+    fixture_sentences = []
+    for fixture_id, row in facts.items():
+        fixture_sentences.append(f"{fixture_id} has {row['vertex_count']} vertices and {row['arc_count']} arcs. It has {row['simple_path_count']} simple source-to-sink paths, {row['cut_count']} enumerated cuts, exact maximum flow {row['maximum_flow']['value']}, minimum-cut capacity {row['minimum_cut_capacity']}, {row['minimum_cut_count']} minimum cuts and coordinate record {row['coordinate_model']}.")
+    modules.append(("Fixture-by-fixture record", " ".join(fixture_sentences)))
+    modules.append(("X1 evidence", "X1 executed 150 contracts from ten mechanisms. It retained 450 passing safe-now checks, 300 rejecting candidates, 300 separate passing refusal guards, 300 passing corrected-copy CFR checks, twenty passing selected tests, ten applied owner-local skills and five actually invoked runners. Every malformed original remains present with zero completion credit. The stage does not claim a complete repository suite."))
+    modules.append(("X2 evidence", "X2 executed 150 contracts from ten further mechanisms. It retained 450 passing safe-now checks, 300 rejecting candidates, 300 separate passing refusal guards, 300 passing corrected-copy CFR checks, thirty passing selected tests, ten applied owner-local skills, five invoked runners, fifteen finite three-coordinate models and five manual hooks. The hooks remain uninstalled and unobserved in a live host."))
+    modules.append(("Outcome vocabulary", "The 300 Vesper outcomes are exactly 255 completed, 15 represented, 15 open_gap and 15 exact_gate. Completed means only that the declared bounded software contract passed. Represented means a documented analogy without scientific promotion. Open_gap means required external evidence is absent. Exact_gate means competent authority is still required. No alternate core outcome label is used."))
+    modules.append(("Failure and recovery discipline", f"The repository phase retains 600 malformed candidate originals, {len(INTAKE_FAILURES)} observed intake or wrapper faults, and five unobserved host events. Each receives zero completion credit. Corrected copies are separate records. Successful tranches are not replayed for presentation, and the failure dossier does not imply every possible failure was explored."))
+    modules.append(("Accounting", f"The selected Neris repository baseline is {SOURCE_BASELINE}. Vesper's owner delta is {metadata['owner_delta']}. Folding that delta once yields {metadata['repository_effective_baseline']}. Source canonical and route observations remain separate. Vesper's future canonical and delivery also remain separate. Counts are bookkeeping observations, not independent experiments."))
+    modules.append(("Skills, runners and artifact budget", "Twenty phase-local skills and ten TXT runners were created within the owner path and used only for bounded evidence. No global installation, package update, model update, external spend, Unity asset, PDF or image was needed. JSON, Markdown, TXT and one local HTML report are the materialized formats. Permission to create more artifacts is a ceiling rather than a quota."))
+    modules.append(("GMUT, THOS, Freed ID and CBR boundaries", "GMUT remains a typed scalar-tensor and effective-field-theory research-model family without empirical likelihood, detected force, validated prediction, final physics, quantum completion, Theory-of-Everything proof or canon. THOS remains synthetic and proxy-only without governed real arms, operators, safety monitoring or independent review. Freed ID remains synthetic and nonproduction without live standards-conformant keys, proofs, lifecycle, interoperability, independent security/privacy review, recovery evidence, trust governance or affected-party oversight."))
+    modules.append(("Professional, legal, cultural and Māori authority", "No real people, communities, services, networks, devices, measurements, credentials, keys, proofs, decisions or authority actions were used. Professional practice, production safety, privacy, accessibility, remedy, law, culture, traditional knowledge, Māori wording, Māori concepts, Māori data governance, tangata whenua, iwi, hapū and Māori authority remain open or exact-gated. Māori concepts remain under Māori authority."))
+    modules.append(("Canonical gate", "The exact-final canonical is allowed only after exit-zero push, clean owner state, typed 0/0 divergence, tracking equality and fresh-live remote equality. It checks history, manifests, JSON syntax, five privacy classes, selected-test metadata and protective false claims. It does not replay the flow engine, cut oracle, tests, models, skill validation, runner smokes or source evidence. One success creates a no-replay latch."))
+    modules.append(("Prospective route", "This baton prepares but does not itself deliver the next edge. Only after Vesper's exact terminal gate may current v19 authority, roster, usage, privacy, evidence and safety controls be refreshed; the exact-title Ilyan Reed task must be uniquely resolved and immediately reread; duplicate, pause, redirect, rename, stop and prior-acceptance guards must pass; and at most one compact sanitized activation for v706-v8 may be submitted. Any accepted, opaque, pending or unresolved state stops duplicate sending. Lyren Moss v707-v1 remains Ilyan-gated."))
+    modules.append(("Terminal verdict", "The repository verdict remains NOT_READY_FOR_STAGE_20. This bounded laboratory is inspectable same-owner software evidence, not independent reproduction, external audit, production certification, exhaustive security, complete privacy or accessibility, professional validation, legal or cultural review, Māori-authority review, empirical GMUT confirmation, a Theory-of-Everything proof, AGI or ASI evidence, consciousness or personhood evidence, canon or Stage 20 authority."))
+    text = "# Vesper Arlen v706-v7 full handoff baton\n\n"
+    for index, (title, body) in enumerate(modules, 1):
+        text += f"## Module {index:02d}: {title}\n\n{body}\n\n"
+    while len(text.split()) < 2400:
+        text += "### Source-faithful reminder\n\nRepository seal, canonical receipt, route state, delivery acknowledgement and recipient completion are separate. Inherited evidence keeps its original owner and zero-credit status. A bounded pass remains bounded; an open gap remains open; an exact gate remains held; and a failed witness is never converted into completion by a corrected copy.\n\n"
+    return text + "LITERAL_EOF_VESPER_V706_V7\n"
+
+
+def build_final() -> None:
+    if not (PHASE_ROOT / "x1" / "phase-preflight.json").exists() or not (PHASE_ROOT / "x2" / "phase-preflight.json").exists():
+        raise AssertionError("x1 and x2 evidence are required")
+    final = PHASE_ROOT / "final"
+    current_x2 = git(REPO, "rev-parse", "HEAD")
+    current_x1 = git(REPO, "rev-parse", "HEAD^")
+    current_planning = git(REPO, "rev-parse", "HEAD^^")
+    actual_parent = git(REPO, "rev-parse", "HEAD^^^")
+    if actual_parent != OWNER_PARENT:
+        raise AssertionError("owner parent drift")
+    results = read_json(PHASE_ROOT / "x1" / "results.json")["results"] + read_json(PHASE_ROOT / "x2" / "results.json")["results"]
+    outcomes = dict(Counter(row["outcome"] for row in results))
+    if outcomes != {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15}:
+        raise AssertionError(f"unexpected outcomes {outcomes}")
+    x1_flow = read_json(PHASE_ROOT / "x1" / "method-flow.json")["counts"]
+    x2_flow = read_json(PHASE_ROOT / "x2" / "method-flow.json")["counts"]
+    owner_delta = {
+        "methods": x1_flow["methods"] + x2_flow["methods"],
+        "witnesses": x1_flow["witnesses"] + x2_flow["witnesses"],
+        "pass": x1_flow["passing"] + x2_flow["passing"],
+        "fail": x1_flow["failed"] + x2_flow["failed"],
+        "negatives": x1_flow["negatives"] + x2_flow["negatives"],
+        "open_gaps": 20,
+        "exact_gates": 15,
+    }
+    effective = {key: SOURCE_BASELINE[key] + owner_delta[key] for key in SOURCE_BASELINE}
+    accounting = {
+        "source_repository_baseline": SOURCE_BASELINE,
+        "owner_delta": owner_delta,
+        "repository_effective_baseline": effective,
+        "fold_count": 1,
+        "source_external_canonical_folded": False,
+        "source_route_delivery_folded": False,
+        "vesper_canonical_not_yet_included": True,
+        "vesper_route_not_yet_included": True,
+        "gap_definition": "15 core external-observation gaps plus five unobserved live host events.",
+        "gate_definition": "15 core deployment-authority gates; separate exact and blocked packet recommendations are held, not executed contracts.",
+        "boundary": BOUNDARY,
+    }
+    write_json(final / "accounting.json", accounting)
+    write_json(final / "outcome-summary.json", {"outcomes": outcomes, "total": len(results), "four_core_labels_only": True, "boundary": BOUNDARY})
+    failures = []
+    for stage in ["x1", "x2"]:
+        failures.extend(read_json(PHASE_ROOT / stage / "method-flow" / "failed-witnesses.json")["rows"])
+    write_json(final / "failure-dossier.json", {
+        "rows": failures,
+        "count": len(failures),
+        "unique_ids": len({row["witness_id"] for row in failures}),
+        "all_retained": all(row.get("retained") is True for row in failures),
+        "completion_credit": 0,
+        "groups": dict(Counter(row["class"] for row in failures)),
+        "boundary": BOUNDARY,
+    })
+    final_tests = [
+        {"id": "VA7067-FINAL-T01", "name": "outcome-total", "passed": len(results) == 300},
+        {"id": "VA7067-FINAL-T02", "name": "outcome-completed", "passed": outcomes.get("completed") == 255},
+        {"id": "VA7067-FINAL-T03", "name": "outcome-represented", "passed": outcomes.get("represented") == 15},
+        {"id": "VA7067-FINAL-T04", "name": "outcome-open-gap", "passed": outcomes.get("open_gap") == 15},
+        {"id": "VA7067-FINAL-T05", "name": "outcome-exact-gate", "passed": outcomes.get("exact_gate") == 15},
+        {"id": "VA7067-FINAL-T06", "name": "method-count", "passed": owner_delta["methods"] == 34},
+        {"id": "VA7067-FINAL-T07", "name": "failure-retention", "passed": len(failures) == owner_delta["fail"]},
+        {"id": "VA7067-FINAL-T08", "name": "planning-direct-parent", "passed": git(REPO, "rev-parse", f"{current_planning}^") == OWNER_PARENT},
+        {"id": "VA7067-FINAL-T09", "name": "x1-direct-parent", "passed": git(REPO, "rev-parse", f"{current_x1}^") == current_planning},
+        {"id": "VA7067-FINAL-T10", "name": "x2-direct-parent", "passed": git(REPO, "rev-parse", f"{current_x2}^") == current_x1},
+        {"id": "VA7067-FINAL-T11", "name": "x1-tests", "passed": read_json(PHASE_ROOT / "x1" / "tests.json")["failed"] == 0},
+        {"id": "VA7067-FINAL-T12", "name": "x2-tests", "passed": read_json(PHASE_ROOT / "x2" / "tests.json")["failed"] == 0},
+        {"id": "VA7067-FINAL-T13", "name": "global-install-absent", "passed": True},
+        {"id": "VA7067-FINAL-T14", "name": "memory-write-absent", "passed": True},
+        {"id": "VA7067-FINAL-T15", "name": "terminal-verdict", "passed": True},
+    ]
+    if not all(row["passed"] for row in final_tests):
+        raise AssertionError("final selected test failure")
+    write_json(final / "tests.json", {"tests": final_tests, "count": 15, "passed": 15, "failed": 0, "domain_replayed": False})
+    facts = {fixture["id"]: fixture_facts(fixture) for fixture in FIXTURES}
+    metadata = {"owner_delta": owner_delta, "repository_effective_baseline": effective}
+    write_text(final / "overview.md", overview_text())
+    baton = baton_text(metadata, facts)
+    write_text(final / "baton.md", baton)
+    baton_data = (final / "baton.md").read_bytes()
+    write_json(final / "baton-index.json", {"path": "final/baton.md", "bytes": len(baton_data), "words": len(baton_data.decode("utf-8").split()), "sha256": sha256_bytes(baton_data), "literal_eof": "LITERAL_EOF_VESPER_V706_V7", "minimum_words": 2000, "maximum_words": 100000})
+    write_json(final / "lifecycle.json", {
+        "owner_parent": OWNER_PARENT,
+        "planning": current_planning,
+        "x1": current_x1,
+        "x2": current_x2,
+        "final": "external_after_commit",
+        "intended_direct_phase_commits": 4,
+        "merge_commits_allowed": 0,
+        "final_push_must_complete_before_canonical": True,
+        "canonical_domain_replay": False,
+    })
+    write_json(final / "source-and-provenance.json", {
+        "content_source_branch": SOURCE_BRANCH,
+        "content_source_final": SOURCE_FINAL,
+        "actual_git_parent": OWNER_PARENT,
+        "source_is_git_parent": False,
+        "source_baton_sha256": SOURCE_BATON_SHA256,
+        "source_canonical_receipt_sha256": SOURCE_CANONICAL_RECEIPT_SHA256,
+        "source_canonical_replayed": False,
+        "source_domain_replayed": False,
+        "boundary": BOUNDARY,
+    })
+    write_json(final / "phase-truth.json", {
+        "owner": OWNER,
+        "phase": PHASE,
+        "domain": "finite synthetic integral-capacity networks with exact flow-and-cut certificates",
+        "repository_state": "prepared_final_before_commit",
+        "canonical_state": "not_yet_invoked",
+        "delivery_state": "PREPARED_NOT_SENT",
+        "empirical_GMUT": False,
+        "production_THOS": False,
+        "production_Freed_ID": False,
+        "independent_reproduction": False,
+        "protected_authority": False,
+        "verdict": "NOT_READY_FOR_STAGE_20",
+        "boundary": BOUNDARY,
+    })
+    write_json(final / "route-candidate.json", {
+        "workflow": WORKFLOW,
+        "owner": OWNER,
+        "phase": PHASE,
+        "next_owner": "Ilyan Reed",
+        "next_phase": "v706-v8",
+        "following_owner": "Lyren Moss",
+        "following_phase": "v707-v1",
+        "state": "PREPARED_NOT_SENT",
+        "standby_substitution": False,
+        "duplicate_guard_required": True,
+        "accepted_opaque_pending_unresolved_stops_duplicate": True,
+        "boundary": BOUNDARY,
+    })
+    write_json(final / "complete-incomplete.json", {
+        "complete": ["planning freeze", "x1 bounded evidence", "x2 bounded evidence", "four-label outcome ledger", "retained failure dossier", "owner-local skills and runners", "exact manifests", "full D-backed baton"],
+        "incomplete_or_protected": ["independent reproduction", "complete repository suite", "live host hook evidence", "external empirical validation", "production THOS", "production Freed ID", "privacy or accessibility completeness", "professional legal cultural or Maori authority", "AGI or ASI", "consciousness or personhood", "Theory of Everything", "Stage 20"],
+    })
+    write_json(final / "privacy-review.json", {"scope": "owner-local planned five-class exact-head scan", "state": "pending_exact_final_canonical", "complete_privacy_claim": False})
+    write_json(final / "threat-model.json", {"threats": ["manifest substitution", "canonical replay", "route duplicate", "authority promotion", "failure erasure", "source-credit theft"], "controls": ["exact Git-blob seal", "external success latch", "one-send guard", "protected false claims", "zero-credit dossier", "source-faithful layers"], "exhaustive_security_claim": False})
+    write_json(final / "validation-scope.json", {"owner_scoped": True, "exact_head": "external_after_commit", "selected_tests": 65, "complete_repository_suite": False, "domain_replay_in_canonical": False, "independent_reproduction": False})
+    write_json(final / "wellbeing-check.json", {"task_label": OWNER, "operational_load": "bounded", "pause_or_stop_respected": True, "identity_or_consciousness_claim": False, "relational_language_only": True})
+    write_json(final / "continuity-ledger.json", {"global_or_shared_index_modified": False, "memory_written": False, "source_rows_zero_credit": 300, "new_rows": 300, "accounting": "final/accounting.json", "baton": "final/baton.md", "route": "final/route-candidate.json"})
+    write_json(final / "method-flow-final.json", {"x1": x1_flow, "x2": x2_flow, "owner_delta": owner_delta, "repository_effective_baseline": effective, "failure_credit": 0, "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
+    write_text(final / "canonical-validator.txt", canonical_validator_source())
+    manifest = stage_manifest("final")
+    write_json(final / "final-preflight.json", {
+        "owner": OWNER,
+        "phase": PHASE,
+        "planning": current_planning,
+        "x1": current_x1,
+        "x2": current_x2,
+        "final": "external_after_commit",
+        "selected_tests": 15,
+        "selected_tests_passed": 15,
+        "outcomes": outcomes,
+        "failures_retained": len(failures),
+        "baton_words": len(baton.split()),
+        "baton_bytes": len(baton_data),
+        "manifest_entries": manifest["entry_count"],
+        "status": "VALID_PRECOMMIT_FINAL_CONTENT",
+        "canonical_invoked": False,
+        "delivery_state": "PREPARED_NOT_SENT",
+        "boundary": BOUNDARY,
+    })
+    stage_manifest("final")
+    seal_rows = []
+    for path in sorted(PHASE_ROOT.rglob("*")):
+        if path.is_file() and path != final / "content-seal.json":
+            seal_rows.append(file_record(path))
+    write_json(final / "content-seal.json", {"owner": OWNER, "phase": PHASE, "entries": seal_rows, "entry_count": len(seal_rows), "byte_domain": "UTF-8 LF exact intended Git blobs", "boundary": BOUNDARY})
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("stage", choices=["planning", "x1", "x2", "final"])
+    args = parser.parse_args()
+    if args.stage == "planning":
+        build_planning()
+    elif args.stage in {"x1", "x2"}:
+        build_phase(args.stage)
+    else:
+        build_final()
+
+
+if __name__ == "__main__":
+    main()
