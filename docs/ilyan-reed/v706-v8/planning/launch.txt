@@ -1,0 +1,11 @@
+// Admitted local entrypoint. It does not invoke or configure a model provider.
+const {spawnSync} = require('node:child_process');
+const path = require('node:path');
+if (process.env.GHC_MODEL_GUARD !== 'v16') throw new Error('Registered admission launcher required');
+const result = spawnSync('python', ['-B', path.join(__dirname, 'build.txt'), ...process.argv.slice(2)], {
+  cwd: path.resolve(__dirname, '../../../..'),
+  env: {...process.env, PYTHONUTF8: '1', PYTHONDONTWRITEBYTECODE: '1'},
+  stdio: 'inherit'
+});
+if (result.error) throw result.error;
+process.exit(result.status === null ? 1 : result.status);

@@ -1,0 +1,139 @@
+"""Exact, bounded, discounted finite MDP implementation. No external actions."""
+from fractions import Fraction as F
+from itertools import product
+from copy import deepcopy
+
+def rational(x):
+    if type(x) is not list or len(x) != 2 or any(type(v) is not int for v in x) or x[1] <= 0:
+        raise ValueError('rational must be a two-integer list with positive denominator')
+    return F(*x)
+
+def validate(f):
+    if not isinstance(f, dict) or set(f) != {'id','states','discount','initial','actions'}:
+        raise ValueError('fixture fields')
+    n = f['states']
+    if type(n) is not int or not 1 <= n <= 4: raise ValueError('state cap')
+    if not isinstance(f['id'],str) or not f['id']: raise ValueError('fixture id')
+    g = rational(f['discount'])
+    if not 0 <= g < 1: raise ValueError('discount outside [0,1)')
+    if type(f['initial']) is not list or len(f['initial']) != n: raise ValueError('initial shape')
+    mu = list(map(rational,f['initial']))
+    if min(mu)<0 or sum(mu)!=1: raise ValueError('initial simplex')
+    if type(f['actions']) is not list or len(f['actions'])!=n: raise ValueError('action states')
+    for aa in f['actions']:
+        if type(aa) is not list or not 1<=len(aa)<=3: raise ValueError('nonempty bounded actions')
+        for a in aa:
+            if not isinstance(a,dict) or set(a)!={'reward','transition'}: raise ValueError('action fields')
+            rational(a['reward'])
+            if type(a['transition']) is not list or len(a['transition'])!=n: raise ValueError('transition shape')
+            ps=list(map(rational,a['transition']))
+            if min(ps)<0 or sum(ps)!=1: raise ValueError('transition simplex')
+    return True
+
+def solve(a,b):
+    n=len(b); m=[list(map(F,row))+[F(y)] for row,y in zip(a,b)]
+    for col in range(n):
+        pivot=next((r for r in range(col,n) if m[r][col]),None)
+        if pivot is None: raise ValueError('singular exact system')
+        m[col],m[pivot]=m[pivot],m[col]; d=m[col][col];m[col]=[x/d for x in m[col]]
+        for r in range(n):
+            if r!=col:
+                d=m[r][col];m[r]=[x-d*y for x,y in zip(m[r],m[col])]
+    return [row[-1] for row in m]
+
+def policy_data(f,p):
+    n=f['states'];g=rational(f['discount'])
+    if len(p)!=n or any(type(a) is not int or not 0<=a<len(f['actions'][s]) for s,a in enumerate(p)): raise ValueError('policy shape')
+    r=[rational(f['actions'][s][a]['reward']) for s,a in enumerate(p)]
+    t=[list(map(rational,f['actions'][s][a]['transition'])) for s,a in enumerate(p)]
+    a=[[F(i==j)-g*t[i][j] for j in range(n)] for i in range(n)]
+    return a,r,t
+
+def policy_value(f,p):
+    a,r,_=policy_data(f,p);return solve(a,r)
+
+def q_values(f,v):
+    g=rational(f['discount'])
+    return [[rational(a['reward'])+g*sum(rational(p)*x for p,x in zip(a['transition'],v)) for a in aa] for aa in f['actions']]
+
+def policy_iteration(f):
+    validate(f); p=tuple(0 for _ in range(f['states'])); trace=[];seen=set()
+    for _ in range(100):
+        if p in seen: raise AssertionError('policy improvement cycle')
+        seen.add(p);v=policy_value(f,p);q=q_values(f,v)
+        nxt=tuple(max(range(len(a)),key=lambda k:(a[k],-k)) for a in q)
+        trace.append({'policy':p,'value':v,'next':nxt})
+        if nxt==p:return {'policy':p,'value':v,'trace':trace,'q':q}
+        p=nxt
+    raise AssertionError('finite policy cap exceeded')
+
+def policies(f):return list(product(*(range(len(a)) for a in f['actions'])))
+
+def occupancy(f,p,mu=None):
+    a,_,_=policy_data(f,p);mu=list(map(rational,f['initial'])) if mu is None else mu
+    return solve([list(x) for x in zip(*a)],mu)
+
+def packed(x):
+    if isinstance(x,F):return [x.numerator,x.denominator]
+    if isinstance(x,dict):return {str(k):packed(v) for k,v in x.items()}
+    if isinstance(x,(list,tuple)):return [packed(v) for v in x]
+    return x
+
+def transformed(f,reward_add=F(0),reward_scale=F(1),permutation=None,duplicate=False):
+    z=deepcopy(f)
+    for aa in z['actions']:
+        for a in aa:a['reward']=packed(reward_scale*rational(a['reward'])+reward_add)
+    if duplicate:
+        for aa in z['actions']:aa.append(deepcopy(aa[0]))
+    if permutation is not None:
+        z['initial']=[z['initial'][i] for i in permutation]
+        z['actions']=[z['actions'][i] for i in permutation]
+        for aa in z['actions']:
+            for a in aa:a['transition']=[a['transition'][i] for i in permutation]
+    validate(z);return z
+
+def evaluate(f,op,oracle):
+    validate(f);n=f['states'];g=rational(f['discount']);out=policy_iteration(f);v=out['value'];p=out['policy'];ref=oracle.optimal(f)
+    assert v==ref['value'], 'policy iteration/exhaustive Cramer mismatch'
+    assert all(max(a)==x for a,x in zip(out['q'],v)), 'Bellman residual'
+    detail=None; disposition='completed'
+    if op==1:detail={'states':n,'actions':[len(a) for a in f['actions']],'discount':g}
+    elif op==2:detail={'policies':policies(f),'count':len(policies(f))};assert detail['count']==len(ref['policies'])
+    elif op==3:
+        q=tuple(0 for _ in range(n));detail={'policy':q,'value':policy_value(f,q)};assert detail['value']==oracle.value(f,q)
+    elif op==4:detail={'residual':[max(q)-x for q,x in zip(out['q'],v)]};assert detail['residual']==[0]*n
+    elif op==5:detail={'optimal_value':ref['value'],'all_optimal_policies':ref['optimizers']};assert p in ref['optimizers']
+    elif op==6:detail={'policy':p,'trace':out['trace']};assert all(all(b>=a for a,b in zip(x['value'],y['value'])) for x,y in zip(out['trace'],out['trace'][1:]))
+    elif op==7:detail={'action_values':out['q'],'advantage':[[q-x for q in aa] for aa,x in zip(out['q'],v)]};assert all(q<=0 for aa in detail['advantage'] for q in aa)
+    elif op==8:
+        detail={'regrets':[{'policy':pp,'gap':[x-y for x,y in zip(v,vv)]} for pp,vv in zip(ref['policies'],ref['values'])]};assert all(x>=0 for r in detail['regrets'] for x in r['gap'])
+    elif op==9:detail={'least_index_greedy_policy':p,'tied_actions':[[i for i,q in enumerate(a) if q==max(a)] for a in out['q']]};assert list(p)==[min(a) for a in detail['tied_actions']]
+    elif op==10:
+        d=occupancy(f,p);detail={'discounted_state_occupancy':d,'total':sum(d)};assert min(d)>=0 and sum(d)==1/(1-g)
+    elif op==11:
+        d=occupancy(f,p);a,r,t=policy_data(f,p);mu=list(map(rational,f['initial']));flow=[d[j]-g*sum(d[i]*t[i][j] for i in range(n))-mu[j] for j in range(n)]
+        detail={'flow_residual':flow,'occupancy_return':sum(x*y for x,y in zip(d,r)),'value_return':sum(x*y for x,y in zip(mu,v))};assert flow==[0]*n and detail['occupancy_return']==detail['value_return']
+    elif op==12:
+        _,r,_=policy_data(f,p);returns=[sum(x*y for x,y in zip(occupancy(f,p,[F(i==s) for i in range(n)]),r)) for s in range(n)]
+        detail={'one_hot_returns':returns};assert returns==v
+    elif op==13:
+        z=transformed(f,reward_add=F(3));w=policy_iteration(z)['value'];detail={'shifted_value':w,'expected_shift':3/(1-g)};assert w==[x+3/(1-g) for x in v] and w==oracle.optimal(z)['value']
+    elif op==14:
+        z=transformed(f,reward_scale=F(2));w=policy_iteration(z)['value'];detail={'scaled_value':w};assert w==[2*x for x in v] and w==oracle.optimal(z)['value']
+    elif op==15:
+        perm=list(reversed(range(n)));z=transformed(f,permutation=perm);w=policy_iteration(z)['value'];detail={'permutation':perm,'value':w};assert w==[v[i] for i in perm] and w==oracle.optimal(z)['value']
+    elif op==16:
+        z=transformed(f,duplicate=True);w=policy_iteration(z)['value'];detail={'duplicated_value':w,'count_before':len(policies(f)),'count_after':len(policies(z))};assert w==v and w==oracle.optimal(z)['value']
+    elif op==17:
+        x=[F(0)]*n
+        for _ in range(12):x=[max(a) for a in q_values(f,x)]
+        tx=[max(a) for a in q_values(f,x)];res=max(abs(a-b) for a,b in zip(tx,x));radius=res/(1-g)
+        detail={'iterations':12,'approximation':x,'residual':res,'radius':radius,'lower':[a-radius for a in x],'upper':[a+radius for a in x]};assert all(a-radius<=b<=a+radius for a,b in zip(x,v))
+    elif op==18:
+        disposition='represented';detail={'coordinates':[F(len(policies(f))),sum(rational(m)*x for m,x in zip(f['initial'],v)),F(len(out['trace']))],'axes':['policy_count','optimal_synthetic_return','policy_iteration_steps'],'physical_observation':False}
+    elif op==19:
+        disposition='open_gap';detail={'calibration_data':None,'observation_count':0,'missing':['measured transition sample','reward justification','population and uncertainty model'],'empirical_claim':False}
+    elif op==20:
+        disposition='exact_gate';detail={'release_permitted':False,'missing':['specific deployment target','affected-party authorization','independent validation','rollback exercise'],'real_actions':0}
+    else:raise ValueError('operation out of bounds')
+    return packed({'operation':op,'fixture':f['id'],'disposition':disposition,'detail':detail,'paired_optimal_value':v,'checks':{'reference_agreement':True,'bellman_optimality':True,'operation_invariant':True}})

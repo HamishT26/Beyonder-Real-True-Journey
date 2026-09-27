@@ -1,0 +1,35 @@
+"""Exhaustive deterministic policies; exact Cramer/permutation-determinant oracle.
+Separate algorithm, same author and host. It is not independent reproduction.
+"""
+from fractions import Fraction as F
+from itertools import permutations,product
+
+def det(a):
+    n=len(a);total=F(0)
+    for p in permutations(range(n)):
+        term=F((-1)**sum(p[i]>p[j] for i in range(n) for j in range(i+1,n)))
+        for i in range(n):term*=a[i][p[i]]
+        total+=term
+    return total
+
+def value(f,policy):
+    n=f['states'];g=F(*f['discount']);rewards=[];a=[]
+    for i,k in enumerate(policy):
+        action=f['actions'][i][k];rewards.append(F(*action['reward']))
+        a.append([F(i==j)-g*F(*action['transition'][j]) for j in range(n)])
+    denominator=det(a)
+    if not denominator:raise AssertionError('oracle singular system')
+    result=[]
+    for col in range(n):
+        b=[row[:] for row in a]
+        for i in range(n):b[i][col]=rewards[i]
+        result.append(det(b)/denominator)
+    return result
+
+def optimal(f):
+    pp=list(product(*(range(len(a)) for a in f['actions'])))
+    vv=[value(f,p) for p in pp]
+    best=[max(v[i] for v in vv) for i in range(f['states'])]
+    optimizers=[p for p,v in zip(pp,vv) if v==best]
+    if not optimizers:raise AssertionError('no stationary componentwise optimizer')
+    return {'policies':pp,'values':vv,'value':best,'optimizers':optimizers}

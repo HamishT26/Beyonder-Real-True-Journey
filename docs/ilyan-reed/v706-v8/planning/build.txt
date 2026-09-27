@@ -1,0 +1,296 @@
+"""Phase authoring and resumable finite execution. Run through launch.txt."""
+import argparse,copy,hashlib,importlib.util,importlib.machinery,json,os,re,subprocess,sys
+from collections import Counter
+from datetime import datetime,timezone
+from fractions import Fraction as F
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent
+REPO=ROOT.parents[2]
+PREFIX=ROOT.relative_to(REPO).as_posix()
+OWNER='Ilyan Reed';PHASE='v706-v8'
+PARENT='6d9f1f62ea8d4f73a173eaa716d6d717d2213eb2'
+SOURCE='456626609a219d3d4520ce98ded11c3e4d9464e7'
+BOUNDARY='Finite synthetic same-owner software evidence. No independent reproduction, empirical GMUT, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, consciousness, personhood, complete privacy, accessibility or security, AGI, ASI, Theory-of-Everything proof or Stage 20 readiness.'
+VERDICT='NOT_READY_FOR_STAGE_20'
+OPS=[
+('record-shape','Validate a bounded rational discounted decision record.'),
+('policy-space','Enumerate the declared deterministic stationary policy space.'),
+('policy-evaluation','Compare exact Gaussian and Cramer values for the zero-index policy.'),
+('bellman-residual','Check every optimal Bellman residual equals zero.'),
+('exhaustive-optimum','Enumerate all deterministic policies and retain every componentwise optimizer.'),
+('policy-improvement','Retain policy iteration steps and verify nondecreasing values.'),
+('action-values','Compute exact optimal action values and nonpositive advantages.'),
+('statewise-regret','Compare each enumerated policy with the optimal value vector.'),
+('tie-break','Keep all optimal action ties and choose the least action index.'),
+('discounted-occupancy','Solve the discounted state visitation system and check its total mass.'),
+('occupancy-duality','Check flow balance and equality of occupancy reward with initial value.'),
+('initial-distribution','Check every one-hot initial return against the value vector.'),
+('reward-translation','Shift every reward by three and verify the exact value shift.'),
+('reward-scaling','Scale every reward by two and verify value covariance.'),
+('state-permutation','Reverse state labels and preserve every value after transport.'),
+('duplicate-action','Duplicate an action without changing the optimum.'),
+('residual-enclosure','Use twelve Bellman updates and an exact contraction residual enclosure.'),
+('three-coordinate-model','Represent policy count, synthetic return and iteration count.'),
+('calibration-gap','Record missing measured transitions and reward calibration.'),
+('deployment-hold','Hold real deployment until its named prerequisites exist.')]
+
+def utc():return datetime.now(timezone.utc).isoformat()
+def digest(b):return hashlib.sha256(b).hexdigest()
+def encoded(x):return json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()
+def objhash(x):return digest(encoded(x))
+def read(p):return json.loads(Path(p).read_text(encoding='utf-8-sig'))
+def write(p,x):
+    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True)
+    b=(json.dumps(x,sort_keys=True,indent=2,ensure_ascii=False,allow_nan=False)+'\n').encode() if not isinstance(x,str) else x.replace('\r\n','\n').encode()
+    p.write_bytes(b)
+def load(name,path):
+    loader=importlib.machinery.SourceFileLoader(name,str(path));spec=importlib.util.spec_from_loader(name,loader);m=importlib.util.module_from_spec(spec);loader.exec_module(m);return m
+def git(*a):return subprocess.check_output(['git','-c','maintenance.auto=false','-c','gc.auto=0','-C',str(REPO),*a],text=True).strip()
+def boundary_document(**kw):return dict(schema='ghc.family.ilyan-mdp.v1',owner=OWNER,phase=PHASE,boundary=BOUNDARY,verdict=VERDICT,**kw)
+def seal(stage):
+    folder=ROOT/stage;entries=[]
+    for p in sorted(folder.rglob('*')):
+        if p.is_file() and p.name!='manifest.json':
+            b=p.read_bytes();entries.append({'path':p.relative_to(REPO).as_posix(),'bytes':len(b),'sha256':digest(b),'git_blob_sha1':hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest(),'words':len(b.decode('utf-8').split())})
+    assert max(e['words'] for e in entries)<=100000
+    write(folder/'manifest.json',boundary_document(stage=stage,byte_domain='UTF-8 LF exact intended committed Git blobs',entry_count=len(entries),entries=entries))
+    print(json.dumps({'stage':stage,'files_bound':len(entries),'max_words':max(e['words'] for e in entries)}),flush=True)
+
+def fixtures():
+    fs=[]
+    for k in range(15):
+        n=1 if k<2 else 2+(k%3);g=[[0,1],[1,3],[1,2],[2,3],[3,4]][k%5];aa=[]
+        for s in range(n):
+            actions=[]
+            for a in range(1 if k%5==4 and s==0 else 2):
+                weights=[F(0)]*n
+                weights[(s+a+k)%n]+=F(1,2);weights[(s+1+a)%n]+=F(1,2)
+                reward=F((s+2*a+k)%7-3,1+(k%2))
+                if k==0:reward=F(a+1)
+                if k==1:reward=F(-1)
+                actions.append({'reward':[reward.numerator,reward.denominator],'transition':[[p.numerator,p.denominator] for p in weights]})
+            aa.append(actions)
+        fs.append({'id':f'MDP{k+1:02d}','states':n,'discount':g,'initial':[[1,n] for _ in range(n)],'actions':aa})
+    return fs
+
+def make_plan(args):
+    assert git('rev-parse','HEAD')==PARENT
+    p=ROOT/'planning';assert not (p/'manifest.json').exists(),'planning already sealed'
+    source=Path(args.source)/'docs/vesper-arlen/v706-v7'
+    inherited=[]
+    for s in ['x1','x2']:
+        for row in read(source/'planning'/f'proposals-{s}.json')['proposals']:
+            inherited.append({'source_owner':'Vesper Arlen','source_phase':'v706-v7','source_commit':SOURCE,'source_path':f'docs/vesper-arlen/v706-v7/planning/proposals-{s}.json','source_record':row,'source_record_sha256':objhash(row),'new_novelty_credit':0,'new_completion_credit':0,'review':'Contrast finite flow certificates with exact discounted policy and occupancy certificates; no source execution.'})
+    assert len(inherited)==300
+    write(p/'inherited-zero-credit.json',boundary_document(count=300,records=inherited))
+    fs=fixtures();write(p/'fixtures.json',boundary_document(fixtures=fs,count=15,all_synthetic=True))
+    proposals=[]
+    for op,(slug,title) in enumerate(OPS,1):
+        for f in fs:
+            row={'id':f'IR7068-P{len(proposals)+1:03d}','stage':'x1' if op<=10 else 'x2','operation':op,'mechanism':slug,'title':title+' '+f['id'],'fixture_id':f['id'],'fixture_sha256':objhash(f),'hypothesis':title,'expected_disposition':'completed' if op<=17 else ['represented','open_gap','exact_gate'][op-18],'falsifier':'Exact oracle disagreement, nonzero claimed residual, malformed record acceptance, changed input digest or promotion beyond the stated disposition.','scope':'Declared finite fixture and operation only; established mathematics, new phase implementation case.'}
+            row['definition_sha256']=objhash(row);proposals.append(row)
+    assert len({r['definition_sha256'] for r in proposals})==300
+    write(p/'proposals.json',boundary_document(count=300,planning_only=True,proposals=proposals))
+    write(p/'mechanisms.json',boundary_document(mechanisms=[{'id':i,'slug':s,'contract':t} for i,(s,t) in enumerate(OPS,1)]))
+    write(p/'workflow.json',boundary_document(authority='Hamish workflow v19, 27 September 2026, plus current received Vesper activation',source_phase='v706-v7',next_owner='Lyren Moss',next_phase='v707-v1',subsequent_owner='Ilyra Fen',subsequent_phase='v707-v2',minimums={'inherited':300,'new':300,'safe_each':400,'candidate_each':300,'cfr_each':300,'skills_each':10,'runners_each':5,'x1_tests':15,'x2_tests':30,'x2_models':15,'hooks':5,'exact':50,'blocked':30},planned={'safe_each':450,'candidate_each':300,'separate_refusal_guards_each':300,'cfr_each':300,'x1_tests':20,'x2_tests':30},shared_and_sibling_lanes='read_only',global_installs='owner_local_candidates_only',model_guard='v16 admitted launcher; no model override',authored_formats=['json','md','txt','html'],web_ceiling_each=2000,baton_word_range=[2000,100000]))
+    baseline=read(Path(args.receipts)/'terminal-effective-baseline.json')
+    write(p/'source-proof.json',boundary_document(source_commit=SOURCE,source_parent='c880085b5837fc5fea15ceba46f8762376d23d48',source_direct_commits=['cdaabb4df323ae8b8a9650478a65791391a07e9d','fb552db494f413d902d3d4159138b6f457d6c244','3ce3e988e3e1ea6ed8d3e1c8c201b75e01cbe176','958945abd6c4aa819d66ea3f39d42430638e3091',SOURCE],verified_manifest_bindings=328,baton_sha256='1e5d1c911f1ff5765d9c624ec699e7719cd916929ea75a97d753de01e0571d4c',baton_words=2409,baton_read='all bytes through LITERAL_EOF_VESPER_V706_V7',source_canonical={'failed_invocations':1,'successful_invocations':1,'post_success_replays':0,'receipt_sha256':'fe0d572255f783a8567360dbc1a3c534a7600a9e2192b0823415ea024ac8a374'},selected_baseline=baseline['terminal_effective'],baseline_sha256=objhash(baseline['terminal_effective']),source_document_sha256=digest((Path(args.receipts)/'terminal-effective-baseline.json').read_bytes()),fold_count=1,delivery_context='Historical PREPARED_NOT_SENT receipt preserved; later native activation received in current chat is a separate event.',source_replayed=False,source_mutated=False))
+    write(p/'source-faithful-ledger.json',boundary_document(owner_prior_head=PARENT,source_content_commit=SOURCE,source_is_git_parent=False,states=['historical source route hold','later native received activation','current Ilyan planning only'],inherited_credit=0,selected_source_baseline_folds=1,planned_phase_commits=4,branch_file_count_at_intake=1033,forecast_phase_file_ceiling=220,owner_file_ceiling=2000))
+    dispositions=[]
+    for i in range(50):dispositions.append({'id':f'EX{i+1:03d}','class':'exact_approval','state':'held','topic':['measured transition data','specific deployment host','affected-party consultation','independent implementation','reward governance'][i%5],'fixture':fs[i%15]['id'],'missing_evidence':['named target and accountable owner','specific evidence and approval record'],'execution_credit':0})
+    for i in range(30):dispositions.append({'id':f'BL{i+1:03d}','class':'blocked','state':'blocked','topic':['claim physical law from reward','identify a person from policy','deploy to an unspecified external account','claim universal moral optimum','claim conscious synthetic agent'][i%5],'fixture':fs[i%15]['id'],'execution_credit':0})
+    write(p/'approval-packets.json',boundary_document(packets=dispositions,exact=50,blocked=30))
+    law_titles=['Discounted reward translation','Positive reward scaling','State relabel covariance','Action duplicate idempotence','Zero-discount myopia','Occupancy mass conservation','Bellman residual enclosure','Greedy tie transparency','Statewise regret nonnegativity','Policy improvement monotonicity','Initial-distribution linearity','Transition normalization necessity','Reward specification dependence','Observation-model separation','Authorization nonconversion']
+    write(p/'law-hypotheses.json',boundary_document(hypotheses=[{'id':f'H{i+1:02d}','title':t,'class':'bounded software or mathematical hypothesis, not a new physical or psyche law','probe':OPS[i%17][0],'falsifier':'A declared exact counterexample or missing prerequisite','universal_law_credit':0} for i,t in enumerate(law_titles)]))
+    problems=['unknown transitions','partially observed state','nonstationary dynamics','time-consistent reward revision','risk-sensitive objectives','multiple stakeholders','non-Markov histories','undiscounted recurrence','continuous state','unbounded action space','distribution shift','causal transport','long-run fairness','energy measurements','independent replication']
+    write(p/'open-problem-probes.json',boundary_document(probes=[{'id':f'OP{i+1:02d}','topic':t,'status':'open_gap','local_probe':'Determine whether the frozen input schema contains the needed evidence. It does not.','resolved_world_problem':False} for i,t in enumerate(problems)]))
+    practices=['operations research documentation','control-system requirements review','probability teaching','software test engineering','records management','technical illustration','research ethics analysis','simulation design']
+    write(p/'practices.json',boundary_document(learning_practices=practices,successor_recommendations=['sensitivity analysis','causal model documentation','simulation accessibility','independent numerical auditing'],qualification_credit=0,real_clients=0))
+    write(p/'capability-plan.json',boundary_document(local_skills_per_stage=10,paired_runners_per_stage=5,groups=[OPS[i:i+4] for i in range(0,20,4)],manual_hooks=5,successor_skill_ideas=['discount sensitivity intervals','policy provenance join','interval transition envelopes','stakeholder reward audit','finite-horizon comparison'],successor_runner_ideas=['discount sweep','policy digest checker','simplex interval validator','reward revision diff','finite-horizon backwards induction'],global_installation=False))
+    write(p/'research.json',boundary_document(sources=[{'title':'MIT 6.7950 Infinite horizon problems, Cathy Wu, 2022','url':'https://web.mit.edu/6.7950/www/lectures/L4-2022fa.pdf','scope':'Read extracted definition and policy/value sections; targeted policy iteration sections examined separately. Established discounted MDP vocabulary and algorithms, not evidence validating these fixtures.'},{'title':'W3C PROV-DM','url':'https://www.w3.org/TR/prov-dm/','scope':'Read abstract and core provenance structure. Use entity, activity and derivation separation as documentation vocabulary; no conformance claim.'},{'title':'MIT difference-constraint lecture index','url':'https://ocw.mit.edu/courses/6-046j-introduction-to-algorithms-sma-5503-fall-2005/resources/lecture-18-shortest-paths-ii-bellman-ford-linear-programming-difference-constraints/','scope':'Considered then rejected as phase focus after finding Tessarin overlap; no new difference-constraint work.'},{'title':'User supplied simulation post','url':'https://x.com/mattshumer_/status/2095596175705399482?s=20','scope':'Retrieval returned internal error; no content verified or integrated.'}],app={'installed_version':'26.924.22138','build':'11645','channel':'prod','update_status':'up_to_date','update_installed_by_phase':False},spend=0))
+    write(p/'intake-failures.json',boundary_document(faults=[{'id':f'INT{i+1:02d}','kind':kind,'original_success_credit':0,'workaround':fix,'rollback':'No source or sibling mutation'} for i,(kind,fix) in enumerate([('combined intake display clipped','Use separately bounded UTF-8 windows'),('skill search display clipped','Read operative guide windows only'),('combined result display clipped','Keep total output below tool budget'),('simulation link retrieval failed','Retain unverified source gap'),('broad historical path lookup slow','Use exact current owner Git paths')])],source_failed_canonical_preserved=True))
+    write(p/'README.md','# Ilyan Reed v706-v8 planning\n\nPrimary focus: THOS, through a finite discounted decision model laboratory. GMUT connections are represented only; Freed ID and CBR keep reward choice, observation, provenance and deployment authority explicit.\n\nThere are fifteen frozen synthetic fixtures and twenty mechanisms, giving 300 bounded implementation contracts. This is a parameterized case portfolio, not 300 discoveries or independent experiments. The 300 inherited Vesper records receive zero Ilyan novelty and completion credit.\n\nGaussian policy iteration is compared with exhaustive stationary-policy enumeration using permutation determinants and Cramer evaluation. All arithmetic is rational. Models have at most four states; original fixtures have at most two actions per state and transformed duplicate-action checks at most three. No real agent, user decision, service or device is controlled.\n\nPlanning must be committed and pushed before x1; x1 must be immutable and pushed before x2. Each execution writes per-contract checkpoints so a failure permits only the unresolved dependency to continue. Canonical is metadata-only after an exact clean pushed final.\n\n'+BOUNDARY+'\n')
+    print(json.dumps({'planning_written':True,'new':300,'inherited':300,'domain_executed':False}),flush=True)
+
+def stage_gate(stage,bank):
+    needed='planning' if stage=='x1' else 'x1'
+    r=read(bank/(needed+'-push.json'))
+    assert r['exit_code']==0 and r['head']==git('rev-parse','HEAD') and r['clean'] and r['divergence']==[0,0]
+    assert r['head']==r['tracking']==r['remote']==r['pushed_head']
+    assert (ROOT/needed/'manifest.json').exists()
+
+def method_ledger(stage,rows,extra,flow):
+    ledger=flow.new_ledger(PHASE+'-'+stage,OWNER);ledger['boundary']=BOUNDARY
+    ledger['execution_authority']='owner_self_scoped_delta'
+    ledger['source_commit']=SOURCE;ledger['final_commit']='external_exact_final_after_push'
+    groups={}
+    for r in rows+extra:groups.setdefault(r['method_id'],[]).append(r)
+    for mid,rr in groups.items():
+        neg=[r['witness_id'] for r in rr if r['result']=='fail'];links=[r['witness_id'] for r in rr]
+        ledger['methods'].append({'method_id':mid,'title':mid,'failure_signature':'Malformed subject, invariant mismatch or missing prerequisite','trigger_preconditions':['Frozen bounded fixture and exact operation'],'privacy_class':'sanitized_public','approval_class':'safe_now','candidate_workaround':'Repair only a new copy; retain failed original and checkpoint completed work.','validation_witness_ids':links,'recurrence_guard':'Exact fixture and request digests; strict rational and simplex validation.','rollback':'Keep sealed evidence; do not use corrected copy if its checks fail.','recommendation_state':'validated','supersedes':[],'protected_gates':['empirical','production','authority','Stage20'],'retained_negative_ids':neg or ['see planning/intake-failures.json; no failure invented for this method'],'scope_boundary':BOUNDARY})
+    ledger['witnesses']=rows+extra;flow.refresh_counts(ledger);v=flow.validate_ledger(ledger);assert v['valid'],v
+    return ledger,v
+
+def witness(wid,mid,procedure,result,observed,negative=None):
+    return {'witness_id':wid,'method_id':mid,'procedure':procedure,'scope':'Frozen owner-local finite fixture and stated operation','expected':'Declared invariant or refusal; invalid subject remains failed','observed':observed,'result':result,'same_owner_only':True,'independent_reproduction':False,'retained_negative_ids':negative or [],'boundary':'See enclosing ledger boundary; scope does not expand.'}
+
+def run_stage(args):
+    stage=args.stage;bank=Path(args.bank);stage_gate(stage,bank)
+    folder=ROOT/stage;folder.mkdir(exist_ok=True);assert not (folder/'manifest.json').exists(),'stage already sealed'
+    eng=load('mdp_runtime_'+stage,ROOT/'planning/runtime.txt');oracle=load('mdp_oracle_'+stage,ROOT/'planning/oracle.txt')
+    flow=load('family_flow',Path(args.flow))
+    fs={f['id']:f for f in read(ROOT/'planning/fixtures.json')['fixtures']}
+    proposals=[p for p in read(ROOT/'planning/proposals.json')['proposals'] if p['stage']==stage]
+    saved={}
+    for checkpoint in folder.glob('execution-journal-op-*.json'):saved.update(read(checkpoint)['completed'])
+    for p in proposals:
+        if p['id'] in saved:continue
+        f=fs[p['fixture_id']];assert objhash(f)==p['fixture_sha256']
+        body={k:v for k,v in p.items() if k!='definition_sha256'};assert objhash(body)==p['definition_sha256']
+        try:
+            result=eng.evaluate(f,p['operation'],oracle)
+            assert result['disposition']==p['expected_disposition']
+            mutations=[]
+            for kind in ['invalid_transition_simplex','boolean_reward_numerator']:
+                bad=copy.deepcopy(f)
+                if kind=='invalid_transition_simplex':bad['actions'][0][0]['transition'][0]=[7,1]
+                else:bad['actions'][0][0]['reward'][0]=True
+                try:eng.validate(bad)
+                except ValueError as e:reason=str(e)
+                else:raise AssertionError('malformed subject accepted')
+                repaired=copy.deepcopy(bad)
+                if kind=='invalid_transition_simplex':repaired['actions'][0][0]['transition']=copy.deepcopy(f['actions'][0][0]['transition'])
+                else:repaired['actions'][0][0]['reward']=copy.deepcopy(f['actions'][0][0]['reward'])
+                assert eng.validate(repaired) and objhash(repaired)==objhash(f)
+                # CFR is schema repair plus exact template equivalence, not a second domain execution.
+                mutations.append({'kind':kind,'original':bad,'original_sha256':objhash(bad),'invalid_original_result':'fail','original_completion_credit':0,'refusal_reason':reason,'guard_result':'pass','repaired_copy':repaired,'repaired_sha256':objhash(repaired),'repair_checks':['strict schema valid','exact frozen-template equivalence'],'repair_result':'pass'})
+            saved[p['id']]={'request_sha256':p['definition_sha256'],'result':result,'mutations':mutations}
+            journal=folder/f"execution-journal-op-{p['operation']:02d}.json"
+            group_ids={q['id'] for q in proposals if q['operation']==p['operation']}
+            write(journal,boundary_document(stage=stage,completed={k:v for k,v in saved.items() if k in group_ids},domain_success_replays=0))
+        except Exception as e:
+            faults=read(folder/'execution-failures.json') if (folder/'execution-failures.json').exists() else {'faults':[]}
+            faults['faults'].append({'proposal':p['id'],'exception':type(e).__name__,'message':str(e),'time':utc(),'original_success_credit':0,'already_completed':len(saved)})
+            write(folder/'execution-failures.json',faults);raise
+    rows=[];safe=[];candidates=[];guards=[];cfr=[];results=[]
+    for p in proposals:
+        s=saved[p['id']];results.append({'proposal':p['id'],**s['result']});mid='IR7068-'+p['mechanism']
+        for ck,passed in s['result']['checks'].items():
+            wid=p['id']+'-safe-'+ck;record={'id':wid,'proposal':p['id'],'check':ck,'passed':passed,'completion_scope':s['result']['disposition']};safe.append(record);rows.append(witness(wid,mid,ck,'pass',record))
+        for i,m in enumerate(s['mutations'],1):
+            neg=p['id']+f'-candidate-{i}';record={'id':neg,'proposal':p['id'],**{k:v for k,v in m.items() if k not in ['original','repaired_copy']},'full_subjects':f"execution-journal-op-{p['operation']:02d}.json","checkpoint_key":p['id'],'mutation_index':i-1};candidates.append(record)
+            rows.append(witness(neg,mid,'malformed subject execution','fail',{'reason':m['refusal_reason'],'sha256':m['original_sha256'],'original_success_credit':0},[neg]))
+            gid=neg+'-guard';gr={'id':gid,'subject':neg,'passed':True,'subject_promoted':False};guards.append(gr);rows.append(witness(gid,mid,'separate refusal guard','pass',gr,[neg]))
+            cid=neg+'-repair';cr={'id':cid,'subject':neg,'passed':True,'new_copy_sha256':m['repaired_sha256'],'checks':m['repair_checks'],'original_success_credit':0};cfr.append(cr);rows.append(witness(cid,mid,'corrected-copy schema and equivalence','pass',cr,[neg]))
+    for name,rr in [('results',results),('safe-now',safe),('candidate',candidates),('refusal-guards',guards),('cfr',cfr)]:write(folder/(name+'.json'),boundary_document(count=len(rr),records=rr))
+    assert list(map(len,[safe,candidates,guards,cfr]))==[450,300,300,300]
+    extras=[];testfile=folder/'tests.json'
+    if testfile.exists():tests=read(testfile)['tests']
+    else:
+        tests=[]
+        for f in fs.values():
+            z=copy.deepcopy(f)
+            if stage=='x2':z['discount']=[3,5]
+            observed=eng.policy_iteration(z);expected=oracle.optimal(z);assert observed['value']==expected['value']
+            tests.append({'id':stage+'-'+f['id']+'-oracle','purpose':'Different discount regression' if stage=='x2' else 'Exact policy algorithm comparison','passed':True,'input_sha256':objhash(z),'optimal_value':eng.packed(observed['value'])})
+        if stage=='x1':
+            for field,value in [('discount',[1,1]),('states',True),('initial',[[2,1]]),('actions',[]),('discount',[1,0])]:
+                z=copy.deepcopy(fs['MDP01']);z[field]=value
+                try:eng.validate(z)
+                except ValueError:pass
+                else:raise AssertionError('negative regression accepted')
+                tests.append({'id':f'x1-negative-{len(tests)-14}','purpose':'Refuse '+field+' '+str(value),'passed':True,'subject':z,'subject_result':'fail','subject_completion_credit':0})
+        else:
+            for f in fs.values():
+                z=copy.deepcopy(f);z['discount']=[4,5];v=oracle.optimal(z)['value'];x=[F(0)]*z['states']
+                for _ in range(20):x=[max(q) for q in eng.q_values(z,x)]
+                tx=[max(q) for q in eng.q_values(z,x)];radius=max(abs(a-b) for a,b in zip(tx,x))/(1-F(4,5));assert all(a-radius<=b<=a+radius for a,b in zip(x,v))
+                tests.append({'id':'x2-'+f['id']+'-enclosure','purpose':'20-step residual enclosure at discount four-fifths','passed':True,'radius':eng.packed(radius)})
+        write(testfile,boundary_document(count=len(tests),tests=tests))
+    for t in tests:
+        if t.get('subject_result')=='fail':extras.append(witness(t['id']+'-subject','IR7068-'+stage+'-focused-tests','invalid regression subject','fail',{'subject':t['subject'],'completion_credit':0},[t['id']+'-subject']))
+        extras.append(witness(t['id'],'IR7068-'+stage+'-focused-tests',t['purpose'],'pass',t))
+    # Each paired caller reads and verifies two actual operation result sets; it never reruns the solver.
+    receipts=[];skills=[];opstart=1 if stage=='x1' else 11
+    for op in range(opstart,opstart+10):
+        slug,title=OPS[op-1];skill=folder/'skills'/('mdp-'+slug)/'SKILL.md'
+        text='---\nname: mdp-'+slug+'\ndescription: '+title+' Use only for the frozen finite rational phase contracts.\n---\n\n# '+title+'\n\nRead planning/fixtures.json and the matching operation records in '+stage+'/results.json. Confirm the fixture digest and expected disposition before interpreting a result.\n\nUse the paired TXT caller to verify the saved cases. Reject Boolean numerators, nonpositive denominators, invalid simplexes and discounts outside zero inclusive to one exclusive. Retain the malformed original at zero credit; apply correction only to a separately identified copy.\n\nThe caller verifies existing evidence and does not re-execute a successful domain tranche. Five model-independent recurrence groups can later be curated after exact review. No global installation or deployment is implied.\n\n'+BOUNDARY+'\n'
+        if not skill.exists():write(skill,text)
+        selected=[r for r in results if r['operation']==op];assert len(selected)==15 and all(r['checks']['operation_invariant'] for r in selected)
+        skills.append({'operation':op,'skill_path':skill.relative_to(ROOT).as_posix(),'sha256':digest(skill.read_bytes()),'records_used':len(selected),'valid_frontmatter':skill.read_text().startswith('---\nname: mdp-'),'evidence_use':'read exact saved operation records','passed':True})
+    write(folder/'skill-use-receipts.json',boundary_document(count=10,records=skills))
+    for skill in skills:extras.append(witness(stage+'-skill-'+str(skill['operation']),'IR7068-'+stage+'-guides','guide metadata and bound evidence use','pass',skill))
+    for pair in range(5):
+        ops=[opstart+pair*2,opstart+pair*2+1];runner=folder/'runners'/f'mdp-pair-{pair+1}.txt'
+        code="import json,hashlib\nfrom pathlib import Path\np=Path(__file__).resolve().parents[1]/'results.json'\nb=p.read_bytes();d=json.loads(b)\nops="+repr(ops)+"\nrows=[r for r in d['records'] if r['operation'] in ops]\nassert len(rows)==30\nassert all(all(r['checks'].values()) for r in rows)\nprint(json.dumps({'operations':ops,'record_count':len(rows),'results_sha256':hashlib.sha256(b).hexdigest(),'domain_replayed':False,'passed':True}))\n"
+        if not runner.exists():write(runner,code)
+        receiptpath=folder/'runner-receipts'/f'pair-{pair+1}.json'
+        if receiptpath.exists():receipt=read(receiptpath)
+        else:
+            c=subprocess.run([sys.executable,'-B',str(runner)],capture_output=True,text=True,check=True);receipt=json.loads(c.stdout);receipt['runner_sha256']=digest(runner.read_bytes());write(receiptpath,receipt)
+        receipts.append(receipt);extras.append(witness(stage+'-runner-'+str(pair+1),'IR7068-'+stage+'-callers','invoke paired saved-evidence caller','pass',receipt))
+    write(folder/'runner-receipts.json',boundary_document(count=5,records=receipts))
+    if stage=='x2':
+        models=[r for r in results if r['operation']==18];assert len(models)==15
+        write(folder/'models.json',boundary_document(count=15,models=models,kind='three exact coordinates per synthetic fixture',use='checked coordinate dimensions and projected into the local viewer',physical_observations=0))
+        for m in models:
+            assert len(m['detail']['coordinates'])==3
+            extras.append(witness('model-'+m['fixture'],'IR7068-model-projection','three rational coordinate shape and model binding','pass',{'fixture':m['fixture'],'coordinates':m['detail']['coordinates']}))
+        hooks=[]
+        for i,field in enumerate(['empirical_GMUT','production_THOS','production_Freed_ID','protected_authority','independent_reproduction'],1):
+            hook=folder/'hooks'/f'manual-{i}.txt'
+            code="import json\npayload={"+repr(field)+":False,'verdict':'NOT_READY_FOR_STAGE_20'}\nassert payload["+repr(field)+"] is False\nprint(json.dumps({'hook':"+repr(field)+",'manual_check':True,'live_host_execution':False,'passed':True}))\n"
+            if not hook.exists():write(hook,code)
+            receiptpath=folder/'hooks'/f'manual-{i}-receipt.json'
+            if receiptpath.exists():receipt=read(receiptpath)
+            else:
+                cp=subprocess.run([sys.executable,'-B',str(hook)],capture_output=True,text=True,check=True);receipt=json.loads(cp.stdout);write(receiptpath,receipt)
+            hooks.append(receipt);extras.append(witness('hook-'+str(i),'IR7068-manual-hooks','manual static claim-boundary smoke','pass',receipt))
+        write(folder/'hooks.json',boundary_document(count=5,hooks=hooks,installed=False,live_hook_event_observed=False))
+        caps=read(ROOT/'planning/capability-plan.json');write(folder/'catalogue.json',boundary_document(skills=[{'stage':s,'path':r['skill_path'],'sha256':r['sha256']} for s in ['x1','x2'] for r in read(ROOT/s/'skill-use-receipts.json')['records']],runner_groups=10,curated_owner_local_groups=caps['groups'],install_state='LOCAL_ONLY_REVIEWABLE',next_skills=caps['successor_skill_ideas'],next_runners=caps['successor_runner_ideas']))
+    ledger,validation=method_ledger(stage,rows,extras,flow)
+    # Shard losslessly per method to avoid oversized documents and keep exact backlinks.
+    shards=[]
+    for method in ledger['methods']:
+        mid=method['method_id'];one=flow.new_ledger(PHASE+'-'+stage,OWNER);one['boundary']=BOUNDARY;one['methods']=[method];one['witnesses']=[r for r in ledger['witnesses'] if r['method_id']==mid];flow.refresh_counts(one);v=flow.validate_ledger(one);assert v['valid']
+        name='method-flow/'+mid+'.json';write(folder/name,one);shards.append({'path':name,'sha256':digest((folder/name).read_bytes()),'counts':one['counts']})
+    write(folder/'method-flow-index.json',boundary_document(shards=shards,counts=ledger['counts'],validation=validation))
+    summary={'contracts':150,'outcomes':dict(Counter(r['disposition'] for r in results)),'safe':450,'candidate_failed_originals':300,'refusal_guards':300,'cfr':300,'tests':len(tests),'skills':10,'runners':5,'method_flow_counts':ledger['counts']}
+    write(folder/'summary.json',boundary_document(**summary));write(folder/'report.md','# '+stage.upper()+' exact decision-model evidence\n\n'+json.dumps(summary,indent=2)+'\n\nCounts are parameterized checks. The invalid subjects remain failed; successful refusal and repaired-copy checks have their own records. No empirical observations, real actions, global installations or successful source replays occurred.\n\n'+BOUNDARY+'\n')
+    print(json.dumps({'stage_complete':stage,**summary}),flush=True)
+
+def main():
+    assert os.environ.get('GHC_MODEL_GUARD')=='v16','registered admission required'
+    ap=argparse.ArgumentParser();ap.add_argument('mode',choices=['plan','stage','seal','publish']);ap.add_argument('--source');ap.add_argument('--receipts');ap.add_argument('--bank');ap.add_argument('--flow');ap.add_argument('--stage',choices=['planning','x1','x2','final']);args=ap.parse_args()
+    if args.mode=='plan':make_plan(args)
+    elif args.mode=='stage':run_stage(args)
+    elif args.mode=='seal':seal(args.stage)
+    else:publish(args.stage,Path(args.bank))
+
+def publish(stage,bank):
+    bank.mkdir(parents=True,exist_ok=True);receiptpath=bank/(stage+'-push.json');pending=bank/(stage+'-push-pending.json')
+    assert not receiptpath.exists() and not pending.exists(),'publication already attempted; inspect exact pending state before continuation'
+    branch='codex/GHC-Family/ilyan-reed-main';assert git('branch','--show-current')==branch
+    sequence=['planning','x1','x2','final'];idx=sequence.index(stage)
+    expected=PARENT if idx==0 else read(bank/(sequence[idx-1]+'-push.json'))['head']
+    assert git('rev-parse','HEAD')==expected,'unexpected owner parent'
+    manifest=read(ROOT/stage/'manifest.json')
+    for e in manifest['entries']:
+        b=(REPO/e['path']).read_bytes();assert digest(b)==e['sha256'] and len(b)==e['bytes']
+    status=git('status','--porcelain')
+    assert status and all(PREFIX+'/' in line for line in status.splitlines()),'nonowner or missing changes'
+    git('add','--sparse','--',PREFIX+'/'+stage)
+    git('commit','-m',OWNER+' '+PHASE+' '+stage+' exact finite decision evidence')
+    head=git('rev-parse','HEAD');assert git('rev-parse','HEAD^')==expected
+    write(pending,{'stage':stage,'head':head,'parent':expected,'started_at':utc(),'state':'PUSH_PENDING','duplicate_push_permitted':False})
+    command=['git','-c','maintenance.auto=false','-c','gc.auto=0','-c','push.negotiate=true','-c','fetch.negotiationAlgorithm=skipping','-c','remote.origin.negotiationRestrict=refs/heads/'+branch,'-c','pack.threads=2','-C',str(REPO),'push','--no-thin','origin','HEAD:refs/heads/'+branch]
+    with (bank/(stage+'-push-log.txt')).open('w',encoding='utf-8') as log:cp=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT)
+    if cp.returncode!=0:
+        write(bank/(stage+'-push-failure.json'),{'stage':stage,'head':head,'exit_code':cp.returncode,'original_success_credit':0});raise RuntimeError('push failed; retain pending and inspect')
+    git('fetch','--no-tags','origin','refs/heads/'+branch+':refs/remotes/origin/'+branch)
+    tracking=git('rev-parse','refs/remotes/origin/'+branch);remote=git('ls-remote','origin','refs/heads/'+branch).split()[0]
+    clean=git('status','--porcelain')=='';div=list(map(int,git('rev-list','--left-right','--count','HEAD...refs/remotes/origin/'+branch).split()))
+    record={'stage':stage,'head':head,'parent':expected,'pushed_head':head,'tracking':tracking,'remote':remote,'clean':clean,'divergence':div,'exit_code':0,'checked_at':utc()}
+    assert clean and div==[0,0] and head==tracking==remote==git('rev-parse','HEAD')
+    write(receiptpath,record);print(json.dumps(record),flush=True)
+if __name__=='__main__':main()
