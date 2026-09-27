@@ -1,0 +1,54 @@
+"""Curate saved capabilities, meaningful manual guards and the context index."""
+import argparse,copy,hashlib,importlib.machinery,importlib.util,json,subprocess,sys
+from pathlib import Path
+R=Path(__file__).resolve().parent;P=R.parent
+ap=argparse.ArgumentParser();ap.add_argument('--validator',required=True);args=ap.parse_args()
+def read(p):return json.loads(p.read_text(encoding='utf-8'))
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def write(p,v):
+ p.parent.mkdir(parents=True,exist_ok=True);p.write_text((json.dumps(v,sort_keys=True,indent=2)+'\n') if not isinstance(v,str) else v,encoding='utf-8',newline='\n')
+assert not (R/'supplemental-receipts.json').exists(),'support already completed'
+source=read(P/'planning/source-proof.json');cap=read(P/'planning/capability-plan.json');props=read(P/'planning/proposals.json')['proposals'];practices=read(P/'planning/practices.json')['learning_practices']
+records=[];cards=[]
+for stage in ['x1','x2']:
+ for f in sorted((P/stage/'skills').glob('*/SKILL.md')):cards.append({'kind':'skill','path':f.relative_to(P).as_posix(),'sha256':sha(f),'state':'local_use_recorded'})
+ for f in sorted((P/stage/'runners').glob('*.txt')):cards.append({'kind':'runner','path':f.relative_to(P).as_posix(),'sha256':sha(f),'state':'invoked_saved_evidence_reader'})
+group_names=['decision-record-and-value','optimality-and-improvement','ties-and-occupancy','reward-and-label-transforms','enclosure-and-release-boundaries']
+for i,name in enumerate(group_names):
+ ops=list(range(i*4+1,i*4+5));guide=R/'curated/skills'/name/'SKILL.md';runner=R/'curated/runners'/(name+'.txt')
+ text='---\nname: '+name+'\ndescription: Read and verify four related finite discounted-decision evidence families from Ilyan v706-v8.\n---\n\n# '+name.replace('-',' ')+'\n\nUse this group when reviewing operations '+', '.join(map(str,ops))+'. Load only the corresponding saved x1 or x2 results. The paired reader checks all sixty fixture-operation records and their three saved predicates; it does not execute the policy engine.\n\nKeep the underlying twenty narrow guides available. This group combines their discovery and verification entrypoints without changing their input contracts. Values are exact rational model outputs. A represented outcome, absent calibration or deployment hold remains in its original state even when all reader checks pass.\n\nFor a changed fixture, create a new definition and a new execution record. Do not quietly replace a saved numerator, probability, reward or selected policy. If a file digest changes unexpectedly, stop the readback and retain the mismatch. Rollback means restoring the intended immutable source reference, not deleting a failed record.\n\nThis is an owner-local candidate; shared registration and global installation have not occurred. It provides no empirical, production, professional, legal, cultural, Maori-authority, consciousness, identity, independent-reproduction or Stage 20 evidence.\n'
+ write(guide,text)
+ code="import json,hashlib\nfrom pathlib import Path\nr=Path(__file__).resolve().parents[3]\nops="+repr(ops)+"\nrows=[];bindings=[]\nfor stage in ['x1','x2']:\n p=r/stage/'results.json';b=p.read_bytes();d=json.loads(b);rows.extend(x for x in d['records'] if x['operation'] in ops);bindings.append({'stage':stage,'sha256':hashlib.sha256(b).hexdigest()})\nassert len(rows)==60\nassert all(all(x['checks'].values()) for x in rows)\nprint(json.dumps({'operations':ops,'record_count':60,'bindings':bindings,'domain_replayed':False,'passed':True}))\n"
+ write(runner,code);c=subprocess.run([sys.executable,'-B',str(runner)],capture_output=True,text=True,check=True);receipt=json.loads(c.stdout);receipt.update(id='curated-runner-'+str(i+1),result='pass');records.append(receipt)
+ cards.extend([{'kind':'curated_skill','path':guide.relative_to(P).as_posix(),'sha256':sha(guide),'state':'local_candidate'},{'kind':'curated_runner','path':runner.relative_to(P).as_posix(),'sha256':sha(runner),'state':'invoked_saved_evidence_reader'}])
+claims={k:False for k in ['empirical_GMUT','production_THOS','production_Freed_ID','protected_authority','independent_reproduction']};claims['verdict']='NOT_READY_FOR_STAGE_20';write(R/'claim-envelope.json',claims)
+initial=[];guards=[]
+for i,field in enumerate(list(claims)[:-1],1):
+ hook=R/'hooks'/f'manual-{i}.txt';initial.append({'path':hook.relative_to(P).as_posix(),'source':hook.read_text(),'sha256':sha(hook),'receipt':read(R/'hooks'/f'manual-{i}-receipt.json'),'scope':'Initial literal smoke only; no incoming-payload admission evidence.'})
+ code="import json,sys\nfield="+repr(field)+"\nraw=sys.stdin.buffer.read(65537)\nif len(raw)>65536:raise SystemExit(2)\ntry:\n p=json.loads(raw)\n ok=isinstance(p,dict) and p.get(field) is False and p.get('verdict')=='NOT_READY_FOR_STAGE_20'\nexcept (ValueError,TypeError):ok=False\nprint(json.dumps({'hook':field,'passed':ok,'live_host_execution':False,'scope':'manual claim envelope'}))\nraise SystemExit(0 if ok else 1)\n"
+ write(hook,code)
+ good=subprocess.run([sys.executable,'-B',str(hook)],input=json.dumps(claims),capture_output=True,text=True);assert good.returncode==0
+ bad=copy.deepcopy(claims);bad[field]=True
+ no=subprocess.run([sys.executable,'-B',str(hook)],input=json.dumps(bad),capture_output=True,text=True);assert no.returncode==1
+ guard={'id':'hook-guard-'+str(i),'field':field,'original_smoke':initial[-1]['sha256'],'current_sha256':sha(hook),'valid_envelope_sha256':sha(R/'claim-envelope.json'),'valid_result':json.loads(good.stdout),'invalid_subject':bad,'invalid_subject_result':'fail','original_success_credit':0,'refusal_result':json.loads(no.stdout),'refusal_guard_passed':True,'installed':False,'live_host_event':'not_observed'};guards.append(guard)
+ records.extend([{'id':guard['id']+'-valid','result':'pass','procedure':'manual input-envelope guard','observed':guard['valid_result']},{'id':guard['id']+'-invalid','result':'fail','procedure':'invalid input-envelope subject','observed':bad,'original_success_credit':0},{'id':guard['id']+'-refusal','result':'pass','procedure':'separate invalid-envelope refusal guard','observed':{'exit_code':no.returncode}}])
+ cards.append({'kind':'manual_hook','path':hook.relative_to(P).as_posix(),'sha256':sha(hook),'state':'manually_invoked_uninstalled'})
+write(R/'hooks/initial-literal-smokes.json',initial);write(R/'hooks/manual-input-receipts.json',guards)
+loader=importlib.machinery.SourceFileLoader('quick_skill_validator',args.validator);spec=importlib.util.spec_from_loader('quick_skill_validator',loader);v=importlib.util.module_from_spec(spec);loader.exec_module(v)
+validation=[]
+for f in sorted(list((R/'skills').glob('*/SKILL.md'))+list((R/'curated/skills').glob('*/SKILL.md'))):
+ ok,msg=v.validate_skill(f.parent);assert ok,(f.name,msg);validation.append({'path':f.relative_to(P).as_posix(),'sha256':sha(f),'passed':ok,'message':msg});records.append({'id':'skill-validate-'+f.parent.name,'result':'pass','procedure':'official skill structural validation','observed':msg})
+write(R/'skill-validation.json',{'count':15,'validator_sha256':sha(Path(args.validator)),'scope':'Frontmatter, naming and scaffold structure only','records':validation})
+deck=[{'id':'anchor','tier':1,'parent':None,'text':'Ilyan Reed is a relational working label; no identity or consciousness claim.'}]
+for pillar in ['Mind','Body','Heart']:deck.append({'id':'pillar-'+pillar,'tier':2,'parent':'anchor','text':pillar})
+for i,name in enumerate(practices):deck.append({'id':f'practice-{i+1}','tier':3,'parent':'pillar-'+['Mind','Body','Heart'][i%3],'text':name+' as a learning lens only'})
+for i,p in enumerate(props):deck.append({'id':p['id'],'tier':4,'parent':f'practice-{i%8+1}','definition_sha256':p['definition_sha256'],'disposition':p['expected_disposition']})
+by_id={c['id']:c for c in deck};assert len(deck)==312 and len(by_id)==312
+for c in deck:
+ if c['parent']:assert by_id[c['parent']]['tier']==c['tier']-1
+write(R/'context-deck.json',{'count':312,'cards':deck,'identity_credit':0,'hierarchy_check':True});records.append({'id':'context-deck','result':'pass','procedure':'immediate-tier parent and identifier uniqueness checks','observed':{'count':312}})
+assert len(cards)==45
+write(R/'catalogue-effective.json',{'count':45,'cards':cards,'shared_mutations':0,'global_installs':0,'next_skills':cap['successor_skill_ideas'],'next_runners':cap['successor_runner_ideas'],'role':'Source-bound discovery; no automatic winner or authority expansion'})
+records.append({'id':'catalogue-bindings','result':'pass','procedure':'actual local file SHA-256 bindings','observed':{'count':45}})
+write(R/'supplemental-receipts.json',{'records':records,'counts':{'pass':sum(r['result']=='pass' for r in records),'fail':sum(r['result']=='fail' for r in records)},'domain_replayed':False,'global_installs':0})
+print(json.dumps({'supplemental_records':len(records),'catalogue':45,'deck':312,'x2_skills_validated':15,'curated_readers_invoked':5,'manual_input_guards':5,'invalid_hook_subjects_retained':5,'domain_replayed':False}))

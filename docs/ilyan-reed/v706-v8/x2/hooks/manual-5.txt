@@ -1,0 +1,10 @@
+import json,sys
+field='independent_reproduction'
+raw=sys.stdin.buffer.read(65537)
+if len(raw)>65536:raise SystemExit(2)
+try:
+ p=json.loads(raw)
+ ok=isinstance(p,dict) and p.get(field) is False and p.get('verdict')=='NOT_READY_FOR_STAGE_20'
+except (ValueError,TypeError):ok=False
+print(json.dumps({'hook':field,'passed':ok,'live_host_execution':False,'scope':'manual claim envelope'}))
+raise SystemExit(0 if ok else 1)

@@ -1,0 +1,10 @@
+import json,hashlib
+from pathlib import Path
+r=Path(__file__).resolve().parents[3]
+ops=[9, 10, 11, 12]
+rows=[];bindings=[]
+for stage in ['x1','x2']:
+ p=r/stage/'results.json';b=p.read_bytes();d=json.loads(b);rows.extend(x for x in d['records'] if x['operation'] in ops);bindings.append({'stage':stage,'sha256':hashlib.sha256(b).hexdigest()})
+assert len(rows)==60
+assert all(all(x['checks'].values()) for x in rows)
+print(json.dumps({'operations':ops,'record_count':60,'bindings':bindings,'domain_replayed':False,'passed':True}))
