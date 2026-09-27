@@ -1,0 +1,94 @@
+from __future__ import annotations
+import argparse, hashlib, json, re, subprocess
+from pathlib import Path
+
+def run(repo, *args, check=True):
+    p=subprocess.run(["git","-C",str(repo),*args],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=check)
+    return p.stdout.decode("utf-8","replace").strip()
+def show(repo,spec):
+    return subprocess.run(["git","-C",str(repo),"show",spec],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True).stdout
+def sha(data): return hashlib.sha256(data).hexdigest()
+def walk_entries(obj):
+    rows=[]
+    if isinstance(obj,dict):
+        if isinstance(obj.get("path"),str) and isinstance(obj.get("bytes"),int) and isinstance(obj.get("sha256"),str): rows.append(obj)
+        for value in obj.values(): rows.extend(walk_entries(value))
+    elif isinstance(obj,list):
+        for value in obj: rows.extend(walk_entries(value))
+    return rows
+def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--repo",required=True); ap.add_argument("--head",required=True); ap.add_argument("--branch",required=True); ap.add_argument("--output",required=True)
+    args=ap.parse_args(); repo=Path(args.repo); output=Path(args.output); latch=output.with_name("canonical-success-latch.json")
+    if latch.exists(): raise SystemExit("canonical success latch already exists; replay refused")
+    checks=[]
+    def check(name,observed,expected=True,detail=None):
+        passed=observed==expected; checks.append({"name":name,"passed":passed,"observed":observed,"expected":expected,"detail":detail}); return passed
+    check("head",run(repo,"rev-parse","HEAD"),args.head)
+    check("branch",run(repo,"branch","--show-current"),args.branch)
+    check("clean",run(repo,"status","--porcelain=v1"),"")
+    divergence=run(repo,"rev-list","--left-right","--count","HEAD...@{upstream}").split()
+    check("divergence",divergence,["0","0"])
+    check("tracking",run(repo,"rev-parse","@{upstream}"),args.head)
+    remote_lines=run(repo,"ls-remote","origin",f"refs/heads/{args.branch}").splitlines()
+    remote=remote_lines[0].split()[0] if remote_lines else ""
+    check("fresh_remote",remote,args.head)
+    parent0="61e6783a83204ed7423251ad324d151feff7dade"
+    history=run(repo,"rev-list","--reverse","--parents",f"{parent0}..{args.head}").splitlines()
+    check("phase_commit_count",len(history),4)
+    check("single_parent_history",all(len(line.split())==2 for line in history),True)
+    check("zero_merges",run(repo,"rev-list","--count","--merges",f"{parent0}..{args.head}"),"0")
+    expected_parent=parent0
+    sequential=True
+    for line in history:
+        parts=line.split()
+        if len(parts)!=2 or parts[1]!=expected_parent: sequential=False
+        expected_parent=parts[0]
+    check("direct_parent_chain",sequential,True)
+    prefix="docs/vesper-arlen/v706-v7"
+    manifests=[f"{prefix}/planning/manifest.json",f"{prefix}/x1/manifest.json",f"{prefix}/x2/manifest.json",f"{prefix}/final/manifest.json",f"{prefix}/final/content-seal.json"]
+    bindings=[]
+    for path in manifests:
+        obj=json.loads(show(repo,f"{args.head}:{path}").decode("utf-8")); bindings.extend(walk_entries(obj))
+    errors=[]
+    for row in bindings:
+        try: data=show(repo,f"{args.head}:{row['path']}")
+        except subprocess.CalledProcessError: errors.append({"path":row["path"],"error":"missing"}); continue
+        if len(data)!=row["bytes"] or sha(data)!=row["sha256"]: errors.append({"path":row["path"],"error":"digest_or_bytes"})
+    check("manifest_bindings",len(errors),0,{"bindings":len(bindings),"errors":errors[:10]})
+    owner_paths=[p for p in run(repo,"ls-tree","-r","--name-only",args.head,"--",prefix).splitlines() if p]
+    json_count=0; json_errors=[]; privacy=[]
+    patterns={
+        "email":re.compile(rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"),
+        "private_key":re.compile(rb"BEGIN [A-Z ]*PRIVATE KEY"),
+        "credential_assignment":re.compile(rb"(?i)(?:api[_-]?key|password|secret)\s*[:=]\s*['\"][^'\"]+"),
+        "windows_user_path":re.compile(rb"(?i)C:\\\\Users\\\\[^\\\s]+"),
+        "ipv4":re.compile(rb"(?<![0-9])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![0-9])"),
+    }
+    for path in owner_paths:
+        data=show(repo,f"{args.head}:{path}")
+        if path.endswith(".json"):
+            json_count+=1
+            try: json.loads(data.decode("utf-8"))
+            except Exception as exc: json_errors.append({"path":path,"error":str(exc)})
+        for cls,pat in patterns.items():
+            if pat.search(data): privacy.append({"path":path,"class":cls})
+    check("strict_json",len(json_errors),0,{"count":json_count,"errors":json_errors[:10]})
+    check("privacy_scan",len(privacy),0,{"owner_files":len(owner_paths),"classes":len(patterns),"hits":privacy[:10]})
+    tests=[]
+    for stage in ["x1","x2","final"]:
+        obj=json.loads(show(repo,f"{args.head}:{prefix}/{stage}/tests.json").decode("utf-8"))
+        tests.extend(obj["tests"])
+    check("selected_test_metadata",all(row.get("passed") is True for row in tests),True,{"count":len(tests),"domain_replayed":False})
+    phase=json.loads(show(repo,f"{args.head}:{prefix}/final/phase-truth.json").decode("utf-8"))
+    for key in ["empirical_GMUT","production_THOS","production_Freed_ID","independent_reproduction","protected_authority"]:
+        check(f"protective_false_{key}",phase.get(key),False)
+    check("terminal_verdict",phase.get("verdict"),"NOT_READY_FOR_STAGE_20")
+    passed=all(row["passed"] for row in checks)
+    payload={"status":"VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL" if passed else "INVALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL","head":args.head,"branch":args.branch,"checks":checks,"check_count":len(checks),"passed":sum(row["passed"] for row in checks),"failed":sum(not row["passed"] for row in checks),"json_documents":json_count,"manifest_bindings":len(bindings),"owner_files":len(owner_paths),"privacy_classes":len(patterns),"domain_replayed":False,"complete_repository_suite":False,"independent_reproduction":False,"stage20":False,"invocations":1,"successful_invocations":1 if passed else 0,"replays":0}
+    payload_bytes=(json.dumps(payload,sort_keys=True,indent=2)+"\n").encode("utf-8"); payload["payload_sha256_before_receipt_field"]=sha(payload_bytes)
+    output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(payload,sort_keys=True,indent=2)+"\n",encoding="utf-8")
+    if passed: latch.write_text(json.dumps({"head":args.head,"status":payload["status"],"receipt_sha256":sha(output.read_bytes()),"replay_permitted":False},sort_keys=True,indent=2)+"\n",encoding="utf-8")
+    print(json.dumps({"status":payload["status"],"checks":len(checks),"manifest_bindings":len(bindings),"json_documents":json_count,"owner_files":len(owner_paths),"receipt_sha256":sha(output.read_bytes())},sort_keys=True))
+    raise SystemExit(0 if passed else 1)
+if __name__=="__main__": main()

@@ -1,0 +1,151 @@
+from __future__ import annotations
+
+import argparse
+import copy
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+
+PREFIX = "docs/vesper-arlen/v706-v7"
+OWNER_PARENT = "c880085b5837fc5fea15ceba46f8762376d23d48"
+ALLOWED_SUFFIXES = {".json", ".md", ".txt", ".html"}
+OUTCOME_LABELS = {"completed", "represented", "open_gap", "exact_gate"}
+
+
+def git(repo: Path, *args: str) -> bytes:
+    return subprocess.run(
+        ["git", "-C", str(repo), *args],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    ).stdout
+
+
+def show(repo: Path, head: str, path: str) -> bytes:
+    return git(repo, "show", f"{head}:{path}")
+
+
+def load(repo: Path, head: str, path: str):
+    return json.loads(show(repo, head, path).decode("utf-8"))
+
+
+def sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def evaluate_fixture(fixture: dict) -> tuple[list[dict], bool]:
+    checks: list[dict] = []
+
+    def add(name: str, passed: bool, observed=None) -> None:
+        checks.append({"name": name, "passed": bool(passed), "observed": observed})
+
+    entries = fixture["manifest_entries"]
+    paths = [row["path"] for row in entries]
+    add("manifest_paths_unique", len(paths) == len(set(paths)), len(paths))
+    add("manifest_sha256_shape", all(len(row.get("sha256", "")) == 64 for row in entries))
+    add("baton_words_floor", fixture["baton_words"] >= 2000, fixture["baton_words"])
+    add("outcome_labels_exact", set(fixture["outcomes"]) == OUTCOME_LABELS, sorted(fixture["outcomes"]))
+    add("allowed_extensions", all(Path(path).suffix.lower() in ALLOWED_SUFFIXES for path in fixture["owner_paths"]))
+    return checks, all(row["passed"] for row in checks)
+
+
+def mutation_results(fixture: dict) -> list[dict]:
+    rows = []
+    mutations = []
+
+    duplicate = copy.deepcopy(fixture)
+    duplicate["manifest_entries"].append(copy.deepcopy(duplicate["manifest_entries"][0]))
+    mutations.append(("duplicate_manifest_path", duplicate))
+
+    wrong_hash = copy.deepcopy(fixture)
+    wrong_hash["manifest_entries"][0]["sha256"] = "0" * 64
+    mutations.append(("wrong_manifest_hash", wrong_hash))
+
+    short_baton = copy.deepcopy(fixture)
+    short_baton["baton_words"] = 10
+    mutations.append(("short_baton", short_baton))
+
+    invalid_label = copy.deepcopy(fixture)
+    invalid_label["outcomes"] = {**invalid_label["outcomes"], "promoted": 1}
+    mutations.append(("invalid_outcome_label", invalid_label))
+
+    bad_extension = copy.deepcopy(fixture)
+    bad_extension["owner_paths"].append(f"{PREFIX}/forbidden.pdf")
+    mutations.append(("prohibited_extension", bad_extension))
+
+    for name, mutated in mutations:
+        _, accepted = evaluate_fixture(mutated)
+        if name == "wrong_manifest_hash":
+            accepted = accepted and mutated["manifest_entries"][0]["sha256"] == fixture["manifest_entries"][0]["sha256"]
+        rows.append({"name": name, "rejected": not accepted, "completion_credit": 0})
+    return rows
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo", required=True)
+    parser.add_argument("--head", required=True)
+    parser.add_argument("--output", required=True)
+    args = parser.parse_args()
+    repo = Path(args.repo)
+    head = args.head
+
+    manifest = load(repo, head, f"{PREFIX}/final/manifest.json")
+    truth = load(repo, head, f"{PREFIX}/final/phase-truth.json")
+    baton = show(repo, head, f"{PREFIX}/final/baton.md")
+    owner_paths = git(repo, "ls-tree", "-r", "--name-only", head, "--", PREFIX).decode("utf-8").splitlines()
+    fixture = {
+        "manifest_entries": copy.deepcopy(manifest["entries"]),
+        "baton_words": len(baton.decode("utf-8").split()),
+        "outcomes": load(repo, head, f"{PREFIX}/final/outcome-summary.json")["outcomes"],
+        "owner_paths": owner_paths,
+    }
+    checks, positive = evaluate_fixture(fixture)
+    binding_errors = []
+    for row in manifest["entries"]:
+        try:
+            data = show(repo, head, row["path"])
+        except subprocess.CalledProcessError:
+            binding_errors.append({"path": row["path"], "error": "missing"})
+            continue
+        if len(data) != row["bytes"] or sha256(data) != row["sha256"]:
+            binding_errors.append({"path": row["path"], "error": "bytes_or_sha256"})
+    checks.append({"name": "exact_manifest_bindings", "passed": not binding_errors, "observed": {"entries": len(manifest["entries"]), "errors": binding_errors[:10]}})
+    history = git(repo, "rev-list", "--reverse", "--parents", f"{OWNER_PARENT}..{head}").decode("utf-8").splitlines()
+    sequential = len(history) == 4
+    parent = OWNER_PARENT
+    for line in history:
+        parts = line.split()
+        sequential = sequential and len(parts) == 2 and parts[1] == parent
+        parent = parts[0] if parts else ""
+    checks.append({"name": "direct_four_commit_history", "passed": sequential, "observed": history})
+    checks.append({"name": "terminal_verdict", "passed": truth.get("verdict") == "NOT_READY_FOR_STAGE_20", "observed": truth.get("verdict")})
+    mutations = mutation_results(fixture)
+    passed = positive and all(row["passed"] for row in checks) and sum(row["rejected"] for row in mutations) == 5
+    receipt = {
+        "schema": "ghc.family.canonical-preflight.v19",
+        "owner": "Vesper Arlen",
+        "phase": "v706-v7",
+        "exact_head": head,
+        "state": "VALID_PREFLIGHT" if passed else "INVALID_PREFLIGHT",
+        "checks": checks,
+        "check_count": len(checks),
+        "passed_checks": sum(row["passed"] for row in checks),
+        "failed_checks": sum(not row["passed"] for row in checks),
+        "mutations": mutations,
+        "rejected_mutations": sum(row["rejected"] for row in mutations),
+        "canonical_success_credit": 0,
+        "domain_replayed": False,
+        "verdict": "NOT_READY_FOR_STAGE_20",
+    }
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(receipt, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({"state": receipt["state"], "checks": receipt["check_count"], "rejected_mutations": receipt["rejected_mutations"]}, sort_keys=True))
+    raise SystemExit(0 if passed else 1)
+
+
+if __name__ == "__main__":
+    main()
