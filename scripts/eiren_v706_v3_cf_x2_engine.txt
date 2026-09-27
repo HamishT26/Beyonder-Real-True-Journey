@@ -1,0 +1,122 @@
+from __future__ import annotations
+
+from fractions import Fraction
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+X1_ENGINE = ROOT / "scripts" / "eiren_v706_v3_cf_engine.txt"
+_x1 = {"__name__": "eiren_v706_v3_cf_engine"}
+exec(compile(X1_ENGINE.read_text(encoding="utf-8"), X1_ENGINE.as_posix(), "exec"), _x1)
+
+X2_OPERATIONS = [
+    "matrix-product",
+    "homography-action",
+    "reversal-duality",
+    "semiconvergents",
+    "approximation-error",
+    "best-approximation-bound",
+    "unimodular-certificate",
+    "trinity-analogy",
+    "observation-gap",
+    "authority-gate",
+]
+
+
+def matmul(left: list[list[int]], right: list[list[int]]) -> list[list[int]]:
+    return [
+        [left[0][0] * right[0][0] + left[0][1] * right[1][0], left[0][0] * right[0][1] + left[0][1] * right[1][1]],
+        [left[1][0] * right[0][0] + left[1][1] * right[1][0], left[1][0] * right[0][1] + left[1][1] * right[1][1]],
+    ]
+
+
+def product_matrix(terms: list[int]) -> list[list[int]]:
+    result = [[1, 0], [0, 1]]
+    for term in terms:
+        result = matmul(result, [[term, 1], [1, 0]])
+    return result
+
+
+def fraction_record(value: Fraction) -> dict:
+    return {"numerator": value.numerator, "denominator": value.denominator}
+
+
+def execute_x2(request: dict) -> dict:
+    if not isinstance(request, dict):
+        raise ValueError("request must be an object")
+    operation = request.get("op")
+    if operation not in X2_OPERATIONS:
+        raise ValueError("unsupported x2 operation")
+    n, d, fixture_id = _x1["normalize_fixture"](request.get("fixture"))
+    terms = _x1["continued_fraction"](n, d)
+    conv = _x1["convergents"](terms)
+    matrix = product_matrix(terms)
+    target = Fraction(n, d)
+    disposition = "completed"
+
+    if operation == "matrix-product":
+        result = {"terms": terms, "matrix": matrix, "matches_fraction": Fraction(matrix[0][0], matrix[1][0]) == target}
+    elif operation == "homography-action":
+        transformed = Fraction(n + d, d)
+        result = {"matrix": [[1, 1], [0, 1]], "input": fraction_record(target), "output": fraction_record(transformed), "denominator_nonzero": True}
+    elif operation == "reversal-duality":
+        reversed_terms = list(reversed(terms))
+        reversed_conv = _x1["convergents"](reversed_terms)
+        reverse_value = Fraction(reversed_conv[-1]["numerator"], reversed_conv[-1]["denominator"])
+        prior_numerator = 1 if len(conv) == 1 else conv[-2]["numerator"]
+        expected = Fraction(conv[-1]["numerator"], prior_numerator)
+        result = {"original_terms": terms, "reversed_terms": reversed_terms, "reversed_value": fraction_record(reverse_value), "expected": fraction_record(expected), "exact": reverse_value == expected}
+    elif operation == "semiconvergents":
+        rows = []
+        if len(terms) > 1:
+            p_prev = conv[-2]["numerator"]
+            q_prev = conv[-2]["denominator"]
+            p_prev2 = 1 if len(conv) == 2 else conv[-3]["numerator"]
+            q_prev2 = 0 if len(conv) == 2 else conv[-3]["denominator"]
+            for multiplier in range(1, terms[-1] + 1):
+                value = Fraction(multiplier * p_prev + p_prev2, multiplier * q_prev + q_prev2)
+                rows.append({"multiplier": multiplier, **fraction_record(value)})
+        result = {"rows": rows, "bounded_by_final_term": terms[-1]}
+    elif operation == "approximation-error":
+        errors = []
+        for row in conv[:-1]:
+            value = Fraction(row["numerator"], row["denominator"])
+            errors.append({"index": row["index"], "signed_error": fraction_record(target - value), "absolute_error": fraction_record(abs(target - value))})
+        result = {"errors": errors, "target": fraction_record(target)}
+    elif operation == "best-approximation-bound":
+        bound = min(max(1, d), 20)
+        best_error = None
+        winners = []
+        for denominator in range(1, bound + 1):
+            center = round(n * denominator / d)
+            for numerator in range(max(0, center - 1), center + 2):
+                error = abs(target - Fraction(numerator, denominator))
+                if best_error is None or error < best_error:
+                    best_error = error
+                    winners = [Fraction(numerator, denominator)]
+                elif error == best_error:
+                    winners.append(Fraction(numerator, denominator))
+        unique = sorted(set(winners))
+        result = {"denominator_bound": bound, "best_error": fraction_record(best_error), "winners": [fraction_record(value) for value in unique], "claim_scope": "finite_declared_search_only"}
+    elif operation == "unimodular-certificate":
+        determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+        result = {"matrix": matrix, "determinant": determinant, "expected": (-1) ** len(terms), "unimodular": abs(determinant) == 1}
+    elif operation == "trinity-analogy":
+        disposition = "represented"
+        result = {"mind": "exact recurrence and falsifier", "body": "bounded executable envelope", "heart": "nonpromotion and authority reservation", "analogy_only": True}
+    elif operation == "observation-gap":
+        disposition = "open_gap"
+        result = {"missing": ["real calibration observations", "latency measurements", "affected-user evaluation", "independent implementation"], "executed_real_actions": 0}
+    else:
+        disposition = "exact_gate"
+        result = {"held": ["identity action", "professional decision", "legal or cultural interpretation", "Maori authority", "production deployment"], "executed_real_actions": 0}
+
+    return {
+        "schema": "ghc.family.continued-fraction-x2-envelope.v1",
+        "operation": operation,
+        "fixture_id": fixture_id,
+        "normalized": {"numerator": n, "denominator": d},
+        "result": result,
+        "disposition": disposition,
+        "boundary": "Finite exact rational same-owner software evidence only.",
+    }

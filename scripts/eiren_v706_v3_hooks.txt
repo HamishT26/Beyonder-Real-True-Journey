@@ -1,0 +1,39 @@
+from __future__ import annotations
+
+import hashlib
+import json
+
+
+def request_shape_hook(request: dict) -> bool:
+    fixture = request.get("fixture") if isinstance(request, dict) else None
+    return isinstance(request.get("op"), str) and isinstance(fixture, dict) and isinstance(fixture.get("numerator"), int) and isinstance(fixture.get("denominator"), int) and fixture["numerator"] > 0 and fixture["denominator"] > 0
+
+
+def request_digest_hook(request: dict, expected_sha256: str) -> bool:
+    encoded = json.dumps(request, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest() == expected_sha256
+
+
+def disposition_hook(envelope: dict, allowed: list[str]) -> bool:
+    return envelope.get("disposition") in allowed
+
+
+def authority_reservation_hook(envelope: dict) -> bool:
+    text = json.dumps(envelope, ensure_ascii=False).lower()
+    return "stage 20 ready" not in text and "maori authority granted" not in text and "production approved" not in text
+
+
+def conflict_preservation_hook(envelope: dict) -> bool:
+    result = envelope.get("result", {})
+    if envelope.get("operation") == "best-approximation-bound":
+        return isinstance(result.get("winners"), list) and len(result["winners"]) >= 1
+    return True
+
+
+HOOKS = [
+    request_shape_hook,
+    request_digest_hook,
+    disposition_hook,
+    authority_reservation_hook,
+    conflict_preservation_hook,
+]

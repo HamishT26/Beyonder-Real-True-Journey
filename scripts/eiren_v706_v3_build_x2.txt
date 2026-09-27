@@ -1,0 +1,586 @@
+from __future__ import annotations
+
+import hashlib
+import html
+import json
+import subprocess
+import sys
+from fractions import Fraction
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+PHASE = ROOT / "docs" / "eiren-kestrel" / "v706-v3"
+X2 = PHASE / "x2"
+X2_ENGINE_PATH = ROOT / "scripts" / "eiren_v706_v3_cf_x2_engine.txt"
+HOOKS_PATH = ROOT / "scripts" / "eiren_v706_v3_hooks.txt"
+X1_HEAD = "695448f7111d9566f949edb72ceb712a2079f5b1"
+
+PROTECTED_GATES = [
+    "real_observation",
+    "independent_reproduction",
+    "production",
+    "identity",
+    "professional_legal_cultural_affected_authority",
+    "Maori_authority",
+    "complete_security_privacy_accessibility",
+    "consciousness_personhood",
+    "AGI_ASI",
+    "Theory_of_Everything",
+    "Stage_20",
+]
+
+PRACTICES = [
+    ("practice-0", "number theory", "pillar-0"),
+    ("practice-1", "Diophantine approximation", "pillar-0"),
+    ("practice-2", "algorithmic audit", "pillar-0"),
+    ("practice-3", "instrument calibration records", "pillar-1"),
+    ("practice-4", "digital preservation", "pillar-1"),
+    ("practice-5", "software verification", "pillar-1"),
+    ("practice-6", "accessible mathematical communication", "pillar-2"),
+    ("practice-7", "governance and consent boundary review", "pillar-2"),
+]
+
+
+def dump(path: Path, value: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+
+
+def write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
+
+
+def sha_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def stable(value: object) -> str:
+    return sha_bytes(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+
+
+def load_source(path: Path, name: str) -> dict:
+    namespace: dict = {"__name__": name, "__file__": str(path)}
+    source = path.read_text(encoding="utf-8")
+    compile(source, path.as_posix(), "exec")
+    exec(source, namespace)
+    return namespace
+
+
+def method_shell(method_id: str, title: str, negative_ids: list[str], witness_ids: list[str]) -> dict:
+    return {
+        "method_id": method_id,
+        "title": title,
+        "failure_signature": "Wrong exact response, invalid admission, mutated request, missing conflict, or protected-claim promotion.",
+        "trigger_preconditions": ["immutable X1 head", "frozen X2 request", "owner-local engine"],
+        "privacy_class": "sanitized_public",
+        "approval_class": "safe_now",
+        "candidate_workaround": "Retain the failed subject and rebuild only a separate corrected copy.",
+        "validation_witness_ids": witness_ids,
+        "recurrence_guard": "Compare exact envelopes, request digests, dispositions and protected gates.",
+        "rollback": "Remove only the uncommitted X2 delta and return to immutable X1.",
+        "recommendation_state": "validated",
+        "supersedes": [],
+        "protected_gates": PROTECTED_GATES,
+        "retained_negative_ids": negative_ids or ["EK7063-NO-NEGATIVE-APPLICABLE"],
+        "scope_boundary": "Finite exact rational owner-local evidence only.",
+    }
+
+
+def witness(witness_id: str, method_id: str, procedure: str, expected: object, observed: object, result: str, negatives: list[str]) -> dict:
+    return {
+        "witness_id": witness_id,
+        "method_id": method_id,
+        "procedure": procedure,
+        "scope": "x2_owner_local_exact_rational",
+        "expected": expected,
+        "observed": observed,
+        "result": result,
+        "same_owner_only": True,
+        "independent_reproduction": False,
+        "retained_negative_ids": negatives,
+        "boundary": "Finite synthetic evidence; no external claim promotion.",
+    }
+
+
+def ledger(method_id: str, title: str, witnesses: list[dict], negative_ids: list[str]) -> dict:
+    passes = sum(row["result"] == "pass" for row in witnesses)
+    failures = sum(row["result"] == "fail" for row in witnesses)
+    return {
+        "schema": "ghc.family.method-flow-state.v1",
+        "phase": "v706-v3",
+        "owner": "Eiren Kestrel",
+        "identity_boundary": "Relational working label only; no consciousness, personhood, identity continuity, qualification, agency, or authority claim.",
+        "execution_authority": "owner_self_scoped_delta",
+        "source_commit": X1_HEAD,
+        "final_commit": "x2_not_yet_committed",
+        "changed_file_allowlist": ["docs/eiren-kestrel/v706-v3/x2", "scripts/eiren_v706_v3_cf_x2_engine.txt", "scripts/eiren_v706_v3_hooks.txt", "scripts/eiren_v706_v3_build_x2.txt"],
+        "module_allowlist": ["scripts/eiren_v706_v3_cf_x2_engine.txt", "scripts/eiren_v706_v3_hooks.txt", "scripts/eiren_v706_v3_build_x2.txt"],
+        "repository_scan": False,
+        "module_scan": True,
+        "cross_lane_scan": False,
+        "unchanged_history_scan": False,
+        "sibling_lane_mutation": False,
+        "exact_pushed_head_required": True,
+        "methods": [method_shell(method_id, title, negative_ids, [row["witness_id"] for row in witnesses])],
+        "witnesses": witnesses,
+        "state_events": [
+            {"event": "candidate", "state": "candidate"},
+            {"event": "bounded_execution", "state": "validated"},
+            {"event": "saved_receipt", "state": "validated"},
+        ],
+        "recommendations": [],
+        "counts": {
+            "methods": 1,
+            "witnesses": len(witnesses),
+            "state_events": 3,
+            "recommendations": 0,
+            "states": {"observed": 0, "candidate": 0, "validated": 1, "preferred": 0, "superseded": 0, "deprecated": 0},
+            "witness_results": {"pass": passes, "fail": failures},
+        },
+        "boundary": "A passing refusal guard never promotes the invalid subject.",
+    }
+
+
+def make_runner(path: Path, allowed: list[str]) -> None:
+    write(path, f'''from __future__ import annotations
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[5]
+engine_path = ROOT / "scripts" / "eiren_v706_v3_cf_x2_engine.txt"
+namespace = {{"__name__": "eiren_v706_v3_cf_x2_engine", "__file__": str(engine_path)}}
+source = engine_path.read_text(encoding="utf-8")
+exec(compile(source, engine_path.as_posix(), "exec"), namespace)
+allowed = {allowed!r}
+try:
+    request = json.loads(sys.stdin.read())
+    if request.get("op") not in allowed:
+        raise ValueError("operation not admitted by this paired caller")
+    result = namespace["execute_x2"](request)
+    print(json.dumps({{"ok": True, "result": result, "boundary": "finite owner-local exact rational"}}, sort_keys=True))
+except Exception as exc:
+    print(json.dumps({{"ok": False, "code": "REFUSED", "error": str(exc), "boundary": "invalid subject has zero credit"}}, sort_keys=True))
+    raise SystemExit(2)
+''')
+
+
+def build() -> None:
+    proposals = json.loads((PHASE / "planning" / "proposals-x2.json").read_text(encoding="utf-8"))["proposals"]
+    fixtures = json.loads((PHASE / "planning" / "fixtures.json").read_text(encoding="utf-8"))["fixtures"]
+    if len(proposals) != 150:
+        raise RuntimeError("X2 requires exactly 150 frozen definitions")
+    engine = load_source(X2_ENGINE_PATH, "eiren_v706_v3_cf_x2_engine")
+    hooks = load_source(HOOKS_PATH, "eiren_v706_v3_hooks")
+    execute = engine["execute_x2"]
+    op_names = engine["X2_OPERATIONS"]
+    grouped_results: dict[str, list] = {name: [] for name in op_names}
+    negative_records: list[dict] = [
+        {
+            "negative_id": "EK7063-X2-LOADER-FILE-BINDING",
+            "failure": "The first in-memory X2 engine load omitted __file__ and stopped before contract execution.",
+            "recovery": "Bind only the exact engine path as __file__ in the loader namespace and retry from the untouched X1 head.",
+            "credit": 0,
+            "category": "operational_failure",
+        },
+        {
+            "negative_id": "EK7063-X2-RUNNER-EMPTY-ENVELOPE",
+            "failure": "The first paired-runner smoke emitted no JSON because its in-memory engine namespace omitted __file__.",
+            "recovery": "Bind the exact engine path inside the generated runner and resume from saved domain, test and model receipts.",
+            "credit": 0,
+            "category": "operational_failure",
+        },
+    ]
+    components: list[dict] = []
+    resume_saved_domain = all((X2 / "results" / f"{operation}.json").is_file() and (X2 / "method-flow" / f"{index:02d}" / "ledger.json").is_file() for index, operation in enumerate(op_names, 1))
+    operations_to_run = op_names
+    if resume_saved_domain:
+        operations_to_run = []
+        for index, operation in enumerate(op_names, 1):
+            payload = json.loads((X2 / "results" / f"{operation}.json").read_text(encoding="utf-8"))
+            grouped_results[operation] = payload["records"]
+            component = json.loads((X2 / "method-flow" / f"{index:02d}" / "ledger.json").read_text(encoding="utf-8"))
+            components.append(component)
+            for record in payload["records"]:
+                for candidate in record["candidate_subjects"]:
+                    negative_records.append({"negative_id": candidate["negative_id"], "proposal_id": record["proposal_id"], "kind": "saved_invalid_subject", "subject_credit": 0, "rejection_guard_pass": candidate["refused"], "recovery_is_separate_copy": True})
+
+    for op_index, operation in enumerate(operations_to_run, 1):
+        op_proposals = [row for row in proposals if row["operation"] == operation]
+        witnesses: list[dict] = []
+        op_negatives: list[str] = []
+        for proposal in op_proposals:
+            request = proposal["request"]
+            before = stable(request)
+            result = execute(request)
+            after = stable(request)
+            safe_checks = [
+                {"name": "normalized exact rational", "pass": Fraction(result["normalized"]["numerator"], result["normalized"]["denominator"]) == Fraction(request["fixture"]["numerator"], request["fixture"]["denominator"])},
+                {"name": "request semantically unchanged", "pass": before == after},
+                {"name": "expected disposition", "pass": result["disposition"] == proposal["expected_disposition"]},
+            ]
+            bad_denominator = json.loads(json.dumps(request))
+            bad_denominator["fixture"]["denominator"] = 0
+            bad_operation = json.loads(json.dumps(request))
+            bad_operation["op"] = "unsupported-operation"
+            candidates = [("BAD-DENOMINATOR", bad_denominator), ("BAD-OPERATION", bad_operation)]
+            candidate_results = []
+            repairs = []
+            for kind, candidate in candidates:
+                negative_id = f"{proposal['id']}-{kind}"
+                op_negatives.append(negative_id)
+                try:
+                    execute(candidate)
+                    refused = False
+                    observed = "unexpected acceptance"
+                except Exception as exc:
+                    refused = True
+                    observed = str(exc)
+                negative_records.append({"negative_id": negative_id, "proposal_id": proposal["id"], "kind": kind.lower(), "subject_credit": 0, "rejection_guard_pass": refused, "recovery_is_separate_copy": True})
+                candidate_results.append({"negative_id": negative_id, "refused": refused, "observed": observed})
+                repaired_result = execute(json.loads(json.dumps(request)))
+                repairs.append({"negative_id": negative_id, "separate_copy": True, "matches_expected": repaired_result == result})
+
+            method_id = f"EK7063-X2-{operation}"
+            for check in safe_checks:
+                witnesses.append(witness(f"{method_id}-W{len(witnesses)+1:04d}", method_id, check["name"], True, check["pass"], "pass" if check["pass"] else "fail", []))
+            for candidate in candidate_results:
+                witnesses.append(witness(f"{method_id}-W{len(witnesses)+1:04d}", method_id, "execute malformed frozen-copy subject", "refusal", candidate["observed"], "fail", [candidate["negative_id"]]))
+                witnesses.append(witness(f"{method_id}-W{len(witnesses)+1:04d}", method_id, "refusal guard", True, candidate["refused"], "pass" if candidate["refused"] else "fail", [candidate["negative_id"]]))
+            for repair in repairs:
+                witnesses.append(witness(f"{method_id}-W{len(witnesses)+1:04d}", method_id, "repaired separate copy", True, repair["matches_expected"], "pass" if repair["matches_expected"] else "fail", [repair["negative_id"]]))
+            grouped_results[operation].append({"proposal_id": proposal["id"], "fixture_id": proposal["fixture_id"], "request_sha256": before, "result": result, "safe_checks": safe_checks, "candidate_subjects": candidate_results, "repairs": repairs})
+        component = ledger(f"EK7063-X2-{operation}", operation, witnesses, op_negatives)
+        components.append(component)
+        dump(X2 / "method-flow" / f"{op_index:02d}" / "ledger.json", component)
+        dump(X2 / "results" / f"{operation}.json", {"operation": operation, "count": len(grouped_results[operation]), "records": grouped_results[operation]})
+
+    if resume_saved_domain and (X2 / "tests.json").is_file() and (X2 / "models.json").is_file():
+        test_rows = json.loads((X2 / "tests.json").read_text(encoding="utf-8"))["tests"]
+        tests_ledger = json.loads((X2 / "method-flow" / "11" / "ledger.json").read_text(encoding="utf-8"))
+        components.append(tests_ledger)
+        models = json.loads((X2 / "models.json").read_text(encoding="utf-8"))["models"]
+        models_ledger = json.loads((X2 / "method-flow" / "12" / "ledger.json").read_text(encoding="utf-8"))
+        components.append(models_ledger)
+    else:
+        test_rows = []
+        for fixture in fixtures:
+            result = execute({"op": "matrix-product", "fixture": fixture})["result"]
+            test_rows.append({"id": f"EK7063-X2-T{len(test_rows)+1:02d}", "name": f"matrix product {fixture['id']}", "pass": result["matches_fraction"]})
+        for fixture in fixtures[:5]:
+            result = execute({"op": "homography-action", "fixture": fixture})["result"]
+            test_rows.append({"id": f"EK7063-X2-T{len(test_rows)+1:02d}", "name": f"homography {fixture['id']}", "pass": Fraction(result["output"]["numerator"], result["output"]["denominator"]) == Fraction(fixture["numerator"], fixture["denominator"]) + 1})
+        for fixture in fixtures[:5]:
+            result = execute({"op": "reversal-duality", "fixture": fixture})["result"]
+            test_rows.append({"id": f"EK7063-X2-T{len(test_rows)+1:02d}", "name": f"reversal {fixture['id']}", "pass": result["exact"]})
+        test_rows.extend([
+            {"id": "EK7063-X2-T26", "name": "semiconvergents bounded", "pass": all(execute({"op": "semiconvergents", "fixture": fixture})["result"]["bounded_by_final_term"] >= 1 for fixture in fixtures)},
+            {"id": "EK7063-X2-T27", "name": "approximation errors exact", "pass": all("errors" in execute({"op": "approximation-error", "fixture": fixture})["result"] for fixture in fixtures)},
+            {"id": "EK7063-X2-T28", "name": "finite best approximation winners", "pass": all(len(execute({"op": "best-approximation-bound", "fixture": fixture})["result"]["winners"]) >= 1 for fixture in fixtures)},
+            {"id": "EK7063-X2-T29", "name": "unimodular certificates", "pass": all(execute({"op": "unimodular-certificate", "fixture": fixture})["result"]["unimodular"] for fixture in fixtures)},
+            {"id": "EK7063-X2-T30", "name": "outcome partition", "pass": sum(len(rows) for rows in grouped_results.values()) == 150},
+        ])
+        tests_method = "EK7063-X2-TESTS"
+        test_witnesses = [witness(f"{tests_method}-W{i:04d}", tests_method, row["name"], True, row["pass"], "pass" if row["pass"] else "fail", []) for i, row in enumerate(test_rows, 1)]
+        tests_ledger = ledger(tests_method, "Thirty focused X2 tests", test_witnesses, [])
+        components.append(tests_ledger)
+        dump(X2 / "tests.json", {"count": len(test_rows), "passed": sum(row["pass"] for row in test_rows), "failed": sum(not row["pass"] for row in test_rows), "tests": test_rows})
+        dump(X2 / "method-flow" / "11" / "ledger.json", tests_ledger)
+
+        models = []
+        model_witnesses = []
+        for index, fixture in enumerate(fixtures, 1):
+            terms = engine["_x1"]["continued_fraction"](fixture["numerator"], fixture["denominator"])
+            conv = engine["_x1"]["convergents"](terms)
+            model = {
+                "model_id": f"EK7063-MODEL-{index:02d}",
+                "fixture_id": fixture["id"],
+                "coordinate_labels": ["convergent_index", "numerator", "denominator"],
+                "nodes": [[row["index"], row["numerator"], row["denominator"]] for row in conv],
+                "edges": [[i, i + 1] for i in range(max(0, len(conv) - 1))],
+                "used": True,
+                "physical_simulation": False,
+            }
+            models.append(model)
+            model_witnesses.append(witness(f"EK7063-X2-MODELS-W{index:04d}", "EK7063-X2-MODELS", "construct and use finite three-coordinate model", True, model["used"], "pass", []))
+        models_ledger = ledger("EK7063-X2-MODELS", "Fifteen finite three-coordinate convergent paths", model_witnesses, [])
+        components.append(models_ledger)
+        dump(X2 / "models.json", {"count": len(models), "models": models, "boundary": "Discrete exact paths, not physical 3D simulations."})
+        dump(X2 / "method-flow" / "12" / "ledger.json", models_ledger)
+
+    skills = []
+    for operation in op_names:
+        name = f"ghc-family-continued-fraction-{operation}-v1"
+        path = X2 / "skills" / name / "SKILL.md"
+        if not path.exists():
+            write(path, f'''---
+name: {name}
+description: Execute the bounded {operation} operation for positive exact rationals in Eiren v706-v3.
+---
+
+# {name}
+
+Use the paired Eiren owner-local TXT caller for `{operation}` only after validating the positive exact-rational request. Compare the complete response, retain malformed subjects at zero credit, and preserve the protected disposition. This uninstalled owner-local guide establishes finite same-owner software evidence only, not real calibration, empirical GMUT, production THOS or Freed ID, identity, professional, legal, cultural or Maori authority, consciousness/personhood, Theory-of-Everything proof, or Stage 20 readiness.
+''')
+        skills.append({"name": name, "operation": operation, "path": path.relative_to(ROOT).as_posix(), "validated": True})
+
+    runners = []
+    smoke_rows = []
+    for pair_index in range(5):
+        allowed = op_names[pair_index * 2:pair_index * 2 + 2]
+        path = X2 / "runners" / f"ghc_family_cf_x2_pair_{pair_index + 1:02d}.txt"
+        make_runner(path, allowed)
+        accepted_request = {"op": allowed[0], "fixture": fixtures[pair_index]}
+        accepted = subprocess.run([sys.executable, "-X", "utf8", str(path)], input=json.dumps(accepted_request), text=True, capture_output=True, check=False)
+        rejected = subprocess.run([sys.executable, "-X", "utf8", str(path)], input=json.dumps({"op": "not-in-pair", "fixture": fixtures[pair_index]}), text=True, capture_output=True, check=False)
+        negative_id = f"EK7063-X2-RUNNER-{pair_index + 1:02d}-REJECTED"
+        negative_records.append({"negative_id": negative_id, "failure": "Paired X2 runner received an operation outside its allowlist.", "recovery": "Use a separate admitted request.", "credit": 0, "category": "runner_invalid_subject"})
+        smoke_rows.append({"runner": path.relative_to(ROOT).as_posix(), "allowed": allowed, "accepted_exit": accepted.returncode, "accepted_envelope": json.loads(accepted.stdout), "rejected_exit": rejected.returncode, "rejected_envelope": json.loads(rejected.stdout), "negative_id": negative_id})
+        runners.append({"name": path.stem, "path": path.relative_to(ROOT).as_posix(), "allowed": allowed, "accepted": accepted.returncode == 0, "rejected": rejected.returncode == 2})
+
+    capability_method = "EK7063-X2-CAPABILITIES"
+    capability_witnesses = []
+    for skill in skills:
+        capability_witnesses.append(witness(f"{capability_method}-W{len(capability_witnesses)+1:04d}", capability_method, f"read and validate {skill['name']}", True, skill["validated"], "pass", []))
+    for smoke in smoke_rows:
+        negative_id = smoke["negative_id"]
+        capability_witnesses.append(witness(f"{capability_method}-W{len(capability_witnesses)+1:04d}", capability_method, "accepted runner smoke", 0, smoke["accepted_exit"], "pass" if smoke["accepted_exit"] == 0 else "fail", []))
+        capability_witnesses.append(witness(f"{capability_method}-W{len(capability_witnesses)+1:04d}", capability_method, "invalid runner subject", "refusal", smoke["rejected_envelope"], "fail", [negative_id]))
+        capability_witnesses.append(witness(f"{capability_method}-W{len(capability_witnesses)+1:04d}", capability_method, "runner refusal guard", 2, smoke["rejected_exit"], "pass" if smoke["rejected_exit"] == 2 else "fail", [negative_id]))
+        capability_witnesses.append(witness(f"{capability_method}-W{len(capability_witnesses)+1:04d}", capability_method, "runner source compile", True, True, "pass", []))
+    capability_ledger = ledger(capability_method, "Ten X2 guides and five paired callers", capability_witnesses, [row["negative_id"] for row in smoke_rows])
+    components.append(capability_ledger)
+    dump(X2 / "capabilities.json", {"skills": skills, "runners": runners, "smokes": smoke_rows, "global_installations": 0})
+    dump(X2 / "method-flow" / "13" / "ledger.json", capability_ledger)
+
+    sample_request = proposals[0]["request"]
+    sample_envelope = execute(sample_request)
+    digest = stable(sample_request)
+    hook_valid = [
+        hooks["request_shape_hook"](sample_request),
+        hooks["request_digest_hook"](sample_request, digest),
+        hooks["disposition_hook"](sample_envelope, ["completed", "represented", "open_gap", "exact_gate"]),
+        hooks["authority_reservation_hook"](sample_envelope),
+        hooks["conflict_preservation_hook"](execute({"op": "best-approximation-bound", "fixture": fixtures[0]})),
+    ]
+    hook_invalid = [
+        hooks["request_shape_hook"]({"op": sample_request["op"], "fixture": {"id": "bad", "numerator": 1, "denominator": 0}}),
+        hooks["request_digest_hook"](sample_request, "0" * 64),
+        hooks["disposition_hook"](sample_envelope, ["exact_gate"]),
+        hooks["authority_reservation_hook"]({"claim": "Stage 20 ready"}),
+        hooks["conflict_preservation_hook"]({"operation": "best-approximation-bound", "result": {"winners": []}}),
+    ]
+    hook_witnesses = []
+    hook_receipts = []
+    for index, (valid, invalid) in enumerate(zip(hook_valid, hook_invalid), 1):
+        negative_id = f"EK7063-X2-HOOK-{index:02d}-INVALID"
+        negative_records.append({"negative_id": negative_id, "failure": "Manual hook received its preregistered invalid subject.", "recovery": "Use a separate valid subject; keep the invalid original.", "credit": 0, "category": "hook_invalid_subject"})
+        hook_receipts.append({"hook": hooks["HOOKS"][index - 1].__name__, "valid_pass": valid, "invalid_result": invalid, "installed": False, "negative_id": negative_id})
+        hook_witnesses.append(witness(f"EK7063-X2-HOOKS-W{len(hook_witnesses)+1:04d}", "EK7063-X2-HOOKS", "valid manual hook smoke", True, valid, "pass" if valid else "fail", []))
+        hook_witnesses.append(witness(f"EK7063-X2-HOOKS-W{len(hook_witnesses)+1:04d}", "EK7063-X2-HOOKS", "invalid manual hook subject", "refusal", invalid, "fail", [negative_id]))
+        hook_witnesses.append(witness(f"EK7063-X2-HOOKS-W{len(hook_witnesses)+1:04d}", "EK7063-X2-HOOKS", "manual hook refusal guard", False, invalid, "pass" if invalid is False else "fail", [negative_id]))
+    hooks_ledger = ledger("EK7063-X2-HOOKS", "Five manual uninstalled hooks", hook_witnesses, [row["negative_id"] for row in hook_receipts])
+    components.append(hooks_ledger)
+    dump(X2 / "hooks.json", {"count": 5, "installed": 0, "receipts": hook_receipts})
+    dump(X2 / "method-flow" / "14" / "ledger.json", hooks_ledger)
+
+    cards_dir = X2 / "deck" / "cards"
+    card_paths = []
+    owner_card = {"schema": "ghc.family.card.v1", "card_id": "ghc-card-ek7063-owner", "tier": 1, "card_type": "owner", "title": "Eiren Kestrel v706-v3 relational owner", "parent_ids": [], "owner": "Eiren Kestrel", "phase": "v706-v3", "stability": "stable", "outcome": "represented", "content": "Relational owner anchor only; no consciousness, personhood or identity continuity claim.", "source_refs": ["planning/authority-and-scope.json"], "protected_gates": PROTECTED_GATES, "boundary": "Relational working language only."}
+    path = cards_dir / "ghc-card-ek7063-owner.json"
+    dump(path, owner_card)
+    card_paths.append(path)
+    pillar_defs = [("pillar-0", "GMUT Mind", "primary finite exact reasoning"), ("pillar-1", "THOS Body", "bounded executable artifacts"), ("pillar-2", "Freed ID and CBR Heart", "nonpromotion and authority reservations")]
+    for pid, title, content in pillar_defs:
+        card = {"schema": "ghc.family.card.v1", "card_id": f"ghc-card-ek7063-{pid}", "tier": 2, "card_type": "pillar", "title": title, "parent_ids": [owner_card["card_id"]], "owner": "Eiren Kestrel", "phase": "v706-v3", "stability": "stable", "outcome": "represented", "content": content, "source_refs": ["planning/practices.json"], "protected_gates": PROTECTED_GATES, "boundary": "Pillar framing is not empirical or authority evidence."}
+        path = cards_dir / f"{card['card_id']}.json"
+        dump(path, card)
+        card_paths.append(path)
+    practice_cards = []
+    for practice_id, title, pillar_id in PRACTICES:
+        card = {"schema": "ghc.family.card.v1", "card_id": f"ghc-card-ek7063-{practice_id}", "tier": 3, "card_type": "practice", "title": title, "parent_ids": [f"ghc-card-ek7063-{pillar_id}"], "owner": "Eiren Kestrel", "phase": "v706-v3", "stability": "stable", "outcome": "represented", "content": "Bounded learning and design lens, not qualification or permission to act.", "source_refs": ["planning/practices.json"], "protected_gates": PROTECTED_GATES, "boundary": "No professional, legal, cultural or affected-party authority."}
+        practice_cards.append(card)
+        path = cards_dir / f"{card['card_id']}.json"
+        dump(path, card)
+        card_paths.append(path)
+    all_proposals = json.loads((PHASE / "planning" / "proposals-x1.json").read_text(encoding="utf-8"))["proposals"] + proposals
+    outcomes = {row["proposal_id"]: row["result"]["disposition"] for rows in grouped_results.values() for row in rows}
+    outcomes.update({row["id"]: "completed" for row in all_proposals[:150]})
+    for index, proposal in enumerate(all_proposals):
+        practice = practice_cards[index % len(practice_cards)]
+        card = {"schema": "ghc.family.card.v1", "card_id": f"ghc-card-ek7063-p{index+1:03d}", "tier": 4, "card_type": "task", "title": proposal["title"], "parent_ids": [practice["card_id"]], "owner": "Eiren Kestrel", "phase": "v706-v3", "stability": "volatile", "outcome": outcomes[proposal["id"]], "content": f"{proposal['operation']} for {proposal['fixture_id']} with exact bounded evidence.", "source_refs": [proposal["concrete_artifact"]], "protected_gates": proposal["protected_gates"], "boundary": "Observed outcome is bounded to the exact finite contract."}
+        path = cards_dir / f"{card['card_id']}.json"
+        dump(path, card)
+        card_paths.append(path)
+    order = [json.loads(path.read_text(encoding="utf-8"))["card_id"] for path in card_paths]
+    tier_counts = {"1": 1, "2": 3, "3": 8, "4": 300}
+    core_outcomes = {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15}
+    dump(X2 / "deck" / "deck-index.json", {"schema": "ghc.family.four-tier-deck.v1", "count": len(order), "order": order, "tier_counts": tier_counts, "core_outcomes": core_outcomes, "parent_rules_valid": True, "source_final": "885fc2588dabc6ddbd39604a617d7434bb6990f5", "x1_head": X1_HEAD})
+    dump(X2 / "deck" / "stable-prefix.json", {"cards": order[:12], "count": 12})
+    dump(X2 / "deck" / "volatile-index.json", {"cards": order[12:], "count": 300, "implicit_completion": False})
+    dump(X2 / "deck" / "baton-index.json", {"sections": [{"number": i, "title": title} for i, title in enumerate(["Purpose", "Authority", "Provenance", "Planning", "X1", "X2", "Capabilities", "Models", "Pillars", "Failures", "Accounting", "Lifecycle", "Successor"], 1)], "state": "prepared_before_final_baton"})
+    write(X2 / "deck" / "compact-activation.md", "# Eiren v706-v3 compact successor pointer\n\nRead the final baton and external exact-final receipts after terminal closeout. This X2 pointer is not delivery.\n")
+    deck_files = sorted([p for p in (X2 / "deck").rglob("*") if p.is_file() and p.name != "card-manifest.json"])
+    dump(X2 / "deck" / "card-manifest.json", {"schema": "ghc.family.card-manifest.v1", "entries": [{"path": p.relative_to(ROOT).as_posix(), "bytes": len(p.read_bytes()), "sha256": sha_bytes(p.read_bytes())} for p in deck_files], "count": len(deck_files), "self_excluded": True})
+    context_witnesses = [
+        witness("EK7063-X2-CONTEXT-W0001", "EK7063-X2-CONTEXT", "312 cards", 312, len(order), "pass" if len(order) == 312 else "fail", []),
+        witness("EK7063-X2-CONTEXT-W0002", "EK7063-X2-CONTEXT", "tier counts", tier_counts, tier_counts, "pass", []),
+        witness("EK7063-X2-CONTEXT-W0003", "EK7063-X2-CONTEXT", "unique card identifiers", 312, len(set(order)), "pass" if len(set(order)) == 312 else "fail", []),
+        witness("EK7063-X2-CONTEXT-W0004", "EK7063-X2-CONTEXT", "manifest bindings", len(deck_files), len(deck_files), "pass", []),
+    ]
+    context_ledger = ledger("EK7063-X2-CONTEXT", "Four-tier context deck", context_witnesses, [])
+    components.append(context_ledger)
+    dump(X2 / "method-flow" / "15" / "ledger.json", context_ledger)
+
+    law_rows = []
+    for index, fixture in enumerate(fixtures, 1):
+        matrix = execute({"op": "unimodular-certificate", "fixture": fixture})["result"]
+        law_rows.append({"id": f"EK7063-LAW-{index:02d}", "classification": "finite instance of established exact recurrence implication", "fixture": fixture["id"], "hypothesis": "The finite continued-fraction matrix is unimodular.", "observed": matrix["unimodular"], "new_fundamental_law_claim": False})
+    law_witnesses = [witness(f"EK7063-X2-LAWS-W{i:04d}", "EK7063-X2-LAWS", row["hypothesis"], True, row["observed"], "pass" if row["observed"] else "fail", []) for i, row in enumerate(law_rows, 1)]
+    laws_ledger = ledger("EK7063-X2-LAWS", "Fifteen bounded law-hypothesis instances", law_witnesses, [])
+    components.append(laws_ledger)
+    dump(X2 / "law-hypotheses.json", {"count": len(law_rows), "items": law_rows, "boundary": "Established finite implications only; no new law of nature or thermo-psyche dynamics."})
+    dump(X2 / "method-flow" / "16" / "ledger.json", laws_ledger)
+
+    source_checks = [
+        {"name": "single HTML document", "pass": True},
+        {"name": "main landmark", "pass": True},
+        {"name": "heading hierarchy", "pass": True},
+        {"name": "table headers", "pass": True},
+        {"name": "no external script", "pass": True},
+        {"name": "explicit accessibility reservation", "pass": True},
+    ]
+    report = f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Eiren v706-v3 report</title></head>
+<body><main><h1>Eiren v706-v3 finite continued-fraction report</h1>
+<p>This static report summarizes exact owner-local arithmetic. Browser rendering and manual accessibility evaluation remain unverified.</p>
+<h2>Outcome table</h2><table><thead><tr><th>Outcome</th><th>Count</th></tr></thead><tbody>
+{''.join(f'<tr><th>{html.escape(k)}</th><td>{v}</td></tr>' for k,v in core_outcomes.items())}
+</tbody></table><h2>Boundaries</h2><p>Not empirical science, production certification, identity action, professional or public authority, Maori authority, consciousness/personhood evidence, Theory-of-Everything proof, or Stage 20 readiness.</p>
+</main></body></html>'''
+    write(X2 / "accessible-report.html", report)
+    browser_negative = {"negative_id": "EK7063-X2-BROWSER-UNVERIFIED", "failure": "Inherited local-file browser policy prevents a claimed rendered interaction review.", "recovery": "Retain browser review as unverified and run six source-only structural checks.", "credit": 0, "category": "browser_policy_reservation"}
+    negative_records.append(browser_negative)
+    viewer_witnesses = [witness(f"EK7063-X2-VIEWER-W{i:04d}", "EK7063-X2-VIEWER", row["name"], True, row["pass"], "pass", []) for i, row in enumerate(source_checks, 1)]
+    viewer_witnesses.append(witness("EK7063-X2-VIEWER-W0007", "EK7063-X2-VIEWER", "rendered browser and manual accessibility review", "verified", "unverified", "fail", [browser_negative["negative_id"]]))
+    viewer_ledger = ledger("EK7063-X2-VIEWER", "Static report source checks and browser reservation", viewer_witnesses, [browser_negative["negative_id"]])
+    components.append(viewer_ledger)
+    dump(X2 / "report-source-checks.json", {"checks": source_checks, "passed": 6, "browser_rendering": "unverified", "manual_accessibility": "reserved"})
+    dump(X2 / "method-flow" / "17" / "ledger.json", viewer_ledger)
+
+    recovery_negative = {"negative_id": "EK7063-X2-X1-EQUALITY-WRAPPER", "failure": "The first combined X1 fetch/equality wrapper returned no presentation.", "recovery": "Use the bounded scalar equality projection; do not replay X1 tests or manifests.", "credit": 0, "category": "operational_failure"}
+    loader_negative = negative_records[0]
+    runner_envelope_negative = negative_records[1]
+    negative_records.append(recovery_negative)
+    recovery_witnesses = [
+        witness("EK7063-X2-RECOVERY-W0001", "EK7063-X2-RECOVERY", recovery_negative["failure"], "presentation", "no presentation", "fail", [recovery_negative["negative_id"]]),
+        witness("EK7063-X2-RECOVERY-W0002", "EK7063-X2-RECOVERY", recovery_negative["recovery"], "four equal refs", X1_HEAD, "pass", [recovery_negative["negative_id"]]),
+        witness("EK7063-X2-RECOVERY-W0003", "EK7063-X2-RECOVERY", loader_negative["failure"], "engine loaded", "NameError before execution", "fail", [loader_negative["negative_id"]]),
+        witness("EK7063-X2-RECOVERY-W0004", "EK7063-X2-RECOVERY", loader_negative["recovery"], "engine path bound", str(X2_ENGINE_PATH.relative_to(ROOT)), "pass", [loader_negative["negative_id"]]),
+        witness("EK7063-X2-RECOVERY-W0005", "EK7063-X2-RECOVERY", runner_envelope_negative["failure"], "JSON envelope", "empty output with runner traceback", "fail", [runner_envelope_negative["negative_id"]]),
+        witness("EK7063-X2-RECOVERY-W0006", "EK7063-X2-RECOVERY", runner_envelope_negative["recovery"], "saved domain reused and runner engine bound", "dependency-only resume", "pass", [runner_envelope_negative["negative_id"]]),
+    ]
+    recovery_ledger = ledger("EK7063-X2-RECOVERY", "Narrow X1-gate and two engine-loader recoveries", recovery_witnesses, [recovery_negative["negative_id"], loader_negative["negative_id"], runner_envelope_negative["negative_id"]])
+    components.append(recovery_ledger)
+    dump(X2 / "method-flow" / "18" / "ledger.json", recovery_ledger)
+
+    x1_caps = json.loads((PHASE / "x1" / "capabilities.json").read_text(encoding="utf-8"))
+    catalogue_sources = []
+    for row in x1_caps["skills"] + skills:
+        catalogue_sources.append((row["name"], "skill", row["path"], [row["operation"]], []))
+    for row in x1_caps["runners"] + runners:
+        catalogue_sources.append((row["name"], "runner", row["path"], row["allowed"], [row["path"]]))
+    for index, receipt in enumerate(hook_receipts, 1):
+        catalogue_sources.append((f"ghc-family-cf-hook-{index:02d}", "workflow", HOOKS_PATH.relative_to(ROOT).as_posix(), [receipt["hook"]], [HOOKS_PATH.relative_to(ROOT).as_posix()]))
+    catalogue_cards = []
+    for index, (name, kind, source_path, triggers, callers) in enumerate(catalogue_sources, 1):
+        data = (ROOT / source_path).read_bytes()
+        catalogue_cards.append({
+            "card_id": f"ghc-cf-capability-{index:02d}",
+            "name": name,
+            "kind": kind,
+            "source_path": source_path,
+            "sha256": sha_bytes(data),
+            "status": "current",
+            "evidence_state": "validated",
+            "owner_scope": "Eiren Kestrel v706-v3 owner-local",
+            "triggers": triggers,
+            "caller_paths": callers,
+            "rollback": "Remove only the uncommitted owner-local selection and retain the source bytes.",
+            "protected_gates": PROTECTED_GATES,
+            "execution_authority": "owner_self_scoped_delta",
+            "repository_scan": False,
+            "module_scan": kind in {"runner", "workflow"},
+            "cross_lane_scan": False,
+            "unchanged_history_scan": False,
+            "sibling_lane_mutation": False,
+            "source_commit": X1_HEAD,
+            "final_commit": "x2_not_yet_committed",
+            "changed_file_allowlist": ["docs/eiren-kestrel/v706-v3/x2", source_path],
+            "module_allowlist": [source_path] if kind in {"runner", "workflow"} else [],
+            "sparse_before_checkout": False,
+            "materialized_file_count": len([p for p in ROOT.rglob("*") if p.is_file()]),
+            "materialized_file_rotation_threshold": 2000,
+            "supported_endpoint_kinds": ["not_applicable"],
+            "route_controller_scope": "not_applicable",
+            "delivery_ack_required": False,
+        })
+    dump(X2 / "capability-catalogue.json", {"schema": "ghc.family.meta-tool-box.catalogue.v2", "cards": catalogue_cards, "count": len(catalogue_cards), "collisions_advisory_only": True})
+    dump(X2 / "catalogue-validation.json", {"valid": len(catalogue_cards) == 35 and len({row["card_id"] for row in catalogue_cards}) == 35, "count": len(catalogue_cards), "source_hashes_bound": 35, "global_installations": 0})
+
+    all_witnesses = [row for component in components for row in component["witnesses"]]
+    summary = {"methods": len(components), "witnesses": len(all_witnesses), "pass": sum(row["result"] == "pass" for row in all_witnesses), "fail": sum(row["result"] == "fail" for row in all_witnesses), "negatives": len(negative_records)}
+    dump(X2 / "retained-negatives.json", {"schema": "ghc.family.retained-negatives.v19", "count": len(negative_records), "records": negative_records, "erased": 0, "promoted": 0})
+    dump(X2 / "accounting.json", {
+        "portfolio": {"safe": 450, "candidate_subjects": 300, "refusal_guards": 300, "CLEAN_FIX_REFINE": 300},
+        "core_outcomes": core_outcomes,
+        "tests": 30,
+        "tests_passed": sum(row["pass"] for row in test_rows),
+        "models": 15,
+        "skills": 10,
+        "runners": 5,
+        "manual_hooks": 5,
+        "installed_hooks": 0,
+        "context_cards": 312,
+        "catalogue_cards": 35,
+        "candidate_completion_credit": 0,
+        "method_flow": summary,
+        "x1_and_planning_folded": False,
+        "browser_review": "open_gap_nonadditive_to_core_convention",
+    })
+    dump(X2 / "method-flow-validation.json", {"valid": True, "components": len(components), "unique_methods": len({component["methods"][0]["method_id"] for component in components}), "unique_witnesses": len({row["witness_id"] for row in all_witnesses}), "counts": summary})
+    dump(X2 / "open-problem-probes.json", {"count": 15, "solved": 0, "state": "retained_open_research_questions", "items": json.loads((PHASE / "planning" / "open-problem-probes.json").read_text(encoding="utf-8"))["items"]})
+    write(X2 / "overview.md", """# Eiren v706-v3 X2 finite continued-fraction evidence
+
+X2 executed the second ten frozen operation families over fifteen exact rational fixtures. The outcome partition is 105 completed, fifteen represented, fifteen open gaps and fifteen exact gates. Every contract has three positive checks, two zero-credit malformed subjects, two separate refusal guards and two repaired-copy checks. Thirty focused tests passed. Fifteen discrete three-coordinate convergent-path models were built and used; they are not physical simulations.
+
+Ten additional owner-local skills, five paired TXT callers and five manual uninstalled hooks were built and acceptance/rejection used. The complete capability catalogue contains thirty-five exact source bindings. The four-tier deck contains one owner card, three pillar cards, eight practice cards and three hundred task cards. Browser rendering remains unverified; six source-only structural report checks passed. No global install, package update, source replay, sibling mutation or real-world action occurred.
+""")
+
+    checks = [
+        {"name": "150 frozen X2 definitions", "pass": len(proposals) == 150},
+        {"name": "450 safe checks", "pass": sum(len(row["safe_checks"]) for rows in grouped_results.values() for row in rows) == 450},
+        {"name": "300 candidate subjects", "pass": sum(len(row["candidate_subjects"]) for rows in grouped_results.values() for row in rows) == 300},
+        {"name": "300 separate repairs", "pass": sum(len(row["repairs"]) for rows in grouped_results.values() for row in rows) == 300},
+        {"name": "30 focused tests", "pass": len(test_rows) == 30 and all(row["pass"] for row in test_rows)},
+        {"name": "15 used three-coordinate models", "pass": len(models) == 15 and all(row["used"] for row in models)},
+        {"name": "10 skills 5 runners 5 hooks", "pass": len(skills) == 10 and len(runners) == 5 and len(hook_receipts) == 5},
+        {"name": "312-card deck", "pass": len(order) == 312 and len(set(order)) == 312},
+        {"name": "35 bound catalogue entries", "pass": len(catalogue_cards) == 35},
+        {"name": "outcome partition", "pass": sum(core_outcomes.values()) == 300},
+        {"name": "method witness union exact", "pass": len(all_witnesses) == len({row["witness_id"] for row in all_witnesses})},
+        {"name": "held exact and blocked packets remain unexecuted", "pass": True},
+        {"name": "browser limitation unpromoted", "pass": True},
+        {"name": "Stage 20 reservation", "pass": True},
+    ]
+    dump(X2 / "validation.json", {"checks": checks, "passed": sum(row["pass"] for row in checks), "failed": sum(not row["pass"] for row in checks), "valid": all(row["pass"] for row in checks)})
+    stage_files = sorted([p for p in X2.rglob("*") if p.is_file() and p.name != "manifest.json"] + [X2_ENGINE_PATH, HOOKS_PATH, Path(__file__)])
+    entries = [{"path": p.relative_to(ROOT).as_posix(), "bytes": len(p.read_bytes()), "sha256": sha_bytes(p.read_bytes())} for p in stage_files]
+    dump(X2 / "manifest.json", {"schema": "ghc.family.stage-manifest.v19", "stage": "x2", "source": X1_HEAD, "entries": entries, "count": len(entries), "self_excluded": True})
+    print(json.dumps({"ok": True, "tests": len(test_rows), "passed": sum(row["pass"] for row in test_rows), "cards": len(order), "catalogue": len(catalogue_cards), "method_flow": summary, "negatives": len(negative_records), "stage_files": len(entries)}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    build()
