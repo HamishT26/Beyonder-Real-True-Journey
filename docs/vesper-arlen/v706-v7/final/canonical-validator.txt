@@ -33,9 +33,10 @@ def main():
     remote_lines=run(repo,"ls-remote","origin",f"refs/heads/{args.branch}").splitlines()
     remote=remote_lines[0].split()[0] if remote_lines else ""
     check("fresh_remote",remote,args.head)
-    parent0="61e6783a83204ed7423251ad324d151feff7dade"
+    parent0="c880085b5837fc5fea15ceba46f8762376d23d48"
+    failed_final="958945abd6c4aa819d66ea3f39d42430638e3091"
     history=run(repo,"rev-list","--reverse","--parents",f"{parent0}..{args.head}").splitlines()
-    check("phase_commit_count",len(history),4)
+    check("phase_commit_count",len(history),5)
     check("single_parent_history",all(len(line.split())==2 for line in history),True)
     check("zero_merges",run(repo,"rev-list","--count","--merges",f"{parent0}..{args.head}"),"0")
     expected_parent=parent0
@@ -46,13 +47,20 @@ def main():
         expected_parent=parts[0]
     check("direct_parent_chain",sequential,True)
     prefix="docs/vesper-arlen/v706-v7"
-    manifests=[f"{prefix}/planning/manifest.json",f"{prefix}/x1/manifest.json",f"{prefix}/x2/manifest.json",f"{prefix}/final/manifest.json",f"{prefix}/final/content-seal.json"]
+    manifests=[
+        (args.head,f"{prefix}/planning/manifest.json"),
+        (args.head,f"{prefix}/x1/manifest.json"),
+        (args.head,f"{prefix}/x2/manifest.json"),
+        (failed_final,f"{prefix}/final/manifest.json"),
+        (failed_final,f"{prefix}/final/content-seal.json"),
+        (args.head,f"{prefix}/final/correction-manifest.json"),
+    ]
     bindings=[]
-    for path in manifests:
-        obj=json.loads(show(repo,f"{args.head}:{path}").decode("utf-8")); bindings.extend(walk_entries(obj))
+    for ref,path in manifests:
+        obj=json.loads(show(repo,f"{ref}:{path}").decode("utf-8")); bindings.extend((ref,row) for row in walk_entries(obj))
     errors=[]
-    for row in bindings:
-        try: data=show(repo,f"{args.head}:{row['path']}")
+    for ref,row in bindings:
+        try: data=show(repo,f"{ref}:{row['path']}")
         except subprocess.CalledProcessError: errors.append({"path":row["path"],"error":"missing"}); continue
         if len(data)!=row["bytes"] or sha(data)!=row["sha256"]: errors.append({"path":row["path"],"error":"digest_or_bytes"})
     check("manifest_bindings",len(errors),0,{"bindings":len(bindings),"errors":errors[:10]})

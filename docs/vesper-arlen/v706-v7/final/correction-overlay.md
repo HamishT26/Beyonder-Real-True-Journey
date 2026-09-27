@@ -1,0 +1,7 @@
+# Vesper Arlen v706-v7 canonical correction overlay
+
+The first canonical invocation at `958945abd6c4aa819d66ea3f39d42430638e3091` aborted before writing a canonical payload or success latch. The committed validator still named the prior Neris owner parent in its Git history range, even though Vesper correctly reused Vesper's own clean `main-3` lane and treated Neris as content provenance rather than Git ancestry. Git therefore rejected the non-ancestor range. The invocation earns zero canonical-success credit and remains visible in the external failure receipt.
+
+This direct-child correction changes only the history dependency and correction-aware manifest scopes. Planning, x1, x2, domain results, tests, models, skills, runners, proposals, outcome labels, repository core accounting, baton, and protected boundaries are not replayed or rewritten. The immutable first final's manifests and content seal continue to be verified at that first final. A separate correction manifest binds only the changed canonical and preflight validators plus this overlay.
+
+The corrected head must contain five direct single-parent commits after Vesper's prior exact final, zero merges, a clean working tree, typed `0/0` divergence, and fresh equality across local, upstream, tracking and live remote before the corrected preflight or canonical may run. One later canonical success will latch replay off. The verdict remains `NOT_READY_FOR_STAGE_20`.

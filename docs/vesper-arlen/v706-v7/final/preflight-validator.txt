@@ -10,6 +10,7 @@ from pathlib import Path
 
 PREFIX = "docs/vesper-arlen/v706-v7"
 OWNER_PARENT = "c880085b5837fc5fea15ceba46f8762376d23d48"
+FAILED_FINAL = "958945abd6c4aa819d66ea3f39d42430638e3091"
 ALLOWED_SUFFIXES = {".json", ".md", ".txt", ".html"}
 OUTCOME_LABELS = {"completed", "represented", "open_gap", "exact_gate"}
 
@@ -92,9 +93,9 @@ def main() -> None:
     repo = Path(args.repo)
     head = args.head
 
-    manifest = load(repo, head, f"{PREFIX}/final/manifest.json")
-    truth = load(repo, head, f"{PREFIX}/final/phase-truth.json")
-    baton = show(repo, head, f"{PREFIX}/final/baton.md")
+    manifest = load(repo, FAILED_FINAL, f"{PREFIX}/final/manifest.json")
+    truth = load(repo, FAILED_FINAL, f"{PREFIX}/final/phase-truth.json")
+    baton = show(repo, FAILED_FINAL, f"{PREFIX}/final/baton.md")
     owner_paths = git(repo, "ls-tree", "-r", "--name-only", head, "--", PREFIX).decode("utf-8").splitlines()
     fixture = {
         "manifest_entries": copy.deepcopy(manifest["entries"]),
@@ -106,21 +107,32 @@ def main() -> None:
     binding_errors = []
     for row in manifest["entries"]:
         try:
-            data = show(repo, head, row["path"])
+            data = show(repo, FAILED_FINAL, row["path"])
         except subprocess.CalledProcessError:
             binding_errors.append({"path": row["path"], "error": "missing"})
             continue
         if len(data) != row["bytes"] or sha256(data) != row["sha256"]:
             binding_errors.append({"path": row["path"], "error": "bytes_or_sha256"})
     checks.append({"name": "exact_manifest_bindings", "passed": not binding_errors, "observed": {"entries": len(manifest["entries"]), "errors": binding_errors[:10]}})
+    correction_manifest = load(repo, head, f"{PREFIX}/final/correction-manifest.json")
+    correction_errors = []
+    for row in correction_manifest["entries"]:
+        try:
+            data = show(repo, head, row["path"])
+        except subprocess.CalledProcessError:
+            correction_errors.append({"path": row["path"], "error": "missing"})
+            continue
+        if len(data) != row["bytes"] or sha256(data) != row["sha256"]:
+            correction_errors.append({"path": row["path"], "error": "bytes_or_sha256"})
+    checks.append({"name": "correction_manifest_bindings", "passed": not correction_errors, "observed": {"entries": len(correction_manifest["entries"]), "errors": correction_errors[:10]}})
     history = git(repo, "rev-list", "--reverse", "--parents", f"{OWNER_PARENT}..{head}").decode("utf-8").splitlines()
-    sequential = len(history) == 4
+    sequential = len(history) == 5
     parent = OWNER_PARENT
     for line in history:
         parts = line.split()
         sequential = sequential and len(parts) == 2 and parts[1] == parent
         parent = parts[0] if parts else ""
-    checks.append({"name": "direct_four_commit_history", "passed": sequential, "observed": history})
+    checks.append({"name": "direct_five_commit_history_with_correction", "passed": sequential, "observed": history})
     checks.append({"name": "terminal_verdict", "passed": truth.get("verdict") == "NOT_READY_FOR_STAGE_20", "observed": truth.get("verdict")})
     mutations = mutation_results(fixture)
     passed = positive and all(row["passed"] for row in checks) and sum(row["rejected"] for row in mutations) == 5
