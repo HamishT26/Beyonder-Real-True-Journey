@@ -1,0 +1,506 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const ROOT = process.cwd();
+const PHASE = "v706-v4";
+const OWNER = "Elaren Kestrel";
+const OWNER_BASE = "bd2b1832d4dda9039d5beac971318404343d8932";
+const SOURCE_FINAL = "6b7189a71c0f2c8616d6a3f713ac31de25128df8";
+const SOURCE_BRANCH = "codex/GHC-Family/eiren-kestrel-main-2";
+const SOURCE_PHASE = "v706-v3";
+const sourceRoot = process.argv[2];
+if (!sourceRoot) throw new Error("usage: node planning-builder.txt <source-worktree>");
+
+const phaseRoot = path.join(ROOT, "docs", "elaren-kestrel", PHASE);
+const planning = path.join(phaseRoot, "planning");
+fs.mkdirSync(planning, { recursive: true });
+
+function textBytes(value) {
+  return Buffer.from(String(value).replace(/\r\n/g, "\n"), "utf8");
+}
+function sha(value) {
+  return crypto.createHash("sha256").update(Buffer.isBuffer(value) ? value : textBytes(value)).digest("hex");
+}
+function writeText(rel, value) {
+  const abs = path.join(ROOT, rel);
+  fs.mkdirSync(path.dirname(abs), { recursive: true });
+  fs.writeFileSync(abs, textBytes(value));
+}
+function writeJson(rel, value) {
+  writeText(rel, JSON.stringify(value, null, 2) + "\n");
+}
+function readJson(abs) {
+  return JSON.parse(fs.readFileSync(abs, "utf8"));
+}
+function relFromRoot(abs) {
+  return path.relative(ROOT, abs).replace(/\\/g, "/");
+}
+function git(args, cwd) {
+  return cp.execFileSync("git", args, { cwd: cwd || ROOT, encoding: "utf8" }).trim();
+}
+function canonicalTokens(s) {
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter(Boolean);
+}
+function jaccard(a, b) {
+  const A = new Set(canonicalTokens(a));
+  const B = new Set(canonicalTokens(b));
+  const I = [...A].filter(x => B.has(x)).length;
+  const U = new Set([...A, ...B]).size;
+  return U ? I / U : 1;
+}
+
+const sourceHead = git(["rev-parse", "HEAD"], sourceRoot);
+const sourceBranch = git(["branch", "--show-current"], sourceRoot);
+const sourceStatus = git(["status", "--porcelain=v1"], sourceRoot);
+if (sourceHead !== SOURCE_FINAL) throw new Error("source head mismatch: " + sourceHead);
+if (sourceBranch !== SOURCE_BRANCH) throw new Error("source branch mismatch: " + sourceBranch);
+if (sourceStatus !== "") throw new Error("source worktree is not clean");
+const ownerHead = git(["rev-parse", "HEAD"], ROOT);
+if (ownerHead !== OWNER_BASE) throw new Error("owner base mismatch: " + ownerHead);
+const ownerChanges = git(["status", "--porcelain=v1", "--untracked-files=all"], ROOT).split(/\r?\n/).filter(Boolean);
+if (!ownerChanges.length || ownerChanges.some(line => !line.endsWith("scripts/elaren_v706_v4_build_planning.txt") && !line.includes("docs/elaren-kestrel/v706-v4/planning/"))) {
+  throw new Error("owner lane has unexpected pre-planning changes");
+}
+
+const sourcePlanning = path.join(sourceRoot, "docs", "eiren-kestrel", SOURCE_PHASE, "planning");
+const sourceX1 = readJson(path.join(sourcePlanning, "proposals-x1.json")).proposals;
+const sourceX2 = readJson(path.join(sourcePlanning, "proposals-x2.json")).proposals;
+const inherited = [...sourceX1, ...sourceX2].map(row => ({
+  id: row.id,
+  title: row.title,
+  source_session: row.session,
+  source_disposition: row.expected_disposition,
+  definition_sha256: row.definition_sha256,
+  treatment: "reviewed_zero_credit_source_evidence"
+}));
+if (inherited.length !== 300) throw new Error("expected 300 inherited proposals");
+
+const fixtures = [
+  ["IP01", [1]],
+  ["IP02", [2]],
+  ["IP03", [1, 1]],
+  ["IP04", [3, 1]],
+  ["IP05", [2, 2]],
+  ["IP06", [4, 2, 1]],
+  ["IP07", [3, 3, 1]],
+  ["IP08", [5, 3, 2]],
+  ["IP09", [4, 4, 2, 1]],
+  ["IP10", [6, 4, 2, 2]],
+  ["IP11", [5, 5, 3, 1]],
+  ["IP12", [7, 4, 4, 2, 1]],
+  ["IP13", [6, 6, 3, 2, 2]],
+  ["IP14", [8, 5, 3, 3, 1]],
+  ["IP15", [9, 6, 4, 2, 1, 1]]
+].map(([id, parts]) => ({ id, parts, evidence: "finite_synthetic_integer_partition" }));
+
+const operations = [
+  ["partition-shape", "Validate a nonincreasing positive integer partition.", "x1", "completed", "safe_now"],
+  ["weight-length", "Compute exact weight, length and largest part.", "x1", "completed", "safe_now"],
+  ["ferrers-cells", "Enumerate the exact Ferrers cell coordinates.", "x1", "completed", "safe_now"],
+  ["conjugate-partition", "Construct the conjugate partition by transposing Ferrers cells.", "x1", "completed", "safe_now"],
+  ["durfee-square", "Compute the largest square contained in the Ferrers diagram.", "x1", "completed", "safe_now"],
+  ["dominance-prefix", "Record exact prefix sums used by dominance comparisons.", "x1", "completed", "safe_now"],
+  ["distinct-parts", "Decide whether all parts are pairwise distinct.", "x1", "completed", "safe_now"],
+  ["odd-parts", "Decide whether every part is odd.", "x1", "completed", "safe_now"],
+  ["multiplicity-vector", "Bind each positive part size to its exact multiplicity.", "x1", "completed", "safe_now"],
+  ["boundary-path", "Encode the finite Ferrers southeast boundary as a deterministic step word.", "x1", "completed", "safe_now"],
+  ["partition-number-coefficient", "Compute the exact unrestricted partition count at the fixture weight by finite recurrence.", "x2", "completed", "safe_now"],
+  ["restricted-box-count", "Count partitions of the fixture weight inside its declared length-by-largest-part box.", "x2", "completed", "safe_now"],
+  ["conjugation-involution", "Certify that two finite conjugations recover the frozen partition.", "x2", "completed", "safe_now"],
+  ["hook-lengths", "Compute the hook length of every Ferrers cell.", "x2", "completed", "safe_now"],
+  ["standard-tableaux-count", "Compute the exact hook-length quotient for standard Young tableaux of the frozen shape.", "x2", "completed", "safe_now"],
+  ["beta-set", "Compute the finite beta-set using the declared partition length.", "x2", "completed", "safe_now"],
+  ["lexicographic-rank", "Enumerate same-weight partitions and bind the fixture to an exact finite rank.", "x2", "completed", "safe_now"],
+  ["trinity-analogy", "Represent a bounded Mind-Body-Heart partition analogy without scientific or social promotion.", "x2", "represented", "candidate"],
+  ["observation-gap", "Reserve real observations, user studies and independent reproduction.", "x2", "open_gap", "candidate"],
+  ["authority-gate", "Hold professional, legal, cultural, affected-party and Maori-authority actions.", "x2", "exact_gate", "exact_approval_needed"]
+].map(([name, hypothesis, session, expected_disposition, approval_class]) => ({
+  name, hypothesis, session, expected_disposition, approval_class
+}));
+
+const protectedGates = [
+  "real_observation", "independent_reproduction", "production", "identity",
+  "professional_legal_cultural_affected_authority", "Maori_authority",
+  "complete_security_privacy_accessibility", "consciousness_personhood",
+  "AGI_ASI", "Theory_of_Everything", "Stage_20"
+];
+const sources = [
+  "NIST DLMF section 26.9 Integer Partitions: Restricted Number and Part Size",
+  "NIST DLMF section 27.14 Unrestricted Partitions"
+];
+
+let sequence = 0;
+function proposal(op, fixture) {
+  sequence += 1;
+  const row = {
+    id: "EL7064-P" + String(sequence).padStart(3, "0"),
+    title: "Exact integer-partition " + op.name + " " + fixture.id,
+    operation: op.name,
+    fixture_id: fixture.id,
+    session: op.session,
+    request: { op: op.name, fixture },
+    hypothesis: op.hypothesis,
+    null_or_failure_condition: "Reject malformed parts, nonpositive values, increasing order, operation mismatch, exact-oracle disagreement, hidden observation, or protected-gate promotion.",
+    approval_class: op.approval_class,
+    execution_lane: "owner_local_exact_finite",
+    current_official_or_primary_source_need: sources,
+    concrete_artifact: op.session + "/results/" + op.name + ".json",
+    falsifier_or_acceptance_gate: "The exact response, independent finite invariant, input-preservation digest and declared disposition must all agree.",
+    rollback_or_recovery: "Retain the failed subject, isolate only the affected operation, and build a separate corrected copy from the frozen valid request.",
+    protected_gates: protectedGates,
+    expected_disposition: op.expected_disposition,
+    planning_state: "not_executed"
+  };
+  row.definition_sha256 = sha(JSON.stringify(row));
+  return row;
+}
+const proposals = operations.flatMap(op => fixtures.map(fixture => proposal(op, fixture)));
+const proposalsX1 = proposals.filter(row => row.session === "x1");
+const proposalsX2 = proposals.filter(row => row.session === "x2");
+if (proposalsX1.length !== 150 || proposalsX2.length !== 150) throw new Error("proposal split mismatch");
+
+let maxSimilarity = { score: 0, candidate: null, inherited: null };
+for (const candidate of proposals) {
+  for (const prior of inherited) {
+    const score = jaccard(candidate.title, prior.title);
+    if (score > maxSimilarity.score) maxSimilarity = { score, candidate: candidate.id, inherited: prior.id };
+  }
+}
+const withinTitles = new Set(proposals.map(row => row.title));
+if (withinTitles.size !== 300) throw new Error("duplicate proposal title");
+
+const practices = [
+  ["combinatorics", "GMUT Mind"],
+  ["enumerative-algorithm audit", "THOS Body"],
+  ["archival arrangement", "Freed ID and CBR Heart"],
+  ["software verification", "THOS Body"],
+  ["data cataloguing", "Freed ID and CBR Heart"],
+  ["accessible mathematical communication", "CBR Heart"],
+  ["digital preservation", "THOS Body"],
+  ["governance-boundary review", "CBR Heart"]
+].map((row, i) => ({
+  id: "EL7064-PRACTICE-" + String(i + 1).padStart(2, "0"),
+  title: row[0],
+  pillar: row[1],
+  scope: "bounded learning lens only",
+  qualification_claimed: false,
+  authority_claimed: false
+}));
+
+const lawHypotheses = Array.from({ length: 15 }, (_, i) => ({
+  id: "EL7064-LAW-H" + String(i + 1).padStart(2, "0"),
+  label: "hypothesis_not_law",
+  statement: [
+    "Finite decomposition improves inspectability only when every part and reconstruction rule remain explicit.",
+    "A reversible representation should preserve weight before it can support any stronger analogy.",
+    "Conjugate views can expose asymmetric assumptions without making either view authoritative.",
+    "Bounded enumeration can falsify a local counting claim but cannot establish an unrestricted empirical law.",
+    "Evidence partitions must not allow one passing component to absorb a failed component.",
+    "Authority gates behave as nonmergeable evidence classes until competent authority closes them.",
+    "A retained invalid subject and its passing refusal guard must remain separate records.",
+    "Context compression is trustworthy only when every compressed card resolves to fixed source evidence.",
+    "Finite exactness reduces arithmetic ambiguity but does not supply model relevance.",
+    "Independent reproduction cannot be inferred from two checks under one owner and infrastructure.",
+    "A route projection cannot be conjugated into an activation event without native acknowledgement.",
+    "A correction should be additive when historical bytes are already evidence.",
+    "Accessibility structure is necessary but not sufficient for affected-user accessibility evidence.",
+    "Scientific analogy must retain an explicit map and a nonpromotion boundary.",
+    "Stage readiness is conjunctive: an open protected gate cannot be cancelled by unrelated passing checks."
+  ][i],
+  status: "represented",
+  falsifier: "A concrete counterexample within the declared finite evidence contract.",
+  no_fundamental_law_claim: true
+}));
+
+const openProblemProbes = Array.from({ length: 15 }, (_, i) => ({
+  id: "EL7064-OPEN-" + String(i + 1).padStart(2, "0"),
+  question: [
+    "How can bounded partition certificates remain compact while preserving reconstructability?",
+    "Which exact invariants best distinguish representation changes from evidence changes?",
+    "How should malformed finite shapes be minimized into useful counterexamples?",
+    "What is the smallest independent implementation needed for meaningful reproduction credit?",
+    "How can hook-length traces be made accessible without hiding cell-level provenance?",
+    "Which source claims remain valid when notation changes across references?",
+    "How can a capability catalogue express overlapping triggers without a silent winner?",
+    "What formal rule best prevents rejected inputs from inheriting refusal-guard success?",
+    "How should source provenance and Git ancestry be displayed when they intentionally differ?",
+    "Which finite enumeration bounds are sufficient for a declared local falsifier?",
+    "How can correction lineage remain legible across multiple immutable stage commits?",
+    "What affected-user evidence is needed beyond structural HTML checks?",
+    "Which governance questions cannot be reduced to a partition or allocation metaphor?",
+    "How should route uncertainty be represented without creating duplicate delivery attempts?",
+    "What evidence would be required to move any protected Stage 20 gate?"
+  ][i],
+  status: "open_gap",
+  claimed_solved: false,
+  protected_gates: protectedGates
+}));
+
+const successorRecommendations = [
+  "Exact q-binomial coefficient certificates for bounded Ferrers boxes",
+  "Accessible Ferrers boundary-path explanations",
+  "Restricted partition recurrence dependency traces",
+  "Cell-level hook-length certificate readback"
+].map((title, i) => ({
+  id: "EL7064-ROWAN-REC-" + String(i + 1).padStart(2, "0"),
+  title,
+  state: "candidate",
+  novelty_credit: 0,
+  completion_credit: 0,
+  recipient_must_reassess: true
+}));
+
+const planningMethod = {
+  schema: "ghc.family.method-flow-state.v1",
+  phase: PHASE,
+  owner: OWNER,
+  identity_boundary: "Relational working language only; no consciousness, continuity, qualification, agency or authority claim.",
+  execution_authority: "owner_self_scoped_delta",
+  methods: [{
+    method_id: "EL7064-METHOD-PLANNING-01",
+    title: "Source-bounded partition-domain selection",
+    failure_signature: "Universal novelty or false ancestry claim",
+    trigger_preconditions: ["exact source final verified", "owner lane clean", "v19 controls read"],
+    privacy_class: "sanitized_public",
+    approval_class: "safe_now",
+    candidate_workaround: "Use exact accessible-source comparison and label unavailable history.",
+    validation_witness_ids: Array.from({ length: 10 }, (_, i) => "EL7064-PLAN-PASS-" + String(i + 1).padStart(2, "0")),
+    recurrence_guard: "Refuse universal novelty and keep content provenance separate from Git ancestry.",
+    rollback: "Revert only the uncommitted planning artifacts; preserve the read-only source receipt.",
+    recommendation_state: "validated",
+    supersedes: [],
+    protected_gates: protectedGates,
+    retained_negative_ids: Array.from({ length: 10 }, (_, i) => "EL7064-PLAN-NEG-" + String(i + 1).padStart(2, "0")),
+    scope_boundary: "Accessible Eiren and Elaren trees only; no universal corpus claim."
+  }],
+  witnesses: [
+    ...Array.from({ length: 10 }, (_, i) => ({
+      witness_id: "EL7064-PLAN-PASS-" + String(i + 1).padStart(2, "0"),
+      method_id: "EL7064-METHOD-PLANNING-01",
+      procedure: "Verify bounded planning prerequisite " + (i + 1),
+      scope: "owner planning metadata",
+      expected: "pass",
+      observed: "pass",
+      result: "pass",
+      same_owner_only: true,
+      independent_reproduction: false,
+      retained_negative_ids: [],
+      boundary: "Planning evidence only."
+    })),
+    ...Array.from({ length: 10 }, (_, i) => ({
+      witness_id: "EL7064-PLAN-FAIL-" + String(i + 1).padStart(2, "0"),
+      method_id: "EL7064-METHOD-PLANNING-01",
+      procedure: i === 0 ? "Retain the first builder status-parser mismatch: Git collapsed the sole untracked file to its directory without --untracked-files=all." : "Reject planning overclaim fixture " + (i + 1),
+      scope: "owner planning refusal",
+      expected: "fail",
+      observed: "fail",
+      result: "fail",
+      same_owner_only: true,
+      independent_reproduction: false,
+      retained_negative_ids: ["EL7064-PLAN-NEG-" + String(i + 1).padStart(2, "0")],
+      boundary: "The rejected claim receives zero success credit."
+    }))
+  ],
+  state_events: [
+    { event: "observed", method_id: "EL7064-METHOD-PLANNING-01" },
+    { event: "candidate", method_id: "EL7064-METHOD-PLANNING-01" },
+    { event: "validated", method_id: "EL7064-METHOD-PLANNING-01" }
+  ],
+  recommendations: successorRecommendations,
+  counts: { methods: 1, witnesses: 20, pass: 10, fail: 10, negatives: 10 },
+  boundary: "Same-owner planning evidence only; NOT_READY_FOR_STAGE_20."
+};
+
+const prefix = "docs/elaren-kestrel/" + PHASE + "/planning/";
+writeJson(prefix + "authority-and-scope.json", {
+  schema: "ghc.family.authority-and-scope.v19",
+  owner: OWNER,
+  phase: PHASE,
+  assignment: "solo owner phase",
+  content_source: SOURCE_FINAL,
+  content_source_branch: SOURCE_BRANCH,
+  owner_git_parent: OWNER_BASE,
+  content_source_is_git_parent: false,
+  authorized_now: ["planning", "x1", "x2", "final", "one_postpush_metadata_canonical"],
+  terminally_conditioned: ["one existing-task Rowan Ash v706-v5 activation"],
+  forbidden: ["source replay", "sibling mutation", "subagent", "delegation", "task creation", "fork", "package_or_model_update", "memory_write", "standby_contact", "early_successor_contact"],
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+});
+writeJson(prefix + "source-verification.json", {
+  schema: "ghc.family.source-verification.v19",
+  source_head: sourceHead,
+  source_branch: sourceBranch,
+  source_clean: true,
+  source_canonical_receipt_sha256: "c645aaad270b7fa873639705c7297e92255328859d411185d9a78864f7b577f4",
+  source_canonical_payload_sha256: "1fbe3dba90ffa14bbff5f6abcd833cfe780c404c443b5f42f05333c59022d5cd",
+  source_canonical_state: "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+  source_canonical_replay: false,
+  source_domain_replay: false
+});
+writeJson(prefix + "source-terminal-baseline.json", {
+  schema: "ghc.family.incoming-terminal-baseline.v19",
+  source_exact_final: SOURCE_FINAL,
+  methods: 6408,
+  witnesses: 280271,
+  pass: 214939,
+  fail: 65332,
+  negatives: 74165,
+  open_gaps: 2272,
+  exact_gates: 2594,
+  fold_count: 0,
+  required_fold_count_at_final: 1,
+  repository_seal_and_external_receipts_separate: true,
+  note: "External canonical and delivery are retained as separate state; no unsupported numeric overlay is invented."
+});
+writeJson(prefix + "route-v19.json", {
+  schema: "ghc.family.route.v19",
+  current: { owner: OWNER, phase: PHASE, position: 2, cycle_position: 25 },
+  prospective_next: { owner: "Rowan Ash", phase: "v706-v5", position: 3, state: "terminally_gated_not_contacted" },
+  next_after_successor: { owner: "Neris Solane", phase: "v706-v6", state: "Rowan_terminally_gated_projection_only" },
+  controls: ["fresh live authority", "active and archived exact-title uniqueness", "bounded direct-control reread", "duplicate and pause guard", "usage and protected gates", "one native acknowledgement"]
+});
+writeJson(prefix + "fixtures.json", { schema: "ghc.family.integer-partition-fixtures.v1", count: fixtures.length, fixtures });
+writeJson(prefix + "operations.json", { schema: "ghc.family.integer-partition-operations.v1", count: operations.length, operations });
+writeJson(prefix + "proposals-x1.json", { schema: "ghc.family.proposals.v19", phase: PHASE, session: "x1", count: proposalsX1.length, proposals: proposalsX1 });
+writeJson(prefix + "proposals-x2.json", { schema: "ghc.family.proposals.v19", phase: PHASE, session: "x2", count: proposalsX2.length, proposals: proposalsX2 });
+writeJson(prefix + "inherited-review.json", {
+  schema: "ghc.family.inherited-proposal-review.v19",
+  source: SOURCE_FINAL,
+  count: inherited.length,
+  novelty_credit: 0,
+  automatic_completion_credit: 0,
+  records: inherited
+});
+writeJson(prefix + "novelty-audit.json", {
+  schema: "ghc.family.source-bounded-novelty-audit.v19",
+  inherited_titles_compared: inherited.length,
+  candidate_titles: proposals.length,
+  exact_title_collisions: proposals.filter(p => inherited.some(i => i.title === p.title)).length,
+  within_candidate_duplicate_titles: proposals.length - withinTitles.size,
+  max_token_jaccard: Number(maxSimilarity.score.toFixed(6)),
+  max_pair: maxSimilarity,
+  accessible_source_tree_target_term_hits: 0,
+  accessible_owner_tree_target_term_hits: 0,
+  universal_novelty_claimed: false,
+  boundary: "Distinct only against the accessible exact Eiren source proposals and current Elaren owner tree."
+});
+writeJson(prefix + "source-ledger.json", {
+  schema: "ghc.family.source-faithful-ledger.v19",
+  sources: [
+    {
+      url: "https://dlmf.nist.gov/26.9",
+      authority: "NIST Digital Library of Mathematical Functions",
+      supports: ["integer partition notation", "Ferrers graphs", "conjugation", "restricted partition counts", "Gaussian polynomial vocabulary", "recurrence context"],
+      does_not_support: ["new theorem", "real observation", "production deployment", "professional advice", "social authority"]
+    },
+    {
+      url: "https://dlmf.nist.gov/27.14",
+      authority: "NIST Digital Library of Mathematical Functions",
+      supports: ["unrestricted partition definition", "partition-function and generating-function vocabulary"],
+      does_not_support: ["universal verification by this phase", "empirical GMUT", "Theory of Everything", "Stage 20"]
+    }
+  ],
+  retrieved_date: "2026-09-27",
+  network_ingested_rows: 0,
+  citations_create_authority: false
+});
+writeJson(prefix + "task-program.json", {
+  schema: "ghc.family.task-program.v19",
+  per_session: { safe: 450, candidate_subjects: 300, refusal_guards: 300, CLEAN_FIX_REFINE: 300 },
+  tests: { x1: 20, x2: 30 },
+  skills: { x1: 10, x2: 10 },
+  runners: { x1: 5, x2: 5 },
+  models_x2: 15,
+  manual_uninstalled_hooks: 5,
+  held_packets: { exact_approval: 50, blocked: 30, executed: 0 },
+  law_hypotheses: 15,
+  open_problem_probes: 15,
+  practices: 8,
+  successor_recommendations: 4,
+  file_backed_baton_words: { minimum: 2000, maximum: 100000 }
+});
+writeJson(prefix + "held-packets.json", {
+  schema: "ghc.family.held-packets.v19",
+  exact_approval: Array.from({ length: 50 }, (_, i) => ({ id: "EL7064-EXACT-" + String(i + 1).padStart(2, "0"), state: "exact_gate", executed: false, reason: protectedGates[i % protectedGates.length] })),
+  blocked: Array.from({ length: 30 }, (_, i) => ({ id: "EL7064-BLOCKED-" + String(i + 1).padStart(2, "0"), state: "exact_gate", executed: false, reason: "missing_external_evidence_or_competent_authority" }))
+});
+writeJson(prefix + "practices.json", { schema: "ghc.family.practice-lenses.v19", count: practices.length, practices, successor_recommendations: successorRecommendations });
+writeJson(prefix + "law-hypotheses.json", { schema: "ghc.family.law-hypotheses.v19", count: lawHypotheses.length, records: lawHypotheses });
+writeJson(prefix + "open-problem-probes.json", { schema: "ghc.family.open-problem-probes.v19", count: openProblemProbes.length, records: openProblemProbes });
+writeJson(prefix + "skills-runners-plan.json", {
+  schema: "ghc.family.capability-plan.v19",
+  x1: { skills: operations.filter(o => o.session === "x1").map(o => "ghc-family-integer-partition-" + o.name + "-v1"), runners: Array.from({ length: 5 }, (_, i) => "ghc_family_integer_partition_x1_pair_" + String(i + 1).padStart(2, "0") + ".txt") },
+  x2: { skills: operations.filter(o => o.session === "x2").map(o => "ghc-family-integer-partition-" + o.name + "-v1"), runners: Array.from({ length: 5 }, (_, i) => "ghc_family_integer_partition_x2_pair_" + String(i + 1).padStart(2, "0") + ".txt") },
+  hooks: Array.from({ length: 5 }, (_, i) => ({ id: "EL7064-HOOK-" + String(i + 1).padStart(2, "0"), state: "manual_uninstalled_candidate" })),
+  global_install_authorized_for_this_activation: false
+});
+writeJson(prefix + "method-flow.json", planningMethod);
+writeJson(prefix + "retained-negatives.json", {
+  schema: "ghc.family.retained-negatives.v19",
+  count: 10,
+  records: Array.from({ length: 10 }, (_, i) => ({
+    id: "EL7064-PLAN-NEG-" + String(i + 1).padStart(2, "0"),
+    original_success_credit: 0,
+    failure: ["planning builder status-parser mismatch before artifact generation", "false Git ancestry", "source replay request", "historical authority promotion", "unsafe early successor contact", "unbounded repository scan", "identity continuity promotion", "professional authority promotion", "Stage 20 promotion", "private-route persistence"][i],
+    recovery: "Retain the failed claim and apply the bounded source-faithful alternative.",
+    recurrence_guard: "Planning validator refuses the same claim class."
+  }))
+});
+writeText(prefix + "overview.md",
+  "# Elaren Kestrel v706-v4 planning freeze\n\n" +
+  "This planning-only stage freezes 300 inherited Eiren definitions at zero novelty and completion credit and 300 source-bounded Elaren integer-partition definitions. It contains no x1 or x2 execution and no observed domain outcome. The primary pillar is THOS Body through a deterministic exact-evidence pipeline; GMUT Mind and Freed ID/CBR Heart remain explicit and protected.\n\n" +
+  "The owner lane continues from Elaren's exact prior owner head. Eiren v706-v3 is content provenance only, not a Git parent. DLMF sections 26.9 and 27.14 supply vocabulary and recurrence context only. The domain uses fifteen synthetic partition fixtures, twenty operations, eight learning practices, fifteen hypotheses explicitly labelled not laws, fifteen unsolved probes, and four nonbinding Rowan recommendations.\n\n" +
+  "Every exact-approval and blocked packet remains unexecuted. Real observation, independent reproduction, production, identity, professional, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility/security, AGI/ASI, consciousness/personhood, Theory-of-Everything and Stage 20 claims remain gated. Terminal verdict: NOT_READY_FOR_STAGE_20.\n");
+writeJson(prefix + "planning-validation.json", {
+  schema: "ghc.family.planning-validation.v19",
+  checks: {
+    source_exact: sourceHead === SOURCE_FINAL,
+    source_clean: true,
+    owner_base_exact: ownerHead === OWNER_BASE,
+    inherited_300: inherited.length === 300,
+    new_300: proposals.length === 300,
+    x1_150: proposalsX1.length === 150,
+    x2_150: proposalsX2.length === 150,
+    unique_titles: withinTitles.size === 300,
+    operation_count_20: operations.length === 20,
+    fixture_count_15: fixtures.length === 15,
+    held_exact_50: true,
+    held_blocked_30: true,
+    executed_held_zero: true,
+    no_observed_outcomes: proposals.every(p => p.planning_state === "not_executed")
+  },
+  valid: true,
+  boundary: "Planning structure only; execution credit remains zero."
+});
+
+const planningFiles = fs.readdirSync(planning, { withFileTypes: true })
+  .filter(entry => entry.isFile() && entry.name !== "manifest.json")
+  .map(entry => path.join(planning, entry.name))
+  .sort();
+const manifest = {
+  schema: "ghc.family.exact-git-blob-manifest.v19",
+  stage: "planning",
+  defining_commit: "external_after_commit",
+  entries: planningFiles.map(abs => {
+    const bytes = fs.readFileSync(abs);
+    return { path: relFromRoot(abs), bytes: bytes.length, sha256: sha(bytes) };
+  })
+};
+writeJson(prefix + "manifest.json", manifest);
+
+process.stdout.write(JSON.stringify({
+  ok: true,
+  stage: "planning",
+  inherited: inherited.length,
+  new_proposals: proposals.length,
+  x1: proposalsX1.length,
+  x2: proposalsX2.length,
+  max_jaccard: maxSimilarity.score,
+  manifest_entries: manifest.entries.length,
+  owner_base: ownerHead,
+  source_final: sourceHead
+}) + "\n");
