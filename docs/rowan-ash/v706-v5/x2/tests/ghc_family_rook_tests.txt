@@ -1,0 +1,34 @@
+"""Thirty exact hit-distribution and boundary checks."""
+import copy,math,subprocess,sys,json
+def run_tests(C,fixtures):
+ by={f['id']:f for f in fixtures};out=[]
+ def test(name,fn):
+  try:ok=bool(fn());detail='predicate matched' if ok else 'predicate false'
+  except Exception as e:ok=False;detail=type(e).__name__+': '+str(e)
+  out.append(dict(name=name,passed=ok,observed=detail,same_owner_only=True))
+ def hit(key):
+  f=by[key];return C['hits'](f['n'],tuple(map(tuple,f['cells'])))[0]
+ def run(op,key):return C['dispatch']({'op':op,'fixture':by[key]})
+ def identity(f):
+  n=f['n'];c=tuple(map(tuple,f['cells']));r=C['rook'](n,c);h=C['hits'](n,c)[0]
+  return C['transform'](n,r)==h and sum(h)==math.factorial(n) and all(sum(math.comb(k,j)*h[k] for k in range(j,n+1))==r[j]*math.factorial(n-j) for j in range(n+1))
+ for f in fixtures:test(f['id']+'-hit-transform-total-and-all-moments',lambda f=f:identity(f))
+ test('diagonal-three-rencontres',lambda:hit('RB04')==(2,3,0,1))
+ test('full-three-all-hits',lambda:hit('RB05')==(0,0,0,6))
+ test('one-row-exactly-one-hit',lambda:hit('RB06')==(0,6,0,0))
+ test('empty-universe-one-empty-permutation',lambda:hit('RB01')==(1,))
+ test('empty-one-one-avoider',lambda:hit('RB02')==(1,0))
+ test('diagonal-complement-reverses-hits',lambda:run('complement-hit-symmetry','RB04')['result']['complement_hit_vector']==(1,0,3,2))
+ test('staircase-Ferrers-factorial-basis',lambda:run('ferrers-factorial-identity','RB07')['result']['applicable'])
+ test('diagonal-non-Ferrers-condition-retained',lambda:not run('ferrers-factorial-identity','RB04')['result']['applicable'])
+ test('rectangle-maximum-matching-two',lambda:run('maximum-rook-capacity','RB09')['result']['maximum_rooks']==2)
+ test('explanation-no-completion-credit',lambda:run('accessible-counting-analogy','RB05')['completion_credit']==0)
+ test('observation-gap-not-promoted',lambda:run('observation-gap','RB05')['disposition']=='open_gap')
+ test('authority-gate-not-promoted',lambda:run('allocation-authority-gate','RB05')['disposition']=='exact_gate')
+ def rejected_bytes(data):
+  p=subprocess.run([sys.executable,'-B',C['__file__']],input=data,capture_output=True,timeout=20);r=json.loads(p.stdout);return p.returncode==2 and r['operation_executed'] is False
+ test('UTF8-invalid-byte-refused',lambda:rejected_bytes(b'\xff'))
+ test('over-65536-byte-input-refused',lambda:rejected_bytes(b' '*65537))
+ test('trailing-JSON-value-refused',lambda:rejected_bytes(b'{} {}'))
+ assert len(out)==30
+ return dict(tests=out,scope='New owner exact hit mathematics, guard conditions and byte parser.',independent_reproduction=False)
