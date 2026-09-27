@@ -1,0 +1,70 @@
+{
+  "schema": "ghc.family.meta-tool-selection.v1",
+  "selected": [
+    {
+      "card_id": "cm7061-admitted-launcher",
+      "name": "registered admitted-model launcher",
+      "kind": "workflow",
+      "status": "current",
+      "evidence_state": "validated",
+      "triggers": [
+        "phase execution",
+        "model guard"
+      ],
+      "rollback": "stop before child start",
+      "protected_gates": [
+        "model allowlist",
+        "no child override"
+      ]
+    },
+    {
+      "card_id": "cm7061-git-blob",
+      "name": "exact Git-blob byte review",
+      "kind": "method",
+      "status": "current",
+      "evidence_state": "validated",
+      "triggers": [
+        "manifest",
+        "staged review"
+      ],
+      "rollback": "retain mismatch and rebuild only changed manifest",
+      "protected_gates": [
+        "source fixity",
+        "no history rewrite"
+      ]
+    },
+    {
+      "card_id": "cm7061-node-builtin",
+      "name": "D-backed Node built-ins",
+      "kind": "runner",
+      "status": "current",
+      "evidence_state": "validated",
+      "triggers": [
+        "exact finite computation"
+      ],
+      "rollback": "retain subject and stop runner",
+      "protected_gates": [
+        "no package update",
+        "owner scope"
+      ]
+    },
+    {
+      "card_id": "cm7061-owner-canonical",
+      "name": "owner-self-scoped canonical",
+      "kind": "workflow",
+      "status": "current",
+      "evidence_state": "candidate",
+      "triggers": [
+        "exact final only"
+      ],
+      "rollback": "retain failed aggregate at zero success credit",
+      "protected_gates": [
+        "no full suite",
+        "one-shot latch"
+      ]
+    }
+  ],
+  "installed_not_selected": "Unrelated installed tools were not bulk-run.",
+  "global_installation": false,
+  "boundary": "Finite synthetic exact prefix-code and same-owner documentation/software evidence only. No real book, binding, archive, collection, person, participant, workplace, material, tool, measurement, custody transfer, identity event, compression deployment, professional decision, legal or cultural interpretation, affected-party approval, Māori wording or authority, empirical GMUT confirmation, THOS effectiveness, production Freed ID, independent reproduction, complete privacy, accessibility or security, AGI or ASI, consciousness or personhood, Theory of Everything, canon, or Stage 20 proof. Māori concepts remain under Māori authority. NOT_READY_FOR_STAGE_20."
+}
