@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+"""Manual uninstalled lifecycle-envelope candidate ghc_family_poset_hook_01."""
+import json
+import sys
+
+try:
+    payload = json.loads(sys.stdin.read())
+except Exception:
+    print(json.dumps({"hook": "ghc_family_poset_hook_01", "decision": "refuse", "reason": "invalid-json"}, sort_keys=True))
+    raise SystemExit(2)
+required = {"event", "owner", "phase", "exact_head"}
+if set(payload) != required or payload.get("owner") != "Ilyra Fen" or payload.get("phase") != "v707-v2" or payload.get("event") not in {"planning", "x1", "x2", "final", "handoff"}:
+    print(json.dumps({"hook": "ghc_family_poset_hook_01", "decision": "refuse", "reason": "invalid-envelope"}, sort_keys=True))
+    raise SystemExit(2)
+print(json.dumps({"hook": "ghc_family_poset_hook_01", "decision": "accept-manual-smoke-only", "event": payload["event"]}, sort_keys=True))
