@@ -1,0 +1,130 @@
+from __future__ import annotations
+
+import hashlib
+import json
+from collections import Counter
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+PHASE_ROOT = ROOT.parent
+REPO = PHASE_ROOT.parents[2]
+
+
+def read_json(path: Path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+
+def record(path: Path) -> dict[str, object]:
+    data = path.read_bytes()
+    return {
+        "path": path.relative_to(REPO).as_posix(),
+        "bytes": len(data),
+        "words": len(data.decode("utf-8", "replace").split()),
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "git_blob_sha1": hashlib.sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest(),
+    }
+
+
+failure = {
+    "witness_id": "NS7066-FINAL-AUDIT-ENCODING-01",
+    "class": "operational_failure",
+    "passed": False,
+    "retained": True,
+    "completion_credit": 0,
+    "reason": "The first precommit closeout audit inherited the Windows cp1252 default and stopped while reading a Unicode-bearing JSON dossier before producing its scalar report.",
+    "recovery": "Rerun the unchanged read-only audit with Python UTF-8 mode; JSON, manifests, seal, baton and canonical syntax then validated.",
+    "reference": "final/precommit-recoveries.json",
+}
+write_json(ROOT / "precommit-recoveries.json", {"rows": [failure], "count": 1, "domain_replayed": False, "repository_mutated_by_failed_attempt": False})
+
+dossier_path = ROOT / "failure-dossier.json"
+dossier = read_json(dossier_path)
+if not any(row["witness_id"] == failure["witness_id"] for row in dossier["rows"]):
+    dossier["rows"].append(failure)
+dossier["count"] = len(dossier["rows"])
+dossier["unique_ids"] = len({row["witness_id"] for row in dossier["rows"]})
+dossier["groups"] = dict(Counter(row["class"] for row in dossier["rows"]))
+write_json(dossier_path, dossier)
+
+accounting_path = ROOT / "accounting.json"
+accounting = read_json(accounting_path)
+accounting["owner_delta"]["fail"] += 1
+accounting["owner_delta"]["negatives"] += 1
+accounting["owner_delta"]["witnesses"] += 1
+accounting["repository_effective_baseline"]["fail"] += 1
+accounting["repository_effective_baseline"]["negatives"] += 1
+accounting["repository_effective_baseline"]["witnesses"] += 1
+write_json(accounting_path, accounting)
+
+method_path = ROOT / "method-flow-final.json"
+method = read_json(method_path)
+method["owner_delta"] = accounting["owner_delta"]
+method["repository_effective_baseline"] = accounting["repository_effective_baseline"]
+write_json(method_path, method)
+
+baton_path = ROOT / "baton.md"
+baton = baton_path.read_text(encoding="utf-8")
+baton = baton.replace(
+    "The phase retains 600 malformed candidate originals, 6 observed intake or wrapper faults, and five unobserved host events.",
+    "The phase retains 600 malformed candidate originals, ten observed intake, validation, recovery or audit-wrapper faults, and five unobserved live-host events.",
+)
+baton = baton.replace(
+    "The Neris owner delta is {'methods': 34, 'witnesses': 3109, 'pass': 2495, 'fail': 614, 'negatives': 614, 'open_gaps': 20, 'exact_gates': 15}. Folding that delta exactly once yields {'methods': 6510, 'witnesses': 289259, 'pass': 222057, 'fail': 67202, 'negatives': 76035, 'open_gaps': 2328, 'exact_gates': 2639}.",
+    "The Neris owner delta is {'methods': 34, 'witnesses': 3110, 'pass': 2495, 'fail': 615, 'negatives': 615, 'open_gaps': 20, 'exact_gates': 15}. Folding that delta exactly once yields {'methods': 6510, 'witnesses': 289260, 'pass': 222057, 'fail': 67203, 'negatives': 76036, 'open_gaps': 2328, 'exact_gates': 2639}.",
+)
+baton_path.write_text(baton, encoding="utf-8", newline="\n")
+
+overview_path = ROOT / "overview.md"
+overview = overview_path.read_text(encoding="utf-8")
+overview = overview.replace(
+    "Six observed intake and wrapper faults and five unobserved live-host events are likewise retained rather than erased.",
+    "Ten observed intake, validation, recovery and audit-wrapper faults and five unobserved live-host events are likewise retained rather than erased.",
+)
+overview_path.write_text(overview, encoding="utf-8", newline="\n")
+
+baton_data = baton_path.read_bytes()
+index = read_json(ROOT / "baton-index.json")
+index["bytes"] = len(baton_data)
+index["words"] = len(baton_data.decode("utf-8").split())
+index["sha256"] = hashlib.sha256(baton_data).hexdigest()
+write_json(ROOT / "baton-index.json", index)
+
+preflight_path = ROOT / "final-preflight.json"
+preflight = read_json(preflight_path)
+preflight["failures_retained"] = dossier["count"]
+preflight["precommit_audit_recoveries"] = 1
+preflight["baton_words"] = index["words"]
+preflight["baton_bytes"] = index["bytes"]
+write_json(preflight_path, preflight)
+
+manifest_path = ROOT / "manifest.json"
+seal_path = ROOT / "content-seal.json"
+manifest_entries = [record(path) for path in sorted(ROOT.rglob("*")) if path.is_file() and path not in {manifest_path, seal_path}]
+preflight = read_json(preflight_path)
+preflight["manifest_entries"] = len(manifest_entries)
+write_json(preflight_path, preflight)
+manifest_entries = [record(path) for path in sorted(ROOT.rglob("*")) if path.is_file() and path not in {manifest_path, seal_path}]
+write_json(manifest_path, {
+    "owner": "Neris Solane",
+    "phase": "v706-v6",
+    "stage": "final",
+    "byte_domain": "UTF-8 LF working bytes intended to equal exact committed Git blobs",
+    "entries": manifest_entries,
+    "entry_count": len(manifest_entries),
+    "boundary": "Finite synthetic same-owner combinatorics and software evidence only; no empirical, production, identity, consciousness, personhood, professional, legal, cultural, Maori-authority, complete-assurance, Theory-of-Everything, canon or Stage 20 claim.",
+})
+
+seal_entries = [record(path) for path in sorted(PHASE_ROOT.rglob("*")) if path.is_file() and path != seal_path]
+write_json(seal_path, {
+    "owner": "Neris Solane",
+    "phase": "v706-v6",
+    "entries": seal_entries,
+    "entry_count": len(seal_entries),
+    "byte_domain": "UTF-8 LF exact intended Git blobs",
+    "boundary": "Finite synthetic same-owner combinatorics and software evidence only; no empirical, production, identity, consciousness, personhood, professional, legal, cultural, Maori-authority, complete-assurance, Theory-of-Everything, canon or Stage 20 claim.",
+})
