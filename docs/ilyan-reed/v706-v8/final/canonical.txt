@@ -1,0 +1,133 @@
+"""Owner-scoped metadata validator. Never imports or executes domain programs."""
+import argparse,collections,datetime,hashlib,json,os,re,subprocess,sys
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent;REPO=ROOT.parents[2];PREFIX=ROOT.relative_to(REPO).as_posix()+'/'
+ap=argparse.ArgumentParser();ap.add_argument('--bank',required=True);ap.add_argument('--mode',choices=['preflight','canonical'],required=True);ap.add_argument('--expected-head');args=ap.parse_args();BANK=Path(args.bank)
+assert os.environ.get('GHC_MODEL_GUARD')=='v16';live=args.mode=='canonical'
+def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def bytes_json(x):return (json.dumps(x,sort_keys=True,indent=2,ensure_ascii=False)+'\n').encode()
+def pairs(kv):
+ d={}
+ for k,v in kv:
+  if k in d:raise ValueError('duplicate JSON key')
+  d[k]=v
+ return d
+def strict(b):return json.loads(b.decode('utf-8'),object_pairs_hook=pairs,parse_constant=lambda x:(_ for _ in ()).throw(ValueError('nonfinite JSON')))
+def ext(n):return strict((BANK/n).read_bytes())
+def git(*a):return subprocess.check_output(['git','-c','maintenance.auto=false','-c','gc.auto=0','-C',str(REPO),*a],stderr=subprocess.PIPE).decode().strip()
+def save(name,value,exclusive=False):
+ with (BANK/name).open('xb' if exclusive else 'wb') as f:f.write(bytes_json(value))
+head=args.expected_head or git('rev-parse','HEAD')
+if live:
+ assert args.expected_head and not (BANK/'canonical-success-latch.json').exists(),'canonical already latched or exact final absent'
+ assert not (BANK/'canonical-invocation.json').exists(),'prior invocation must not be silently replayed'
+ save('canonical-invocation.json',{'head':head,'started_at':now(),'invocations':1,'domain_replayed':False,'post_success_replays':0},True)
+proc=subprocess.Popen(['git','-C',str(REPO),'cat-file','--batch'],stdin=subprocess.PIPE,stdout=subprocess.PIPE);cache={}
+def blob(path,rev=None):
+ if not live and rev is None:return (REPO/path).read_bytes()
+ key=(rev or head)+':'+path
+ if key not in cache:
+  proc.stdin.write((key+'\n').encode());proc.stdin.flush();h=proc.stdout.readline().split();assert len(h)==3 and h[1]==b'blob',key
+  b=proc.stdout.read(int(h[2]));assert proc.stdout.read(1)==b'\n';cache[key]=b
+ return cache[key]
+def doc(name,rev=None):return strict(blob(PREFIX+name,rev))
+checks=[]
+def check(name,condition,detail=None):checks.append({'name':name,'passed':bool(condition),'detail':detail})
+try:
+ branch='codex/GHC-Family/ilyan-reed-main';parent='6d9f1f62ea8d4f73a173eaa716d6d717d2213eb2';names=['planning','x1','x2']+(['final'] if live else [])
+ receipts={s:ext(s+'-push.json') for s in names};commits=[receipts[s]['head'] for s in names]
+ check('exact_owner_branch',git('branch','--show-current')==branch)
+ check('exact_head',git('rev-parse','HEAD')==head)
+ check('saved_stage_exit_zero_gates',all(r['exit_code']==0 and r['clean'] and r['divergence']==[0,0] and r['head']==r['tracking']==r['remote']==r['pushed_head'] for r in receipts.values()))
+ graph=[r.split() for r in git('rev-list','--parents',parent+'..'+head).splitlines()]
+ expected_count=4 if live else 3
+ check('direct_single_parent_history',len(graph)==expected_count and all(len(g)==2 for g in graph) and [g[0] for g in graph]==list(reversed(commits)) and graph[-1][1]==parent)
+ check('zero_merges',git('rev-list','--count','--merges',parent+'..'+head)=='0')
+ if live:
+  check('clean_checkout',git('status','--porcelain')=='')
+  div=list(map(int,git('rev-list','--left-right','--count','HEAD...@{upstream}').split()));check('typed_zero_divergence',div==[0,0])
+  heads=[git('rev-parse','HEAD'),git('rev-parse','@{upstream}'),git('rev-parse','refs/remotes/origin/'+branch),git('ls-remote','origin','refs/heads/'+branch).split()[0]]
+  check('fresh_four_way_equality',heads==[head]*4)
+  delta=git('diff','--name-status',parent,head).splitlines();paths=[x.split('\t')[-1] for x in delta]
+  check('only_added_current_owner_files',all(x.startswith('A\t'+PREFIX) for x in delta))
+ else:paths=sorted(p.relative_to(REPO).as_posix() for p in ROOT.rglob('*') if p.is_file())
+ check('exact_literal_inventory',sorted(paths)==sorted(doc('final/allowlist.json')['paths']),len(paths))
+ check('allowed_authored_formats',all(Path(p).suffix in {'.json','.md','.txt','.html'} for p in paths))
+ tracked=len(git('ls-files').splitlines());materialized=0
+ for _,dirs,files in os.walk(REPO):dirs[:]=[d for d in dirs if d!='.git'];materialized+=len([f for f in files if f!='.git'])
+ check('owner_file_ceilings',tracked<2000 and materialized<2000,{'tracked':tracked,'materialized':materialized})
+ parsed=0;compiled=0;max_words=0;privacy=[]
+ patterns={'absolute_private_path':re.compile(r'\b[A-Za-z]:[\\/](?:Users|GHC-Archives)',re.I),'private_uuid':re.compile(r'\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b',re.I),'credential_token':re.compile(r'\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}'),'email_address':re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'),'bearer_secret':re.compile(r'Bearer\s+[A-Za-z0-9._-]{24,}')}
+ for path in paths:
+  b=blob(path);t=b.decode('utf-8');max_words=max(max_words,len(t.split()))
+  if path.endswith('.json'):strict(b);parsed+=1
+  if path.endswith('.txt') and not t.lstrip().startswith(('const ','//')):compile(t,path,'exec');compiled+=1
+  for label,pat in patterns.items():
+   if pat.search(t):privacy.append({'path':path,'pattern_class':label})
+ check('strict_json',parsed>0,parsed);check('python_txt_syntax_only',compiled>0,compiled)
+ check('document_word_ceiling',max_words<=100000,max_words);check('privacy_pattern_review',not privacy,{'classes':len(patterns),'hits':privacy,'scope_files':len(paths)})
+ bindings=0
+ for s in ['planning','x1','x2','final']:
+  rev=receipts[s]['head'] if s in receipts else None;m=doc(s+'/manifest.json',rev);ok=True
+  for e in m['entries']:
+   b=blob(e['path'],rev);ok=ok and len(b)==e['bytes'] and sha(b)==e['sha256'] and hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()==e['git_blob_sha1'];bindings+=1
+  check(s+'_manifest_exact_blob_bindings',ok,{'entries':len(m['entries']),'revision':rev or 'working_final_preflight'})
+ seal=doc('final/content-seal.json');ok=True
+ for e in seal['entries']:
+  b=blob(e['path']);ok=ok and len(b)==e['bytes'] and sha(b)==e['sha256'];bindings+=1
+ check('content_seal_exact_blob_bindings',ok,len(seal['entries']))
+ proposals=doc('planning/proposals.json')['proposals'];inherit=doc('planning/inherited-zero-credit.json')['records'];fixtures=doc('planning/fixtures.json')['fixtures']
+ check('frozen_proposals_and_fixtures',len(proposals)==300 and len({r['id'] for r in proposals})==300 and len(fixtures)==15)
+ def object_hash(x):return sha(json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode())
+ check('definition_digests',all(object_hash({k:v for k,v in r.items() if k!='definition_sha256'})==r['definition_sha256'] for r in proposals))
+ check('inherited_zero_credit_source_digests',len(inherit)==300 and all(r['new_novelty_credit']==r['new_completion_credit']==0 and object_hash(r['source_record'])==r['source_record_sha256'] for r in inherit))
+ results=[r for s in ['x1','x2'] for r in doc(s+'/results.json')['records']]
+ check('core_outcome_partition',dict(collections.Counter(r['disposition'] for r in results))=={'completed':255,'represented':15,'open_gap':15,'exact_gate':15})
+ for s in ['x1','x2']:
+  safe=doc(s+'/safe-now.json')['records'];candidates=doc(s+'/candidate.json')['records'];guards=doc(s+'/refusal-guards.json')['records'];cfr=doc(s+'/cfr.json')['records']
+  check(s+'_workload_counts',[len(safe),len(candidates),len(guards),len(cfr)]==[450,300,300,300])
+  check(s+'_saved_safe_and_refusal_evidence',all(r['passed'] for r in safe+guards+cfr) and all(r['invalid_original_result']=='fail' and r['original_completion_credit']==0 for r in candidates))
+  checkpoint_ok=True
+  for c in candidates:
+   cp=doc(s+'/'+c['full_subjects'])['completed'][c['checkpoint_key']]['mutations'][c['mutation_index']]
+   checkpoint_ok=checkpoint_ok and object_hash(cp['original'])==c['original_sha256'] and object_hash(cp['repaired_copy'])==c['repaired_sha256'] and cp['original_completion_credit']==0
+  check(s+'_retained_full_subject_bindings',checkpoint_ok)
+  tests=doc(s+'/tests.json')['tests'];check(s+'_focused_test_metadata',len(tests)==(20 if s=='x1' else 30) and all(t['passed'] for t in tests),len(tests))
+  check(s+'_official_skill_validation',doc(s+'/skill-validation.json')['count']==(10 if s=='x1' else 15) and all(r['passed'] for r in doc(s+'/skill-validation.json')['records']))
+  check(s+'_paired_reader_receipts',len(doc(s+'/runner-receipts.json')['records'])==5 and all(r['passed'] and not r['domain_replayed'] for r in doc(s+'/runner-receipts.json')['records']))
+ catalog=doc('x2/catalogue-effective.json')['cards'];check('forty_five_catalogue_source_bindings',len(catalog)==45 and all(sha(blob(PREFIX+r['path']))==r['sha256'] for r in catalog))
+ check('five_curated_reader_receipts',sum(r['id'].startswith('curated-runner-') and r.get('passed') is True for r in doc('x2/supplemental-receipts.json')['records'])==5)
+ hooks=doc('x2/hooks/manual-input-receipts.json');check('manual_hooks_and_retained_negatives',len(hooks)==5 and all(r['valid_result']['passed'] and not r['refusal_result']['passed'] and r['refusal_guard_passed'] and r['original_success_credit']==0 and not r['installed'] and r['live_host_event']=='not_observed' for r in hooks))
+ check('fifteen_three_coordinate_models',len(doc('x2/models.json')['models'])==15 and all(len(m['detail']['coordinates'])==3 for m in doc('x2/models.json')['models']))
+ browser=doc('x2/browser-checks.json');check('six_observed_browser_checks',len(browser['checks'])==6 and all(c['passed'] for c in browser['checks']) and browser['html_sha256']==sha(blob(PREFIX+'x2/viewer.html')) and not browser['complete_accessibility'])
+ deck=doc('x2/context-deck.json')['cards'];byid={x['id']:x for x in deck};check('context_deck_parentage',len(deck)==len(byid)==312 and all(x['parent'] is None or byid[x['parent']]['tier']==x['tier']-1 for x in deck))
+ methods=[];witnesses=[];flow=doc('final/method-flow-final.json')
+ for s in flow['shards']:
+  b=blob(PREFIX+s['path']);d=strict(b);assert sha(b)==s['sha256'];methods.extend(d['methods']);witnesses.extend(d['witnesses'])
+ mid={m['method_id']:m for m in methods};wids={w['witness_id'] for w in witnesses}
+ check('lossless_method_shards_and_backlinks',len(mid)==len(methods) and len(wids)==len(witnesses) and all(w['witness_id'] in mid[w['method_id']]['validation_witness_ids'] and w['independent_reproduction'] is False for w in witnesses))
+ counts=doc('final/accounting.json');owned=counts['owner_delta'];negative=doc('final/failure-dossier.json')['retained_negatives']
+ check('actual_witness_counts',owned['methods']==len(methods) and owned['witnesses']==len(witnesses) and owned['pass']==sum(w['result']=='pass' for w in witnesses) and owned['fail']==sum(w['result']=='fail' for w in witnesses))
+ check('negative_inventory_zero_credit',len(negative)==len({n['negative_id'] for n in negative})==owned['negatives']==owned['fail'] and all(n['original_success_credit']==0 for n in negative))
+ src=doc('planning/source-proof.json')['selected_baseline'];check('one_source_baseline_fold',counts['source_fold_count']==1 and src==counts['source_selected_once'] and all(counts['repository_effective'][k]==src[k]+owned[k] for k in src))
+ tc=doc('final/tribunal-cases.json')['cases'];check('one_valid_five_invalid_tribunal',len(tc)==6 and tc[0]['admitted'] and all(r['invalid_subject'] and r['admitted'] is False and r['guard_passed'] and r['original_success_credit']==0 for r in tc[1:]))
+ packets=doc('planning/approval-packets.json')['packets'];check('fifty_exact_thirty_blocked_held',collections.Counter(r['class'] for r in packets)=={'exact_approval':50,'blocked':30} and all(r['execution_credit']==0 for r in packets))
+ check('hypotheses_and_open_probes_labelled',len(doc('x2/hypothesis-assessments.json')['records'])==15 and all(r['new_physical_or_psyche_law_credit']==0 for r in doc('x2/hypothesis-assessments.json')['records']) and len(doc('x2/open-probe-assessments.json')['records'])==15)
+ check('ten_overviews_bound',len(doc('planning/recent-ten-review.json')['records'])==10)
+ baton=blob(PREFIX+'final/baton.md');bi=doc('final/baton-index.json');check('baton_hash_words_and_eof',2000<=len(baton.decode().split())<=100000 and len(baton)==bi['bytes'] and sha(baton)==bi['sha256'] and baton.decode().endswith('LITERAL_EOF_ILYAN_V706_V8\n'),bi['words'])
+ truth=doc('final/phase-truth.json');check('protected_claims_false',all(truth[k] is False for k in ['empirical_GMUT','production_THOS','production_Freed_ID','independent_reproduction','protected_authority','consciousness_or_personhood_evidence','complete_security_privacy_accessibility']))
+ check('scope_and_stage20_boundary',truth['verdict']=='NOT_READY_FOR_STAGE_20' and truth['global_installations']==truth['sibling_mutations']==truth['shared_mutations']==truth['new_agents']==truth['model_overrides']==truth['spend']==0)
+ route=doc('final/route-candidate.json');check('one_prepared_next_edge',route['state']=='PREPARED_NOT_SENT' and route['next_title']=='Lyren Moss' and route['next_phase']=='v707-v1' and route['following_title']=='Ilyra Fen' and route['following_phase']=='v707-v2')
+ failed=[c for c in checks if not c['passed']]
+ result={'status':('VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL' if live else 'VALID_WORKING_FINAL_METADATA_PREFLIGHT') if not failed else 'FAILED_METADATA_VALIDATION','head':head,'owner':'Ilyan Reed','phase':'v706-v8','checked_at':now(),'checks':checks,'check_count':len(checks),'passed':len(checks)-len(failed),'failed':len(failed),'manifest_bindings':bindings,'json_documents':parsed,'phase_files':len(paths),'invocations':1 if live else 0,'successful_invocations':1 if live and not failed else 0,'post_success_replays':0,'domain_replayed':False,'source_replayed':False,'complete_repository_suite':False,'independent_reproduction':False}
+ result['payload_sha256']=sha(bytes_json(result));name='canonical-receipt.json' if live else 'final-preflight.json';save(name,result,live)
+ if live and not failed:save('canonical-success-latch.json',{'head':head,'receipt_sha256':sha((BANK/name).read_bytes()),'status':result['status'],'replay_permitted':False},True)
+ print(json.dumps({k:v for k,v in result.items() if k!='checks'}),flush=True)
+ if failed:print(json.dumps({'failed_checks':failed}),flush=True)
+ raise SystemExit(1 if failed else 0)
+except Exception as e:
+ failure={'head':head,'mode':args.mode,'exception':type(e).__name__,'message':str(e),'checks_before_failure':checks,'original_success_credit':0,'domain_replayed':False,'time':now()}
+ save('canonical-operational-failure.json' if live else 'preflight-operational-failure.json',failure,live);print(json.dumps({'failure':failure['exception'],'message':failure['message']}),flush=True);raise
+finally:
+ proc.stdin.close();proc.wait()
