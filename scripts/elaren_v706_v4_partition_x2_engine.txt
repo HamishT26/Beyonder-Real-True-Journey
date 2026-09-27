@@ -1,0 +1,152 @@
+"use strict";
+
+require.extensions[".txt"] = require.extensions[".js"];
+const crypto = require("crypto");
+const base = require("./elaren_v706_v4_partition_engine.txt");
+
+const X2_OPS = [
+  "partition-number-coefficient", "restricted-box-count", "conjugation-involution",
+  "hook-lengths", "standard-tableaux-count", "beta-set", "lexicographic-rank",
+  "trinity-analogy", "observation-gap", "authority-gate"
+];
+
+function sha(value) {
+  return crypto.createHash("sha256").update(Buffer.from(JSON.stringify(value), "utf8")).digest("hex");
+}
+function partitionsOf(n, maxPart = n, prefix = [], out = []) {
+  if (n === 0) {
+    out.push([...prefix]);
+    return out;
+  }
+  for (let p = Math.min(maxPart, n); p >= 1; p -= 1) {
+    prefix.push(p);
+    partitionsOf(n - p, p, prefix, out);
+    prefix.pop();
+  }
+  return out;
+}
+function partitionNumber(n) {
+  const dp = Array(n + 1).fill(0n);
+  dp[0] = 1n;
+  for (let part = 1; part <= n; part += 1) {
+    for (let sum = part; sum <= n; sum += 1) dp[sum] += dp[sum - part];
+  }
+  return dp[n];
+}
+function hookLengths(parts) {
+  const conj = base.conjugate(parts);
+  const rows = [];
+  for (let r = 0; r < parts.length; r += 1) {
+    const row = [];
+    for (let c = 0; c < parts[r]; c += 1) {
+      row.push((parts[r] - (c + 1)) + (conj[c] - (r + 1)) + 1);
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+function factorial(n) {
+  let x = 1n;
+  for (let i = 2n; i <= BigInt(n); i += 1n) x *= i;
+  return x;
+}
+function tableauxCount(parts) {
+  const hooks = hookLengths(parts).flat();
+  const product = hooks.reduce((a, b) => a * BigInt(b), 1n);
+  return factorial(base.weight(parts)) / product;
+}
+function betaSet(parts) {
+  return parts.map((p, i) => p + parts.length - i - 1);
+}
+function compute(op, parts) {
+  const n = base.weight(parts);
+  switch (op) {
+    case "partition-number-coefficient":
+      return { weight: n, partition_count: partitionNumber(n).toString() };
+    case "restricted-box-count": {
+      const all = partitionsOf(n);
+      const count = all.filter(p => p.length <= parts.length && p[0] <= parts[0]).length;
+      return { weight: n, max_parts: parts.length, max_part_size: parts[0], count };
+    }
+    case "conjugation-involution": {
+      const once = base.conjugate(parts);
+      const twice = base.conjugate(once);
+      return { once, twice, recovered: JSON.stringify(twice) === JSON.stringify(parts) };
+    }
+    case "hook-lengths": {
+      const rows = hookLengths(parts);
+      return { rows, cell_count: rows.flat().length };
+    }
+    case "standard-tableaux-count":
+      return { weight: n, count: tableauxCount(parts).toString(), formula: "n_factorial_over_hook_product" };
+    case "beta-set":
+      return { length: parts.length, beta_set: betaSet(parts) };
+    case "lexicographic-rank": {
+      const all = partitionsOf(n);
+      const key = JSON.stringify(parts);
+      const rank = all.findIndex(p => JSON.stringify(p) === key);
+      return { weight: n, zero_based_rank: rank, total: all.length, found: rank >= 0 };
+    }
+    case "trinity-analogy":
+      return {
+        mind: "declared partition definition and exact invariant",
+        body: "bounded executable transformation and rollback",
+        heart: "nonpromotion, conflict retention and authority gate",
+        promoted_to_law: false
+      };
+    case "observation-gap":
+      return { real_observations: 0, independent_teams: 0, affected_users: 0, state: "open_gap" };
+    case "authority-gate":
+      return { approvals: 0, real_actions: 0, state: "exact_gate", Maori_authority_reserved: true };
+    default:
+      throw new Error("UNKNOWN_OPERATION");
+  }
+}
+function expectedOutcome(op) {
+  if (op === "trinity-analogy") return "represented";
+  if (op === "observation-gap") return "open_gap";
+  if (op === "authority-gate") return "exact_gate";
+  return "completed";
+}
+function verify(op, parts, result) {
+  const n = base.weight(parts);
+  switch (op) {
+    case "partition-number-coefficient": return BigInt(result.partition_count) === partitionNumber(n);
+    case "restricted-box-count": return Number.isSafeInteger(result.count) && result.count > 0;
+    case "conjugation-involution": return result.recovered && JSON.stringify(result.twice) === JSON.stringify(parts);
+    case "hook-lengths": return result.cell_count === n && result.rows.flat().every(h => Number.isSafeInteger(h) && h > 0);
+    case "standard-tableaux-count": return BigInt(result.count) > 0n;
+    case "beta-set": return result.beta_set.length === parts.length && result.beta_set.every((x, i, a) => i === 0 || a[i - 1] > x);
+    case "lexicographic-rank": return result.found && result.zero_based_rank >= 0 && result.zero_based_rank < result.total;
+    case "trinity-analogy": return result.promoted_to_law === false;
+    case "observation-gap": return result.state === "open_gap" && result.real_observations === 0;
+    case "authority-gate": return result.state === "exact_gate" && result.approvals === 0 && result.real_actions === 0;
+    default: return false;
+  }
+}
+function processRequest(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) throw new Error("OBJECT_REQUIRED");
+  if (!X2_OPS.includes(request.op)) throw new Error("UNKNOWN_OPERATION");
+  if (!request.fixture || typeof request.fixture !== "object") throw new Error("FIXTURE_REQUIRED");
+  base.assertPartition(request.fixture.parts);
+  const frozen = JSON.parse(JSON.stringify(request));
+  const result = compute(request.op, frozen.fixture.parts);
+  if (!verify(request.op, frozen.fixture.parts, result)) throw new Error("INVARIANT_MISMATCH");
+  return {
+    schema: "ghc.family.integer-partition.x2-result.v1",
+    operation: request.op,
+    fixture_id: request.fixture.id,
+    input_sha256: sha(frozen),
+    input_preserved: JSON.stringify(request) === JSON.stringify(frozen),
+    result,
+    invariant_passed: true,
+    outcome: expectedOutcome(request.op),
+    evidence_scope: "finite_synthetic_exact_integer_partition",
+    boundary: "Same-owner finite software evidence only; protected claims remain gated."
+  };
+}
+
+module.exports = {
+  X2_OPS, partitionsOf, partitionNumber, hookLengths, tableauxCount,
+  betaSet, compute, verify, expectedOutcome, processRequest, sha
+};

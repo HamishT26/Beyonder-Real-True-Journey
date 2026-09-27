@@ -1,0 +1,5 @@
+"use strict";
+require.extensions[".txt"] = require.extensions[".js"];
+const path=require("path");const engine=require(path.join(process.cwd(),"scripts","elaren_v706_v4_partition_x2_engine.txt"));
+const allowed=["observation-gap","authority-gate"];
+let raw="";process.stdin.setEncoding("utf8");process.stdin.on("data",c=>raw+=c);process.stdin.on("end",()=>{try{const req=JSON.parse(raw);if(!allowed.includes(req.op))throw new Error("PAIR_OPERATION_REFUSED");process.stdout.write(JSON.stringify(engine.processRequest(req))+"\n");}catch(error){process.stdout.write(JSON.stringify({refused:true,code:error.message,boundary:"Invalid original receives zero success credit."})+"\n");process.exitCode=2;}});
