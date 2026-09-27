@@ -1,0 +1,22 @@
+from __future__ import annotations
+import argparse, json, sys
+parser = argparse.ArgumentParser()
+parser.add_argument("--check", required=True)
+args = parser.parse_args()
+payload = json.load(sys.stdin)
+check = args.check
+ok = False
+if check == "exact_source_head":
+    ok = payload.get("source_head") == "76262724b5adaaeb67a8967476e8aa30ce58b00a"
+elif check == "terminal_baseline_fold_once":
+    ok = payload.get("fold_count") == 1
+elif check == "x1_before_x2":
+    ok = payload.get("x1_pushed_equal") is True and payload.get("x2_started") is False
+elif check == "canonical_success_latch":
+    ok = payload.get("successes") in {0, 1} and payload.get("replays") == 0
+elif check == "delivery_no_resend":
+    ok = payload.get("send_count") in {0, 1} and payload.get("resend_count") == 0
+else:
+    raise SystemExit(3)
+print(json.dumps({"check": check, "accepted": ok}, sort_keys=True))
+raise SystemExit(0 if ok else 2)
