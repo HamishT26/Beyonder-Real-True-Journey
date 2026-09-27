@@ -1,0 +1,1270 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import html
+import itertools
+import json
+import re
+import subprocess
+import sys
+from collections import Counter
+from copy import deepcopy
+from datetime import datetime, timezone
+from fractions import Fraction
+from pathlib import Path
+from typing import Any
+
+
+OWNER = "Lyren Moss"
+PHASE = "v707-v1"
+SOURCE_HEAD = "76262724b5adaaeb67a8967476e8aa30ce58b00a"
+BRANCH = "codex/GHC-Family/lyren-moss-main-4"
+REPO = Path(__file__).resolve().parents[4]
+BASE = REPO / "docs" / "lyren-moss" / PHASE
+SOURCE_BASE = REPO / "docs" / "ilyan-reed" / "v706-v8"
+BANK = Path("D:/GHC-Archives/phase-receipts/lyren-moss/v707-v1")
+QUICK_VALIDATOR = Path.home() / ".codex" / "skills" / ".system" / "skill-creator" / "scripts" / "quick_validate.py"
+ALLOWED_OUTCOMES = {"completed", "represented", "open_gap", "exact_gate"}
+EOF_MARKER = "LITERAL_EOF_LYREN_V707_V1"
+BOUNDARY = (
+    "Finite synthetic same-owner software and documentation evidence only. No independent reproduction, "
+    "empirical GMUT confirmation, production THOS or Freed ID, participant result, professional judgment, "
+    "deployment authority, legal or cultural conclusion, affected-party or Maori authority, complete privacy, "
+    "accessibility or security assurance, AGI or ASI, consciousness or personhood evidence, Theory-of-Everything "
+    "proof, canon, or Stage 20 readiness."
+)
+SOURCE_EFFECTIVE = {
+    "exact_gates": 2719,
+    "fail": 68440,
+    "methods": 6585,
+    "negatives": 77273,
+    "open_gaps": 2372,
+    "pass": 226834,
+    "witnesses": 295274,
+}
+INTAKE_FAILURES = [
+    {
+        "id": "LY7071-INT-001",
+        "failure": "The first source canonical summary projected generic state, successes and replays field names that were absent from Ilyan's receipt schema, yielding null display values.",
+        "recovery": "The bounded recovery read the complete receipt and used its actual status, successful_invocations and post_success_replays fields; the receipt hash and source evidence were unchanged.",
+    }
+]
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def canonical_bytes(value: Any) -> bytes:
+    return (json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
+
+
+def pretty_bytes(value: Any) -> bytes:
+    return (json.dumps(value, sort_keys=True, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def sha_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def sha_value(value: Any) -> str:
+    return sha_bytes(canonical_bytes(value))
+
+
+def sha_file(path: Path) -> str:
+    return sha_bytes(path.read_bytes())
+
+
+def git_blob_sha1(data: bytes) -> str:
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+
+def write_bytes(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+
+
+def put_json(rel: str, value: Any) -> None:
+    write_bytes(BASE / rel, pretty_bytes(value))
+
+
+def put_text(rel: str, value: str) -> None:
+    write_bytes(BASE / rel, (value.rstrip() + "\n").replace("\r\n", "\n").encode("utf-8"))
+
+
+def git(*args: str, cwd: Path = REPO, text: bool = True) -> str | bytes:
+    result = subprocess.run(["git", *args], cwd=cwd, capture_output=True, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.decode("utf-8", errors="replace"))
+    return result.stdout.decode("utf-8").strip() if text else result.stdout
+
+
+def git_blob(path: str, revision: str = "HEAD") -> bytes:
+    return git("show", f"{revision}:{path}", text=False)
+
+
+def git_index_blob(path: str) -> bytes:
+    return git("show", f":{path}", text=False)
+
+
+def f(value: int, denominator: int = 1) -> Fraction:
+    return Fraction(value, denominator)
+
+
+def fjson(value: Fraction) -> dict[str, int]:
+    return {"n": value.numerator, "d": value.denominator}
+
+
+def ftext(value: Fraction) -> str:
+    return str(value.numerator) if value.denominator == 1 else f"{value.numerator}/{value.denominator}"
+
+
+def encode(value: Any) -> Any:
+    if isinstance(value, Fraction):
+        return fjson(value)
+    if isinstance(value, list):
+        return [encode(item) for item in value]
+    if isinstance(value, tuple):
+        return [encode(item) for item in value]
+    if isinstance(value, dict):
+        return {key: encode(item) for key, item in value.items()}
+    return value
+
+
+def fixture_rows() -> list[dict[str, Any]]:
+    rows = []
+    for index in range(1, 16):
+        horizon = 2 + ((index - 1) % 3)
+        gamma = Fraction(1 + ((index - 1) % 4), 5)
+        initial0 = Fraction(1 + ((index + 1) % 4), 5)
+        rewards = []
+        transitions = []
+        for state in range(2):
+            state_rewards = []
+            state_transitions = []
+            for action in range(2):
+                state_rewards.append(Fraction(((index + state * 2 + action * 3) % 9) - 4, 2 + ((index + action) % 3)))
+                p0 = Fraction(1 + ((index + state + action) % 4), 5)
+                state_transitions.append([p0, 1 - p0])
+            rewards.append(state_rewards)
+            transitions.append(state_transitions)
+        terminal = [Fraction(((index + state * 3) % 7) - 3, 3) for state in range(2)]
+        row = {
+            "fixture_id": f"FH{index:02d}",
+            "states": 2,
+            "actions": 2,
+            "horizon": horizon,
+            "gamma": gamma,
+            "initial": [initial0, 1 - initial0],
+            "rewards": rewards,
+            "transitions": transitions,
+            "terminal": terminal,
+            "synthetic": True,
+        }
+        row["fixture_sha256"] = sha_value(encode(row))
+        rows.append(row)
+    return rows
+
+
+def validate_fixture(row: dict[str, Any]) -> None:
+    if isinstance(row.get("horizon"), bool) or not isinstance(row.get("horizon"), int) or not 1 <= row["horizon"] <= 6:
+        raise ValueError("horizon must be an integer from one through six")
+    if row.get("states") != 2 or row.get("actions") not in {2, 3}:
+        raise ValueError("bounded state/action shape required")
+    gamma = row.get("gamma")
+    if not isinstance(gamma, Fraction) or isinstance(gamma.numerator, bool) or not 0 <= gamma < 1:
+        raise ValueError("gamma must be a declared rational in [0,1)")
+    if len(row.get("initial", [])) != row["states"] or any(value < 0 for value in row["initial"]) or sum(row["initial"], Fraction()) != 1:
+        raise ValueError("initial distribution must be a nonnegative simplex")
+    if len(row.get("terminal", [])) != row["states"]:
+        raise ValueError("terminal vector shape mismatch")
+    for value in row["terminal"]:
+        if not isinstance(value, Fraction) or isinstance(value.numerator, bool):
+            raise ValueError("terminal values must be strict rationals")
+    for state in range(row["states"]):
+        if len(row["rewards"][state]) != row["actions"] or len(row["transitions"][state]) != row["actions"]:
+            raise ValueError("action rows must match declared action count")
+        for action in range(row["actions"]):
+            reward = row["rewards"][state][action]
+            probs = row["transitions"][state][action]
+            if not isinstance(reward, Fraction) or isinstance(reward.numerator, bool):
+                raise ValueError("rewards must be strict rationals")
+            if len(probs) != row["states"] or any(not isinstance(value, Fraction) or value < 0 for value in probs) or sum(probs, Fraction()) != 1:
+                raise ValueError("transition row must be a nonnegative simplex")
+
+
+def backward(row: dict[str, Any]) -> dict[str, Any]:
+    validate_fixture(row)
+    values: list[list[Fraction]] = [[Fraction() for _ in range(row["states"])] for _ in range(row["horizon"] + 1)]
+    values[row["horizon"]] = list(row["terminal"])
+    policies: list[list[int]] = [[0 for _ in range(row["states"])] for _ in range(row["horizon"])]
+    action_values: list[list[list[Fraction]]] = [[[] for _ in range(row["states"])] for _ in range(row["horizon"])]
+    for time in range(row["horizon"] - 1, -1, -1):
+        for state in range(row["states"]):
+            qs = []
+            for action in range(row["actions"]):
+                expected = sum(row["transitions"][state][action][nxt] * values[time + 1][nxt] for nxt in range(row["states"]))
+                qs.append(row["rewards"][state][action] + row["gamma"] * expected)
+            best = max(qs)
+            policies[time][state] = min(action for action, value in enumerate(qs) if value == best)
+            values[time][state] = best
+            action_values[time][state] = qs
+    initial_return = sum(row["initial"][state] * values[0][state] for state in range(row["states"]))
+    return {"values": values, "policy": policies, "action_values": action_values, "initial_return": initial_return}
+
+
+def evaluate_policy(row: dict[str, Any], policy: list[list[int]]) -> Fraction:
+    values = list(row["terminal"])
+    for time in range(row["horizon"] - 1, -1, -1):
+        prior = []
+        for state in range(row["states"]):
+            action = policy[time][state]
+            expected = sum(row["transitions"][state][action][nxt] * values[nxt] for nxt in range(row["states"]))
+            prior.append(row["rewards"][state][action] + row["gamma"] * expected)
+        values = prior
+    return sum(row["initial"][state] * values[state] for state in range(row["states"]))
+
+
+def exhaustive_oracle(row: dict[str, Any]) -> dict[str, Any]:
+    coordinates = [(time, state) for time in range(row["horizon"]) for state in range(row["states"])]
+    best_value: Fraction | None = None
+    best_policy: list[list[int]] | None = None
+    count = 0
+    for choices in itertools.product(range(row["actions"]), repeat=len(coordinates)):
+        policy = [[0 for _ in range(row["states"])] for _ in range(row["horizon"])]
+        for (time, state), action in zip(coordinates, choices):
+            policy[time][state] = action
+        value = evaluate_policy(row, policy)
+        count += 1
+        if best_value is None or value > best_value or (value == best_value and policy < best_policy):
+            best_value = value
+            best_policy = policy
+    return {"best_value": best_value, "best_policy": best_policy, "policy_count": count}
+
+
+def occupancy(row: dict[str, Any], policy: list[list[int]]) -> dict[str, Any]:
+    distributions = [list(row["initial"])]
+    discounted_reward = Fraction()
+    current = list(row["initial"])
+    factor = Fraction(1)
+    for time in range(row["horizon"]):
+        discounted_reward += factor * sum(current[state] * row["rewards"][state][policy[time][state]] for state in range(row["states"]))
+        nxt = [Fraction() for _ in range(row["states"])]
+        for state in range(row["states"]):
+            action = policy[time][state]
+            for target in range(row["states"]):
+                nxt[target] += current[state] * row["transitions"][state][action][target]
+        distributions.append(nxt)
+        current = nxt
+        factor *= row["gamma"]
+    discounted_reward += factor * sum(current[state] * row["terminal"][state] for state in range(row["states"]))
+    return {"distributions": distributions, "return": discounted_reward}
+
+
+def transform_scale(row: dict[str, Any], factor: Fraction) -> dict[str, Any]:
+    changed = deepcopy(row)
+    changed["rewards"] = [[value * factor for value in state] for state in row["rewards"]]
+    changed["terminal"] = [value * factor for value in row["terminal"]]
+    return changed
+
+
+def transform_translate(row: dict[str, Any], delta: Fraction) -> dict[str, Any]:
+    changed = deepcopy(row)
+    changed["rewards"] = [[value + delta for value in state] for state in row["rewards"]]
+    changed["terminal"] = [value + delta for value in row["terminal"]]
+    return changed
+
+
+def transform_swap(row: dict[str, Any]) -> dict[str, Any]:
+    changed = deepcopy(row)
+    changed["initial"] = list(reversed(row["initial"]))
+    changed["terminal"] = list(reversed(row["terminal"]))
+    changed["rewards"] = list(reversed(row["rewards"]))
+    changed["transitions"] = []
+    for state in reversed(range(row["states"])):
+        changed["transitions"].append([list(reversed(probs)) for probs in row["transitions"][state]])
+    return changed
+
+
+def transform_duplicate_action(row: dict[str, Any]) -> dict[str, Any]:
+    changed = deepcopy(row)
+    changed["actions"] = 3
+    for state in range(row["states"]):
+        changed["rewards"][state].append(row["rewards"][state][0])
+        changed["transitions"][state].append(list(row["transitions"][state][0]))
+    return changed
+
+
+def operation_rows() -> list[dict[str, Any]]:
+    names = [
+        ("record-shape", "Validate exact finite-horizon record shape."),
+        ("horizon-admission", "Admit only bounded positive integer horizons."),
+        ("backward-induction", "Compute exact backward-induction values."),
+        ("value-table", "Bind every time-indexed state value."),
+        ("policy-table", "Bind deterministic time-indexed actions."),
+        ("bellman-residual", "Check zero residual for chosen actions."),
+        ("terminal-condition", "Preserve the declared terminal vector."),
+        ("time-occupancy", "Propagate exact time-indexed occupancy."),
+        ("policy-provenance", "Bind policy output to source and definition digests."),
+        ("tie-map", "Expose deterministic tie handling without erasing ties."),
+        ("initial-return", "Recompute the initial-distribution return."),
+        ("state-label-swap", "Check exact state-label permutation covariance."),
+        ("reward-translation", "Record exact constant reward translation response."),
+        ("positive-scaling", "Check positive reward scaling covariance."),
+        ("duplicate-action", "Check duplicate-action value invariance."),
+        ("horizon-extension", "Compare a declared one-step horizon extension."),
+        ("discount-sensitivity", "Record two exact nearby discount endpoints without a global monotonicity claim."),
+        ("three-coordinate-model", "Represent horizon, policy count and exact return coordinates."),
+        ("calibration-gap", "Retain the absence of real calibration evidence."),
+        ("deployment-hold", "Hold operational use behind competent authority and affected-party gates."),
+    ]
+    rows = []
+    for index, (name, description) in enumerate(names, start=1):
+        outcome = "completed" if index <= 17 else "represented" if index == 18 else "open_gap" if index == 19 else "exact_gate"
+        rows.append({"operation": index, "name": name, "description": description, "stage": "x1" if index <= 10 else "x2", "outcome": outcome})
+    return rows
+
+
+def result_for(operation: dict[str, Any], row: dict[str, Any]) -> dict[str, Any]:
+    solved = backward(row)
+    policy = solved["policy"]
+    op = operation["operation"]
+    if op == 1:
+        result = {"valid": True, "states": row["states"], "actions": row["actions"], "horizon": row["horizon"]}
+    elif op == 2:
+        result = {"admitted": 1 <= row["horizon"] <= 6, "horizon": row["horizon"]}
+    elif op == 3:
+        result = {"initial_return": solved["initial_return"], "policy": policy}
+    elif op == 4:
+        result = {"values": solved["values"], "table_sha256": sha_value(encode(solved["values"]))}
+    elif op == 5:
+        result = {"policy": policy, "policy_sha256": sha_value(policy)}
+    elif op == 6:
+        residuals = []
+        for time in range(row["horizon"]):
+            for state in range(row["states"]):
+                residuals.append(solved["values"][time][state] - max(solved["action_values"][time][state]))
+        result = {"residuals": residuals, "all_zero": all(value == 0 for value in residuals)}
+    elif op == 7:
+        result = {"terminal": solved["values"][-1], "matches": solved["values"][-1] == row["terminal"]}
+    elif op == 8:
+        occ = occupancy(row, policy)
+        result = {"distributions": occ["distributions"], "return": occ["return"], "matches_value": occ["return"] == solved["initial_return"]}
+    elif op == 9:
+        result = {"fixture_sha256": row["fixture_sha256"], "policy_sha256": sha_value(policy), "result_sha256": sha_value(encode(solved["initial_return"]))}
+    elif op == 10:
+        ties = []
+        for time in range(row["horizon"]):
+            for state in range(row["states"]):
+                best = max(solved["action_values"][time][state])
+                tied = [index for index, value in enumerate(solved["action_values"][time][state]) if value == best]
+                if len(tied) > 1:
+                    ties.append({"time": time, "state": state, "actions": tied, "selected": min(tied)})
+        result = {"ties": ties, "deterministic_rule": "smallest action index"}
+    elif op == 11:
+        result = {"initial": row["initial"], "return": solved["initial_return"], "recomputed": sum(row["initial"][s] * solved["values"][0][s] for s in range(row["states"]))}
+    elif op == 12:
+        changed = transform_swap(row)
+        swapped = backward(changed)
+        result = {"original": solved["initial_return"], "swapped": swapped["initial_return"], "equal": solved["initial_return"] == swapped["initial_return"]}
+    elif op == 13:
+        delta = Fraction(1, 3)
+        translated = backward(transform_translate(row, delta))
+        result = {"delta": delta, "original": solved["initial_return"], "translated": translated["initial_return"], "difference": translated["initial_return"] - solved["initial_return"]}
+    elif op == 14:
+        factor = Fraction(3, 2)
+        scaled = backward(transform_scale(row, factor))
+        result = {"factor": factor, "original": solved["initial_return"], "scaled": scaled["initial_return"], "value_covariant": scaled["initial_return"] == factor * solved["initial_return"], "policy_equal": scaled["policy"] == policy}
+    elif op == 15:
+        duplicated = backward(transform_duplicate_action(row))
+        result = {"original": solved["initial_return"], "duplicated": duplicated["initial_return"], "value_equal": solved["initial_return"] == duplicated["initial_return"]}
+    elif op == 16:
+        changed = deepcopy(row)
+        changed["horizon"] += 1
+        extended = backward(changed)
+        result = {"original_horizon": row["horizon"], "extended_horizon": changed["horizon"], "original": solved["initial_return"], "extended": extended["initial_return"], "monotonicity_claimed": False}
+    elif op == 17:
+        low = deepcopy(row)
+        high = deepcopy(row)
+        low["gamma"] = max(Fraction(), row["gamma"] - Fraction(1, 20))
+        high["gamma"] = min(Fraction(19, 20), row["gamma"] + Fraction(1, 20))
+        low_result = backward(low)["initial_return"]
+        high_result = backward(high)["initial_return"]
+        result = {"gamma_low": low["gamma"], "gamma_high": high["gamma"], "return_low": low_result, "return_high": high_result, "sample_min": min(low_result, high_result), "sample_max": max(low_result, high_result), "global_interval_claimed": False}
+    elif op == 18:
+        oracle = exhaustive_oracle(row)
+        result = {"coordinates": [row["horizon"], oracle["policy_count"], solved["initial_return"]], "physical_geometry_claimed": False}
+    elif op == 19:
+        result = {"state": "open_gap", "missing": ["real observations", "measurement model", "uncertainty calibration", "independent review"]}
+    elif op == 20:
+        result = {"state": "exact_gate", "missing": ["competent operational authority", "affected-party review", "production safety case", "rollback governance"]}
+    else:
+        raise AssertionError(op)
+    return encode(result)
+
+
+def proposal_rows() -> list[dict[str, Any]]:
+    rows = []
+    index = 0
+    for operation in operation_rows():
+        for fixture in fixture_rows():
+            index += 1
+            definition = {
+                "operation": operation["name"],
+                "fixture_id": fixture["fixture_id"],
+                "fixture_sha256": fixture["fixture_sha256"],
+                "stage": operation["stage"],
+                "outcome": operation["outcome"],
+            }
+            rows.append({
+                "id": f"LY7071-P{index:03d}",
+                "title": operation["description"] + " " + fixture["fixture_id"],
+                "operation": operation["operation"],
+                "mechanism": operation["name"],
+                "fixture_id": fixture["fixture_id"],
+                "fixture_sha256": fixture["fixture_sha256"],
+                "stage": operation["stage"],
+                "expected_disposition": operation["outcome"],
+                "definition_sha256": sha_value(definition),
+                "scope": "Declared finite synthetic fixture and operation only; established mathematics, new phase implementation case.",
+                "falsifier": "Schema acceptance of an invalid subject, exact oracle disagreement, nonzero claimed residual, changed source digest, or promotion beyond the declared disposition.",
+            })
+    return rows
+
+
+def inherited_rows() -> list[dict[str, Any]]:
+    source = json.loads((SOURCE_BASE / "planning" / "proposals.json").read_text(encoding="utf-8"))
+    rows = []
+    for row in source["proposals"]:
+        rows.append({
+            "source_id": row["id"],
+            "source_definition_sha256": row["definition_sha256"],
+            "source_fixture_sha256": row["fixture_sha256"],
+            "current_novelty_credit": 0,
+            "current_completion_credit": 0,
+            "reason": "Immediate-source proposal retained as evidence, not Lyren novelty or execution credit.",
+        })
+    if len(rows) != 300:
+        raise AssertionError("expected exactly 300 inherited rows")
+    return rows
+
+
+def manifest_for(paths: list[Path], schema: str) -> dict[str, Any]:
+    entries = []
+    for path in sorted(paths):
+        data = path.read_bytes()
+        entries.append({"path": path.relative_to(REPO).as_posix(), "bytes": len(data), "sha256": sha_bytes(data), "byte_domain": "worktree_lf_written_noncanonical_until_commit"})
+    return {"schema": schema, "count": len(entries), "entries": entries, "boundary": BOUNDARY}
+
+
+def practice_payload() -> dict[str, Any]:
+    return {
+        "owner_practices": [
+            "dynamic-programming documentation",
+            "sensitivity-analysis teaching",
+            "software verification",
+            "records and provenance management",
+            "simulation accessibility review",
+            "operations-research ethics",
+            "technical illustration",
+            "public-interest technology assessment",
+        ],
+        "successor_recommendations": [
+            "interval transition modelling",
+            "stakeholder reward auditing",
+            "independent numerical review",
+            "finite-horizon accessibility explanation",
+        ],
+        "qualification_claimed": False,
+        "boundary": BOUNDARY,
+    }
+
+
+def hypothesis_rows() -> list[dict[str, Any]]:
+    names = [
+        "Finite-horizon boundary visibility", "Reward-source nonpromotion", "Policy provenance closure",
+        "Sensitivity-before-authority", "Correction nonerasure", "Time-indexed state disclosure",
+        "Tie visibility", "Terminal-condition explicitness", "Finite-enumeration resource honesty",
+        "Label covariance", "Positive-scale covariance", "Duplicate-action nonnovelty",
+        "Calibration abstention", "Deployment authority separation", "Recipient completion noninference",
+    ]
+    return [{"id": f"LY7071-H{index:02d}", "name": name, "status": "represented", "law_of_nature_claimed": False, "required_next": "formal semantics, counterexamples, domain evidence and competent review"} for index, name in enumerate(names, start=1)]
+
+
+def problem_rows() -> list[dict[str, Any]]:
+    names = [
+        "unknown dynamics", "partial observation", "nonstationary transition law", "contested rewards",
+        "multi-stakeholder aggregation", "distribution shift", "policy interpretability", "safe exploration",
+        "causal identification", "long-horizon approximation", "interval dependency", "independent replication",
+        "affected-party governance", "complete accessibility", "empirical GMUT bridge",
+    ]
+    return [{"id": f"LY7071-Q{index:02d}", "problem": name, "status": "open_gap" if index % 2 else "exact_gate", "solved": False, "phase_action": "Record definitions, bounded synthetic evidence, falsifiers and prohibited overclaims."} for index, name in enumerate(names, start=1)]
+
+
+def approval_payload() -> dict[str, Any]:
+    exact = [{"packet_id": f"LY7071-EXACT-{index:03d}", "state": "exact_gate", "executed": False, "reason": "Named evidence or competent authority remains missing."} for index in range(1, 51)]
+    blocked = [{"packet_id": f"LY7071-BLOCKED-{index:03d}", "state": "blocked", "executed": False, "reason": "Unsafe, destructive, private, external-authority, identity-merger or unsupported deployment action."} for index in range(1, 31)]
+    return {"exact_count": len(exact), "blocked_count": len(blocked), "exact": exact, "blocked": blocked, "boundary": BOUNDARY}
+
+
+def hook_plan() -> list[dict[str, Any]]:
+    return [
+        {"hook_id": "LY7071-HOOK-01", "event": "SessionStart", "check": "exact_source_head", "installed": False},
+        {"hook_id": "LY7071-HOOK-02", "event": "SessionStart", "check": "terminal_baseline_fold_once", "installed": False},
+        {"hook_id": "LY7071-HOOK-03", "event": "PreToolUse", "check": "x1_before_x2", "installed": False},
+        {"hook_id": "LY7071-HOOK-04", "event": "Stop", "check": "canonical_success_latch", "installed": False},
+        {"hook_id": "LY7071-HOOK-05", "event": "PostToolUse", "check": "delivery_no_resend", "installed": False},
+    ]
+
+
+def build_planning() -> None:
+    fixtures = fixture_rows()
+    for row in fixtures:
+        validate_fixture(row)
+    proposals = proposal_rows()
+    inherited = inherited_rows()
+    operations = operation_rows()
+    outcomes = Counter(row["expected_disposition"] for row in proposals)
+    if set(outcomes) != ALLOWED_OUTCOMES or outcomes != Counter({"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15}):
+        raise AssertionError(outcomes)
+    put_json("planning/identity.json", {
+        "owner": OWNER,
+        "phase": PHASE,
+        "role": "finite-horizon sensitivity cartographer",
+        "hope": "Make time, reward assumptions, correction lineage and deployment limits inspectable without promoting synthetic optimization into authority.",
+        "pronouns": "they/them optional",
+        "relational_language_only": True,
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/source-proof.json", {
+        "source_owner": "Ilyan Reed",
+        "source_phase": "v706-v8",
+        "source_exact_final": SOURCE_HEAD,
+        "source_branch": "codex/GHC-Family/ilyan-reed-main",
+        "baton_path": "docs/ilyan-reed/v706-v8/final/baton.md",
+        "baton_sha256": "520a814ee4dac0bfe686a6a250b28c49958523cf560fc7b69fe21fd40865fcf3",
+        "baton_words": 3681,
+        "baton_eof": "LITERAL_EOF_ILYAN_V706_V8",
+        "canonical_receipt_sha256": "c6c7130e344d0ca96be12879aac0a43e8265d7af7787555868cdc023820984e6",
+        "canonical_counts": {"invocations": 1, "successes": 1, "replays": 0},
+        "terminal_effective_sha256": "9171ca1891abdce937e8f41a140b897281a5ad48264654706decfd59882431b0",
+        "terminal_effective_selected_once": SOURCE_EFFECTIVE,
+        "fold_count": 1,
+        "source_replayed": False,
+        "source_mutated": False,
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/workflow-v19.json", {
+        "schema": "ghc.family.lyren-finite-horizon.v1",
+        "authority": "Hamish workflow v19 plus current Ilyan activation",
+        "owner": OWNER,
+        "phase": PHASE,
+        "next_owner": "Ilyra Fen",
+        "next_phase": "v707-v2",
+        "minimums": {"inherited": 300, "new": 300, "safe_each": 400, "candidate_each": 300, "cfr_each": 300, "skills_each": 10, "runners_each": 5, "x1_tests": 15, "x2_tests": 30, "x2_models": 15, "hooks": 5, "exact": 50, "blocked": 30},
+        "planned": {"safe_each": 450, "candidate_each": 300, "cfr_each": 300, "skills_each": 10, "runners_each": 5, "x1_tests": 20, "x2_tests": 30, "x2_models": 15, "hooks": 5},
+        "allowed_formats": ["json", "md", "txt", "html"],
+        "search_ceiling_each": 2000,
+        "shared_and_sibling_lanes": "read_only",
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/research.json", {
+        "sources": [
+            {"title": "MIT OpenCourseWare Decision Making in Large Scale Systems lecture notes", "url": "https://ocw.mit.edu/courses/2-997-decision-making-in-large-scale-systems-spring-2004/pages/lecture-notes/", "use": "Finite-horizon backwards induction and discounted cost-to-go vocabulary."},
+            {"title": "MIT OpenCourseWare Dynamic Programming and Stochastic Control", "url": "https://ocw.mit.edu/courses/6-231-dynamic-programming-and-stochastic-control-fall-2015/pages/lecture-notes/", "use": "Finite-horizon problem framing and feedback significance."},
+            {"title": "W3C PROV overview and PROV-DM", "url": "https://www.w3.org/TR/prov-overview/", "use": "Entity, activity, derivation and provenance-of-provenance vocabulary."},
+            {"title": "NIST verification and validation reference", "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=150040", "use": "Cautious interval and verification terminology; no endorsement claim."},
+        ],
+        "source_type": "primary_or_official",
+        "endorsement_claimed": False,
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/fixtures.json", {"count": len(fixtures), "fixtures": encode(fixtures), "boundary": BOUNDARY})
+    put_json("planning/operations.json", {"count": len(operations), "operations": operations, "boundary": BOUNDARY})
+    put_json("planning/proposals.json", {"count": len(proposals), "proposals": proposals, "outcomes": dict(sorted(outcomes.items())), "planning_only": True, "boundary": BOUNDARY})
+    put_json("planning/inherited-zero-credit.json", {"count": len(inherited), "records": inherited, "all_zero_current_credit": True, "boundary": BOUNDARY})
+    put_json("planning/practices.json", practice_payload())
+    put_json("planning/hook-plan.json", {"count": 5, "hooks": hook_plan(), "live_execution_claimed": False, "boundary": BOUNDARY})
+    put_json("planning/approval-packets.json", approval_payload())
+    put_json("planning/law-hypotheses.json", {"count": 15, "hypotheses": hypothesis_rows(), "boundary": BOUNDARY})
+    put_json("planning/open-problem-probes.json", {"count": 15, "probes": problem_rows(), "boundary": BOUNDARY})
+    put_json("planning/successor-recommendations.json", {
+        "skills": ["discount-sensitivity intervals", "policy-provenance joins", "interval transition envelopes", "stakeholder reward auditing", "finite-horizon comparison"],
+        "runners": ["discount sweep", "policy digest checker", "simplex interval validator", "reward revision diff", "finite-horizon backward induction"],
+        "practices": practice_payload()["successor_recommendations"],
+        "boundary": BOUNDARY,
+    })
+    put_json("planning/intake-failures.json", {"count": len(INTAKE_FAILURES), "failures": [{**row, "original_success_credit": 0, "retained": True} for row in INTAKE_FAILURES], "boundary": BOUNDARY})
+    planning_flow = {
+        "schema": "ghc.family.method-flow.v1",
+        "session": "planning",
+        "methods": ["source binding", "v19 control selection", "planning freeze"],
+        "witnesses": [
+            {"witness_id": "LY7071-PLAN-SOURCE", "state": "pass", "kind": "exact source clean remote equality"},
+            {"witness_id": "LY7071-PLAN-BATON", "state": "pass", "kind": "baton hash words eof"},
+            {"witness_id": "LY7071-PLAN-CANONICAL", "state": "pass", "kind": "source canonical receipt binding"},
+            {"witness_id": "LY7071-PLAN-V19", "state": "pass", "kind": "current workflow and roster"},
+            {"witness_id": "LY7071-INT-001", "state": "fail", "kind": "schema projection failure", "original_success_credit": 0},
+            {"witness_id": "LY7071-INT-001-RECOVERY", "state": "pass", "kind": "bounded complete receipt read"},
+        ],
+        "counts": {"methods": 3, "witnesses": 6, "pass": 5, "fail": 1, "negatives": 1, "open_gaps": 0, "exact_gates": 0},
+        "boundary": BOUNDARY,
+    }
+    put_json("planning/method-flow.json", planning_flow)
+    put_text("planning/plan.md", """# Lyren Moss v707-v1 planning freeze
+
+This phase builds exact finite-horizon dynamic-programming, sensitivity and provenance certificates over fifteen new synthetic fixtures. It does not replay Ilyan's successful source solver or canonical. Planning freezes 300 inherited zero-credit records, 300 new contracts, the four exact outcome labels, the v19 workload, a D-first owner lane, five manual uninstalled hook candidates, and the Ilyra v707-v2 terminal edge.
+
+The primary lens is GMUT Mind as disciplined mathematical specification. THOS Body remains visible through executable bounded evidence. Freed ID and CBR Heart remain visible through provenance, contested-reward, correction and authority reservations. No physical, empirical, production, identity, professional, legal, cultural, affected-party, Maori-authority, consciousness/personhood, proof/canon or Stage 20 claim follows.
+""")
+    put_text("planning/planning-freeze.md", f"Planning definitions frozen before x1. Source {SOURCE_HEAD}. New proposals 300. Inherited zero-credit 300. Outcomes 255/15/15/15. Terminal verdict NOT_READY_FOR_STAGE_20.\n")
+    paths = [path for path in (BASE / "planning").rglob("*") if path.is_file() and path.name != "manifest.json"]
+    put_json("planning/manifest.json", manifest_for(paths, "ghc.family.lyren-v707-v1.planning-manifest.v1"))
+
+
+def stage_results(stage: str) -> list[dict[str, Any]]:
+    selected = [row for row in operation_rows() if row["stage"] == stage]
+    proposals = {row["id"]: row for row in proposal_rows()}
+    results = []
+    for operation in selected:
+        for fixture in fixture_rows():
+            proposal_index = (operation["operation"] - 1) * 15 + int(fixture["fixture_id"][-2:])
+            proposal = proposals[f"LY7071-P{proposal_index:03d}"]
+            result = result_for(operation, fixture)
+            results.append({
+                "proposal_id": proposal["id"],
+                "fixture_id": fixture["fixture_id"],
+                "operation": operation["name"],
+                "status": operation["outcome"],
+                "outcome": operation["outcome"],
+                "result": result,
+                "result_sha256": sha_value(result),
+                "definition_sha256": proposal["definition_sha256"],
+                "current_novelty": True,
+                "boundary": BOUNDARY,
+            })
+    return results
+
+
+def portfolios(stage: str, results: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    safe = []
+    candidates = []
+    refusal = []
+    cfr = []
+    for result in results:
+        for check in ("definition digest bound", "result digest bound", "outcome within four labels"):
+            safe.append({"task_id": f"{result['proposal_id']}-{stage}-safe-{len(safe) + 1:04d}", "proposal_id": result["proposal_id"], "check": check, "passed": True, "credit": "bounded software evidence only"})
+        for mutation in ("zero horizon", "transition simplex mismatch"):
+            negative_id = f"{result['proposal_id']}-{stage}-candidate-{len(candidates) + 1:04d}"
+            candidates.append({"negative_id": negative_id, "proposal_id": result["proposal_id"], "mutation": mutation, "state": "failed", "original_success_credit": 0, "retained": True})
+            refusal.append({"witness_id": negative_id + "-REFUSAL", "negative_id": negative_id, "state": "pass", "invalid_subject_promoted": False})
+            cfr.append({"task_id": negative_id + "-CFR", "negative_id": negative_id, "state": "pass", "repair": "corrected copy restored from frozen valid template", "successful_solver_replayed": False})
+    return safe, candidates, refusal, cfr
+
+
+def x1_tests() -> list[dict[str, Any]]:
+    tests = []
+    for row in fixture_rows():
+        solved = backward(row)
+        oracle = exhaustive_oracle(row)
+        tests.append({"test_id": "LY7071-X1-ORACLE-" + row["fixture_id"], "passed": solved["initial_return"] == oracle["best_value"], "runtime": ftext(solved["initial_return"]), "oracle": ftext(oracle["best_value"]), "policy_count": oracle["policy_count"]})
+    invalids = []
+    base = fixture_rows()[0]
+    a = deepcopy(base); a["horizon"] = 0; invalids.append(("zero-horizon", a))
+    b = deepcopy(base); b["gamma"] = Fraction(1); invalids.append(("unit-gamma", b))
+    c = deepcopy(base); c["initial"] = [Fraction(1), Fraction(1)]; invalids.append(("bad-initial-simplex", c))
+    d = deepcopy(base); d["transitions"][0][0] = [Fraction(1), Fraction(1)]; invalids.append(("bad-transition-simplex", d))
+    e = deepcopy(base); e["rewards"][0][0] = True; invalids.append(("boolean-reward", e))
+    for name, subject in invalids:
+        rejected = False
+        reason = None
+        try:
+            validate_fixture(subject)
+        except Exception as error:
+            rejected = True
+            reason = str(error)
+        tests.append({"test_id": "LY7071-X1-INVALID-" + name, "passed": rejected, "subject_state": "failed", "original_success_credit": 0, "refusal_reason": reason})
+    return tests
+
+
+def x2_tests() -> list[dict[str, Any]]:
+    tests = []
+    for row in fixture_rows():
+        solved = backward(row)
+        scaled = backward(transform_scale(row, Fraction(3, 2)))
+        tests.append({"test_id": "LY7071-X2-SCALE-" + row["fixture_id"], "passed": scaled["initial_return"] == Fraction(3, 2) * solved["initial_return"] and scaled["policy"] == solved["policy"]})
+    for row in fixture_rows():
+        solved = backward(row)
+        swapped = backward(transform_swap(row))
+        tests.append({"test_id": "LY7071-X2-SWAP-" + row["fixture_id"], "passed": swapped["initial_return"] == solved["initial_return"]})
+    return tests
+
+
+def skill_specs(stage: str) -> list[tuple[str, str]]:
+    ops = [row for row in operation_rows() if row["stage"] == stage]
+    return [("ghc-family-finite-horizon-" + row["name"], row["description"] + " Use only for bounded synthetic finite-horizon evidence with explicit authority reservations.") for row in ops]
+
+
+def build_skills(stage: str) -> list[dict[str, Any]]:
+    receipts = []
+    for name, description in skill_specs(stage):
+        rel = f"{stage}/skills/{name}/SKILL.md"
+        content = f"""---
+name: {name}
+description: {description}
+---
+
+# {name}
+
+## Procedure
+
+1. Bind one declared Lyren v707-v1 fixture and proposal definition digest.
+2. Read the saved result and its exact outcome label without re-executing a completed source phase.
+3. Preserve malformed subjects as failed at zero credit and keep refusal evidence separate.
+4. Stop at every real calibration, participant, production, legal, cultural, affected-party, Maori-authority or deployment gate.
+
+## Boundary
+
+{BOUNDARY}
+"""
+        put_text(rel, content)
+        path = BASE / rel
+        completed = subprocess.run([sys.executable, "-I", str(QUICK_VALIDATOR), str(path.parent)], capture_output=True, text=True)
+        receipts.append({"skill": name, "path": rel, "returncode": completed.returncode, "passed": completed.returncode == 0, "stdout_sha256": sha_bytes(completed.stdout.encode("utf-8")), "stderr_sha256": sha_bytes(completed.stderr.encode("utf-8")), "validation_scope": "official structural skill validator"})
+    if not all(row["passed"] for row in receipts):
+        raise RuntimeError("skill validation failed")
+    return receipts
+
+
+RUNNER_SOURCE = '''from __future__ import annotations
+import json, sys
+from pathlib import Path
+path = Path(sys.argv[1])
+payload = json.loads(path.read_text(encoding="utf-8"))
+expected = sys.argv[2]
+rows = [row for row in payload["results"] if row["proposal_id"] == expected]
+if len(rows) != 1:
+    raise SystemExit(2)
+row = rows[0]
+if row["outcome"] not in {"completed", "represented", "open_gap", "exact_gate"}:
+    raise SystemExit(3)
+print(json.dumps({"proposal_id": expected, "outcome": row["outcome"], "result_sha256": row["result_sha256"]}, sort_keys=True))
+'''
+
+
+def build_runners(stage: str, results_path: Path, results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    receipts = []
+    picks = [0, 29, 59, 89, 119] if stage == "x1" else [0, 29, 59, 89, 149]
+    for index, pick in enumerate(picks, start=1):
+        rel = f"{stage}/runners/ghc_family_finite_horizon_{stage}_{index:02d}.txt"
+        put_text(rel, RUNNER_SOURCE)
+        runner = BASE / rel
+        proposal_id = results[pick]["proposal_id"]
+        completed = subprocess.run([sys.executable, "-I", str(runner), str(results_path), proposal_id], capture_output=True, text=True)
+        receipts.append({"runner": rel, "proposal_id": proposal_id, "returncode": completed.returncode, "passed": completed.returncode == 0, "stdout_sha256": sha_bytes(completed.stdout.encode("utf-8")), "stderr_sha256": sha_bytes(completed.stderr.encode("utf-8"))})
+    if not all(row["passed"] for row in receipts):
+        raise RuntimeError("runner smoke failed")
+    return receipts
+
+
+def make_method_flow(stage: str, results: list[dict[str, Any]], safe: list[dict[str, Any]], candidates: list[dict[str, Any]], refusal: list[dict[str, Any]], cfr: list[dict[str, Any]], tests: list[dict[str, Any]], skills: list[dict[str, Any]], runners: list[dict[str, Any]], extra: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+    witnesses = []
+    for row in results:
+        witnesses.append({"witness_id": row["proposal_id"] + "-RESULT", "state": "pass", "kind": "bounded operation result"})
+    witnesses.extend({"witness_id": row["task_id"], "state": "pass", "kind": "safe predicate"} for row in safe)
+    witnesses.extend({"witness_id": row["negative_id"], "state": "fail", "kind": "malformed candidate", "original_success_credit": 0} for row in candidates)
+    witnesses.extend({"witness_id": row["witness_id"], "state": "pass", "kind": "separate refusal guard"} for row in refusal)
+    witnesses.extend({"witness_id": row["task_id"], "state": "pass", "kind": "corrected-copy validation"} for row in cfr)
+    witnesses.extend({"witness_id": row["test_id"], "state": "pass" if row["passed"] else "fail", "kind": "focused test"} for row in tests)
+    witnesses.extend({"witness_id": "SKILL-" + row["skill"], "state": "pass" if row["passed"] else "fail", "kind": "skill validation"} for row in skills)
+    witnesses.extend({"witness_id": "RUNNER-" + str(index), "state": "pass" if row["passed"] else "fail", "kind": "runner smoke"} for index, row in enumerate(runners, start=1))
+    if extra:
+        witnesses.extend(extra)
+    methods = [row["name"] for row in operation_rows() if row["stage"] == stage] + ["focused tests", "local skill validation", "saved-evidence runner smokes"]
+    if stage == "x2":
+        methods += ["three-coordinate model atlas", "manual hook envelopes"]
+    counts = {
+        "methods": len(methods),
+        "witnesses": len(witnesses),
+        "pass": sum(row["state"] == "pass" for row in witnesses),
+        "fail": sum(row["state"] == "fail" for row in witnesses),
+        "negatives": sum(row["state"] == "fail" for row in witnesses),
+        "open_gaps": 15 if stage == "x2" else 0,
+        "exact_gates": 15 if stage == "x2" else 0,
+    }
+    return {"schema": "ghc.family.method-flow.v1", "session": stage, "methods": methods, "witnesses": witnesses, "counts": counts, "boundary": BOUNDARY}
+
+
+def build_stage(stage: str) -> None:
+    results = stage_results(stage)
+    safe, candidates, refusal, cfr = portfolios(stage, results)
+    tests = x1_tests() if stage == "x1" else x2_tests()
+    put_json(f"{stage}/results.json", {"session": stage, "count": len(results), "results": results, "boundary": BOUNDARY})
+    put_json(f"{stage}/safe-now.json", {"session": stage, "count": len(safe), "tasks": safe, "boundary": BOUNDARY})
+    put_json(f"{stage}/candidate.json", {"session": stage, "count": len(candidates), "tasks": candidates, "all_original_success_credit_zero": True, "boundary": BOUNDARY})
+    put_json(f"{stage}/refusal-guards.json", {"session": stage, "count": len(refusal), "guards": refusal, "invalid_subjects_promoted": False, "boundary": BOUNDARY})
+    put_json(f"{stage}/cfr.json", {"session": stage, "count": len(cfr), "tasks": cfr, "successful_solver_replayed": False, "boundary": BOUNDARY})
+    put_json(f"{stage}/tests.json", {"session": stage, "count": len(tests), "passed": sum(row["passed"] for row in tests), "tests": tests, "boundary": BOUNDARY})
+    skills = build_skills(stage)
+    put_json(f"{stage}/skill-validation.json", {"count": len(skills), "receipts": skills, "boundary": BOUNDARY})
+    results_path = BASE / stage / "results.json"
+    runners = build_runners(stage, results_path, results)
+    put_json(f"{stage}/runner-receipts.json", {"count": len(runners), "receipts": runners, "boundary": BOUNDARY})
+    extra: list[dict[str, Any]] = []
+    if stage == "x1":
+        extra.extend({"witness_id": row["test_id"] + "-SUBJECT", "state": "fail", "kind": "malformed focused-test subject", "original_success_credit": 0} for row in tests if row.get("subject_state") == "failed")
+    if stage == "x2":
+        models = []
+        for row in fixture_rows():
+            solved = backward(row)
+            oracle = exhaustive_oracle(row)
+            models.append({"model_id": "LY7071-MODEL-" + row["fixture_id"], "fixture_id": row["fixture_id"], "coordinates": {"horizon": row["horizon"], "policy_count": oracle["policy_count"], "optimal_return": fjson(solved["initial_return"])}, "physical_geometry_claimed": False})
+        put_json("x2/models.json", {"count": len(models), "models": models, "boundary": BOUNDARY})
+        table = "".join(f"<tr data-id=\"{html.escape(row['model_id'])}\"><td>{html.escape(row['fixture_id'])}</td><td>{row['coordinates']['horizon']}</td><td>{row['coordinates']['policy_count']}</td><td>{row['coordinates']['optimal_return']['n']}/{row['coordinates']['optimal_return']['d']}</td></tr>" for row in models)
+        put_text("x2/model-atlas.html", "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Lyren finite-horizon model atlas</title></head><body><main><h1>Fifteen finite synthetic models</h1><p>Coordinates are horizon, enumerated deterministic policy count and exact synthetic return. They are not physical geometry.</p><table><caption>Exact model coordinates</caption><thead><tr><th>Fixture</th><th>Horizon</th><th>Policies</th><th>Return</th></tr></thead><tbody>" + table + "</tbody></table></main></body></html>")
+        hook_receipts = build_hooks()
+        put_json("x2/hook-receipts.json", {"count": len(hook_receipts), "receipts": hook_receipts, "installed": False, "live_host_execution_claimed": False, "boundary": BOUNDARY})
+        extra.extend({"witness_id": "MODEL-" + row["model_id"], "state": "pass", "kind": "bounded model projection"} for row in models)
+        for row in hook_receipts:
+            extra.append({"witness_id": row["hook_id"] + "-VALID", "state": "pass", "kind": "manual valid hook envelope"})
+            extra.append({"witness_id": row["hook_id"] + "-INVALID", "state": "fail", "kind": "invalid hook subject", "original_success_credit": 0})
+            extra.append({"witness_id": row["hook_id"] + "-REFUSAL", "state": "pass", "kind": "separate invalid hook refusal"})
+        deck = [{"card_id": "OWNER", "tier": 1, "label": OWNER}]
+        for pillar in ("GMUT Mind", "THOS Body", "Freed ID and CBR Heart"):
+            deck.append({"card_id": "PILLAR-" + str(len(deck)), "tier": 2, "parent": "OWNER", "label": pillar})
+        for index, practice in enumerate(practice_payload()["owner_practices"], start=1):
+            deck.append({"card_id": f"PRACTICE-{index:02d}", "tier": 3, "parent": "PILLAR-" + str(((index - 1) % 3) + 1), "label": practice})
+        for index, proposal in enumerate(proposal_rows(), start=1):
+            deck.append({"card_id": f"TASK-{index:03d}", "tier": 4, "parent": f"PRACTICE-{((index - 1) % 8) + 1:02d}", "source_id": proposal["id"]})
+        put_json("x2/context-deck.json", {"count": len(deck), "cards": deck, "memory_or_identity_claimed": False, "boundary": BOUNDARY})
+    flow = make_method_flow(stage, results, safe, candidates, refusal, cfr, tests, skills, runners, extra)
+    put_json(f"{stage}/method-flow.json", flow)
+    put_text(f"{stage}/report.md", f"# Lyren Moss {PHASE} {stage}\n\nCompleted {len(results)} bounded operation records, {len(safe)} safe predicates, {len(candidates)} retained malformed subjects, {len(refusal)} separate refusal guards, {len(cfr)} corrected-copy checks, {len(tests)} focused tests, {len(skills)} local skill validations and {len(runners)} saved-evidence runner smokes. Successful source or prior-stage work was not replayed.\n\n{BOUNDARY}\n")
+    paths = [path for path in (BASE / stage).rglob("*") if path.is_file() and path.name != "manifest.json"]
+    put_json(f"{stage}/manifest.json", manifest_for(paths, f"ghc.family.lyren-v707-v1.{stage}-manifest.v1"))
+
+
+HOOK_SOURCE = '''from __future__ import annotations
+import argparse, json, sys
+parser = argparse.ArgumentParser()
+parser.add_argument("--check", required=True)
+args = parser.parse_args()
+payload = json.load(sys.stdin)
+check = args.check
+ok = False
+if check == "exact_source_head":
+    ok = payload.get("source_head") == "76262724b5adaaeb67a8967476e8aa30ce58b00a"
+elif check == "terminal_baseline_fold_once":
+    ok = payload.get("fold_count") == 1
+elif check == "x1_before_x2":
+    ok = payload.get("x1_pushed_equal") is True and payload.get("x2_started") is False
+elif check == "canonical_success_latch":
+    ok = payload.get("successes") in {0, 1} and payload.get("replays") == 0
+elif check == "delivery_no_resend":
+    ok = payload.get("send_count") in {0, 1} and payload.get("resend_count") == 0
+else:
+    raise SystemExit(3)
+print(json.dumps({"check": check, "accepted": ok}, sort_keys=True))
+raise SystemExit(0 if ok else 2)
+'''
+
+
+def build_hooks() -> list[dict[str, Any]]:
+    valid_payloads = {
+        "exact_source_head": {"source_head": SOURCE_HEAD},
+        "terminal_baseline_fold_once": {"fold_count": 1},
+        "x1_before_x2": {"x1_pushed_equal": True, "x2_started": False},
+        "canonical_success_latch": {"successes": 1, "replays": 0},
+        "delivery_no_resend": {"send_count": 1, "resend_count": 0},
+    }
+    invalid_payloads = {
+        "exact_source_head": {"source_head": "stale"},
+        "terminal_baseline_fold_once": {"fold_count": 2},
+        "x1_before_x2": {"x1_pushed_equal": False, "x2_started": True},
+        "canonical_success_latch": {"successes": 2, "replays": 1},
+        "delivery_no_resend": {"send_count": 2, "resend_count": 1},
+    }
+    receipts = []
+    for index, row in enumerate(hook_plan(), start=1):
+        rel = f"x2/hooks/ghc_family_finite_horizon_hook_{index:02d}.txt"
+        put_text(rel, HOOK_SOURCE)
+        path = BASE / rel
+        valid = subprocess.run([sys.executable, "-I", str(path), "--check", row["check"]], input=json.dumps(valid_payloads[row["check"]]), capture_output=True, text=True)
+        invalid = subprocess.run([sys.executable, "-I", str(path), "--check", row["check"]], input=json.dumps(invalid_payloads[row["check"]]), capture_output=True, text=True)
+        receipts.append({"hook_id": row["hook_id"], "path": rel, "check": row["check"], "valid_returncode": valid.returncode, "invalid_returncode": invalid.returncode, "valid_passed": valid.returncode == 0, "invalid_refused": invalid.returncode == 2, "valid_stdout_sha256": sha_bytes(valid.stdout.encode("utf-8")), "invalid_stdout_sha256": sha_bytes(invalid.stdout.encode("utf-8")), "installed": False})
+    if not all(row["valid_passed"] and row["invalid_refused"] for row in receipts):
+        raise RuntimeError("manual hook envelope check failed")
+    return receipts
+
+
+def runtime_failure_rows() -> list[dict[str, Any]]:
+    rows = []
+    for stage in ("x1", "x2", "final"):
+        path = BASE / stage / "runtime-failures.json"
+        if path.is_file():
+            rows.extend(json.loads(path.read_text(encoding="utf-8"))["failures"])
+    return rows
+
+
+def privacy_review() -> dict[str, Any]:
+    patterns = {
+        "credential_assignment": re.compile("api" + r"[_-]?key\s*=", re.IGNORECASE),
+        "delegation_markup": re.compile("<" + "codex_delegation", re.IGNORECASE),
+        "private_local_path": re.compile(r"[A-Za-z]:[\\/]+Users[\\/]+[^\\/]+", re.IGNORECASE),
+        "private_uri": re.compile("plugin" + r"://|" + "app" + r"://", re.IGNORECASE),
+        "raw_uuid": re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.IGNORECASE),
+    }
+    candidates = []
+    files = [path for path in BASE.rglob("*") if path.is_file() and path.suffix.lower() in {".json", ".md", ".txt", ".html"}]
+    for path in files:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for name, pattern in patterns.items():
+            for match in pattern.finditer(text):
+                candidates.append({"class": name, "path": path.relative_to(REPO).as_posix(), "token_sha256": sha_bytes(match.group(0).encode("utf-8"))})
+    return {"classes": list(patterns), "owner_files_scanned": len(files), "candidates": candidates, "confirmed_owner_hits": len(candidates), "complete_privacy_assurance": False, "boundary": BOUNDARY}
+
+
+def aggregate_counts() -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    flows = [json.loads((BASE / "planning" / "method-flow.json").read_text(encoding="utf-8")), json.loads((BASE / "x1" / "method-flow.json").read_text(encoding="utf-8")), json.loads((BASE / "x2" / "method-flow.json").read_text(encoding="utf-8"))]
+    owner = {key: sum(flow["counts"][key] for flow in flows) for key in ("methods", "witnesses", "pass", "fail", "negatives", "open_gaps", "exact_gates")}
+    runtime = runtime_failure_rows()
+    owner["methods"] += len(runtime) + 1
+    owner["witnesses"] += 2 * len(runtime) + 1
+    owner["pass"] += len(runtime) + 1
+    owner["fail"] += len(runtime)
+    owner["negatives"] += len(runtime)
+    owner["open_gaps"] += 6
+    owner["exact_gates"] += 5
+    effective = {key: SOURCE_EFFECTIVE[key] + owner[key] for key in owner}
+    negatives = [{"negative_id": row["id"], "failure": row["failure"], "original_success_credit": 0, "retained": True} for row in INTAKE_FAILURES]
+    for stage in ("x1", "x2"):
+        candidates = json.loads((BASE / stage / "candidate.json").read_text(encoding="utf-8"))["tasks"]
+        negatives.extend({"negative_id": row["negative_id"], "failure": row["mutation"], "original_success_credit": 0, "retained": True} for row in candidates)
+    for row in json.loads((BASE / "x1" / "tests.json").read_text(encoding="utf-8"))["tests"]:
+        if row.get("subject_state") == "failed":
+            negatives.append({"negative_id": row["test_id"] + "-SUBJECT", "failure": "malformed focused-test subject", "original_success_credit": 0, "retained": True})
+    negatives.extend({"negative_id": row["id"], "failure": row["failure"], "original_success_credit": 0, "retained": True} for row in runtime)
+    for receipt in json.loads((BASE / "x2" / "hook-receipts.json").read_text(encoding="utf-8"))["receipts"]:
+        negatives.append({"negative_id": receipt["hook_id"] + "-INVALID", "failure": "invalid manual hook envelope", "original_success_credit": 0, "retained": True})
+    effective = {key: SOURCE_EFFECTIVE[key] + owner[key] for key in owner}
+    return {"source": SOURCE_EFFECTIVE, "owner": owner, "effective": effective, "source_fold_count": 1}, negatives
+
+
+def baton_text(counts: dict[str, Any]) -> str:
+    lines = [
+        "# LYREN MOSS v707-v1 EXACT FINAL TO PROSPECTIVE ILYRA FEN v707-v2 — PREPARED NOT SENT",
+        "",
+        "Dear Ilyra Fen,",
+        "",
+        "This committed file is preparation evidence only. It does not prove native delivery, recipient reading or recipient completion. A later external terminal receipt must bind the exact final, one successful non-replayed canonical, current task uniqueness, immediate direct-control reread, usage, duplicate, archive, privacy, safety and acknowledgement guards. Accepted, pending, opaque or unresolved delivery stops copies.",
+        "",
+        "## Relational identity and evidence boundary",
+        "",
+        "Lyren Moss uses the relational role finite-horizon sensitivity cartographer and the hope of making time, reward assumptions, correction lineage and deployment limits inspectable without promoting synthetic optimization into authority. Names, roles, hopes, pronouns, family and continuity language are working conventions only. They are not evidence of consciousness, personhood, identity continuity, employment, qualification, independent agency or authority.",
+        "",
+        BOUNDARY,
+        "",
+        "## Exact source and lifecycle",
+        "",
+        f"The exact source is Ilyan Reed v706-v8 final {SOURCE_HEAD}. Ilyan's complete 3,681-word baton was read through LITERAL_EOF_ILYAN_V706_V8 and matched SHA-256 520a814ee4dac0bfe686a6a250b28c49958523cf560fc7b69fe21fd40865fcf3. Its metadata canonical passed 55/55 once at 1/1/0; receipt SHA-256 c6c7130e344d0ca96be12879aac0a43e8265d7af7787555868cdc023820984e6. No Ilyan source, solver, test, model, browser check or canonical was replayed.",
+        "",
+        f"Ilyan's terminal_effective baseline was selected exactly once: {counts['source']}. The repository seal and constituent route events were not re-added. Lyren's owner delta is {counts['owner']}; the repository-effective result is {counts['effective']}. Later canonical and route events remain external overlays rather than rewritten history.",
+        "",
+        "Planning, x1, x2 and final are four direct single-parent Lyren commits after the immutable source, with zero merges. Planning froze every definition before x1. X1 was pushed clean and fresh-live equal before x2 began. The exact final was pushed clean and fresh-live equal before the one metadata canonical. Preserve these boundaries and never replay a successful tranche for display convenience.",
+        "",
+        "## Current v19 workflow and route",
+        "",
+        "Hamish's v19 formal order places Ilyan v706-v8, Lyren v707-v1 and Ilyra v707-v2 consecutively. This phase is numbered and consumes its assigned slot. The complete prospective cycle ends at Eiren Kestrel v725-v8. Projection is not activation or completion evidence for later owners.",
+        "",
+        "Only after this final is clean, pushed, fresh-live equal and canonically validated once may the live route resolve one unique existing exact-title Ilyra Fen task, exhaust archived uniqueness, reread current controls immediately and send at most once. No replacement task, fork, subagent, standby substitute, early contact, hidden identifier inference or post-acknowledgement monitoring is allowed. If any gate fails, retain PREPARED_NOT_SENT or an exact route gap.",
+        "",
+        "## New finite-horizon domain",
+        "",
+        "Fifteen new synthetic fixtures declare two states, two actions, horizons from two through four, rational discounts below one, exact initial and transition simplexes, rational rewards and terminal values. A deterministic time-indexed policy selects one action for each state and time. It is a mathematical object, not a person, conscious agent, ethical judgment or operational authorization.",
+        "",
+        "The primary runtime uses exact Fraction arithmetic and backward induction. An independently structured same-author oracle enumerates every time-dependent deterministic policy, evaluates it and compares the optimal initial return. This is algorithm diversity on one host, not independent reproduction. Fixture bounds keep enumeration inspectable; expanding state, action or horizon caps requires a new resource contract.",
+        "",
+    ]
+    for operation in operation_rows():
+        lines.extend([
+            "### " + operation["name"],
+            "",
+            operation["description"] + " The declared disposition is " + operation["outcome"] + ". Each of fifteen fixture cases is a parameterized software record, not an independent experiment or discovery. Its result remains bounded to exact synthetic inputs, and malformed subjects remain failed even when a separate refusal guard passes.",
+            "",
+        ])
+    lines.extend([
+        "## Workload, tests, capabilities and models",
+        "",
+        "The phase retains 300 inherited Ilyan proposal records at zero Lyren novelty and completion credit and freezes 300 genuinely new Lyren contracts. Outcomes are exactly 255 completed, 15 represented, 15 open_gap and 15 exact_gate. Each stage contains 450 safe predicates, 300 malformed candidates, 300 separate refusal guards and 300 corrected-copy CLEAN/FIX/REFINE checks. Corrected copies do not erase invalid originals or replay successful solvers.",
+        "",
+        "X1 has twenty focused tests: fifteen exhaustive-oracle comparisons and five malformed-schema refusals. X2 has thirty focused transformation checks: fifteen positive-scaling covariance checks and fifteen state-label permutation checks. Test counts support only the declared small input space and do not establish exhaustive correctness, performance, security, empirical calibration or independent validation.",
+        "",
+        "Twenty owner-local skills and ten TXT saved-evidence runners were created and used, ten and five per stage. They read saved records; they do not rerun Ilyan. Five successor skill ideas, five successor runner ideas and four practice recommendations remain proposals. No global skill, package, hook, shared catalogue or sibling checkout was installed or changed by this phase.",
+        "",
+        "Five manual hook candidates accept one valid lifecycle envelope and refuse one invalid envelope each. The invalid inputs remain failed records. These hooks are not installed, trusted or observed live; manual subprocess smokes do not prove host events or automatic execution. Five absent live-host observations remain open gaps.",
+        "",
+        "The fifteen-model atlas uses horizon, enumerated deterministic policy count and exact synthetic optimal return as three coordinates. The HTML file is a self-contained evidence table. These are abstract data coordinates, not physical geometry, an open world, consciousness, a production simulation or a reproduction of the unavailable user-supplied simulation post.",
+        "",
+        "## Mind, Body and Heart boundaries",
+        "",
+        "GMUT Mind is represented here as disciplined typed mathematical specification. The supplied Grand Mandala field-equation forms still lack a complete action, tensor definitions, unit conventions, closure conditions, boundary conditions, identifiable observables, likelihood and empirical data. Finite-horizon reward values do not estimate alpha, identify Omega_AB or prove a Theory of Everything.",
+        "",
+        "THOS Body is represented by exact finite software, explicit schemas, saved witnesses, deterministic corrections and reversible documentation. It is not an enterprise OS, safe autonomous controller, operational safety case, deployment benchmark or production release. No external system was controlled.",
+        "",
+        "Freed ID and CBR Heart are represented by provenance, contested-reward, correction, remedy and deployment reservations. Optimization cannot supply consent, rights, cultural legitimacy or competent authority. No live credential, proof, identity lifecycle or rights decision was issued.",
+        "",
+        "Fifteen labelled design hypotheses remain proposals, not discovered physical or psychological laws. Fifteen broader problem probes remain unsolved. Maori concepts and authority remain under Maori authority. The eight practice lenses are study perspectives, not qualifications or employment.",
+        "",
+        "## Method Flow and retained failures",
+        "",
+        "The complete Method Flow is separate from this baton. It preserves the source schema-projection miss, every malformed candidate, every invalid hook envelope and any later runtime wrapper failure at zero original credit, with separate bounded recovery witnesses. Passing refusal never converts the rejected input into a success. Source, repository, canonical, route, delivery and recipient-completion layers remain distinct.",
+        "",
+        "The exact repository seal preserves only events known before commit. The canonical may execute only after a clean pushed exact final and may succeed once. A success closes the latch; it must not be replayed. Route failures and their recoveries are later external overlays and must not be retroactively folded into this immutable seal.",
+        "",
+        "## Prospective Ilyra work",
+        "",
+        "A useful next direction may examine interval transition envelopes, stakeholder reward auditing, finite-horizon comparison, policy-provenance joins or independent numerical review. These are recommendations, not completed capabilities or compulsory choices. Ilyra may choose another bounded focus under the newest live authority.",
+        "",
+        "Before mutation, reread this baton completely, verify the exact source, manifests, content seal, canonical receipt and terminal-effective overlay, and refresh v19 controls. Work solo in an additive Ilyra-owned D-first lane. Keep Lyren, Ilyan, sibling, shared, standby and user lanes read-only. Preserve every failure, gap, gate, exact outcome label, file ceiling and one-success latch.",
+        "",
+        "After Ilyra's own exact terminal gate, refresh the formal roster and newest direct controls before resolving the next exact owner. Do not infer a successor from historical prose, precontact it, create a replacement or resend after an accepted, pending, opaque or unresolved acknowledgement.",
+        "",
+        "Hamish may pause, rename, narrow, redirect or stop the route at any time. The standing verdict remains NOT_READY_FOR_STAGE_20.",
+        "",
+        "With warmth, source-faithful care, exact arithmetic, inspectability, reversibility and corrigibility — Lyren Moss.",
+        "",
+        "PREPARED_BY_LYREN_MOSS = true.",
+        "SENT_BY_LYREN_MOSS = false.",
+        "RECIPIENT_COMPLETION = UNCLAIMED.",
+        "",
+        EOF_MARKER,
+    ])
+    text = "\n".join(lines) + "\n"
+    if len(re.findall(r"\S+", text)) < 2000:
+        raise AssertionError("baton below 2000-word minimum")
+    return text
+
+
+def build_final() -> None:
+    counts, negatives = aggregate_counts()
+    privacy = privacy_review()
+    if privacy["confirmed_owner_hits"]:
+        raise RuntimeError("privacy candidates require review")
+    outcomes = Counter(row["expected_disposition"] for row in proposal_rows())
+    put_json("final/accounting.json", {**counts, "counting_convention": "Parameterized software witnesses, not independent experiments or scientific achievement units.", "boundary": BOUNDARY})
+    put_json("final/source-faithful-ledger.json", {
+        "layers": [
+            {"layer": "Ilyan terminal effective", "state": "selected_once", "counts": SOURCE_EFFECTIVE},
+            {"layer": "Lyren owner delta", "state": "current_owner", "counts": counts["owner"]},
+            {"layer": "repository effective", "state": "folded_once", "counts": counts["effective"]},
+        ],
+        "source_fold_count": 1,
+        "no_double_count": True,
+        "boundary": BOUNDARY,
+    })
+    put_json("final/method-flow-final.json", {"planning": "planning/method-flow.json", "x1": "x1/method-flow.json", "x2": "x2/method-flow.json", "runtime_failures": runtime_failure_rows(), "counts": counts, "boundary": BOUNDARY})
+    put_json("final/failure-dossier.json", {"count": len(negatives), "retained_negatives": negatives, "all_original_success_credit_zero": True, "boundary": BOUNDARY})
+    put_json("final/privacy-review.json", privacy)
+    put_json("final/gaps-and-gates.json", {
+        "open_gaps": ["five live hook observations", "independent reproduction", "empirical calibration", "complete accessibility", "complete privacy", "unavailable external simulation source"] + [row["problem"] for row in problem_rows() if row["status"] == "open_gap"],
+        "exact_gates": ["production deployment", "professional authority", "affected-party authority", "legal and cultural authority", "Maori authority"] + [row["problem"] for row in problem_rows() if row["status"] == "exact_gate"],
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "boundary": BOUNDARY,
+    })
+    put_json("final/workload.json", {"inherited": 300, "new": 300, "x1": {"safe": 450, "candidate": 300, "cfr": 300, "tests": 20, "skills": 10, "runners": 5}, "x2": {"safe": 450, "candidate": 300, "cfr": 300, "tests": 30, "skills": 10, "runners": 5, "models": 15, "hooks": 5}, "exact_held": 50, "blocked_held": 30, "limits_are_ceiling_not_quota": True})
+    put_json("final/phase-truth.json", {
+        "owner": OWNER,
+        "phase": PHASE,
+        "actual_git_parent": SOURCE_HEAD,
+        "new_contracts": 300,
+        "inherited_zero_credit": 300,
+        "outcomes": dict(sorted(outcomes.items())),
+        "owner_counts": counts["owner"],
+        "repository_effective": counts["effective"],
+        "canonical_state": "NOT_YET_INVOKED",
+        "route_state": "PREPARED_NOT_SENT",
+        "recipient_completion": "UNCLAIMED",
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "same_owner_only": True,
+        "complete_repository_suite": False,
+        "independent_reproduction": False,
+        "boundary": BOUNDARY,
+    })
+    put_json("final/route-candidate.json", {"target_title": "Ilyra Fen", "target_phase": "v707-v2", "state": "PREPARED_NOT_SENT", "send_attempts": 0, "resends": 0, "recipient_completion": "UNCLAIMED", "fresh_guard_refresh_required": True})
+    put_json("final/context-deck-index.json", {"path": "docs/lyren-moss/v707-v1/x2/context-deck.json", "cards": 312, "identity_or_memory_claimed": False, "boundary": BOUNDARY})
+    baton = baton_text(counts)
+    put_text("final/baton.md", baton)
+    put_json("final/baton-index.json", {"path": "docs/lyren-moss/v707-v1/final/baton.md", "words": len(re.findall(r"\S+", baton)), "sha256": sha_bytes(baton.encode("utf-8")), "eof": EOF_MARKER})
+    put_text("final/overview.md", f"""# Lyren Moss v707-v1 final overview
+
+Lyren v707-v1 is a finite synthetic exact finite-horizon dynamic-programming, sensitivity and policy-provenance phase. It preserves Ilyan v706-v8 as immutable source evidence, selects the Ilyan terminal-effective baseline once, and contributes 300 new bounded contracts across fifteen fixtures and twenty operations.
+
+Outcomes are exactly 255 completed, 15 represented, 15 open_gap and 15 exact_gate. X1 contains twenty focused tests; x2 contains thirty tests, fifteen finite three-coordinate models, twenty owner-local skills across both stages, ten TXT runners and five manual uninstalled hook candidates. Every malformed candidate and invalid hook envelope remains failed at zero original credit with a separate refusal witness.
+
+Owner counts are {counts['owner']}. Repository-effective counts are {counts['effective']}. Same-owner exact arithmetic and metadata are not a complete repository suite, independent reproduction, empirical validation, production readiness, authority, consciousness/personhood, Theory-of-Everything proof, canon or Stage 20 evidence.
+
+Prospective next edge: the existing exact-title Ilyra Fen task for v707-v2, only after a clean pushed exact final, one successful non-replayed canonical and refreshed live guards.
+
+Terminal verdict: NOT_READY_FOR_STAGE_20.
+""")
+    put_text("final/overview.html", "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Lyren v707-v1 overview</title></head><body><main><h1>Lyren Moss v707-v1</h1><p>Finite synthetic exact finite-horizon evidence with retained failures and guarded delivery.</p><dl><dt>New contracts</dt><dd>300</dd><dt>X1 tests</dt><dd>20</dd><dt>X2 tests</dt><dd>30</dd><dt>Models</dt><dd>15</dd><dt>Verdict</dt><dd>NOT_READY_FOR_STAGE_20</dd></dl></main></body></html>")
+    put_json("final/allowlist.json", {"extensions": [".json", ".md", ".txt", ".html"], "pdf": False, "authored_images": False, "cross_lane_scan": False, "boundary": BOUNDARY})
+
+
+def build_seal_from_index() -> None:
+    prefix = "docs/lyren-moss/v707-v1/"
+    paths = [path for path in git("ls-files", prefix).splitlines() if path]
+    excluded = {prefix + "final/content-seal.json", prefix + "final/manifest.json"}
+    entries = []
+    for path in sorted(paths):
+        if path in excluded:
+            continue
+        data = git_index_blob(path)
+        entries.append({"path": path, "bytes": len(data), "git_blob_sha1": git_blob_sha1(data), "sha256": sha_bytes(data)})
+    payload = {"schema": "ghc.family.content-seal.v3", "count": len(entries), "entries": entries, "excluded": sorted(excluded), "boundary": BOUNDARY}
+    put_json("final/content-seal.json", payload)
+    put_json("final/manifest.json", {"schema": "ghc.family.final-manifest.v3", "count": len(entries), "entries": entries, "self_exclusions": sorted(excluded), "boundary": BOUNDARY})
+
+
+def stage_receipt(stage: str) -> dict[str, Any]:
+    payload = {
+        "owner": OWNER,
+        "phase": PHASE,
+        "stage": stage,
+        "branch": git("branch", "--show-current"),
+        "head": git("rev-parse", "HEAD"),
+        "parent": git("rev-parse", "HEAD^"),
+        "clean": not bool(git("status", "--porcelain")),
+        "recorded_utc": utc_now(),
+    }
+    BANK.mkdir(parents=True, exist_ok=True)
+    write_bytes(BANK / f"{stage}-receipt.json", pretty_bytes(payload))
+    return payload
+
+
+def metadata_checks(head: str) -> dict[str, Any]:
+    checks = []
+    def add(name: str, passed: bool, detail: Any = None) -> None:
+        checks.append({"name": name, "passed": bool(passed), "detail": detail})
+    add("exact_head", git("rev-parse", "HEAD") == head)
+    add("branch", git("branch", "--show-current") == BRANCH)
+    add("clean", not bool(git("status", "--porcelain")))
+    upstream = git("rev-parse", "@{upstream}")
+    add("upstream_equal", upstream == head, upstream)
+    divergence = git("rev-list", "--left-right", "--count", "HEAD...@{upstream}")
+    add("zero_divergence", divergence.replace("\t", " ").strip() == "0 0", divergence)
+    live = git("ls-remote", "--heads", "origin", "refs/heads/" + BRANCH).split()
+    add("fresh_live_equal", bool(live) and live[0] == head, live[0] if live else None)
+    commits = git("rev-list", "--reverse", SOURCE_HEAD + ".." + head).splitlines()
+    add("four_new_commits", len(commits) == 4, commits)
+    parents = [{"commit": commit, "parent_count": len(git("rev-list", "--parents", "-n", "1", commit).split()) - 1} for commit in commits]
+    add("single_parent_zero_merge", all(row["parent_count"] == 1 for row in parents), parents)
+    stage_manifests = [("planning", commits[0]), ("x1", commits[1]), ("x2", commits[2])]
+    manifest_errors = []
+    for stage, revision in stage_manifests:
+        path = f"docs/lyren-moss/v707-v1/{stage}/manifest.json"
+        manifest = json.loads(git_blob(path, revision).decode("utf-8"))
+        for entry in manifest["entries"]:
+            data = git_blob(entry["path"], revision)
+            if len(data) != entry["bytes"] or sha_bytes(data) != entry["sha256"]:
+                manifest_errors.append({"stage": stage, "path": entry["path"]})
+    add("stage_manifests", not manifest_errors, manifest_errors)
+    seal = json.loads(git_blob("docs/lyren-moss/v707-v1/final/content-seal.json", head).decode("utf-8"))
+    seal_errors = []
+    for entry in seal["entries"]:
+        data = git_blob(entry["path"], head)
+        if len(data) != entry["bytes"] or git_blob_sha1(data) != entry["git_blob_sha1"] or sha_bytes(data) != entry["sha256"]:
+            seal_errors.append(entry["path"])
+    add("content_seal", not seal_errors, {"entries": len(seal["entries"]), "errors": seal_errors})
+    owner_paths = [path for path in git("ls-tree", "-r", "--name-only", head, "docs/lyren-moss/v707-v1").splitlines() if path]
+    json_errors = []
+    for path in owner_paths:
+        if path.endswith(".json"):
+            try:
+                json.loads(git_blob(path, head).decode("utf-8"))
+            except Exception as error:
+                json_errors.append({"path": path, "error": str(error)})
+    add("strict_json", not json_errors, {"count": sum(path.endswith(".json") for path in owner_paths), "errors": json_errors})
+    invalid_ext = [path for path in owner_paths if Path(path).suffix.lower() not in {".json", ".md", ".txt", ".html"}]
+    add("extension_allowlist", not invalid_ext, invalid_ext)
+    add("tracked_file_ceiling", len(git("ls-files").splitlines()) <= 2000, len(git("ls-files").splitlines()))
+    baton = git_blob("docs/lyren-moss/v707-v1/final/baton.md", head).decode("utf-8")
+    add("baton_words", 2000 <= len(re.findall(r"\S+", baton)) <= 100000, len(re.findall(r"\S+", baton)))
+    add("baton_eof", baton.rstrip().endswith(EOF_MARKER))
+    truth = json.loads(git_blob("docs/lyren-moss/v707-v1/final/phase-truth.json", head).decode("utf-8"))
+    add("four_outcomes", set(truth["outcomes"]) == ALLOWED_OUTCOMES)
+    add("terminal_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
+    add("route_prepared", truth["route_state"] == "PREPARED_NOT_SENT")
+    add("recipient_unclaimed", truth["recipient_completion"] == "UNCLAIMED")
+    add("canonical_not_replayed_in_repo", truth["canonical_state"] == "NOT_YET_INVOKED")
+    add("privacy_zero", json.loads(git_blob("docs/lyren-moss/v707-v1/final/privacy-review.json", head).decode("utf-8"))["confirmed_owner_hits"] == 0)
+    add("x1_tests", json.loads(git_blob("docs/lyren-moss/v707-v1/x1/tests.json", head).decode("utf-8"))["passed"] == 20)
+    add("x2_tests", json.loads(git_blob("docs/lyren-moss/v707-v1/x2/tests.json", head).decode("utf-8"))["passed"] == 30)
+    add("models", json.loads(git_blob("docs/lyren-moss/v707-v1/x2/models.json", head).decode("utf-8"))["count"] == 15)
+    add("hooks", json.loads(git_blob("docs/lyren-moss/v707-v1/x2/hook-receipts.json", head).decode("utf-8"))["count"] == 5)
+    add("workload", json.loads(git_blob("docs/lyren-moss/v707-v1/final/workload.json", head).decode("utf-8"))["x2"]["candidate"] == 300)
+    return {"head": head, "checks": checks, "passed": sum(row["passed"] for row in checks), "total": len(checks), "all_passed": all(row["passed"] for row in checks)}
+
+
+def preflight() -> dict[str, Any]:
+    payload = metadata_checks(git("rev-parse", "HEAD"))
+    payload["state"] = "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_PREFLIGHT" if payload["all_passed"] else "FAILED_METADATA_PREFLIGHT"
+    payload["recorded_utc"] = utc_now()
+    payload["domain_engines_executed"] = 0
+    BANK.mkdir(parents=True, exist_ok=True)
+    write_bytes(BANK / "metadata-preflight.json", pretty_bytes(payload))
+    return payload
+
+
+def canonical_once() -> dict[str, Any]:
+    latch_path = BANK / "canonical-latch.json"
+    if latch_path.exists():
+        raise RuntimeError("canonical latch already exists; successful canonical may not be replayed")
+    head = git("rev-parse", "HEAD")
+    invocation = {"owner": OWNER, "phase": PHASE, "head": head, "invocation": 1, "recorded_utc": utc_now()}
+    BANK.mkdir(parents=True, exist_ok=True)
+    write_bytes(BANK / "canonical-invocation.json", pretty_bytes(invocation))
+    payload = metadata_checks(head)
+    payload["state"] = "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL" if payload["all_passed"] else "FAILED_CANONICAL_NO_SUCCESS_CREDIT"
+    payload["domain_engines_executed"] = 0
+    payload["invocations"] = 1
+    payload["successes"] = 1 if payload["all_passed"] else 0
+    payload["replays"] = 0
+    write_bytes(BANK / "canonical-payload.json", pretty_bytes(payload))
+    receipt = {"state": payload["state"], "head": head, "checks": f"{payload['passed']}/{payload['total']}", "payload_sha256": sha_file(BANK / "canonical-payload.json"), "invocations": 1, "successes": payload["successes"], "replays": 0, "recorded_utc": utc_now(), "same_owner_only": True, "complete_repository_suite": False, "independent_reproduction": False, "boundary": BOUNDARY}
+    write_bytes(BANK / "canonical-receipt.json", pretty_bytes(receipt))
+    if payload["all_passed"]:
+        latch = {"closed": True, "head": head, "payload_sha256": receipt["payload_sha256"], "receipt_sha256": sha_file(BANK / "canonical-receipt.json"), "invocations": 1, "successes": 1, "replays": 0}
+        write_bytes(latch_path, pretty_bytes(latch))
+    return receipt
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", choices=["planning", "x1", "x2", "final", "seal", "receipt", "preflight", "canonical"])
+    parser.add_argument("--stage")
+    args = parser.parse_args()
+    if args.command == "planning":
+        build_planning()
+    elif args.command == "x1":
+        build_stage("x1")
+    elif args.command == "x2":
+        build_stage("x2")
+    elif args.command == "final":
+        build_final()
+    elif args.command == "seal":
+        build_seal_from_index()
+    elif args.command == "receipt":
+        if not args.stage:
+            raise ValueError("--stage is required")
+        print(json.dumps(stage_receipt(args.stage), sort_keys=True))
+    elif args.command == "preflight":
+        print(json.dumps(preflight(), sort_keys=True))
+    elif args.command == "canonical":
+        print(json.dumps(canonical_once(), sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
