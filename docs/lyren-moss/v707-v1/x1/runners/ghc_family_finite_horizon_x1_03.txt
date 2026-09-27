@@ -1,0 +1,13 @@
+from __future__ import annotations
+import json, sys
+from pathlib import Path
+path = Path(sys.argv[1])
+payload = json.loads(path.read_text(encoding="utf-8"))
+expected = sys.argv[2]
+rows = [row for row in payload["results"] if row["proposal_id"] == expected]
+if len(rows) != 1:
+    raise SystemExit(2)
+row = rows[0]
+if row["outcome"] not in {"completed", "represented", "open_gap", "exact_gate"}:
+    raise SystemExit(3)
+print(json.dumps({"proposal_id": expected, "outcome": row["outcome"], "result_sha256": row["result_sha256"]}, sort_keys=True))
