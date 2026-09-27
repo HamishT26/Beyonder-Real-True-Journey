@@ -1,0 +1,156 @@
+"""Finite exact rook/hit laboratory, n <= 6; no external actions."""
+import json,sys,hashlib
+from functools import lru_cache
+from itertools import permutations
+from math import comb,factorial
+OPS=('board-shape','row-degrees','column-degrees','rook-placement-census','rook-subset-dp','deletion-contraction','component-factorization','transpose-invariance','row-relabel-invariance','column-relabel-invariance','permutation-hit-census','rook-hit-transform','forbidden-position-avoidance','binomial-hit-moments','complement-hit-symmetry','ferrers-factorial-identity','maximum-rook-capacity','accessible-counting-analogy','observation-gap','allocation-authority-gate')
+BOUNDARY='Finite synthetic same-owner counting only; no real assignment, empirical, production, independent reproduction, identity, professional, legal, cultural, affected-party or Maori authority, consciousness, personhood or Stage 20 claim.'
+def canonical(d):return (json.dumps(d,sort_keys=True,ensure_ascii=True,indent=2)+'\n').encode()
+def digest(d):return hashlib.sha256(canonical(d)).hexdigest()
+def validate(f):
+ keys={'id','n','name','cells','real_participants','authority_actions','evidence','definition_sha256'}
+ if not isinstance(f,dict) or set(f)!=keys:raise ValueError('FIXTURE_KEYS')
+ n=f['n']
+ if type(n) is not int or not 0<=n<=6:raise ValueError('BOARD_BOUND')
+ if not isinstance(f['id'],str) or not 1<=len(f['id'])<=30 or not isinstance(f['name'],str) or len(f['name'])>100:raise ValueError('LABEL_BOUND')
+ if f['evidence']!='finite_synthetic_board':raise ValueError('EVIDENCE_CLASS')
+ if any(type(f[k]) is not int or f[k]!=0 for k in ('real_participants','authority_actions')):raise ValueError('REAL_WORLD_FIELD')
+ if not isinstance(f['cells'],list) or len(f['cells'])>n*n:raise ValueError('CELL_COUNT')
+ for c in f['cells']:
+  if not isinstance(c,list) or len(c)!=2 or any(type(v) is not int or not 0<=v<n for v in c):raise ValueError('CELL_COORDINATE')
+ cells=tuple(tuple(c) for c in f['cells'])
+ if list(cells)!=sorted(set(cells)):raise ValueError('CELL_ORDER_OR_DUPLICATE')
+ if digest({k:v for k,v in f.items() if k!='definition_sha256'})!=f['definition_sha256']:raise ValueError('DEFINITION_DIGEST')
+ return n,cells
+@lru_cache(None)
+def enumerate_rooks(n,cells):
+ rows=[tuple(c for r,c in cells if r==i) for i in range(n)];counts=[0]*(n+1);witnesses={}
+ def visit(r,used,placed):
+  if r==n:
+   k=len(placed);counts[k]+=1;witnesses.setdefault(k,tuple(placed));return
+  visit(r+1,used,placed)
+  for c in rows[r]:
+   if c not in used:visit(r+1,used|{c},placed+[(r,c)])
+ visit(0,set(),[]);return tuple(counts),tuple((k,witnesses[k]) for k in sorted(witnesses))
+@lru_cache(None)
+def dp_rooks(n,cells):
+ table={0:1}
+ for r in range(n):
+  nxt=dict(table)
+  for mask,count in table.items():
+   for rr,c in cells:
+    if rr==r and not mask&(1<<c):nxt[mask|(1<<c)]=nxt.get(mask|(1<<c),0)+count
+  table=nxt
+ counts=[0]*(n+1)
+ for mask,count in table.items():counts[mask.bit_count()]+=count
+ return tuple(counts)
+def rook(n,cells):
+ a=dp_rooks(n,cells);b=enumerate_rooks(n,cells)[0]
+ if a!=b:raise ArithmeticError('ROOK_COMPARATOR')
+ return a
+def multiply(a,b,n):
+ out=[0]*(n+1)
+ for i,x in enumerate(a):
+  for j,y in enumerate(b):
+   if i+j<=n:out[i+j]+=x*y
+ return tuple(out)
+def components(cells):
+ remaining=set(cells);out=[]
+ while remaining:
+  seed=min(remaining);part={seed};front=[seed];remaining.remove(seed)
+  while front:
+   r,c=front.pop();connected={x for x in remaining if x[0]==r or x[1]==c};remaining-=connected;part|=connected;front+=sorted(connected)
+  out.append(tuple(sorted(part)))
+ return tuple(out)
+@lru_cache(None)
+def hits(n,cells):
+ board=set(cells);h=[0]*(n+1);representatives={}
+ for p in permutations(range(n)):
+  k=sum((i,c) in board for i,c in enumerate(p));h[k]+=1;representatives.setdefault(k,p)
+ return tuple(h),tuple((k,representatives[k]) for k in sorted(representatives))
+def transform(n,r):return tuple(sum((-1)**(j-k)*comb(j,k)*r[j]*factorial(n-j) for j in range(k,n+1)) for k in range(n+1))
+def falling(x,k):
+ y=1
+ for j in range(k):y*=x-j
+ return y
+def evaluate(op,f):
+ n,c=validate(f);i=OPS.index(op);state='completed';checks=[]
+ def check(label,condition):
+  if not condition:raise ArithmeticError(label)
+  checks.append(label)
+ if i==0:result=dict(n=n,selected_cells=len(c),empty_universe=n==0);check('closed_envelope',True)
+ elif i==1:
+  deg=[sum(r==i for r,j in c) for i in range(n)];check('row_degree_total',sum(deg)==len(c));result=dict(degrees=deg)
+ elif i==2:
+  deg=[sum(j==i for r,j in c) for i in range(n)];check('column_degree_total',sum(deg)==len(c));result=dict(degrees=deg)
+ elif i in (3,4):
+  r=rook(n,c);check('direct_equals_subset_DP',True);check('empty_placement_unique',r[0]==1);check('one_rook_cells',n==0 or r[1]==len(c));result=dict(rook_vector=r,representatives=enumerate_rooks(n,c)[1])
+ elif i==5:
+  r=rook(n,c);traces=[]
+  if not c:check('empty_board_recurrence_base',r==(1,)+(0,)*n)
+  for cell in c:
+   deleted=tuple(x for x in c if x!=cell);contracted=tuple(x for x in c if x[0]!=cell[0] and x[1]!=cell[1]);a=dp_rooks(n,deleted);b=dp_rooks(n,contracted);combined=tuple(a[k]+(b[k-1] if k else 0) for k in range(n+1));check('cell_recurrence_'+str(cell),combined==r);traces.append(dict(cell=cell,deleted=a,contracted=b))
+  result=dict(rook_vector=r,cell_certificates=traces,vacuous_empty_board=not bool(c))
+ elif i==6:
+  parts=components(c);v=(1,)+(0,)*n
+  for part in parts:v=multiply(v,dp_rooks(n,part),n)
+  check('disjoint_component_product',v==rook(n,c));result=dict(components=parts,component_vectors=[dp_rooks(n,x) for x in parts],product=v)
+ elif i in (7,8,9):
+  changed=tuple(sorted((j,r) if i==7 else (((r+1)%n,j) if i==8 else (r,n-1-j)) for r,j in c));check('coordinate_bijection',len(set(changed))==len(c));check('rook_invariance',rook(n,c)==rook(n,changed));result=dict(transformed_cells=changed,rook_vector=rook(n,c))
+ elif i==10:
+  h,reps=hits(n,c);check('permutation_total',sum(h)==factorial(n));result=dict(hit_vector=h,representatives=reps,permutations=factorial(n))
+ elif i==11:
+  r=rook(n,c);h=transform(n,r);check('transform_equals_permutation_enumeration',h==hits(n,c)[0]);check('nonnegative_hit_coefficients',all(x>=0 for x in h));result=dict(rook_vector=r,hit_vector=h)
+ elif i==12:
+  r=rook(n,c);count=sum((-1)**k*r[k]*factorial(n-k) for k in range(n+1));check('avoidance_equals_zero_hits',count==hits(n,c)[0][0]);result=dict(avoidance_count=count,alternating_terms=[(-1)**k*r[k]*factorial(n-k) for k in range(n+1)])
+ elif i==13:
+  r=rook(n,c);h=hits(n,c)[0];moments=[]
+  for j in range(n+1):
+   a=sum(comb(k,j)*h[k] for k in range(j,n+1));b=r[j]*factorial(n-j);check('moment_'+str(j),a==b);moments.append(dict(order=j,from_hits=a,from_rooks=b))
+  result=dict(moments=moments)
+ elif i==14:
+  other=tuple((r,j) for r in range(n) for j in range(n) if (r,j) not in set(c));h=hits(n,c)[0];hc=hits(n,other)[0];check('fixed_universe_complement',hc==tuple(reversed(h)));result=dict(hit_vector=h,complement_hit_vector=hc,universe=n*n)
+ elif i==15:
+  b=[sum(r==i for r,j in c) for i in range(n)];ferrers=b==sorted(b) and c==tuple((i,j) for i in range(n) for j in range(b[i]));tests=[]
+  if ferrers:
+   r=rook(n,c)
+   for x in range(-1,n+1):
+    a=sum(r[n-k]*falling(x,k) for k in range(n+1));z=1
+    for j,h in enumerate(b):z*=x+h-j
+    check('factorial_basis_'+str(x),a==z);tests.append(dict(x=x,left=a,right=z))
+  else:check('non_ferrers_guard',True)
+  result=dict(applicable=ferrers,row_lengths=b,evaluation_certificates=tests,not_applicable_reason=None if ferrers else 'Explicit ordered row-prefix Ferrers condition is absent.')
+ elif i==16:
+  r=rook(n,c);largest=max(k for k,x in enumerate(r) if x);w=enumerate_rooks(n,c)[1][-1][1];check('capacity_witness',len(w)==largest);result=dict(maximum_rooks=largest,witness=w,full_assignment_in_board=largest==n)
+ elif i==17:state='represented';result=dict(selected_cells=len(c),analogy='Rows and columns can represent abstract assignment slots; counts alone supply no fairness, preference, suitability, consent or institutional authority.',real_assignment_credit=0);check('analogy_ceiling',True)
+ elif i==18:state='open_gap';result=dict(real_observations=0,participants=0,measured_outcomes=0,missing=['observed constraints','affected-party preferences','consequences and remedies']);check('observation_gap_retained',True)
+ else:state='exact_gate';result=dict(real_actions=0,decision_authority=False,required=['competent authority','specific action scope','affected-party process','real evidence']);check('authority_gate_retained',True)
+ return dict(op=op,fixture_id=f['id'],fixture_sha256=f['definition_sha256'],disposition=state,result=result,checks=checks,certificate_valid=True,operation_executed=True,completion_credit=int(state=='completed'),boundary=BOUNDARY)
+def dispatch(req,allowed=OPS):
+ try:
+  if not isinstance(req,dict) or set(req)!={'op','fixture'}:raise ValueError('REQUEST_KEYS')
+  if not isinstance(req['op'],str) or req['op'] not in allowed or req['op'] not in OPS:raise ValueError('UNKNOWN_OR_OUT_OF_SCOPE_OPERATION')
+  return evaluate(req['op'],req['fixture'])
+ except (ValueError,TypeError,KeyError) as exc:return dict(disposition='rejected',code=str(exc),operation_executed=False,completion_credit=0,boundary=BOUNDARY)
+def strict_load(data):
+ def unique(pairs):
+  d={}
+  for k,v in pairs:
+   if k in d:raise ValueError('DUPLICATE_KEY')
+   d[k]=v
+  return d
+ def depth(x,n=0):
+  if n>16:raise ValueError('NESTING_LIMIT')
+  if isinstance(x,dict):
+   for v in x.values():depth(v,n+1)
+  elif isinstance(x,list):
+   for v in x:depth(v,n+1)
+ d=json.loads(data,object_pairs_hook=unique,parse_constant=lambda _:(_ for _ in ()).throw(ValueError('NONFINITE_JSON')));depth(d);return d
+def cli(allowed=OPS):
+ try:
+  data=sys.stdin.buffer.read(65537)
+  if len(data)>65536:raise ValueError('BYTE_LIMIT')
+  result=dispatch(strict_load(data.decode('utf8')),allowed)
+ except (ValueError,UnicodeError,RecursionError) as exc:result=dict(disposition='rejected',code=type(exc).__name__,operation_executed=False,completion_credit=0,boundary=BOUNDARY)
+ print(json.dumps(result,sort_keys=True,ensure_ascii=True));return 2 if result['disposition']=='rejected' else 0
+if __name__=='__main__':sys.exit(cli())

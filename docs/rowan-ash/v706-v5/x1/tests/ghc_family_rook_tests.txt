@@ -1,0 +1,37 @@
+"""Twenty explicit mathematical, envelope and parser checks."""
+import copy,math
+def run_tests(C,fixtures):
+ by={f['id']:f for f in fixtures};out=[]
+ def test(name,fn):
+  try:ok=bool(fn());detail='predicate matched' if ok else 'predicate false'
+  except Exception as e:ok=False;detail=type(e).__name__+': '+str(e)
+  out.append(dict(name=name,passed=ok,observed=detail,same_owner_only=True))
+ def vector(key):
+  f=by[key];return C['rook'](f['n'],tuple(map(tuple,f['cells'])))
+ def bad(change):
+  f=copy.deepcopy(by['RB07']);change(f);return C['dispatch']({'op':'board-shape','fixture':f})['disposition']=='rejected'
+ def invalid(s):
+  try:C['strict_load'](s);return False
+  except ValueError:return True
+ test('empty-universe-one-empty-placement',lambda:vector('RB01')==(1,))
+ test('empty-one-no-nonempty-placement',lambda:vector('RB02')==(1,0))
+ test('full-three-closed-form',lambda:vector('RB05')==tuple(math.comb(3,k)**2*math.factorial(k) for k in range(4)))
+ test('diagonal-binomial-coefficients',lambda:vector('RB04')==(1,3,3,1))
+ test('one-row-capacity-one',lambda:vector('RB06')==(1,3,0,0))
+ test('disjoint-two-block-convolution',lambda:vector('RB10')==(1,8,20,16,4))
+ test('staircase-Stirling-coefficients',lambda:vector('RB07')==(1,10,25,15,1))
+ test('rectangle-closed-form',lambda:vector('RB09')==tuple(math.comb(2,k)*math.comb(3,k)*math.factorial(k) if k<=2 else 0 for k in range(5)))
+ test('connected-cells-do-not-factor-independently',lambda:C['rook'](2,((0,0),(0,1)))!=(1,2,1))
+ test('boolean-dimension-refused',lambda:bad(lambda f:f.update(n=True)))
+ test('boolean-coordinate-refused',lambda:bad(lambda f:f['cells'][0].__setitem__(0,False)))
+ test('duplicate-cell-refused',lambda:bad(lambda f:f['cells'].append(f['cells'][0])))
+ test('unsorted-cell-refused',lambda:bad(lambda f:f['cells'].reverse()))
+ test('outside-universe-refused',lambda:bad(lambda f:f['cells'][0].__setitem__(1,4)))
+ test('digest-tampering-refused',lambda:bad(lambda f:f.update(name='changed')))
+ test('real-authority-field-refused',lambda:bad(lambda f:f.update(authority_actions=1)))
+ test('extra-fixture-key-refused',lambda:bad(lambda f:f.update(extra='field')))
+ test('duplicate-JSON-key-refused',lambda:invalid('{"a":1,"a":2}'))
+ test('nonfinite-JSON-refused',lambda:invalid('{"a":NaN}'))
+ test('excessive-nesting-refused',lambda:invalid('['*18+'0'+']'*18))
+ assert len(out)==20
+ return dict(tests=out,scope='New owner implementation only; known mathematical examples and invalid envelopes.',independent_reproduction=False)
