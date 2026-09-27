@@ -1,0 +1,165 @@
+from __future__ import annotations
+
+from fractions import Fraction
+from math import gcd
+
+
+X1_OPERATIONS = [
+    "rational-shape",
+    "euclidean-trace",
+    "simple-continued-fraction",
+    "convergents",
+    "continuants",
+    "determinant-identity",
+    "stern-brocot-path",
+    "calkin-wilf-index",
+    "farey-neighbors",
+    "mediant-reduction",
+]
+
+
+def normalize_fixture(fixture: dict) -> tuple[int, int, str]:
+    if not isinstance(fixture, dict):
+        raise ValueError("fixture must be an object")
+    numerator = fixture.get("numerator")
+    denominator = fixture.get("denominator")
+    fixture_id = fixture.get("id")
+    if isinstance(numerator, bool) or not isinstance(numerator, int) or numerator <= 0:
+        raise ValueError("numerator must be a positive integer")
+    if isinstance(denominator, bool) or not isinstance(denominator, int) or denominator <= 0:
+        raise ValueError("denominator must be a positive integer")
+    if not isinstance(fixture_id, str) or not fixture_id:
+        raise ValueError("fixture id must be a nonempty string")
+    factor = gcd(numerator, denominator)
+    return numerator // factor, denominator // factor, fixture_id
+
+
+def euclidean_trace(numerator: int, denominator: int) -> list[dict]:
+    trace: list[dict] = []
+    a, b = numerator, denominator
+    while b:
+        q, r = divmod(a, b)
+        trace.append({"dividend": a, "divisor": b, "quotient": q, "remainder": r})
+        a, b = b, r
+    return trace
+
+
+def continued_fraction(numerator: int, denominator: int) -> list[int]:
+    terms: list[int] = []
+    a, b = numerator, denominator
+    while b:
+        q, r = divmod(a, b)
+        terms.append(q)
+        a, b = b, r
+    return terms
+
+
+def convergents(terms: list[int]) -> list[dict]:
+    p_minus_2, p_minus_1 = 0, 1
+    q_minus_2, q_minus_1 = 1, 0
+    rows: list[dict] = []
+    for index, term in enumerate(terms):
+        p = term * p_minus_1 + p_minus_2
+        q = term * q_minus_1 + q_minus_2
+        rows.append({"index": index, "term": term, "numerator": p, "denominator": q})
+        p_minus_2, p_minus_1 = p_minus_1, p
+        q_minus_2, q_minus_1 = q_minus_1, q
+    return rows
+
+
+def stern_brocot_path(numerator: int, denominator: int) -> str:
+    n, d = numerator, denominator
+    path: list[str] = []
+    while n != d:
+        if n < d:
+            path.append("L")
+            d -= n
+        else:
+            path.append("R")
+            n -= d
+    return "".join(path)
+
+
+def decode_stern_brocot(path: str) -> tuple[int, int]:
+    left_n, left_d = 0, 1
+    right_n, right_d = 1, 0
+    n, d = 1, 1
+    for token in path:
+        if token == "L":
+            right_n, right_d = n, d
+        elif token == "R":
+            left_n, left_d = n, d
+        else:
+            raise ValueError("path tokens must be L or R")
+        n, d = left_n + right_n, left_d + right_d
+    return n, d
+
+
+def farey_neighbors(numerator: int, denominator: int) -> tuple[tuple[int, int], tuple[int, int]]:
+    if denominator == 1:
+        return (numerator - 1, 1), (numerator + 1, 1)
+    y_left = pow(numerator, -1, denominator)
+    x_left = (numerator * y_left - 1) // denominator
+    left = (x_left, y_left)
+    right = (numerator - x_left, denominator - y_left)
+    return left, right
+
+
+def execute(request: dict) -> dict:
+    if not isinstance(request, dict):
+        raise ValueError("request must be an object")
+    operation = request.get("op")
+    if operation not in X1_OPERATIONS:
+        raise ValueError("unsupported x1 operation")
+    n, d, fixture_id = normalize_fixture(request.get("fixture"))
+    terms = continued_fraction(n, d)
+    conv = convergents(terms)
+    path = stern_brocot_path(n, d)
+    left, right = farey_neighbors(n, d)
+
+    if operation == "rational-shape":
+        result = {"normalized": {"numerator": n, "denominator": d}, "gcd": 1}
+    elif operation == "euclidean-trace":
+        result = {"trace": euclidean_trace(n, d), "gcd": 1}
+    elif operation == "simple-continued-fraction":
+        result = {"terms": terms, "canonical_tail": len(terms) == 1 or terms[-1] > 1}
+    elif operation == "convergents":
+        result = {"convergents": conv, "last": conv[-1]}
+    elif operation == "continuants":
+        result = {"numerators": [row["numerator"] for row in conv], "denominators": [row["denominator"] for row in conv]}
+    elif operation == "determinant-identity":
+        determinants = []
+        for index in range(1, len(conv)):
+            value = conv[index]["numerator"] * conv[index - 1]["denominator"] - conv[index - 1]["numerator"] * conv[index]["denominator"]
+            determinants.append({"index": index, "value": value, "expected": (-1) ** (index - 1)})
+        result = {"determinants": determinants, "all_exact": all(row["value"] == row["expected"] for row in determinants)}
+    elif operation == "stern-brocot-path":
+        decoded = decode_stern_brocot(path)
+        result = {"path": path, "decoded": {"numerator": decoded[0], "denominator": decoded[1]}, "exact": decoded == (n, d)}
+    elif operation == "calkin-wilf-index":
+        bits = "1" + path.replace("L", "0").replace("R", "1")
+        result = {"path": path, "binary_index": bits, "index": int(bits, 2)}
+    elif operation == "farey-neighbors":
+        result = {
+            "left": {"numerator": left[0], "denominator": left[1]},
+            "right": {"numerator": right[0], "denominator": right[1]},
+            "left_determinant": n * left[1] - d * left[0],
+            "right_determinant": d * right[0] - n * right[1],
+        }
+    else:
+        mediant_n, mediant_d = left[0] + right[0], left[1] + right[1]
+        factor = gcd(mediant_n, mediant_d)
+        result = {
+            "raw_mediant": {"numerator": mediant_n, "denominator": mediant_d},
+            "reduced": {"numerator": mediant_n // factor, "denominator": mediant_d // factor},
+            "equals_input": Fraction(mediant_n, mediant_d) == Fraction(n, d),
+        }
+    return {
+        "schema": "ghc.family.continued-fraction-envelope.v1",
+        "operation": operation,
+        "fixture_id": fixture_id,
+        "normalized": {"numerator": n, "denominator": d},
+        "result": result,
+        "disposition": "completed",
+        "boundary": "Finite exact rational software evidence only.",
+    }

@@ -1,0 +1,20 @@
+from __future__ import annotations
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[5]
+namespace = {"__name__": "eiren_v706_v3_cf_engine"}
+engine_path = ROOT / "scripts" / "eiren_v706_v3_cf_engine.txt"
+source = engine_path.read_text(encoding="utf-8")
+exec(compile(source, engine_path.as_posix(), "exec"), namespace)
+allowed = ['stern-brocot-path', 'calkin-wilf-index']
+try:
+    request = json.loads(sys.stdin.read())
+    if request.get("op") not in allowed:
+        raise ValueError("operation not admitted by this paired caller")
+    result = namespace["execute"](request)
+    print(json.dumps({"ok": True, "result": result, "boundary": "finite owner-local exact rational"}, sort_keys=True))
+except Exception as exc:
+    print(json.dumps({"ok": False, "code": "REFUSED", "error": str(exc), "boundary": "invalid subject has zero credit"}, sort_keys=True))
+    raise SystemExit(2)
