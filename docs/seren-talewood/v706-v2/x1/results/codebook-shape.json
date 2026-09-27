@@ -1,0 +1,5901 @@
+{
+  "operation": "codebook-shape",
+  "complete": true,
+  "cases": [
+    {
+      "proposal_id": "ST7062-P001",
+      "definition_sha256": "290a3ce227c83f922c335d94d3df736de6c7a7afb5859784bc9918c25cd7f61c",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD01",
+          "codewords": [
+            "0",
+            "1"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "01",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD01",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            1
+          ],
+          "max_length": 1
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD01",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            1
+          ],
+          "max_length": 1
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "1553023d9e477123d7ab55294065587505319fda02ca8b9474f490a87ff82cc5",
+          "observed": "1553023d9e477123d7ab55294065587505319fda02ca8b9474f490a87ff82cc5",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P001-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P001-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P001-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P001-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P001-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                1
+              ],
+              "max_length": 1
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P001-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P001-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P001",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P001-BAD-OPERATION",
+          "proposal_id": "ST7062-P001",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P002",
+      "definition_sha256": "3e50c67c2d08d7483a2aa5542d7ebc23d8e811b305bee48acec26ac04580ee6f",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD02",
+          "codewords": [
+            "0",
+            "01"
+          ],
+          "message": [
+            1,
+            0
+          ],
+          "word": "010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD02",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD02",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "1418d6dfc72d91846d1d2c75991e68adfeb799eb929bb5462aec48946e8a43e8",
+          "observed": "1418d6dfc72d91846d1d2c75991e68adfeb799eb929bb5462aec48946e8a43e8",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P002-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P002-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P002-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P002-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P002-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P002-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P002-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P002",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P002-BAD-OPERATION",
+          "proposal_id": "ST7062-P002",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P003",
+      "definition_sha256": "3828c6341d7982d1170a6c0cfe9097f38773b7023110ed3b3bb12695c80fa146",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD03",
+          "codewords": [
+            "0",
+            "00"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "000",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD03",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD03",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "42bbc5c0271d4803f8b3c0eda338021220d1afd36908db21fa43a9e73d9468ac",
+          "observed": "42bbc5c0271d4803f8b3c0eda338021220d1afd36908db21fa43a9e73d9468ac",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P003-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P003-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P003-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P003-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P003-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P003-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P003-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P003",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P003-BAD-OPERATION",
+          "proposal_id": "ST7062-P003",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P004",
+      "definition_sha256": "d46566b001d4716b082816451f3c1999395fc373923482a0d8cbc21e13d65ddc",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD04",
+          "codewords": [
+            "0",
+            "01",
+            "10"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "001",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD04",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            1,
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD04",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            1,
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "0d4db1cb64c0b7423e391ef4b97dd7f5dbcb6fb00b8f9d8738ea79d241185726",
+          "observed": "0d4db1cb64c0b7423e391ef4b97dd7f5dbcb6fb00b8f9d8738ea79d241185726",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P004-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P004-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P004-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P004-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P004-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P004-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P004-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P004",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P004-BAD-OPERATION",
+          "proposal_id": "ST7062-P004",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P005",
+      "definition_sha256": "70d9db3ab1e55e7dea96e9b5d387e01e6ea71b6f32d415d125860a0db6e54c4d",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD05",
+          "codewords": [
+            "01",
+            "10"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "0110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD05",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD05",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "2411aaa551345a897c3a6f31043d8f3e46148e0d03c29b0dff6b933e4870b7df",
+          "observed": "2411aaa551345a897c3a6f31043d8f3e46148e0d03c29b0dff6b933e4870b7df",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P005-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P005-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P005-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P005-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P005-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P005-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P005-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P005",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P005-BAD-OPERATION",
+          "proposal_id": "ST7062-P005",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P006",
+      "definition_sha256": "ecae4a72705daa3c593e7a912f5e4a7da60688e73979f9ccfab949df869d9343",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD06",
+          "codewords": [
+            "0",
+            "01",
+            "11"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD06",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            1,
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD06",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            1,
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "9df3207ea20d30e755570d7c7ba3e099fdea41b2162bcaf3547d1c151a9d5b1e",
+          "observed": "9df3207ea20d30e755570d7c7ba3e099fdea41b2162bcaf3547d1c151a9d5b1e",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P006-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P006-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P006-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P006-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P006-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P006-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P006-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P006",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P006-BAD-OPERATION",
+          "proposal_id": "ST7062-P006",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P007",
+      "definition_sha256": "a6de8c6619292ab44ab9a4ec7edbb086bcf5b38765adb73c1019ebf7871d2f73",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD07",
+          "codewords": [
+            "0",
+            "10",
+            "110",
+            "111"
+          ],
+          "message": [
+            2,
+            3
+          ],
+          "word": "110111",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD07",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            1,
+            2,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD07",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            1,
+            2,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "eb189d24540ba34086506a6f7b07df5c9841d8a98873af4407c30694732d8533",
+          "observed": "eb189d24540ba34086506a6f7b07df5c9841d8a98873af4407c30694732d8533",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P007-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P007-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P007-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P007-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P007-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P007-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P007-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P007",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P007-BAD-OPERATION",
+          "proposal_id": "ST7062-P007",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P008",
+      "definition_sha256": "8d948896ea90f6c80d3cfbf6cb211df0b7d78ff6f9efebbf9d4618028f74a878",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD08",
+          "codewords": [
+            "00",
+            "01",
+            "10",
+            "11"
+          ],
+          "message": [
+            3,
+            0
+          ],
+          "word": "1100",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD08",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD08",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "839a7dd641ce2e7b515a35fe78b0f8c5cccd9682796d7977af49015d323217a0",
+          "observed": "839a7dd641ce2e7b515a35fe78b0f8c5cccd9682796d7977af49015d323217a0",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P008-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P008-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P008-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P008-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P008-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P008-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P008-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P008",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P008-BAD-OPERATION",
+          "proposal_id": "ST7062-P008",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P009",
+      "definition_sha256": "fbd33dcfa5ebc4700a2a51d5f0eb444cfaaf15385130404b88a68167cf3e98d7",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD09",
+          "codewords": [
+            "01",
+            "011",
+            "110"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "11001",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD09",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            2,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD09",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            2,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "74c70bdf89c3ec6ef0b3b2f7496f37c0dc7892509a2536cd7e278b3b305d56fc",
+          "observed": "74c70bdf89c3ec6ef0b3b2f7496f37c0dc7892509a2536cd7e278b3b305d56fc",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P009-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P009-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P009-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P009-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P009-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P009-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P009-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P009",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P009-BAD-OPERATION",
+          "proposal_id": "ST7062-P009",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P010",
+      "definition_sha256": "e9522f1fe082f70c6b4ced3e27953a9419fc255fb5c7bcedd4dba223f8944864",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD10",
+          "codewords": [
+            "1",
+            "10"
+          ],
+          "message": [
+            1,
+            0
+          ],
+          "word": "101",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD10",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD10",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "e797c68e29bbb78cf941498c43002fd937306b7dd14d653d97947eff5dc5f695",
+          "observed": "e797c68e29bbb78cf941498c43002fd937306b7dd14d653d97947eff5dc5f695",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P010-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P010-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P010-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P010-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P010-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P010-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P010-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P010",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P010-BAD-OPERATION",
+          "proposal_id": "ST7062-P010",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P011",
+      "definition_sha256": "69d5b51d830bd016c69868911fdfb4ee126c7dd25a33704a0cc5f2314fa500dd",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD11",
+          "codewords": [
+            "1",
+            "11"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "111",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD11",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD11",
+        "state": "completed",
+        "result": {
+          "symbols": 2,
+          "lengths": [
+            1,
+            2
+          ],
+          "max_length": 2
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "9d6406fb8ef32ebc704e3e388704858953979c8084cba011aa198a284372446f",
+          "observed": "9d6406fb8ef32ebc704e3e388704858953979c8084cba011aa198a284372446f",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P011-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P011-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P011-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P011-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P011-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "symbols": 2,
+              "lengths": [
+                1,
+                2
+              ],
+              "max_length": 2
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P011-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P011-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P011",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P011-BAD-OPERATION",
+          "proposal_id": "ST7062-P011",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P012",
+      "definition_sha256": "c109cb48cdbdfe0c5be717af5d371be0f5e829ab728d7ba5a2f776e87da94beb",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD12",
+          "codewords": [
+            "0",
+            "001",
+            "101"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "1010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD12",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            1,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD12",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            1,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "3d35c0977e3ebb1cc48ae5d98ae85dd9a41c2c02cd6ec5505fc03b1e852ba1cc",
+          "observed": "3d35c0977e3ebb1cc48ae5d98ae85dd9a41c2c02cd6ec5505fc03b1e852ba1cc",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P012-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P012-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P012-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P012-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P012-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                1,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P012-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P012-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P012",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P012-BAD-OPERATION",
+          "proposal_id": "ST7062-P012",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P013",
+      "definition_sha256": "53422a82b41dfa8425dae58ba43ba34c14bf757dd3cfc4087efdb454a55b0f64",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD13",
+          "codewords": [
+            "00",
+            "010",
+            "011"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "00010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD13",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            2,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD13",
+        "state": "completed",
+        "result": {
+          "symbols": 3,
+          "lengths": [
+            2,
+            3,
+            3
+          ],
+          "max_length": 3
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "0b88d1b61da70eed9f9ac8b12c555dee9c7419938595f7338bc12e22829ffd21",
+          "observed": "0b88d1b61da70eed9f9ac8b12c555dee9c7419938595f7338bc12e22829ffd21",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P013-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P013-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P013-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P013-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P013-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "symbols": 3,
+              "lengths": [
+                2,
+                3,
+                3
+              ],
+              "max_length": 3
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P013-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P013-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P013",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P013-BAD-OPERATION",
+          "proposal_id": "ST7062-P013",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P014",
+      "definition_sha256": "b4e93526aaa32940e3e01db7980c903e37bbf14b8dddc79ef9e8f6efcef0b047",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD14",
+          "codewords": [
+            "0",
+            "00",
+            "000",
+            "0000"
+          ],
+          "message": [
+            1,
+            2
+          ],
+          "word": "00000",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD14",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "max_length": 4
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD14",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "max_length": 4
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "d4739549fedb49b0f0039b7fdf8f99c2adf71e373015ce6a1399fc83084a1f31",
+          "observed": "d4739549fedb49b0f0039b7fdf8f99c2adf71e373015ce6a1399fc83084a1f31",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P014-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P014-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P014-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P014-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P014-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P014-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P014-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P014",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P014-BAD-OPERATION",
+          "proposal_id": "ST7062-P014",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P015",
+      "definition_sha256": "d63fa84f6ce55a4bbcf829602f8f88781a279f45376f83998b4f0770199f325e",
+      "request": {
+        "op": "codebook-shape",
+        "fixture": {
+          "id": "UD15",
+          "codewords": [
+            "01",
+            "001",
+            "1011",
+            "1110"
+          ],
+          "message": [
+            2,
+            3
+          ],
+          "word": "10111110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD15",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "max_length": 4
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "codebook-shape",
+        "fixture_id": "UD15",
+        "state": "completed",
+        "result": {
+          "symbols": 4,
+          "lengths": [
+            2,
+            3,
+            4,
+            4
+          ],
+          "max_length": 4
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "codebook-shape",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "3c7d4492fb0658b14773157038e73b96a9a9a8d08457b8afc1601e5eb55bc7d2",
+          "observed": "3c7d4492fb0658b14773157038e73b96a9a9a8d08457b8afc1601e5eb55bc7d2",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P015-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P015-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P015-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P015-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P015-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "codebook-shape",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "symbols": 4,
+              "lengths": [
+                2,
+                3,
+                4,
+                4
+              ],
+              "max_length": 4
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P015-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/codebook-shape.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P015-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P015",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P015-BAD-OPERATION",
+          "proposal_id": "ST7062-P015",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    }
+  ]
+}

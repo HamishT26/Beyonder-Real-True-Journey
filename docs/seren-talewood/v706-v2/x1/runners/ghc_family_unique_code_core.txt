@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""Finite binary codebook contracts, with exact residual and parse evidence."""
+import json,sys
+from pathlib import Path
+OPS=['codebook-shape','proper-prefix-pairs','suffix-universe','left-quotient','first-residuals','residual-closure','unique-decoding-decision','finite-parses','message-encoding','message-boundaries']
+def validate(q,allowed=OPS):
+ if type(q) is not dict or set(q)!={'op','fixture'}:raise ValueError('request_fields')
+ if q['op'] not in allowed:raise ValueError('operation')
+ f=q['fixture']
+ if type(f) is not dict or set(f)!={'id','codewords','message','word','evidence'}:raise ValueError('fixture_fields')
+ c=f['codewords']
+ if type(c) is not list or not 1<=len(c)<=5 or any(type(w) is not str or not 1<=len(w)<=4 or set(w)-{'0','1'} for w in c):raise ValueError('codewords')
+ if len(set(c))!=len(c):raise ValueError('duplicate_codeword')
+ if type(f['message']) is not list or len(f['message'])>3 or any(type(i) is not int or not 0<=i<len(c) for i in f['message']):raise ValueError('message')
+ if type(f['word']) is not str or len(f['word'])>12 or set(f['word'])-{'0','1'}:raise ValueError('word')
+ if type(f['id']) is not str or not 1<=len(f['id'])<=40 or f['evidence']!='synthetic':raise ValueError('evidence')
+ return f
+def prefixes(c):return [[i,j] for i,a in enumerate(c) for j,b in enumerate(c) if i!=j and b.startswith(a)]
+def suffixes(c):return sorted({w[i:] for w in c for i in range(1,len(w))})
+def first(c):return sorted({b[len(a):] for a in c for b in c if a!=b and b.startswith(a)})
+def residual(c):
+ queue=first(c);seen=set(queue);edges=[]
+ for r in queue:
+  if not r:continue
+  for i,w in enumerate(c):
+   outputs=[]
+   if r.startswith(w):outputs.append(('word_from_residual',r[len(w):]))
+   if w.startswith(r):outputs.append(('residual_from_word',w[len(r):]))
+   for direction,s in outputs:
+    edges.append({'from':r,'word_index':i,'direction':direction,'to':s})
+    if s not in seen:seen.add(s);queue.append(s)
+ return {'unique': '' not in seen,'residuals':sorted(seen),'edges':edges,'finite_exhausted':True}
+def parses(c,word):
+ cache={len(word):[[]]}
+ for pos in range(len(word)-1,-1,-1):
+  choices=[]
+  for i,w in enumerate(c):
+   if word.startswith(w,pos):choices.extend([[i]+rest for rest in cache[pos+len(w)]])
+  cache[pos]=choices
+ return cache[0]
+def envelope(op,f,result,state='completed'):
+ return {'schema':'ghc.family.unique-code.response.v1','operation':op,'fixture_id':f['id'],'state':state,'result':result,'evidence':'synthetic','real_observations':0,'independent_reproduction':False}
+def evaluate(q):
+ f=validate(q);c=f['codewords'];op=q['op']
+ if op=='codebook-shape':r={'symbols':len(c),'lengths':[len(w) for w in c],'max_length':max(map(len,c))}
+ elif op=='proper-prefix-pairs':r={'pairs':prefixes(c),'prefix_free':not prefixes(c)}
+ elif op=='suffix-universe':r={'suffixes':suffixes(c),'count':len(suffixes(c))}
+ elif op=='left-quotient':r={'residuals':sorted({f['word'][len(w):] for w in c if f['word'].startswith(w)})}
+ elif op=='first-residuals':r={'residuals':first(c)}
+ elif op=='residual-closure':r=residual(c)
+ elif op=='unique-decoding-decision':r={'unique':residual(c)['unique']}
+ elif op=='finite-parses':
+  choices=parses(c,f['word']);r={'parses':choices,'count':len(choices),'classification':'none' if not choices else 'unique' if len(choices)==1 else 'ambiguous'}
+ elif op=='message-encoding':r={'encoded':''.join(c[i] for i in f['message']),'message':f['message'][:]}
+ elif op=='message-boundaries':
+  bounds=[0]
+  for i in f['message']:bounds.append(bounds[-1]+len(c[i]))
+  r={'boundaries':bounds,'length':bounds[-1]}
+ return envelope(op,f,r)
+def rejected(reason):return {'schema':'ghc.family.unique-code.response.v1','state':'rejected','reason':reason,'executed':False}
+def handle(q):
+ try:return evaluate(q)
+ except (ValueError,KeyError,TypeError) as e:return rejected(str(e))
+def cli(handler=handle):
+ try:
+  if len(sys.argv)!=2:raise ValueError('one_json_path_required')
+  q=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'));r=handler(q)
+ except (ValueError,OSError) as e:r=rejected(str(e) if isinstance(e,ValueError) else 'input_io')
+ print(json.dumps(r,ensure_ascii=False,sort_keys=True));return 2 if r['state']=='rejected' else 0
+if __name__=='__main__':raise SystemExit(cli())

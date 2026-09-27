@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+"""Owner-local paired operation caller; no network or persistent mutation."""
+import runpy
+from pathlib import Path
+M=runpy.run_path(str(Path(__file__).with_name('ghc_family_unique_code_core.txt')))
+ALLOWED=['first-residuals', 'residual-closure']
+def guarded(q):
+ if not isinstance(q,dict) or q.get("op") not in ALLOWED:return M["rejected"]("operation")
+ return M["handle"](q)
+if __name__=="__main__":raise SystemExit(M["cli"](guarded))

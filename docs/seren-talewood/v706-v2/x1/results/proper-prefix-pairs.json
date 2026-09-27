@@ -1,0 +1,5821 @@
+{
+  "operation": "proper-prefix-pairs",
+  "complete": true,
+  "cases": [
+    {
+      "proposal_id": "ST7062-P016",
+      "definition_sha256": "1507c64262eee61836c781d235f9a0ae1630a722f6789bb2ff0e72dd132b47f6",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD01",
+          "codewords": [
+            "0",
+            "1"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "01",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD01",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD01",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "f69819c5fe0a6cf98b21760cdfdf86f63ce7dd48dfc506d78430f3e957c9556e",
+          "observed": "f69819c5fe0a6cf98b21760cdfdf86f63ce7dd48dfc506d78430f3e957c9556e",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P016-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P016-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P016-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P016-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P016-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P016-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P016-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P016",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P016-BAD-OPERATION",
+          "proposal_id": "ST7062-P016",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P017",
+      "definition_sha256": "bc6e0265842dd39bcc64acdb84be3e44c3a06f194291c519c3e3cf3d2a465750",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD02",
+          "codewords": [
+            "0",
+            "01"
+          ],
+          "message": [
+            1,
+            0
+          ],
+          "word": "010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD02",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD02",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "79c0e36b41de5b88657b0208a81e1fed863f114d80ae5830feaf6d0e2e0bec0c",
+          "observed": "79c0e36b41de5b88657b0208a81e1fed863f114d80ae5830feaf6d0e2e0bec0c",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P017-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P017-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P017-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P017-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P017-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P017-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P017-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P017",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P017-BAD-OPERATION",
+          "proposal_id": "ST7062-P017",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P018",
+      "definition_sha256": "1904de9d8f7e7238c6277fc0382f52d9d50d52a089047e3dbc795db8cdddb264",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD03",
+          "codewords": [
+            "0",
+            "00"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "000",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD03",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD03",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "048470543ebe34abc9c615d9a36ffa69ea187aaf5ce2843df30323f76c9014cb",
+          "observed": "048470543ebe34abc9c615d9a36ffa69ea187aaf5ce2843df30323f76c9014cb",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P018-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P018-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P018-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P018-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P018-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P018-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P018-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P018",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P018-BAD-OPERATION",
+          "proposal_id": "ST7062-P018",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P019",
+      "definition_sha256": "0c69254bbb5466d915d5804016379e7cb13a7438cc557526bd486eeb17cd5202",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD04",
+          "codewords": [
+            "0",
+            "01",
+            "10"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "001",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD04",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD04",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "e768d0e026f1d9e9ae33fd0b81db937e33d0349c71442d9b81f3bd0c14e35904",
+          "observed": "e768d0e026f1d9e9ae33fd0b81db937e33d0349c71442d9b81f3bd0c14e35904",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P019-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P019-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P019-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P019-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P019-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P019-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P019-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P019",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P019-BAD-OPERATION",
+          "proposal_id": "ST7062-P019",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P020",
+      "definition_sha256": "b95dae14235db72235b9552911ef21b0c18b43dc8a033e19691a29840c9f0187",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD05",
+          "codewords": [
+            "01",
+            "10"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "0110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD05",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD05",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "55bac14698853ee7a6f23387f323f6b5deb270bbeb77425e9cdcf60a2d64e0ac",
+          "observed": "55bac14698853ee7a6f23387f323f6b5deb270bbeb77425e9cdcf60a2d64e0ac",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P020-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P020-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P020-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P020-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P020-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P020-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P020-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P020",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P020-BAD-OPERATION",
+          "proposal_id": "ST7062-P020",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P021",
+      "definition_sha256": "f4b7c6689cb16623d285c9f90e2fbcc9a4885fbfae93d7e750573952dfab595f",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD06",
+          "codewords": [
+            "0",
+            "01",
+            "11"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD06",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD06",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "40abe2b87ed0b6bd920897d178a4508395824800ff839a0fa4b2eee1588cb49a",
+          "observed": "40abe2b87ed0b6bd920897d178a4508395824800ff839a0fa4b2eee1588cb49a",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P021-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P021-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P021-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P021-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P021-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P021-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P021-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P021",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P021-BAD-OPERATION",
+          "proposal_id": "ST7062-P021",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P022",
+      "definition_sha256": "750d3f55b37300c589e9dbeaf7e37139f902a1d58dedb7b8740f94e58ff6affe",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD07",
+          "codewords": [
+            "0",
+            "10",
+            "110",
+            "111"
+          ],
+          "message": [
+            2,
+            3
+          ],
+          "word": "110111",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD07",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD07",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "64f5f4ca9f9f3afe2aed69d2df773737a06456aa148b1bd45378df22e95d3a28",
+          "observed": "64f5f4ca9f9f3afe2aed69d2df773737a06456aa148b1bd45378df22e95d3a28",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P022-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P022-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P022-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P022-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P022-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P022-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P022-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P022",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P022-BAD-OPERATION",
+          "proposal_id": "ST7062-P022",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P023",
+      "definition_sha256": "aa84292798370ad7e88f18d1471a9b5e5121b6eabbddbb697d9e58b496b14271",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD08",
+          "codewords": [
+            "00",
+            "01",
+            "10",
+            "11"
+          ],
+          "message": [
+            3,
+            0
+          ],
+          "word": "1100",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD08",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD08",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "44cbcd2b1623f11109e36839cd9bd5ea30d7ce65128d438031ca8816ffc2b2f1",
+          "observed": "44cbcd2b1623f11109e36839cd9bd5ea30d7ce65128d438031ca8816ffc2b2f1",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P023-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P023-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P023-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P023-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P023-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P023-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P023-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P023",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P023-BAD-OPERATION",
+          "proposal_id": "ST7062-P023",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P024",
+      "definition_sha256": "6d90f858174dfc5ae56d6dcc503b02edb4ee812e16f5c39af5354fb5c9fbde0e",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD09",
+          "codewords": [
+            "01",
+            "011",
+            "110"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "11001",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD09",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD09",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "9b49cae16f3cf64b00f77afdb0ee828685f1c0142f0c3f879f97d39e2567dd31",
+          "observed": "9b49cae16f3cf64b00f77afdb0ee828685f1c0142f0c3f879f97d39e2567dd31",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P024-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P024-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P024-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P024-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P024-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P024-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P024-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P024",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P024-BAD-OPERATION",
+          "proposal_id": "ST7062-P024",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P025",
+      "definition_sha256": "526de29322a5d04930539599448ed7bad688c177111f2007a9f71f50474686db",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD10",
+          "codewords": [
+            "1",
+            "10"
+          ],
+          "message": [
+            1,
+            0
+          ],
+          "word": "101",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD10",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD10",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "a3aea22da6b8d158865a225f6deb76553d7517ebc73ee8ff625338d4effe115e",
+          "observed": "a3aea22da6b8d158865a225f6deb76553d7517ebc73ee8ff625338d4effe115e",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P025-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P025-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P025-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P025-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P025-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P025-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P025-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P025",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P025-BAD-OPERATION",
+          "proposal_id": "ST7062-P025",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P026",
+      "definition_sha256": "37beff1f1f81e16c0021d8c56fa88813bd9d7ede2ed76183dbb7e85eb847df1b",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD11",
+          "codewords": [
+            "1",
+            "11"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "111",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD11",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD11",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "6d9113c3ab511b43823a74134fc61c95f7c88cedc4a4de2fa3db18cb09d312c6",
+          "observed": "6d9113c3ab511b43823a74134fc61c95f7c88cedc4a4de2fa3db18cb09d312c6",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P026-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P026-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P026-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P026-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P026-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P026-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P026-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P026",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P026-BAD-OPERATION",
+          "proposal_id": "ST7062-P026",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P027",
+      "definition_sha256": "9e02a97ba2af3ab7a78b001fb13af52a231345c42c71ddb2b82b908257dd1e7c",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD12",
+          "codewords": [
+            "0",
+            "001",
+            "101"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "1010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD12",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD12",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "b7ccb99a670df9e8efea4f57b5c070d847213ac4f31045ae068d3711d3ed851c",
+          "observed": "b7ccb99a670df9e8efea4f57b5c070d847213ac4f31045ae068d3711d3ed851c",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P027-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P027-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P027-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P027-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P027-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P027-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P027-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P027",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P027-BAD-OPERATION",
+          "proposal_id": "ST7062-P027",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P028",
+      "definition_sha256": "8e5d303a2e0675ce3cc356776d54995a10f1777bffbcad2d10ec8c97f7ace743",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD13",
+          "codewords": [
+            "00",
+            "010",
+            "011"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "00010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD13",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD13",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "bc0590a91fdd4b7b788f2db9a86bc5a722d8bb53771b0bfc41beed440b8aa259",
+          "observed": "bc0590a91fdd4b7b788f2db9a86bc5a722d8bb53771b0bfc41beed440b8aa259",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P028-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P028-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P028-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P028-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P028-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P028-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P028-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P028",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P028-BAD-OPERATION",
+          "proposal_id": "ST7062-P028",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P029",
+      "definition_sha256": "98a4c74eea11d6c759def8ace6f54983fb4e62a2bb65bfc75b4b32588f2151e3",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD14",
+          "codewords": [
+            "0",
+            "00",
+            "000",
+            "0000"
+          ],
+          "message": [
+            1,
+            2
+          ],
+          "word": "00000",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD14",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD14",
+        "state": "completed",
+        "result": {
+          "pairs": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "prefix_free": false
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "0f69dec868425b5501748927ab31369f79e99c76a91c854cb4936592dcaf6729",
+          "observed": "0f69dec868425b5501748927ab31369f79e99c76a91c854cb4936592dcaf6729",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P029-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P029-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P029-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P029-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P029-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "pairs": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  2,
+                  3
+                ]
+              ],
+              "prefix_free": false
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P029-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P029-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P029",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P029-BAD-OPERATION",
+          "proposal_id": "ST7062-P029",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P030",
+      "definition_sha256": "6c8cb6b6d749777aad65c7f1a0fb46caca2c050aeab4468fb5f5a3afb7e22801",
+      "request": {
+        "op": "proper-prefix-pairs",
+        "fixture": {
+          "id": "UD15",
+          "codewords": [
+            "01",
+            "001",
+            "1011",
+            "1110"
+          ],
+          "message": [
+            2,
+            3
+          ],
+          "word": "10111110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD15",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "proper-prefix-pairs",
+        "fixture_id": "UD15",
+        "state": "completed",
+        "result": {
+          "pairs": [],
+          "prefix_free": true
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "proper-prefix-pairs",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "69672600f2bd6d61eb6514f155f7f6a21affe51401245369310e0a292ae36b3a",
+          "observed": "69672600f2bd6d61eb6514f155f7f6a21affe51401245369310e0a292ae36b3a",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P030-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P030-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P030-BAD-CODEWORDS"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P030-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P030-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "proper-prefix-pairs",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "pairs": [],
+              "prefix_free": true
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P030-BAD-OPERATION"
+          ],
+          "artifact": "x1/results/proper-prefix-pairs.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P030-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P030",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P030-BAD-OPERATION",
+          "proposal_id": "ST7062-P030",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    }
+  ]
+}

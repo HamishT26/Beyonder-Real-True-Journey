@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+"""Separate finite paired-decoder oracle and direct recursive tokenization."""
+from collections import deque
+def product(c):
+ proper=sorted({''}|{w[:i] for w in c for i in range(1,len(w))});start=('','',False);queue=[start];ids={start:0};parents={start:None};edges=[]
+ def step(prefix,bit):
+  s=prefix+bit;choices=[]
+  if s in c:choices.append(('',c.index(s)))
+  if any(w.startswith(s) and len(w)>len(s) for w in c):choices.append((s,None))
+  return choices
+ for state in queue:
+  a,b,different=state
+  for bit in '01':
+   for na,ea in step(a,bit):
+    for nb,eb in step(b,bit):
+     nxt=(na,nb,different or ea!=eb)
+     if nxt not in ids:ids[nxt]=len(queue);queue.append(nxt);parents[nxt]=(state,bit,ea,eb)
+     edges.append({'from':ids[state],'to':ids[nxt],'bit':bit,'left_emit':ea,'right_emit':eb})
+ target=('','',True);witness=None
+ if target in ids:
+  chars=[];left=[];right=[];state=target
+  while parents[state] is not None:
+   state,bit,a,b=parents[state];chars.append(bit)
+   if a is not None:left.append(a)
+   if b is not None:right.append(b)
+  witness={'word':''.join(reversed(chars)),'left':list(reversed(left)),'right':list(reversed(right))}
+  assert witness['left']!=witness['right'] and ''.join(c[i] for i in witness['left'])==''.join(c[i] for i in witness['right'])==witness['word']
+ return {'unique':target not in ids,'prefix_nodes':proper,'states':[[a,b,int(d)] for a,b,d in queue],'edges':edges,'witness':witness,'complete_reachable_graph':True}
+def recursive_parses(c,word):
+ if word=='':return [[]]
+ out=[]
+ for i,w in enumerate(c):
+  if word[:len(w)]==w:out += [[i]+rest for rest in recursive_parses(c,word[len(w):])]
+ return out
+def residual_levels(c):
+ level={b[len(a):] for a in c for b in c if a!=b and b[:len(a)]==a};seen=set();levels=[]
+ while not level<=seen:
+  levels.append(sorted(level));seen|=level
+  if '' in level:return {'unique':False,'seen':sorted(seen),'levels':levels}
+  level={s for u in level for w in c for s in ([u[len(w):]] if u[:len(w)]==w else [])+([w[len(u):]] if w[:len(u)]==u else [])}
+ return {'unique':True,'seen':sorted(seen),'levels':levels}
