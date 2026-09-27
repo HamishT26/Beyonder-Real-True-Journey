@@ -1,0 +1,7 @@
+# Caelen Morrow v706-v1 x1 evidence
+
+X1 executes the first ten frozen finite prefix-code mechanisms over fifteen synthetic fixtures, producing 150 bounded completed outcomes. It retains 300 malformed or mismatched subjects as failures with zero completion credit, then records 300 separate CLEAN/FIX recovery witnesses without promoting those subjects. Four hundred and fifty safe checks, twenty owner-local tests, ten complete local guides and five actually smoke-used paired callers pass.
+
+The deterministic construction orders active nodes by weight, lexical symbol provenance and creation serial; records every merge; assigns left-zero and right-one words; verifies prefix freedom, exact dyadic Kraft equality, weighted path length and trie collision freedom. These are finite fixture facts, not general algorithm certification, real compression evidence, archival observation or professional practice.
+
+Finite synthetic exact prefix-code and same-owner documentation/software evidence only. No real book, binding, archive, collection, person, participant, workplace, material, tool, measurement, custody transfer, identity event, compression deployment, professional decision, legal or cultural interpretation, affected-party approval, Māori wording or authority, empirical GMUT confirmation, THOS effectiveness, production Freed ID, independent reproduction, complete privacy, accessibility or security, AGI or ASI, consciousness or personhood, Theory of Everything, canon, or Stage 20 proof. Māori concepts remain under Māori authority. NOT_READY_FOR_STAGE_20.
