@@ -1,0 +1,5 @@
+# Mira Fenwick v707-v3 planning freeze
+
+This phase builds exact finite simplicial-complex, GF(2) boundary, Betti-number, Euler-Poincare, subdivision-census, and provenance certificates over fifteen new synthetic fixtures. It does not replay Ilyra Fen's finite-poset solver, tests, models, hooks, or canonical. Planning freezes 300 inherited Ilyra records at zero novelty and completion credit, 300 genuinely new Mira contracts, the four exact outcome labels, the v19 workload, a D-first sparse owner lane, five manual uninstalled hook candidates, and the prospective Auren Lark v707-v4 edge.
+
+The primary lens is GMUT Mind as disciplined finite mathematical specification. THOS Body remains visible through executable bounded evidence. Freed ID and CBR Heart remain visible through provenance, correction, remedy, accessibility, and authority reservations. No physical, empirical, production, identity, professional, legal, cultural, affected-party, Maori-authority, consciousness/personhood, proof/canon, or Stage 20 claim follows.
