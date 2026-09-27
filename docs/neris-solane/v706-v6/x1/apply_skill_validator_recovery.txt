@@ -1,0 +1,128 @@
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+PHASE_ROOT = ROOT.parent
+REPO = PHASE_ROOT.parents[2]
+
+
+def write_json(path: Path, value: object) -> None:
+    path.write_text(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+
+def read_json(path: Path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def record(path: Path) -> dict[str, object]:
+    data = path.read_bytes()
+    return {
+        "path": path.relative_to(REPO).as_posix(),
+        "bytes": len(data),
+        "words": len(data.decode("utf-8", "replace").split()),
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "git_blob_sha1": hashlib.sha1(f"blob {len(data)}\0".encode("ascii") + data).hexdigest(),
+    }
+
+
+recovery = {
+    "id": "NS7066-X1-SKILL-VALIDATOR-ENCODING-01",
+    "class": "operational_failure",
+    "passed": False,
+    "retained": True,
+    "completion_credit": 0,
+    "reason": "The first official quick_validate.py pass inherited the Windows cp1252 default and raised UnicodeDecodeError on the Māori-authority boundary before evaluating any skill.",
+    "recovery": "Rerun the unchanged official validator once with PYTHONUTF8=1; all ten owner-local skills then returned Skill is valid.",
+    "reference": "x1/operational-recoveries.json",
+}
+path_recovery = {
+    "witness_id": "NS7066-X1-RECOVERY-PATH-01",
+    "class": "operational_failure",
+    "passed": False,
+    "retained": True,
+    "completion_credit": 0,
+    "reason": "The first evidence-receipt updater selected one ancestor above the repository root and failed while projecting a repository-relative method-flow path.",
+    "recovery": "Correct only the repository-root ancestor, preserve the partial writes, and rerun the idempotent updater.",
+    "reference": "x1/operational-recoveries.json",
+}
+schema_recovery = {
+    "witness_id": "NS7066-X1-RECOVERY-SCHEMA-01",
+    "class": "operational_failure",
+    "passed": False,
+    "retained": True,
+    "completion_credit": 0,
+    "reason": "The second updater attempt encountered the partial first-attempt row under id rather than the Method Flow witness_id key and stopped before projection completion.",
+    "recovery": "Preserve and normalize the partial row by copying id into witness_id, then rerun the same idempotent projection.",
+    "reference": "x1/operational-recoveries.json",
+}
+write_json(ROOT / "operational-recoveries.json", {
+    "rows": [recovery, path_recovery, schema_recovery],
+    "count": 3,
+    "failed_skill_content_count": 0,
+    "replayed_domain_work": False,
+})
+
+receipts = read_json(ROOT / "skill-use-receipts.json")
+for row in receipts["skills"]:
+    row["validation_state"] = "VALID_OFFICIAL_QUICK_VALIDATE_WITH_PYTHONUTF8"
+    row["validator_output"] = "Skill is valid!"
+    row["first_wrapper_failure_retained"] = recovery["id"]
+write_json(ROOT / "skill-use-receipts.json", receipts)
+
+failed_path = ROOT / "method-flow" / "failed-witnesses.json"
+failed = read_json(failed_path)
+for row in failed["rows"]:
+    if "witness_id" not in row and "id" in row:
+        row["witness_id"] = row["id"]
+for retained_failure in [recovery, path_recovery, schema_recovery]:
+    retained_id = retained_failure.get("witness_id", retained_failure.get("id"))
+    if not any(row["witness_id"] == retained_id for row in failed["rows"]):
+        failed["rows"].append({**retained_failure, "witness_id": retained_id})
+failed["count"] = len(failed["rows"])
+write_json(failed_path, failed)
+
+state_path = ROOT / "method-flow" / "methods-and-state.json"
+state = read_json(state_path)
+state["failed_witness_count"] = failed["count"]
+state["witness_count"] = state["passing_witness_count"] + state["failed_witness_count"]
+state["negative_count"] = state["failed_witness_count"]
+write_json(state_path, state)
+
+flow_path = ROOT / "method-flow.json"
+flow = read_json(flow_path)
+flow["counts"]["failed"] = failed["count"]
+flow["counts"]["witnesses"] = flow["counts"]["passing"] + failed["count"]
+flow["counts"]["negatives"] = failed["count"]
+part_names = ["methods-and-state.json", "passing-witnesses.json", "failed-witnesses.json"]
+flow["parts"] = []
+for name in part_names:
+    row = record(ROOT / "method-flow" / name)
+    row["path"] = str(Path(row["path"]).relative_to("docs/neris-solane/v706-v6")).replace("\\", "/")
+    flow["parts"].append(row)
+write_json(flow_path, flow)
+
+preflight_path = ROOT / "phase-preflight.json"
+preflight = read_json(preflight_path)
+preflight["method_flow"] = flow["counts"]
+preflight["skill_validator"] = {"valid": 10, "invalid": 0, "wrapper_failures_retained": 1, "python_utf8_recovery": True}
+write_json(preflight_path, preflight)
+
+manifest_path = ROOT / "manifest.json"
+entries = [record(path) for path in sorted(ROOT.rglob("*")) if path.is_file() and path != manifest_path]
+preflight = read_json(preflight_path)
+preflight["manifest_entries"] = len(entries)
+write_json(preflight_path, preflight)
+entries = [record(path) for path in sorted(ROOT.rglob("*")) if path.is_file() and path != manifest_path]
+write_json(manifest_path, {
+    "owner": "Neris Solane",
+    "phase": "v706-v6",
+    "stage": "x1",
+    "byte_domain": "UTF-8 LF working bytes intended to equal exact committed Git blobs",
+    "entries": entries,
+    "entry_count": len(entries),
+    "boundary": "Finite synthetic same-owner combinatorics and software evidence only; no empirical, production, identity, consciousness, personhood, professional, legal, cultural, Maori-authority, complete-assurance, Theory-of-Everything, canon or Stage 20 claim.",
+})

@@ -1,0 +1,37 @@
+{
+  "count": 3,
+  "failed_skill_content_count": 0,
+  "replayed_domain_work": false,
+  "rows": [
+    {
+      "class": "operational_failure",
+      "completion_credit": 0,
+      "id": "NS7066-X1-SKILL-VALIDATOR-ENCODING-01",
+      "passed": false,
+      "reason": "The first official quick_validate.py pass inherited the Windows cp1252 default and raised UnicodeDecodeError on the Māori-authority boundary before evaluating any skill.",
+      "recovery": "Rerun the unchanged official validator once with PYTHONUTF8=1; all ten owner-local skills then returned Skill is valid.",
+      "reference": "x1/operational-recoveries.json",
+      "retained": true
+    },
+    {
+      "class": "operational_failure",
+      "completion_credit": 0,
+      "passed": false,
+      "reason": "The first evidence-receipt updater selected one ancestor above the repository root and failed while projecting a repository-relative method-flow path.",
+      "recovery": "Correct only the repository-root ancestor, preserve the partial writes, and rerun the idempotent updater.",
+      "reference": "x1/operational-recoveries.json",
+      "retained": true,
+      "witness_id": "NS7066-X1-RECOVERY-PATH-01"
+    },
+    {
+      "class": "operational_failure",
+      "completion_credit": 0,
+      "passed": false,
+      "reason": "The second updater attempt encountered the partial first-attempt row under id rather than the Method Flow witness_id key and stopped before projection completion.",
+      "recovery": "Preserve and normalize the partial row by copying id into witness_id, then rerun the same idempotent projection.",
+      "reference": "x1/operational-recoveries.json",
+      "retained": true,
+      "witness_id": "NS7066-X1-RECOVERY-SCHEMA-01"
+    }
+  ]
+}

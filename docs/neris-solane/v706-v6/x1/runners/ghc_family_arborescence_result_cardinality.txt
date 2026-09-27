@@ -1,0 +1,29 @@
+import json, sys
+from collections import Counter
+
+path = sys.argv[1]
+obj = json.load(open(path, "r", encoding="utf-8"))
+kind = 'results'
+expected_outcomes = {'completed': 150}
+if kind == "results":
+    rows = obj["results"]
+    passed = len(rows) == 150 and all(row.get("passed_bounded_contract") is True for row in rows)
+    observed = len(rows)
+elif kind == "safe":
+    rows = obj["tasks"]
+    passed = len(rows) == 450 and all(row.get("passed") is True for row in rows)
+    observed = len(rows)
+elif kind == "candidate":
+    rows = obj["tasks"]
+    passed = len(rows) == 300 and all(row.get("accepted") is False and row.get("completion_credit") == 0 for row in rows)
+    observed = len(rows)
+elif kind == "cfr":
+    rows = obj["tasks"]
+    passed = len(rows) == 300 and all(row.get("passed") is True for row in rows)
+    observed = len(rows)
+else:
+    rows = obj["results"]
+    observed = dict(Counter(row["outcome"] for row in rows))
+    passed = observed == expected_outcomes
+print(json.dumps({"kind": kind, "passed": passed, "observed": observed}, sort_keys=True))
+raise SystemExit(0 if passed else 1)
