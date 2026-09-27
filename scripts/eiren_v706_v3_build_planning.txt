@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -9,7 +10,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs" / "eiren-kestrel" / "v706-v3"
 PLANNING = PHASE / "planning"
-SEREN_ROOT = Path("D:/GHC-Archives/worktrees/seren-talewood-main-3")
+SEREN_ROOT_TEXT = os.environ.get("EIREN_V706_V3_SEREN_SOURCE_ROOT")
+if not SEREN_ROOT_TEXT:
+    raise RuntimeError("EIREN_V706_V3_SEREN_SOURCE_ROOT must name the caller-controlled read-only source checkout")
+SEREN_ROOT = Path(SEREN_ROOT_TEXT)
 SEREN_PHASE = SEREN_ROOT / "docs" / "seren-talewood" / "v706-v2"
 
 OWNER = "Eiren Kestrel"

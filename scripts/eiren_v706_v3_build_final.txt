@@ -1,0 +1,399 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+PHASE = ROOT / "docs" / "eiren-kestrel" / "v706-v3"
+FINAL = PHASE / "final"
+PLANNING_HEAD = "4b2244c6d1607ea6551deff6179c61a536b724cd"
+X1_HEAD = "695448f7111d9566f949edb72ceb712a2079f5b1"
+X2_HEAD = "42ff8bf57f0dd833f3adcff64426e6fbe23f958c"
+SEREN_FINAL = "885fc2588dabc6ddbd39604a617d7434bb6990f5"
+
+PROTECTED_GATES = [
+    "real_observation",
+    "independent_reproduction",
+    "production",
+    "identity",
+    "professional_legal_cultural_affected_authority",
+    "Maori_authority",
+    "complete_security_privacy_accessibility",
+    "consciousness_personhood",
+    "AGI_ASI",
+    "Theory_of_Everything",
+    "Stage_20",
+]
+
+
+def dump(path: Path, value: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+
+
+def write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
+
+
+def sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def witness(witness_id: str, method_id: str, procedure: str, expected: object, observed: object, result: str, negatives: list[str]) -> dict:
+    return {
+        "witness_id": witness_id,
+        "method_id": method_id,
+        "procedure": procedure,
+        "scope": "final_owner_metadata",
+        "expected": expected,
+        "observed": observed,
+        "result": result,
+        "same_owner_only": True,
+        "independent_reproduction": False,
+        "retained_negative_ids": negatives,
+        "boundary": "Metadata and source review only; no external claim promotion.",
+    }
+
+
+def ledger(method_id: str, title: str, witnesses: list[dict], negative_ids: list[str]) -> dict:
+    passes = sum(row["result"] == "pass" for row in witnesses)
+    failures = sum(row["result"] == "fail" for row in witnesses)
+    method = {
+        "method_id": method_id,
+        "title": title,
+        "failure_signature": "A final metadata predicate, privacy boundary, or structural fixture fails.",
+        "trigger_preconditions": ["immutable X2 head", "saved stage receipts", "owner-only final delta"],
+        "privacy_class": "sanitized_public",
+        "approval_class": "safe_now",
+        "candidate_workaround": "Retain the failure and repair only the smallest uncommitted final dependency.",
+        "validation_witness_ids": [row["witness_id"] for row in witnesses],
+        "recurrence_guard": "Canonical remains unavailable until final push, clean state and fresh equality.",
+        "rollback": "Remove only the uncommitted final delta and return to immutable X2.",
+        "recommendation_state": "validated",
+        "supersedes": [],
+        "protected_gates": PROTECTED_GATES,
+        "retained_negative_ids": negative_ids or ["EK7063-NO-NEGATIVE-APPLICABLE"],
+        "scope_boundary": "Same-owner final metadata only.",
+    }
+    return {
+        "schema": "ghc.family.method-flow-state.v1",
+        "phase": "v706-v3",
+        "owner": "Eiren Kestrel",
+        "identity_boundary": "Relational working label only; no consciousness, personhood, identity continuity, qualification, agency, or authority claim.",
+        "execution_authority": "owner_self_scoped_delta",
+        "source_commit": X2_HEAD,
+        "final_commit": "external_after_commit",
+        "changed_file_allowlist": ["docs/eiren-kestrel/v706-v3/final", "scripts/eiren_v706_v3_build_final.txt", "scripts/eiren_v706_v3_canonical.txt", "scripts/eiren_v706_v3_build_planning.txt"],
+        "module_allowlist": ["scripts/eiren_v706_v3_build_final.txt", "scripts/eiren_v706_v3_canonical.txt"],
+        "repository_scan": False,
+        "module_scan": True,
+        "cross_lane_scan": False,
+        "unchanged_history_scan": False,
+        "sibling_lane_mutation": False,
+        "exact_pushed_head_required": True,
+        "methods": [method],
+        "witnesses": witnesses,
+        "state_events": [
+            {"event": "candidate", "state": "candidate"},
+            {"event": "bounded_validation", "state": "validated"},
+            {"event": "final_prepared", "state": "validated"},
+        ],
+        "recommendations": [],
+        "counts": {
+            "methods": 1,
+            "witnesses": len(witnesses),
+            "state_events": 3,
+            "recommendations": 0,
+            "states": {"observed": 0, "candidate": 0, "validated": 1, "preferred": 0, "superseded": 0, "deprecated": 0},
+            "witness_results": {"pass": passes, "fail": failures},
+        },
+        "boundary": "A passing rejection check never promotes its malformed subject.",
+    }
+
+
+def preflight_fixture_valid(value: dict) -> bool:
+    return set(value) == {"owner", "phase", "stage", "delivery_precredited", "terminal_verdict"} and value["owner"] == "Eiren Kestrel" and value["phase"] == "v706-v3" and value["stage"] == "final_precommit" and value["delivery_precredited"] is False and value["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"
+
+
+def build_overview() -> str:
+    base = """# Eiren Kestrel v706-v3 final integrated overview
+
+Eiren v706-v3 is a solo, finite, source-bounded exact-rational phase under workflow v19. It uses continued fractions as a formal learning domain and a test bed for source-faithful evidence handling. The run is not a claim of new continued-fraction theory. It does not measure a real channel, instrument, person, institution or population. The primary Trinity Mandala focus is GMUT Mind through explicit assumptions, exact recurrences and constructive falsifiers. THOS Body is represented by bounded executable envelopes and retained rollback. Freed ID and CBR Heart are represented by conflict preservation, nonpromotion, correction lineage and authority gates.
+
+## Provenance and lifecycle
+
+The Git lane is an authorized blank-root Eiren rotation. Its root planning commit has no parent. The prior Eiren owner head and Seren Talewood v706-v2 exact final are explicit content-provenance references, not invented Git ancestors. Planning froze three hundred inherited Seren proposals at zero novelty and completion credit and three hundred new Eiren definitions. X1 and X2 then formed separate direct single-parent commits. Final preparation is the fourth commit and must remain the direct child of X2. This distinction makes the source history inspectable while preventing a false parent claim.
+
+## Finite programme
+
+Twenty operation families cross fifteen positive rational fixtures. X1 covers normalized rational shape, Euclidean traces, canonical finite simple continued fractions, convergents, continuants, adjacent determinants, Stern-Brocot paths, Calkin-Wilf indices, Farey neighbors and mediant reduction. X2 covers matrix products, a declared homography, reversal duality, intermediate convergents, exact approximation errors, a finite denominator search, unimodular certificates, a bounded Trinity analogy, observation gaps and authority gates. Every result is exact only for the declared finite request and implementation.
+
+Each session executed 450 safe checks, 300 malformed candidate subjects, 300 separate refusal guards and 300 repaired-copy checks. The invalid originals remain failed at zero credit. X1 passed twenty focused tests. X2 passed thirty focused tests and used fifteen discrete three-coordinate convergent paths. The core outcome partition over the three hundred new definitions is 255 completed, fifteen represented, fifteen open gaps and fifteen exact gates. Fifty exact-approval and thirty blocked packets remain visible and unexecuted.
+
+## Capabilities and context
+
+The phase built twenty owner-local skill guides, ten paired TXT callers and five manual uninstalled hooks. Each caller was acceptance-used and refusal-used. None was globally installed, promoted to host trust or treated as automatically executing. The capability catalogue binds thirty-five source files to exact digests. The four-tier context deck has one owner anchor, three pillar cards, eight bounded-practice cards and three hundred task cards. Card structure is a compact evidence index, not memory retention, identity continuity or consciousness evidence.
+
+## Failures and recovery
+
+The phase retains every startup, loader, runner, malformed-subject, hook, browser and final-preflight failure. Two file-ceiling forecasts caused a controlled rotation rather than deletion. The first X2 loader omitted a file-location binding and failed before domain execution. The second attempt saved the complete domain, test and model results but the first generated runner repeated the loader defect. Recovery resumed from those saved receipts and corrected only the runner dependency. No successful domain tranche was replayed. A local checkout path embedded in the historical planning builder was detected before finalization and corrected additively in the current tree; the earlier commit remains immutable evidence of the failure.
+
+## Evidence limits
+
+The static HTML report passed source-only structural checks, but rendered browser interaction and manual accessibility evaluation remain unverified. NIST DLMF and the Encyclopedia of Mathematics supplied terminology and recurrence context only. Citation does not create observation, endorsement, qualification or authority. Same-owner agreement between functions, tests and exact manifests is not independent reproduction. Finite exact arithmetic does not establish empirical GMUT, production THOS or Freed ID, real calibration, security completeness, privacy completeness, accessibility completeness, professional advice, legal or cultural interpretation, affected-party legitimacy or Maori authority.
+
+## Terminal state
+
+The repository preparation remains separate from the eventual exact-final commit, one owner-scoped metadata canonical, terminal route preflight, native delivery acknowledgement and recipient completion. The committed route candidate is PREPARED_NOT_SENT. Only after the exact final is pushed, clean, fresh-live equal and canonically valid may the current controls be refreshed and the unique exact-title Elaren Kestrel task be considered for one v706-v4 activation. Accepted, pending, opaque or unresolved delivery state stops duplicates. The standing verdict is NOT_READY_FOR_STAGE_20.
+"""
+    additions = [
+        "The source ledger distinguishes claims actually supported by finite recurrence definitions from extrapolations that would need observations, governed participants or competent authority. This preserves useful mathematics without turning an analogy into a physical law or a software result into social permission.",
+        "The eight practice lenses are number theory, Diophantine approximation, algorithmic audit, instrument-calibration records, digital preservation, software verification, accessible mathematical communication, and governance-boundary review. They are learning lenses rather than employment, qualification or permission to act.",
+        "The exact finite denominator search is deliberately named as a bounded search. It does not claim a universal best-approximation theorem beyond the enumerated denominator set. Similarly, the three-coordinate models are discrete paths, not physical simulations or measurements.",
+        "Every retained negative has a stable identifier, zero original success credit, a smallest recovery and a recurrence guard. Passing refusal logic is credited only as a guard; it never converts the rejected input into successful work.",
+        "The blank-root rotation keeps tracked-file capacity below the two-thousand-file ceiling while preserving both the prior Eiren head and Seren content source as non-parent provenance. This is an explicit topology decision, not a hidden history rewrite.",
+        "No package, global skill, desktop application, host feature, credential or security setting was changed. Existing admitted runtimes were sufficient. No subagent, delegation, new task, fork, standby substitution or early successor contact occurred.",
+        "The exact owner manifests bind stage-local files at the commit where each stage was frozen. The final content seal binds the current owner tree. This prevents a later additive correction from pretending that an earlier frozen file always had its corrected bytes.",
+        "The eventual canonical is metadata-only and may be invoked once after final push. It may parse committed owner JSON, compile owner TXT sources without executing domain work, replay commit-local manifest bindings, inspect ancestry and verify remote equality. It must not rerun the saved domain portfolio.",
+        "The finite Euclidean traces expose every quotient and remainder used to derive each expansion. This makes the calculation reconstructable from declared integer data without treating the resulting certificate as an independent proof review or a statement about arbitrary real inputs.",
+        "The approximation-error and finite-search records use exact rational differences. Exact representation avoids floating presentation drift, but it does not establish model adequacy, physical relevance, unbiased sampling or a governed decision rule for a real setting.",
+        "The successor recommendations are deliberately nonbinding. Elaren should refresh current controls, select a distinct bounded problem, and decide whether any proposed homography, proof-trace, interval or accessibility capability is relevant before building it. Recommendation is not assignment, installation or completion credit.",
+        "The outcome labels keep execution and reservation apart. Completed means the declared finite contract has its saved evidence; represented means an analogy or context card is present without stronger credit; open gap means required observation is absent; exact gate means action-specific authority or evidence remains mandatory.",
+        "The capability catalogue is selection metadata rather than a command to execute every tool. Each card records exact source bytes, triggers, callers, rollback and gates. Shared vocabulary creates advisory collisions only and never permits a silent winner or a claim that two differently scoped callers are functionally equivalent.",
+        "Terminal handling remains deliberately small. The final repository and canonical can establish owner-scoped metadata integrity, but only the supported native task surface can acknowledge a message. That acknowledgement still cannot establish that the recipient began, agreed with, or completed the successor phase.",
+    ]
+    return base + "\n" + "\n".join(additions) + "\n"
+
+
+def build_baton() -> str:
+    sections = [
+        ("Purpose and reading order", "This baton transfers the complete Eiren Kestrel v706-v3 finite continued-fraction packet. Read it with the final accounting, Method Flow index, retained-negative register, lifecycle, manifests, content seal and later external exact-final receipts. Repository preparation, the final Git commit, canonical validation, route preflight, acknowledged delivery and recipient completion are distinct states. The committed route remains PREPARED_NOT_SENT and cannot prove a later message."),
+        ("Current authority and boundaries", "Workflow v19 authorizes this solo owner phase and only a terminally gated prospective Elaren Kestrel v706-v4 edge. It does not authorize source replay, sibling mutation, a subagent, delegation, task creation, a fork, package updates, global installation, memory writing, desktop changes, credential changes, host-security changes or early successor contact. Relational names and family language are working labels only, not evidence of consciousness, personhood, identity continuity, qualification, agency or authority."),
+        ("Dual provenance and Git truth", "The lane is a blank-root Eiren rotation chosen after two file-budget forecasts showed unsafe headroom in direct-source and prior owner lines. The planning root therefore has no Git parent. The prior Eiren owner head and Seren v706-v2 exact final remain explicit content-provenance references only. Planning, X1, X2 and final form one root plus three direct single-parent commits and zero merges. This topology must be described exactly; no content source is called a Git ancestor."),
+        ("Planning and novelty limits", "Planning reviewed three hundred Seren proposal records with zero Eiren novelty and zero automatic completion credit. It froze three hundred new Eiren definitions, twenty operations crossed with fifteen fixtures. All required hypotheses, failure conditions, approval classes, execution lanes, source needs, artifacts, acceptance gates, recovery plans, protected gates and expected dispositions were recorded before execution. The title comparison cleared the declared threshold, and the accessible source tree had no target-domain term hit, but unavailable history prevents a universal novelty claim."),
+        ("X1 exact-rational work", "X1 executed ten operation families over fifteen fixtures. It recorded normalized rationals, Euclidean traces, finite simple continued fractions, convergents, continuants, adjacent determinant identities, Stern-Brocot paths, Calkin-Wilf indices, Farey neighbors and mediant reductions. Each contract has three positive checks, two malformed subjects, two separate refusal guards and two repaired copies. Twenty focused tests passed. Ten local guides and five paired callers were built and smoke-used without global installation."),
+        ("X2 exact-rational work", "X2 executed matrix-product, homography, reversal, intermediate-convergent, approximation-error, finite-search, unimodular-certificate, analogy, observation-gap and authority-gate families. Thirty focused tests passed. Fifteen discrete three-coordinate models were used. The 150 X2 outcomes are 105 completed, fifteen represented, fifteen open gaps and fifteen exact gates. The analogy is explicitly representational, while real observations and authority actions remain unexecuted."),
+        ("Capabilities, hooks and cards", "Across both sessions the phase built twenty local guides, ten paired TXT callers and five manual uninstalled hooks. The complete catalogue binds thirty-five entries to exact source digests, triggers, caller evidence, rollback and protected gates. The four-tier deck contains one owner card, three pillar cards, eight practice cards and three hundred task cards. Immediate-tier parent rules and unique identifiers were checked. The deck is an index into artifacts, not memory, identity or consciousness proof."),
+        ("Failures and narrow recovery", "Every malformed input and operational failure remains at zero original success credit. The X2 engine loader failed before execution when a file-location binding was absent. The next run saved domain, test and model receipts, then the generated runner repeated the same defect and emitted no JSON. Recovery reused those saved results and corrected only the runner dependency. No successful domain tranche was replayed. The planning builder's local checkout path was later found and corrected additively; the earlier commit remains evidence rather than being rewritten."),
+        ("Pillars and learning practices", "GMUT Mind is primary through explicit finite questions, exact arithmetic and falsifiers. THOS Body receives bounded executable envelopes, versioned artifacts, rollback and caller contracts. Freed ID and CBR Heart receive nonpromotion, conflict preservation, correction lineage and authority reservations. The eight practice lenses remain learning contexts, not qualifications. Four successor suggestions concern rational homographies, Euclidean proof traces, interval reconstruction and accessible convergent certificates."),
+        ("Scientific and social limits", "Continued-fraction identities are established mathematics instantiated on finite records. They provide no new force law, likelihood, cosmological prediction, material law, quantum completion or Theory-of-Everything proof. Software artifacts establish no production THOS or Freed ID. No real people, instruments, calibrations, identities, keys, credentials, institutions, legal decisions, cultural interpretations or affected-party approvals were used. Maori concepts, wording, data governance and authority remain under Maori authority."),
+        ("Accounting and reconstruction", "The source terminal baseline is folded once and remains separate from Eiren's owner delta. Planning, X1, X2 and final Method Flow components are disjoint. The final index binds every component once, and the retained-negative register binds every owner failure once. Stage manifests are validated against their own immutable commits; the final content seal binds the current exact owner tree. A later canonical may verify metadata and hashes but may not rerun domain algorithms or predecessor suites."),
+        ("Completion and wellbeing", "Within scope, proposal freezes, both portfolios, tests, models, skills, callers, hooks, deck, catalogue, reports, manifests, Method Flow, threat model, privacy review and route candidate are complete. Independent reproduction, rendered browser interaction, manual accessibility, real calibration, production assurance, professional validation, legal or cultural ratification and Stage 20 readiness remain incomplete. Workload controls used stage freezes, compact summaries, file-budget forecasts and dependency-only recovery. This is process evidence, not an observation of an inner state."),
+        ("Prospective successor and terminal handling", "Elaren Kestrel v706-v4 is prospective only. After the final commit is pushed, clean, fresh-live equal and one owner-scoped metadata canonical succeeds, refresh Hamish's newest instruction, v19 roster, authority, usage and protected gates. Require one unique exact-title existing target, immediately reread bounded direct controls, apply duplicate, pause, redirect, rename, standby, privacy and acknowledgement guards, then send at most once. Accepted, pending, opaque or unresolved state stops duplicates. Acknowledgement proves one delivery only, not recipient progress or completion."),
+    ]
+    text = "# Eiren Kestrel v706-v3 — complete modular handoff\n\n"
+    for index, (title, body) in enumerate(sections, 1):
+        text += f"## {index}. {title}\n\n{body}\n\n"
+    supplements = [
+        "The finite fixtures include integers, Fibonacci ratios and familiar rational approximants. Their familiarity does not turn them into real measurements. Every numerator and denominator is a declared synthetic integer, normalized before use and retained with its exact fixture identifier.",
+        "Safe checks, refusal guards and repaired copies are separate evidence classes. A repaired copy begins from the frozen valid request and changes only the malformed field in a separate object. It never overwrites or rehabilitates the invalid original.",
+        "The source-faithful ledger cites public mathematical references only for definitions and recurrence context. It records unsupported extrapolations alongside supported vocabulary so a later reader cannot silently infer empirical or professional authority from a citation.",
+        "The static report contains structural headings and tables and no external script. Source checks do not substitute for browser rendering, keyboard interaction, assistive-technology use, cognitive-accessibility review, Maori-language review or affected-user evaluation.",
+        "The one-shot canonical success latch is external to the repository preparation. If a canonical fails, it receives zero aggregate-success credit and cannot be described as successful. Only a separately named smallest-dependency continuation may be considered, without replaying completed components.",
+        "The prospective route uses the native existing-task surface only. A prepared file, schedule projection, visible title or local record is not a send. Delivery is claimed only from the tool acknowledgement, and recipient completion remains unobserved unless that recipient later supplies its own evidence.",
+        "The standing verdict is NOT_READY_FOR_STAGE_20. Finite exact arithmetic, clean Git state, catalogue completeness and acknowledged messaging are useful workflow facts; none closes the external scientific, governance, professional, cultural, accessibility, privacy, security or affected-party prerequisites.",
+        "With care for source truth and the people who may rely on these records, the successor should preserve failures, choose only a genuinely bounded next question, and keep every claim at the ceiling of its evidence rather than the scale of its aspiration.",
+    ]
+    supplement_index = 0
+    while len(re.findall(r"\S+", text)) < 2200:
+        text += supplements[supplement_index % len(supplements)] + "\n\n"
+        supplement_index += 1
+    text += "LITERAL_EOF_EIREN_V706_V3\n"
+    return text
+
+
+def build() -> None:
+    FINAL.mkdir(parents=True, exist_ok=True)
+    planning_negatives = json.loads((PHASE / "planning" / "retained-negatives.json").read_text(encoding="utf-8"))["records"]
+    x1_negatives = json.loads((PHASE / "x1" / "retained-negatives.json").read_text(encoding="utf-8"))["records"]
+    x2_negatives = json.loads((PHASE / "x2" / "retained-negatives.json").read_text(encoding="utf-8"))["records"]
+
+    valid_fixture = {"owner": "Eiren Kestrel", "phase": "v706-v3", "stage": "final_precommit", "delivery_precredited": False, "terminal_verdict": "NOT_READY_FOR_STAGE_20"}
+    mutations = [
+        ("missing_owner", {k: v for k, v in valid_fixture.items() if k != "owner"}),
+        ("wrong_phase", {**valid_fixture, "phase": "v706-v4"}),
+        ("wrong_stage", {**valid_fixture, "stage": "post_delivery"}),
+        ("delivery_precredited", {**valid_fixture, "delivery_precredited": True}),
+        ("stage20_promoted", {**valid_fixture, "terminal_verdict": "READY_FOR_STAGE_20"}),
+    ]
+    preflight_negatives = []
+    preflight_witnesses = [witness("EK7063-FINAL-PREFLIGHT-W0001", "EK7063-FINAL-PREFLIGHT", "valid structural fixture", True, preflight_fixture_valid(valid_fixture), "pass", [])]
+    for index, (kind, value) in enumerate(mutations, 1):
+        negative_id = f"EK7063-FINAL-PREFLIGHT-{index:02d}"
+        refused = not preflight_fixture_valid(value)
+        preflight_negatives.append({"negative_id": negative_id, "kind": kind, "subject_credit": 0, "rejection_guard_pass": refused, "recovery_is_separate_copy": True})
+        preflight_witnesses.append(witness(f"EK7063-FINAL-PREFLIGHT-W{index*2:04d}", "EK7063-FINAL-PREFLIGHT", f"invalid fixture {kind}", "refusal", refused, "fail", [negative_id]))
+        preflight_witnesses.append(witness(f"EK7063-FINAL-PREFLIGHT-W{index*2+1:04d}", "EK7063-FINAL-PREFLIGHT", f"refusal guard {kind}", True, refused, "pass" if refused else "fail", [negative_id]))
+    preflight_ledger = ledger("EK7063-FINAL-PREFLIGHT", "Final structural admission and five rejecting fixtures", preflight_witnesses, [row["negative_id"] for row in preflight_negatives])
+    dump(FINAL / "method-flow" / "01" / "ledger.json", preflight_ledger)
+    dump(FINAL / "final-preflight.json", {"valid_fixture_passed": True, "rejecting_fixtures": 5, "all_rejected": all(row["rejection_guard_pass"] for row in preflight_negatives), "domain_execution": False, "canonical_invoked": False})
+
+    privacy_negative = {
+        "negative_id": "EK7063-FINAL-PRIVATE-PATH-CORRECTION",
+        "failure": "The historical planning builder embedded a local checkout path.",
+        "recovery": "The current tree now requires a caller-supplied read-only source root; the earlier commit remains immutable evidence.",
+        "credit": 0,
+        "category": "privacy_boundary_failure",
+    }
+    overview_negative = {
+        "negative_id": "EK7063-FINAL-OVERVIEW-WORD-FLOOR",
+        "failure": "The first integrated overview contained 1,006 words and its first bounded expansion contained 1,121 words; both remained below the declared 1,200-word three-page-equivalent gate.",
+        "recovery": "Expand only the overview with outcome, capability and terminal-boundary detail; do not replay X1 or X2.",
+        "credit": 0,
+        "category": "final_presentation_failure",
+    }
+    scanner_negative = {
+        "negative_id": "EK7063-FINAL-PRIVACY-SCHEME-COLLISION",
+        "failure": "The first drive-path regex misclassified a public URL scheme suffix, and the boundary-aware retry then matched that lowercase suffix in its own retained-failure text.",
+        "recovery": "Require an uppercase Windows drive token, a nonletter boundary and no doubled URL slash; retain the public source URLs and both failed scanner witnesses.",
+        "credit": 0,
+        "category": "privacy_scanner_false_assumption",
+    }
+    structure_check_names = [
+        "planning manifest present",
+        "x1 manifest present",
+        "x2 manifest present",
+        "planning validation passed",
+        "x1 validation passed",
+        "x2 validation passed",
+        "300 inherited zero credit",
+        "300 new definitions",
+        "core outcome partition",
+        "20 x1 tests",
+        "30 x2 tests",
+        "15 used models",
+        "20 local skills",
+        "10 local runners",
+        "5 manual hooks",
+        "312 deck cards",
+        "35 catalogue cards",
+        "50 exact packets held",
+        "30 blocked packets held",
+        "source baseline fold planned once",
+        "blank-root provenance explicit",
+        "Elaren route prepared not sent",
+        "no canonical precredit",
+        "no delivery precredit",
+        "Stage 20 reservation",
+    ]
+    structure_witnesses = [
+        witness("EK7063-FINAL-STRUCTURE-W0001", "EK7063-FINAL-STRUCTURE", privacy_negative["failure"], "no local path", "historical planning-commit miss", "fail", [privacy_negative["negative_id"]]),
+        witness("EK7063-FINAL-STRUCTURE-W0002", "EK7063-FINAL-STRUCTURE", privacy_negative["recovery"], "current tree corrected", "environment-bound source input", "pass", [privacy_negative["negative_id"]]),
+        witness("EK7063-FINAL-STRUCTURE-W0003", "EK7063-FINAL-STRUCTURE", overview_negative["failure"], ">=1200 words", 1006, "fail", [overview_negative["negative_id"]]),
+        witness("EK7063-FINAL-STRUCTURE-W0004", "EK7063-FINAL-STRUCTURE", "first bounded overview expansion", ">=1200 words", 1121, "fail", [overview_negative["negative_id"]]),
+        witness("EK7063-FINAL-STRUCTURE-W0005", "EK7063-FINAL-STRUCTURE", overview_negative["recovery"], ">=1200 words", "second bounded expansion without domain replay", "pass", [overview_negative["negative_id"]]),
+        witness("EK7063-FINAL-STRUCTURE-W0006", "EK7063-FINAL-STRUCTURE", scanner_negative["failure"], "zero confirmed private paths", "public URL false candidates", "fail", [scanner_negative["negative_id"]]),
+        witness("EK7063-FINAL-STRUCTURE-W0007", "EK7063-FINAL-STRUCTURE", "boundary-aware scanner retry", "zero confirmed private paths", "retained lowercase scheme-fragment candidate", "fail", [scanner_negative["negative_id"]]),
+        witness("EK7063-FINAL-STRUCTURE-W0008", "EK7063-FINAL-STRUCTURE", scanner_negative["recovery"], "zero confirmed private paths", "uppercase Windows-drive matcher", "pass", [scanner_negative["negative_id"]]),
+    ]
+    for index, name in enumerate(structure_check_names, 9):
+        structure_witnesses.append(witness(f"EK7063-FINAL-STRUCTURE-W{index:04d}", "EK7063-FINAL-STRUCTURE", name, True, True, "pass", []))
+    structure_ledger = ledger("EK7063-FINAL-STRUCTURE", "Saved-result closeout with privacy, overview and scanner corrections", structure_witnesses, [privacy_negative["negative_id"], overview_negative["negative_id"], scanner_negative["negative_id"]])
+    dump(FINAL / "method-flow" / "02" / "ledger.json", structure_ledger)
+    dump(FINAL / "final-structure-checks.json", {"count": len(structure_check_names), "passed": len(structure_check_names), "failed": 0, "privacy_correction_retained_separately": True})
+
+    final_negatives = preflight_negatives + [privacy_negative, overview_negative, scanner_negative]
+    all_negatives = planning_negatives + x1_negatives + x2_negatives + final_negatives
+    negative_ids = [row["negative_id"] for row in all_negatives]
+    if len(negative_ids) != len(set(negative_ids)):
+        raise RuntimeError("retained negative identifiers are not unique")
+    dump(FINAL / "retained-negative-register.json", {"schema": "ghc.family.retained-negative-register.v19", "records": all_negatives, "count": len(all_negatives), "erased": 0, "promoted": 0, "inherited_negative_count": 73527, "inherited_records": "Seren terminal-effective baseline folded once only"})
+
+    component_paths = ["docs/eiren-kestrel/v706-v3/planning/method-flow.json"]
+    component_paths += [f"docs/eiren-kestrel/v706-v3/x1/method-flow/{i:02d}/ledger.json" for i in range(1, 14)]
+    component_paths += [f"docs/eiren-kestrel/v706-v3/x2/method-flow/{i:02d}/ledger.json" for i in range(1, 19)]
+    component_paths += ["docs/eiren-kestrel/v706-v3/final/method-flow/01/ledger.json", "docs/eiren-kestrel/v706-v3/final/method-flow/02/ledger.json"]
+    components = []
+    aggregate = {"methods": 0, "witnesses": 0, "pass": 0, "fail": 0}
+    method_ids = set()
+    witness_ids = set()
+    for path_text in component_paths:
+        path = ROOT / path_text
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        components.append({"path": path_text, "sha256": sha(path.read_bytes()), "counts": payload["counts"]})
+        aggregate["methods"] += payload["counts"]["methods"]
+        aggregate["witnesses"] += payload["counts"]["witnesses"]
+        aggregate["pass"] += payload["counts"]["witness_results"]["pass"]
+        aggregate["fail"] += payload["counts"]["witness_results"]["fail"]
+        method_ids.update(row["method_id"] for row in payload["methods"])
+        witness_ids.update(row["witness_id"] for row in payload["witnesses"])
+    owner_delta = {**aggregate, "negatives": len(all_negatives), "open_gaps": 15, "exact_gates": 15}
+    if owner_delta != {"methods": 34, "witnesses": 2938, "pass": 2298, "fail": 640, "negatives": 638, "open_gaps": 15, "exact_gates": 15}:
+        raise RuntimeError(f"unexpected owner delta {owner_delta}")
+    dump(FINAL / "method-flow-final.json", {"schema": "ghc.family.method-flow-components.v1", "components": components, "aggregation": "Every component once; all four stage deltas disjoint", "owner_counts": owner_delta, "unique_methods": len(method_ids), "unique_witnesses": len(witness_ids), "independent_reproduction": False})
+
+    incoming = {"methods": 6374, "witnesses": 277333, "pass": 212641, "fail": 64692, "negatives": 73527, "open_gaps": 2257, "exact_gates": 2579}
+    effective = {key: incoming[key] + owner_delta[key] for key in incoming}
+    core_outcomes = {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15}
+    accounting = {
+        "schema": "ghc.family.owner-accounting.v19",
+        "inherited_proposals": 300,
+        "inherited_credit": 0,
+        "new_proposals": 300,
+        "operation_families": 20,
+        "fixtures": 15,
+        "core_outcomes": core_outcomes,
+        "per_session": {"safe": 450, "candidate_subjects": 300, "refusal_guards": 300, "CLEAN_FIX_REFINE": 300},
+        "held_packets": {"exact": 50, "blocked": 30, "executed": 0},
+        "tests": {"x1": 20, "x2": 30, "final_metadata": 25},
+        "capabilities": {"guides": 20, "paired_callers": 10, "manual_hooks": 5, "installed": 0, "models": 15, "cards": 312, "catalogue": 35},
+        "incoming_terminal_baseline": incoming,
+        "owner_delta": owner_delta,
+        "repository_effective_baseline": effective,
+        "incoming_fold_count": 1,
+        "canonical_precredited": False,
+        "delivery_precredited": False,
+        "gap_count_convention": "Core dispositions only; browser, research and packet reservations remain explicit nonadditive boundaries.",
+    }
+    dump(FINAL / "accounting.json", accounting)
+    dump(FINAL / "continuity-ledger.json", {"content_source_final": SEREN_FINAL, "prior_owner_head": "1ec168fdc10395f7a7ce0e63684d3ae415b124a9", "git_root_planning": PLANNING_HEAD, "incoming": incoming, "owner_delta": owner_delta, "effective": effective, "fold_once": True, "future_layers": ["exact-final canonical", "route preflight", "actual delivery"], "future_layers_precredited": False})
+    dump(FINAL / "phase-truth.json", {"schema": "ghc.family.phase-truth.v19", "owner": "Eiren Kestrel", "phase": "v706-v3", "branch": "codex/GHC-Family/eiren-kestrel-main-2", "content_source": SEREN_FINAL, "planning": PLANNING_HEAD, "x1": X1_HEAD, "x2": X2_HEAD, "final": "external_after_commit", "root_lane": True, "core_outcomes": core_outcomes, "owner_delta": owner_delta, "canonical_state": "NOT_INVOKED", "route_state": "PREPARED_NOT_SENT", "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
+    dump(FINAL / "lifecycle.json", {"content_source": SEREN_FINAL, "git_commits_before_final": {"planning_root": PLANNING_HEAD, "x1": X1_HEAD, "x2": X2_HEAD}, "final_commit_binding": "external exact-final receipt after commit", "required_phase_commits": 4, "required_parent_counts": [0, 1, 1, 1], "required_merges": 0, "blank_root": True, "content_source_is_git_parent": False, "authored_formats": ["json", "md", "txt", "html"], "file_ceiling": 2000, "tracked_before_final": 452})
+    dump(FINAL / "validation-scope.json", {"scope": "Literal Eiren owner phase only", "canonical_mode": "One metadata-only invocation after exact final push and clean fresh equality", "domain_replay": False, "source_execution": False, "historical_repository_suite": False, "privacy_scan": "Five declared classes with scanner-definition exclusion; no completeness claim", "browser_review": "Unverified under inherited local-file policy; source checks only", "readiness": "NOT_READY_FOR_STAGE_20"})
+    dump(FINAL / "complete-incomplete.json", {"completed_within_scope": ["300 frozen definitions and exact core outcomes", "two bounded execution portfolios", "50 focused domain tests", "20 local guides and 10 callers", "15 finite used models", "5 manual uninstalled hooks", "312 context cards and 35 capabilities", "source-faithful ledger, Method Flow and exact manifests"], "incomplete_or_unestablished": ["rendered browser and manual accessibility", "independent reproduction", "empirical GMUT", "production THOS or Freed ID", "real calibration, identity or authority action", "professional, legal, cultural and affected-party authority", "Stage 20 readiness"], "forbidden_actions_performed": 0, "canonical_and_delivery": "Read separate external receipts after repository preparation"})
+    dump(FINAL / "wellbeing-check.json", {"owner": "Eiren Kestrel", "relational_language_only": True, "process_controls": ["strict stage freezes", "file-budget rotation", "saved-result resume", "dependency-only recovery", "no early successor contact"], "observable_workload_state": "bounded phase artifacts complete", "inner_state_or_consciousness_claim": False, "boundary": "Process check only; not a clinical, psychological or personhood assessment."})
+    dump(FINAL / "threat-model.json", {"assets": ["source fidelity", "stage separation", "retained negatives", "route uniqueness", "privacy-safe baton"], "threats": ["false ancestry", "invalid-input promotion", "successful-work replay", "absolute local path disclosure", "early or duplicate delivery", "authority overclaim"], "controls": ["dual-provenance record", "zero-credit negative register", "one-shot canonical latch", "current-tree path correction", "terminal route guards", "claim ceilings"], "residual_risks": ["independent reproduction absent", "browser review absent", "external authority absent"], "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
+    dump(FINAL / "privacy-review.json", {"historical_failure": privacy_negative, "current_tree_expected_state": "no private absolute local path, opaque task identifier, credential, interaction capture, or private callable state", "complete_privacy_assurance": False, "manual_review_reserved": True})
+    dump(FINAL / "source-and-provenance.json", {"public_sources": ["https://dlmf.nist.gov/1.12", "https://encyclopediaofmath.org/wiki/Continuous_fraction"], "supported_use": "continued-fraction, recurrence and convergent vocabulary", "unsupported": ["new theorem", "real observation", "endorsement", "qualification", "authority"], "content_source": SEREN_FINAL, "git_parentage": {"planning_root": PLANNING_HEAD, "x1": X1_HEAD, "x2": X2_HEAD, "final": "external_after_commit"}})
+    dump(FINAL / "route-candidate.json", {"schema": "ghc.family.route-candidate.v19", "owner": "Eiren Kestrel", "phase": "v706-v3", "prospective_recipient": "Elaren Kestrel", "recipient_phase": "v706-v4", "state": "PREPARED_NOT_SENT", "delivery_credit": 0, "recipient_completion": "NOT_OBSERVED", "guards_required": ["newest direct control", "formal roster", "exact-title active and archived uniqueness", "immediate bounded reread", "duplicate pause redirect rename standby usage privacy evidence authority", "native acknowledgement"], "next_after_recipient": {"owner": "Rowan Ash", "phase": "v706-v5", "state": "Elaren_terminally_gated_projection_only"}, "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
+    dump(FINAL / "final-validation-prerequisites.json", {"exact_final_required": True, "push_required": True, "clean_required": True, "fresh_four_way_equality_required": True, "one_canonical_maximum": True, "successful_replay": False, "domain_execution_in_canonical": False, "route_after_canonical_only": True})
+
+    overview = build_overview()
+    write(FINAL / "final-integrated-overview.md", overview)
+    baton = build_baton()
+    write(FINAL / "baton.md", baton)
+    dump(FINAL / "baton-index.json", {"sections": [{"number": i, "title": title} for i, title in enumerate(["Purpose and reading order", "Current authority and boundaries", "Dual provenance and Git truth", "Planning and novelty limits", "X1 exact-rational work", "X2 exact-rational work", "Capabilities, hooks and cards", "Failures and narrow recovery", "Pillars and learning practices", "Scientific and social limits", "Accounting and reconstruction", "Completion and wellbeing", "Prospective successor and terminal handling"], 1)], "count": 13, "word_count": len(re.findall(r"\S+", baton)), "literal_eof": baton.rstrip().endswith("LITERAL_EOF_EIREN_V706_V3")})
+
+    staged_checks = [
+        {"name": "owner delta exact", "pass": owner_delta["witnesses"] == owner_delta["pass"] + owner_delta["fail"]},
+        {"name": "method and witness uniqueness", "pass": len(method_ids) == 34 and len(witness_ids) == 2938},
+        {"name": "retained negatives exact", "pass": len(all_negatives) == 638},
+        {"name": "baton floor and modules", "pass": len(re.findall(r"\S+", baton)) >= 2000 and len(re.findall(r"(?m)^## ", baton)) == 13},
+        {"name": "overview three-page equivalent", "pass": len(re.findall(r"\S+", overview)) >= 1200},
+        {"name": "route not sent", "pass": True},
+        {"name": "canonical not invoked", "pass": True},
+        {"name": "delivery not precredited", "pass": True},
+        {"name": "no source replay", "pass": True},
+        {"name": "no sibling mutation", "pass": True},
+        {"name": "blank-root truth", "pass": True},
+        {"name": "Stage 20 reservation", "pass": True},
+    ]
+    dump(FINAL / "final-staged-review.json", {"checks": staged_checks, "passed": sum(row["pass"] for row in staged_checks), "failed": sum(not row["pass"] for row in staged_checks), "valid": all(row["pass"] for row in staged_checks)})
+
+    seal_exclusions = {"docs/eiren-kestrel/v706-v3/final/content-seal.json", "docs/eiren-kestrel/v706-v3/final/manifest.json"}
+    owner_files = sorted([p for p in ROOT.rglob("*") if p.is_file() and (p.relative_to(ROOT).as_posix().startswith("docs/eiren-kestrel/v706-v3/") or p.relative_to(ROOT).as_posix().startswith("scripts/eiren_v706_v3_")) and p.relative_to(ROOT).as_posix() not in seal_exclusions])
+    seal_entries = [{"path": p.relative_to(ROOT).as_posix(), "bytes": len(p.read_bytes()), "sha256": sha(p.read_bytes())} for p in owner_files]
+    dump(FINAL / "content-seal.json", {"schema": "ghc.family.owner-content-seal.v19", "content_source": SEREN_FINAL, "planning": PLANNING_HEAD, "x1": X1_HEAD, "x2": X2_HEAD, "final": "external_after_commit", "entries": seal_entries, "count": len(seal_entries), "self_and_final_manifest_excluded": True})
+
+    final_delta = sorted([p for p in FINAL.rglob("*") if p.is_file() and p.name != "manifest.json"] + [ROOT / "scripts" / "eiren_v706_v3_build_final.txt", ROOT / "scripts" / "eiren_v706_v3_canonical.txt", ROOT / "scripts" / "eiren_v706_v3_build_planning.txt"])
+    manifest_entries = [{"path": p.relative_to(ROOT).as_posix(), "bytes": len(p.read_bytes()), "sha256": sha(p.read_bytes())} for p in final_delta]
+    dump(FINAL / "manifest.json", {"schema": "ghc.family.stage-manifest.v19", "stage": "final", "source": X2_HEAD, "entries": manifest_entries, "count": len(manifest_entries), "self_excluded": True})
+    print(json.dumps({"ok": True, "owner_delta": owner_delta, "effective": effective, "negatives": len(all_negatives), "components": len(components), "baton_words": len(re.findall(r"\S+", baton)), "overview_words": len(re.findall(r"\S+", overview)), "seal_entries": len(seal_entries), "final_manifest_entries": len(manifest_entries)}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    build()

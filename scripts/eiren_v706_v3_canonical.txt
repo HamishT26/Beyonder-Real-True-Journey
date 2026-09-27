@@ -1,0 +1,241 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import subprocess
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+BRANCH = "codex/GHC-Family/eiren-kestrel-main-2"
+PLANNING = "4b2244c6d1607ea6551deff6179c61a536b724cd"
+X1 = "695448f7111d9566f949edb72ceb712a2079f5b1"
+X2 = "42ff8bf57f0dd833f3adcff64426e6fbe23f958c"
+
+
+def run(*args: str) -> str:
+    result = subprocess.run(args, cwd=ROOT, capture_output=True, check=True)
+    return result.stdout.decode("utf-8", errors="strict").strip()
+
+
+def blob(commit: str, path: str) -> bytes:
+    return subprocess.run(["git", "cat-file", "blob", f"{commit}:{path}"], cwd=ROOT, capture_output=True, check=True).stdout
+
+
+def sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def dump(path: Path, value: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+
+
+def check(name: str, passed: bool, detail: object | None = None) -> dict:
+    row = {"name": name, "result": "pass" if passed else "fail"}
+    if detail is not None:
+        row["detail"] = detail
+    return row
+
+
+def validate_manifest(commit: str, path: str) -> tuple[bool, int]:
+    manifest = json.loads(blob(commit, path).decode("utf-8"))
+    valid = manifest["count"] == len(manifest["entries"])
+    for entry in manifest["entries"]:
+        data = blob(commit, entry["path"])
+        valid = valid and len(data) == entry["bytes"] and sha(data) == entry["sha256"]
+    return valid, len(manifest["entries"])
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--expected-final", required=True)
+    parser.add_argument("--bank", required=True)
+    args = parser.parse_args()
+    bank = Path(args.bank)
+    bank.mkdir(parents=True, exist_ok=True)
+    latch_path = bank / "canonical-latch.json"
+    if latch_path.exists():
+        existing = json.loads(latch_path.read_text(encoding="utf-8"))
+        if existing.get("successes", 0) > 0 or existing.get("state") in {"STARTED", "SUCCESS"}:
+            raise SystemExit("canonical latch refuses a second invocation")
+    dump(latch_path, {"schema": "ghc.family.canonical-latch.v19", "state": "STARTED", "invocations": 1, "successes": 0, "replays": 0, "expected_final": args.expected_final})
+
+    head = run("git", "rev-parse", "HEAD")
+    upstream = run("git", "rev-parse", "@{upstream}")
+    tracking = run("git", "rev-parse", f"refs/remotes/origin/{BRANCH}")
+    fresh_remote = run("git", "ls-remote", "origin", f"refs/heads/{BRANCH}").split()[0]
+    branch = run("git", "branch", "--show-current")
+    dirty = run("git", "status", "--porcelain=v1")
+    commits = run("git", "rev-list", "--reverse", "HEAD").splitlines()
+    parent_counts = [max(0, len(run("git", "rev-list", "--parents", "-n", "1", commit).split()) - 1) for commit in commits]
+    merge_count = sum(count > 1 for count in parent_counts)
+    tracked = run("git", "ls-tree", "-r", "--name-only", "HEAD").splitlines()
+    owner_files = [path for path in tracked if path.startswith("docs/eiren-kestrel/v706-v3/") or path.startswith("scripts/eiren_v706_v3_")]
+
+    checks: list[dict] = []
+    checks.append(check("exact owner branch and final", branch == BRANCH and head == args.expected_final))
+    checks.append(check("clean before", dirty == ""))
+    checks.append(check("four root-lane phase commits", commits == [PLANNING, X1, X2, args.expected_final], commits))
+    checks.append(check("root then three direct single parents", parent_counts == [0, 1, 1, 1], parent_counts))
+    checks.append(check("zero merges", merge_count == 0))
+    checks.append(check("fresh four-way equality before", len({head, upstream, tracking, fresh_remote}) == 1, [head, upstream, tracking, fresh_remote]))
+    checks.append(check("file ceiling", len(tracked) < 2000, len(tracked)))
+    checks.append(check("exact owner scope", len(owner_files) == len(tracked), len(owner_files)))
+    allowed_suffixes = {".json", ".md", ".txt", ".html"}
+    checks.append(check("permitted authored formats", all(Path(path).suffix.lower() in allowed_suffixes for path in tracked)))
+
+    json_count = 0
+    txt_syntax = 0
+    max_words = 0
+    line_endings_ok = True
+    json_ok = True
+    txt_ok = True
+    privacy_candidates: list[dict] = []
+    privacy_patterns = {
+        "absolute_private_path": re.compile(rb"(?<![A-Za-z])[A-Z]:[\\/](?![\\/])"),
+        "opaque_task_identifier": re.compile(rb"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b", re.I),
+        "credential_or_bearer": re.compile(rb"(?:sk-[A-Za-z0-9_-]{12,}|Bearer\s+[A-Za-z0-9._-]{12,})"),
+        "private_callable_state": re.compile(rb"(?:threadId|session_id|private_callable_identifier)"),
+        "interaction_capture": re.compile(rb"(?:transcript|screenshot|session_stream)", re.I),
+    }
+    for path in owner_files:
+        data = blob(head, path)
+        line_endings_ok = line_endings_ok and b"\r\n" not in data and (not data or data.endswith(b"\n"))
+        text = data.decode("utf-8")
+        max_words = max(max_words, len(re.findall(r"\S+", text)))
+        suffix = Path(path).suffix.lower()
+        if suffix == ".json":
+            json_count += 1
+            try:
+                json.loads(text)
+            except Exception:
+                json_ok = False
+        if suffix == ".txt" and (path.startswith("scripts/") or "/runners/" in path):
+            txt_syntax += 1
+            try:
+                compile(text, path, "exec")
+            except Exception:
+                txt_ok = False
+        if path == "scripts/eiren_v706_v3_canonical.txt":
+            continue
+        for label, pattern in privacy_patterns.items():
+            if pattern.search(data):
+                privacy_candidates.append({"path": path, "class": label})
+    checks.append(check("exact LF and terminal newline", line_endings_ok))
+    checks.append(check("word ceiling", max_words <= 100000, max_words))
+    checks.append(check("strict owner JSON parsing", json_ok, json_count))
+    checks.append(check("TXT syntax-only compilation", txt_ok, txt_syntax))
+    checks.append(check("five-class privacy scan", not privacy_candidates, {"confirmed_hits": len(privacy_candidates), "complete_assurance": False}))
+
+    manifest_specs = [
+        (PLANNING, "docs/eiren-kestrel/v706-v3/planning/manifest.json", "planning manifest"),
+        (X1, "docs/eiren-kestrel/v706-v3/x1/manifest.json", "x1 manifest"),
+        (X2, "docs/eiren-kestrel/v706-v3/x2/manifest.json", "x2 manifest"),
+        (head, "docs/eiren-kestrel/v706-v3/final/manifest.json", "final manifest"),
+    ]
+    binding_count = 0
+    for commit, path, label in manifest_specs:
+        valid, count = validate_manifest(commit, path)
+        binding_count += count
+        checks.append(check(label, valid, count))
+
+    seal_path = "docs/eiren-kestrel/v706-v3/final/content-seal.json"
+    seal = json.loads(blob(head, seal_path).decode("utf-8"))
+    seal_valid = seal["count"] == len(seal["entries"])
+    for entry in seal["entries"]:
+        data = blob(head, entry["path"])
+        seal_valid = seal_valid and len(data) == entry["bytes"] and sha(data) == entry["sha256"]
+    binding_count += len(seal["entries"])
+    checks.append(check("complete owner content seal", seal_valid, len(seal["entries"])))
+
+    flow = json.loads(blob(head, "docs/eiren-kestrel/v706-v3/final/method-flow-final.json").decode("utf-8"))
+    flow_valid = len(flow["components"]) == 34
+    method_ids: set[str] = set()
+    witness_ids: set[str] = set()
+    flow_counts = {"methods": 0, "witnesses": 0, "pass": 0, "fail": 0}
+    for component in flow["components"]:
+        data = blob(head, component["path"])
+        flow_valid = flow_valid and sha(data) == component["sha256"]
+        payload = json.loads(data.decode("utf-8"))
+        for method in payload["methods"]:
+            method_ids.add(method["method_id"])
+        for witness in payload["witnesses"]:
+            witness_ids.add(witness["witness_id"])
+        flow_counts["methods"] += payload["counts"]["methods"]
+        flow_counts["witnesses"] += payload["counts"]["witnesses"]
+        flow_counts["pass"] += payload["counts"]["witness_results"]["pass"]
+        flow_counts["fail"] += payload["counts"]["witness_results"]["fail"]
+    expected_owner = {"methods": 34, "witnesses": 2938, "pass": 2298, "fail": 640, "negatives": 638, "open_gaps": 15, "exact_gates": 15}
+    flow_valid = flow_valid and flow_counts == {k: expected_owner[k] for k in ("methods", "witnesses", "pass", "fail")}
+    flow_valid = flow_valid and len(method_ids) == 34 and len(witness_ids) == 2938
+    checks.append(check("Method Flow components validate and bind", flow_valid, flow_counts))
+    checks.append(check("unique method and witness union", len(method_ids) == 34 and len(witness_ids) == 2938))
+
+    negatives = json.loads(blob(head, "docs/eiren-kestrel/v706-v3/final/retained-negative-register.json").decode("utf-8"))
+    negative_ids = [row["negative_id"] for row in negatives["records"]]
+    checks.append(check("negative nonerasure and uniqueness", negatives["count"] == 638 and len(negative_ids) == len(set(negative_ids)) == 638 and negatives["erased"] == negatives["promoted"] == 0))
+    accounting = json.loads(blob(head, "docs/eiren-kestrel/v706-v3/final/accounting.json").decode("utf-8"))
+    checks.append(check("owner exact witness accounting", accounting["owner_delta"] == expected_owner))
+    checks.append(check("incoming terminal baseline folded once", accounting["incoming_fold_count"] == 1))
+    checks.append(check("repository effective baseline", accounting["repository_effective_baseline"] == {"methods": 6408, "witnesses": 280271, "pass": 214939, "fail": 65332, "negatives": 74165, "open_gaps": 2272, "exact_gates": 2594}))
+    checks.append(check("core outcome equality", accounting["core_outcomes"] == {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15}))
+    checks.append(check("saved 20 x1 and 30 x2 tests", accounting["tests"] == {"x1": 20, "x2": 30, "final_metadata": 25}))
+    checks.append(check("fifteen finite used models", accounting["capabilities"]["models"] == 15))
+    checks.append(check("312 immediate-tier cards", accounting["capabilities"]["cards"] == 312))
+    checks.append(check("35 bound capabilities", accounting["capabilities"]["catalogue"] == 35))
+    preflight = json.loads(blob(head, "docs/eiren-kestrel/v706-v3/final/final-preflight.json").decode("utf-8"))
+    checks.append(check("saved accepting and five rejecting preflight fixtures", preflight["valid_fixture_passed"] and preflight["rejecting_fixtures"] == 5 and preflight["all_rejected"]))
+    baton = blob(head, "docs/eiren-kestrel/v706-v3/final/baton.md").decode("utf-8")
+    checks.append(check("complete thirteen-section baton", len(re.findall(r"(?m)^## ", baton)) == 13 and len(re.findall(r"\S+", baton)) >= 2000))
+    route = json.loads(blob(head, "docs/eiren-kestrel/v706-v3/final/route-candidate.json").decode("utf-8"))
+    checks.append(check("prepared successor and zero delivery credit", route["state"] == "PREPARED_NOT_SENT" and route["delivery_credit"] == 0))
+    checks.append(check("Stage 20 reservation remains", route["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"))
+    checks.append(check("clean unchanged head after", run("git", "status", "--porcelain=v1") == "" and run("git", "rev-parse", "HEAD") == head))
+    after_remote = run("git", "ls-remote", "origin", f"refs/heads/{BRANCH}").split()[0]
+    checks.append(check("fresh four-way equality after", len({head, run("git", "rev-parse", "@{upstream}"), run("git", "rev-parse", f"refs/remotes/origin/{BRANCH}"), after_remote}) == 1))
+
+    passed = sum(row["result"] == "pass" for row in checks)
+    failed = len(checks) - passed
+    payload = {
+        "schema": "ghc.family.exact-final-owner-canonical.payload.v19",
+        "owner": "Eiren Kestrel",
+        "phase": "v706-v3",
+        "status": "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL" if failed == 0 else "INVALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+        "exact_final": head,
+        "content_source": "885fc2588dabc6ddbd39604a617d7434bb6990f5",
+        "git_parentage": {"root_planning": PLANNING, "x1": X1, "x2": X2, "final": head},
+        "branch": BRANCH,
+        "checks": checks,
+        "passed": passed,
+        "failed": failed,
+        "owner_files": len(owner_files),
+        "whole_tree_files": len(tracked),
+        "strict_json": json_count,
+        "txt_syntax": txt_syntax,
+        "bindings": binding_count,
+        "max_document_words": max_words,
+        "privacy_confirmed_hits": len(privacy_candidates),
+        "owner_delta": expected_owner,
+        "domain_execution": False,
+        "source_replay": False,
+        "full_repository_suite": False,
+        "boundary": "Same-owner metadata only; no independent reproduction, empirical, production, identity, legal, professional, cultural, Maori authority, consciousness, personhood or Stage 20 claim.",
+    }
+    payload_bytes = (json.dumps(payload, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    payload_sha = sha(payload_bytes)
+    payload_path = bank / f"canonical-payload-{head}.json"
+    payload_path.write_bytes(payload_bytes)
+    receipt = {**{key: value for key, value in payload.items() if key != "checks"}, "invocations": 1, "successes": 1 if failed == 0 else 0, "replays": 0, "payload_sha256": payload_sha}
+    receipt_path = bank / f"canonical-{head}.json"
+    dump(receipt_path, receipt)
+    dump(latch_path, {"schema": "ghc.family.canonical-latch.v19", "state": "SUCCESS" if failed == 0 else "FAILED", "invocations": 1, "successes": 1 if failed == 0 else 0, "replays": 0, "expected_final": head, "payload_sha256": payload_sha, "receipt_sha256": sha(receipt_path.read_bytes())})
+    print(json.dumps({"status": payload["status"], "passed": passed, "failed": failed, "payload_sha256": payload_sha, "receipt_sha256": sha(receipt_path.read_bytes()), "invocations": 1, "successes": 1 if failed == 0 else 0, "replays": 0}, sort_keys=True))
+    if failed:
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()
