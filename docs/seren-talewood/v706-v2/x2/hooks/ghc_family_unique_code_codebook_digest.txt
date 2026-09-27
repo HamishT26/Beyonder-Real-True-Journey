@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+"""Manual owner-local hook; not registered with any host."""
+import hashlib,json,sys
+def digest(value):return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()).hexdigest()
+def check(value):
+ try:
+  return digest(value['codewords'])==value['expected']
+ except (KeyError,TypeError,ValueError,IndexError):return False
+if __name__=="__main__":
+ result=check(json.loads(sys.stdin.read()));print(json.dumps({"accepted":result,"installed":False}));raise SystemExit(0 if result else 2)

@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""Exact finite unique-decoding graph and evidence extensions."""
+from pathlib import Path
+import runpy
+ROOT=Path(__file__).resolve().parents[2]
+C=runpy.run_path(str(ROOT/'x1/runners/ghc_family_unique_code_core.txt'))
+R=runpy.run_path(str(ROOT/'x1/runners/ghc_family_unique_code_reference.txt'))
+OPS=['paired-automaton','ambiguity-witness','length-series','kraft-necessity','prefix-versus-unique','reversal-invariance','symbol-renaming-invariance','trinity-analogy','observation-gap','authority-gate']
+rejected=C['rejected'];cli=C['cli']
+def handle(q):
+ try:
+  f=C['validate'](q,OPS);c=f['codewords'];op=q['op'];state='completed'
+  if op=='paired-automaton':r=R['product'](c)
+  elif op=='ambiguity-witness':
+   g=R['product'](c);r={'unique':g['unique'],'codewords':c[:],'witness':g['witness']}
+  elif op=='length-series':
+   a=[1]+[0]*12
+   for n in range(1,13):a[n]=sum(a[n-len(w)] for w in c if len(w)<=n)
+   r={'through':12,'token_sequence_counts':a,'distinct_bitstrings_claimed':False}
+  elif op=='kraft-necessity':
+   L=max(map(len,c));n=sum(2**(L-len(w)) for w in c);u=C['residual'](c)['unique'];r={'numerator':n,'denominator':2**L,'at_most_one':n<=2**L,'unique':u,'necessary_implication_holds':not u or n<=2**L,'sufficiency_claimed':False}
+  elif op=='prefix-versus-unique':r={'prefix_free':not C['prefixes'](c),'unique':C['residual'](c)['unique']}
+  elif op=='reversal-invariance':
+   transformed=[w[::-1] for w in c];a=C['residual'](c)['unique'];b=C['residual'](transformed)['unique'];r={'transformed':transformed,'before':a,'after':b,'equal':a==b}
+  elif op=='symbol-renaming-invariance':
+   transformed=[w.translate(str.maketrans('01','10')) for w in c];a=C['residual'](c)['unique'];b=C['residual'](transformed)['unique'];r={'transformed':transformed,'before':a,'after':b,'equal':a==b}
+  elif op=='trinity-analogy':state='represented';r={'mind':'Exact finite identifiability question','body':'Decoder implementation with explicit counterexamples','heart':'Record preservation and authority reservation','mapping':'analogy only','physical_conversion':False}
+  elif op=='observation-gap':state='open_gap';r={'missing':['real channel','sampling plan','calibration','real recovery observations'],'empirical_confirmation':False}
+  elif op=='authority-gate':state='exact_gate';r={'missing':['named target','competent authority','affected-party participation','rollback'],'authorized_real_action':False}
+  return C['envelope'](op,f,r,state)
+ except (ValueError,KeyError,TypeError) as e:return rejected(str(e))
+if __name__=='__main__':raise SystemExit(cli(handle))

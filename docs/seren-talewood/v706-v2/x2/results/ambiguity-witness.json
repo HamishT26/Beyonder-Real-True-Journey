@@ -1,0 +1,6097 @@
+{
+  "operation": "ambiguity-witness",
+  "complete": true,
+  "cases": [
+    {
+      "proposal_id": "ST7062-P166",
+      "definition_sha256": "34c845029954ef9877acb53183607efe4423ec564c5b8d2a363794941c2773c0",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD01",
+          "codewords": [
+            "0",
+            "1"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "01",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD01",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "1"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD01",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "1"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD01",
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "01",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "0064080dda816049552b9fbf7ea3128798a8393fd05fdb6ee14944b56715dc10",
+          "observed": "0064080dda816049552b9fbf7ea3128798a8393fd05fdb6ee14944b56715dc10",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P166-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P166-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P166-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P166-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P166-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD01",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "1"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P166-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P166-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P166",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P166-BAD-OPERATION",
+          "proposal_id": "ST7062-P166",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P167",
+      "definition_sha256": "3d77d5d35e35432a7b44d85d0f86fa28c00a0c087d77bf1e22623970c1adf2ef",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD02",
+          "codewords": [
+            "0",
+            "01"
+          ],
+          "message": [
+            1,
+            0
+          ],
+          "word": "010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD02",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "01"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD02",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "01"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD02",
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "7ea38f5d49cc326f649bbcd4a162db730033e02a1c9d8236dab75963884f23f8",
+          "observed": "7ea38f5d49cc326f649bbcd4a162db730033e02a1c9d8236dab75963884f23f8",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P167-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P167-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P167-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P167-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P167-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD02",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P167-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P167-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P167",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P167-BAD-OPERATION",
+          "proposal_id": "ST7062-P167",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P168",
+      "definition_sha256": "1de0130879bdeb0e30ad18df4700d73d0aef2c8ef2b992b8ea2868a6198eb313",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD03",
+          "codewords": [
+            "0",
+            "00"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "000",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD03",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "0",
+            "00"
+          ],
+          "witness": {
+            "word": "00",
+            "left": [
+              0,
+              0
+            ],
+            "right": [
+              1
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD03",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "0",
+            "00"
+          ],
+          "witness": {
+            "word": "00",
+            "left": [
+              0,
+              0
+            ],
+            "right": [
+              1
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "word": "00",
+                "left": [
+                  0,
+                  0
+                ],
+                "right": [
+                  1
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD03",
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "word": "00",
+                "left": [
+                  0,
+                  0
+                ],
+                "right": [
+                  1
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "7008c8182268078c53560ba3fc740de1bb153e8a2d1bc95d659b4379a2a58531",
+          "observed": "7008c8182268078c53560ba3fc740de1bb153e8a2d1bc95d659b4379a2a58531",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P168-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P168-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P168-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P168-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P168-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD03",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P168-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P168-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P168",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P168-BAD-OPERATION",
+          "proposal_id": "ST7062-P168",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P169",
+      "definition_sha256": "2d5942d949166ca827f0f14db5b563657b2e100a0c8032a99618b696180773c5",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD04",
+          "codewords": [
+            "0",
+            "01",
+            "10"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "001",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD04",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "0",
+            "01",
+            "10"
+          ],
+          "witness": {
+            "word": "010",
+            "left": [
+              0,
+              2
+            ],
+            "right": [
+              1,
+              0
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD04",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "0",
+            "01",
+            "10"
+          ],
+          "witness": {
+            "word": "010",
+            "left": [
+              0,
+              2
+            ],
+            "right": [
+              1,
+              0
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "word": "010",
+                "left": [
+                  0,
+                  2
+                ],
+                "right": [
+                  1,
+                  0
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD04",
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "word": "010",
+                "left": [
+                  0,
+                  2
+                ],
+                "right": [
+                  1,
+                  0
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "91c3a722fcb57fb6d4bf6fd8fd482c7cadac64b0d28b0f8222e9e9acaead96ac",
+          "observed": "91c3a722fcb57fb6d4bf6fd8fd482c7cadac64b0d28b0f8222e9e9acaead96ac",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P169-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P169-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P169-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P169-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P169-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD04",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "01",
+                "10"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P169-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P169-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P169",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P169-BAD-OPERATION",
+          "proposal_id": "ST7062-P169",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P170",
+      "definition_sha256": "d251f3effa1cfaa302f88a12df9430aad281bfe7a6871a024a72d05985e2d125",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD05",
+          "codewords": [
+            "01",
+            "10"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "0110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD05",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "01",
+            "10"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD05",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "01",
+            "10"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD05",
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "0110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "7baff69ed557fe15ebaff1e434b299cd75814a9b9090a23742b766be71aaa367",
+          "observed": "7baff69ed557fe15ebaff1e434b299cd75814a9b9090a23742b766be71aaa367",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P170-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P170-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P170-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P170-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P170-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD05",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P170-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P170-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P170",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P170-BAD-OPERATION",
+          "proposal_id": "ST7062-P170",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P171",
+      "definition_sha256": "eebf5d510cedebb769f02d97297163b9fc3ae446766a229f27a2195b780ce912",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD06",
+          "codewords": [
+            "0",
+            "01",
+            "11"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD06",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "01",
+            "11"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD06",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "01",
+            "11"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD06",
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "c9654f101d77a1ca4e61f6431dc3a401769bc38fe160649d4c6ff010354952a1",
+          "observed": "c9654f101d77a1ca4e61f6431dc3a401769bc38fe160649d4c6ff010354952a1",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P171-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P171-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P171-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P171-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P171-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD06",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "01",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P171-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P171-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P171",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P171-BAD-OPERATION",
+          "proposal_id": "ST7062-P171",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P172",
+      "definition_sha256": "f746c6f8ad03e7bd03a2b0e7fd45974874b1f620265887459159292ae8a29fba",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD07",
+          "codewords": [
+            "0",
+            "10",
+            "110",
+            "111"
+          ],
+          "message": [
+            2,
+            3
+          ],
+          "word": "110111",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD07",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "10",
+            "110",
+            "111"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD07",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "10",
+            "110",
+            "111"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD07",
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "110111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "2a9ccf07d245cd0801b8c9154f05cfdc6c0e1beecaef9c84a01e1dd243babaf1",
+          "observed": "2a9ccf07d245cd0801b8c9154f05cfdc6c0e1beecaef9c84a01e1dd243babaf1",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P172-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P172-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P172-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P172-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P172-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD07",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "10",
+                "110",
+                "111"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P172-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P172-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P172",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P172-BAD-OPERATION",
+          "proposal_id": "ST7062-P172",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P173",
+      "definition_sha256": "13a87e0e07eb0d53cb890b4db6dfdc1301fec145653776c806c09a77599ee915",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD08",
+          "codewords": [
+            "00",
+            "01",
+            "10",
+            "11"
+          ],
+          "message": [
+            3,
+            0
+          ],
+          "word": "1100",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD08",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "00",
+            "01",
+            "10",
+            "11"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD08",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "00",
+            "01",
+            "10",
+            "11"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD08",
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "message": [
+                3,
+                0
+              ],
+              "word": "1100",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "85737bd7dfc6b7439a962b6785754f25807e4514a848417d687b5f203b907da5",
+          "observed": "85737bd7dfc6b7439a962b6785754f25807e4514a848417d687b5f203b907da5",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P173-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P173-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P173-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P173-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P173-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD08",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "01",
+                "10",
+                "11"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P173-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P173-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P173",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P173-BAD-OPERATION",
+          "proposal_id": "ST7062-P173",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P174",
+      "definition_sha256": "17efbc500dde1d0ffaa53f1281f37c912924c9d980bd23e9177166ff1c5f33ff",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD09",
+          "codewords": [
+            "01",
+            "011",
+            "110"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "11001",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD09",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "01",
+            "011",
+            "110"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD09",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "01",
+            "011",
+            "110"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD09",
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "11001",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "01ce27b563fca7dfb949fd7ecd77b1a6b09f3c876ff4648beb4326c0853d9536",
+          "observed": "01ce27b563fca7dfb949fd7ecd77b1a6b09f3c876ff4648beb4326c0853d9536",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P174-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P174-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P174-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P174-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P174-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD09",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "011",
+                "110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P174-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P174-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P174",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P174-BAD-OPERATION",
+          "proposal_id": "ST7062-P174",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P175",
+      "definition_sha256": "66943e88d770d9d165348916d16e23436c5941f1a2ae5d34bc95252999754af3",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD10",
+          "codewords": [
+            "1",
+            "10"
+          ],
+          "message": [
+            1,
+            0
+          ],
+          "word": "101",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD10",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "1",
+            "10"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD10",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "1",
+            "10"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD10",
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "message": [
+                1,
+                0
+              ],
+              "word": "101",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "0c06b7f0968566d8644a5b053e28e3cf8d0303580c7635960555b6eef2788650",
+          "observed": "0c06b7f0968566d8644a5b053e28e3cf8d0303580c7635960555b6eef2788650",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P175-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P175-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P175-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P175-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P175-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD10",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "1",
+                "10"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P175-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P175-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P175",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P175-BAD-OPERATION",
+          "proposal_id": "ST7062-P175",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P176",
+      "definition_sha256": "66448171716babf1c2629984e5b4f8d300099c464bd263fa263ac3021f3c1b3a",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD11",
+          "codewords": [
+            "1",
+            "11"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "111",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD11",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "1",
+            "11"
+          ],
+          "witness": {
+            "word": "11",
+            "left": [
+              0,
+              0
+            ],
+            "right": [
+              1
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD11",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "1",
+            "11"
+          ],
+          "witness": {
+            "word": "11",
+            "left": [
+              0,
+              0
+            ],
+            "right": [
+              1
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "word": "11",
+                "left": [
+                  0,
+                  0
+                ],
+                "right": [
+                  1
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD11",
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "111",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "word": "11",
+                "left": [
+                  0,
+                  0
+                ],
+                "right": [
+                  1
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "e5f69d4a34f0dd0fd328f8f06bbbfcf60d2a14542567dc563148ec5e50faf2e9",
+          "observed": "e5f69d4a34f0dd0fd328f8f06bbbfcf60d2a14542567dc563148ec5e50faf2e9",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P176-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P176-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P176-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P176-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P176-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD11",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "1",
+                "11"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P176-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P176-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P176",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P176-BAD-OPERATION",
+          "proposal_id": "ST7062-P176",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P177",
+      "definition_sha256": "558c27c1c091dc4fb492ca5197c79e64d9b6e97cd55a9a7db020d5f41e3eb3ad",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD12",
+          "codewords": [
+            "0",
+            "001",
+            "101"
+          ],
+          "message": [
+            2,
+            0
+          ],
+          "word": "1010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD12",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "001",
+            "101"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD12",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "0",
+            "001",
+            "101"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD12",
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "message": [
+                2,
+                0
+              ],
+              "word": "1010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "24161b81a6ca0d9edb3ace7421beb121cd63de14e144b4b6295ff6332f819cf3",
+          "observed": "24161b81a6ca0d9edb3ace7421beb121cd63de14e144b4b6295ff6332f819cf3",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P177-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P177-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P177-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P177-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P177-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD12",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "0",
+                "001",
+                "101"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P177-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P177-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P177",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P177-BAD-OPERATION",
+          "proposal_id": "ST7062-P177",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P178",
+      "definition_sha256": "26a61d7b102bc3ab1d8d64dfeb65e10abe315a6bbf470a24278e308d5ae0d194",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD13",
+          "codewords": [
+            "00",
+            "010",
+            "011"
+          ],
+          "message": [
+            0,
+            1
+          ],
+          "word": "00010",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD13",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "00",
+            "010",
+            "011"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD13",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "00",
+            "010",
+            "011"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD13",
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "message": [
+                0,
+                1
+              ],
+              "word": "00010",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "a8b3a1d8e29198e01d1cca6496f4d8d51db1e48de6d62f61626a1b5a11215514",
+          "observed": "a8b3a1d8e29198e01d1cca6496f4d8d51db1e48de6d62f61626a1b5a11215514",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P178-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P178-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P178-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P178-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P178-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD13",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "00",
+                "010",
+                "011"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P178-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P178-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P178",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P178-BAD-OPERATION",
+          "proposal_id": "ST7062-P178",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P179",
+      "definition_sha256": "51d62b460cb5b7db5c4725f348f8dfb620319ef4ad5b630b57c16e76d8e90ba5",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD14",
+          "codewords": [
+            "0",
+            "00",
+            "000",
+            "0000"
+          ],
+          "message": [
+            1,
+            2
+          ],
+          "word": "00000",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD14",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "0",
+            "00",
+            "000",
+            "0000"
+          ],
+          "witness": {
+            "word": "00",
+            "left": [
+              0,
+              0
+            ],
+            "right": [
+              1
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD14",
+        "state": "completed",
+        "result": {
+          "unique": false,
+          "codewords": [
+            "0",
+            "00",
+            "000",
+            "0000"
+          ],
+          "witness": {
+            "word": "00",
+            "left": [
+              0,
+              0
+            ],
+            "right": [
+              1
+            ]
+          }
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "word": "00",
+                "left": [
+                  0,
+                  0
+                ],
+                "right": [
+                  1
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD14",
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "message": [
+                1,
+                2
+              ],
+              "word": "00000",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "word": "00",
+                "left": [
+                  0,
+                  0
+                ],
+                "right": [
+                  1
+                ]
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "5b03ee30199e3d23490dea33d01b6a2bab89fb77498fe0902aa66a61b2939854",
+          "observed": "5b03ee30199e3d23490dea33d01b6a2bab89fb77498fe0902aa66a61b2939854",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P179-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P179-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P179-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P179-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P179-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD14",
+            "state": "completed",
+            "result": {
+              "unique": false,
+              "codewords": [
+                "0",
+                "00",
+                "000",
+                "0000"
+              ],
+              "witness": {
+                "sound": true
+              }
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P179-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P179-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P179",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P179-BAD-OPERATION",
+          "proposal_id": "ST7062-P179",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    },
+    {
+      "proposal_id": "ST7062-P180",
+      "definition_sha256": "0f2d85ea404cd32a3bb14a02f52e724d527c59cb58aba3f62adabc569a8c7bb5",
+      "request": {
+        "op": "ambiguity-witness",
+        "fixture": {
+          "id": "UD15",
+          "codewords": [
+            "01",
+            "001",
+            "1011",
+            "1110"
+          ],
+          "message": [
+            2,
+            3
+          ],
+          "word": "10111110",
+          "evidence": "synthetic"
+        }
+      },
+      "actual": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD15",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "01",
+            "001",
+            "1011",
+            "1110"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "expected": {
+        "schema": "ghc.family.unique-code.response.v1",
+        "operation": "ambiguity-witness",
+        "fixture_id": "UD15",
+        "state": "completed",
+        "result": {
+          "unique": true,
+          "codewords": [
+            "01",
+            "001",
+            "1011",
+            "1110"
+          ],
+          "witness": null
+        },
+        "evidence": "synthetic",
+        "real_observations": 0,
+        "independent_reproduction": false
+      },
+      "mutations": [
+        {
+          "kind": "codewords",
+          "request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        },
+        {
+          "kind": "operation",
+          "request": {
+            "op": "unsupported-operation",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "repaired_request": {
+            "op": "ambiguity-witness",
+            "fixture": {
+              "id": "UD15",
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "message": [
+                2,
+                3
+              ],
+              "word": "10111110",
+              "evidence": "synthetic"
+            }
+          },
+          "repaired_response": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "original_completion_credit": 0
+        }
+      ],
+      "events": [
+        {
+          "procedure": "safe: full semantic response and separate reference",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "safe: caller input is unchanged",
+          "expected": "39080904d3fd32140a5b81db673dc888b54608cd676b0331481aa868c930aed7",
+          "observed": "39080904d3fd32140a5b81db673dc888b54608cd676b0331481aa868c930aed7",
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "safe: correct typed disposition and evidence ceiling",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": []
+        },
+        {
+          "procedure": "candidate subject fails admission: codewords",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "codewords",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P180-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: codewords",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P180-BAD-CODEWORDS"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P180-BAD-CODEWORDS"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "candidate subject fails admission: operation",
+          "expected": "admissible",
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "state": "rejected",
+            "reason": "operation",
+            "executed": false
+          },
+          "result": "fail",
+          "negatives": [
+            "ST7062-P180-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        },
+        {
+          "procedure": "separate rejection guard: operation",
+          "expected": true,
+          "observed": true,
+          "result": "pass",
+          "negatives": [
+            "ST7062-P180-BAD-OPERATION"
+          ]
+        },
+        {
+          "procedure": "CLEAN/FIX: restore affected field and compare complete response",
+          "expected": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "observed": {
+            "schema": "ghc.family.unique-code.response.v1",
+            "operation": "ambiguity-witness",
+            "fixture_id": "UD15",
+            "state": "completed",
+            "result": {
+              "unique": true,
+              "codewords": [
+                "01",
+                "001",
+                "1011",
+                "1110"
+              ],
+              "witness": null
+            },
+            "evidence": "synthetic",
+            "real_observations": 0,
+            "independent_reproduction": false
+          },
+          "result": "pass",
+          "negatives": [
+            "ST7062-P180-BAD-OPERATION"
+          ],
+          "artifact": "x2/results/ambiguity-witness.json"
+        }
+      ],
+      "negative_records": [
+        {
+          "negative_id": "ST7062-P180-BAD-CODEWORDS",
+          "proposal_id": "ST7062-P180",
+          "kind": "codewords",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        },
+        {
+          "negative_id": "ST7062-P180-BAD-OPERATION",
+          "proposal_id": "ST7062-P180",
+          "kind": "operation",
+          "subject_credit": 0,
+          "rejection_guard_pass": true,
+          "recovery_is_separate_copy": true
+        }
+      ]
+    }
+  ]
+}
