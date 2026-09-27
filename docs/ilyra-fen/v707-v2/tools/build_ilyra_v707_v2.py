@@ -116,6 +116,23 @@ ACTIVATION_RECOVERIES = [
         "observed": "Fixture construction now sorts declared covers before strict validation while preserving the same finite relations.",
     },
 ]
+X1_RUNTIME_FAILURES = [
+    {
+        "id": "IF7072-X1-RUNTIME-FAIL-001",
+        "state": "fail",
+        "original_success_credit": 0,
+        "observed": "The first x1 invocation sliced fixture-major proposals and encountered an x2 relabel mechanism without a transformation record before writing x1 artifacts.",
+        "recovery": "IF7072-X1-RUNTIME-RECOVERY-001",
+    }
+]
+X1_RUNTIME_RECOVERIES = [
+    {
+        "id": "IF7072-X1-RUNTIME-RECOVERY-001",
+        "state": "pass",
+        "repairs": "IF7072-X1-RUNTIME-FAIL-001",
+        "observed": "The bounded recovery selects the frozen proposal stage explicitly instead of relying on fixture-major array position.",
+    }
+]
 
 
 DEFINITIONS = [
@@ -637,7 +654,9 @@ def build_x1() -> None:
     x1 = PHASE / "x1"
     if x1.exists():
         raise RuntimeError("x1 already exists; lifecycle replay refused")
-    proposals = load_json(PHASE / "planning" / "proposals.json")["proposals"][:150]
+    proposals = [row for row in load_json(PHASE / "planning" / "proposals.json")["proposals"] if row["stage"] == "x1"]
+    if len(proposals) != 150:
+        raise RuntimeError("x1 proposal-stage selection did not yield 150 records")
     fixture_rows = fixtures()
     analyses = {row["id"]: analyze(row) for row in fixture_rows}
     transforms: dict[str, dict[str, Any]] = {}
@@ -665,12 +684,19 @@ def build_x1() -> None:
     runner_receipts = create_runners(x1, "x1", x1 / "results.json")
     write_json(x1 / "runner-receipts.json", {"boundary": BOUNDARY, "count": 5, "records": runner_receipts})
 
-    methods = [row[0] for row in DEFINITIONS[:10]] + ["focused tests", "local skill validation", "saved-evidence runner smokes"]
-    witnesses = stage_witnesses(results, safe, candidates, refusals, corrected, tests, skill_receipts, runner_receipts)
+    methods = [row[0] for row in DEFINITIONS[:10]] + ["focused tests", "local skill validation", "saved-evidence runner smokes", "stage proposal selection recovery"]
+    runtime_extras = [
+        {"witness_id": row["id"], "state": "fail", "kind": "retained x1 runtime failure", "original_success_credit": 0}
+        for row in X1_RUNTIME_FAILURES
+    ] + [
+        {"witness_id": row["id"], "state": "pass", "kind": "bounded x1 runtime recovery", "repairs": row["repairs"]}
+        for row in X1_RUNTIME_RECOVERIES
+    ]
+    witnesses = stage_witnesses(results, safe, candidates, refusals, corrected, tests, skill_receipts, runner_receipts, runtime_extras)
     counts = method_flow_counts(witnesses, methods)
-    if counts != {"methods": 13, "witnesses": 1540, "pass": 1235, "fail": 305, "negatives": 305, "open_gaps": 0, "exact_gates": 0}:
+    if counts != {"methods": 14, "witnesses": 1542, "pass": 1236, "fail": 306, "negatives": 306, "open_gaps": 0, "exact_gates": 0}:
         raise RuntimeError(f"unexpected x1 Method Flow counts: {counts}")
-    write_json(x1 / "method-flow.json", {"schema": "ghc.family.method-flow.v1", "session": "x1", "boundary": BOUNDARY, "methods": methods, "counts": counts, "witnesses": witnesses})
+    write_json(x1 / "method-flow.json", {"schema": "ghc.family.method-flow.v1", "session": "x1", "boundary": BOUNDARY, "methods": methods, "counts": counts, "runtime_failures": X1_RUNTIME_FAILURES, "runtime_recoveries": X1_RUNTIME_RECOVERIES, "witnesses": witnesses})
     write_text(
         x1 / "report.md",
         "# Ilyra Fen v707-v2 x1\n\nX1 executed exact finite-poset closure, ideal, antichain, bijection, width, height, linear-extension, and Mobius checks over fifteen synthetic fixtures. Fifteen separately structured exhaustive oracle comparisons and five refusal tests passed. Three hundred malformed candidates remain failed at zero credit; their separate refusal and corrected-copy witnesses do not promote or erase them. Evidence is bounded same-owner software evidence only.\n",
@@ -731,7 +757,9 @@ def build_x2() -> None:
     x2 = PHASE / "x2"
     if x2.exists():
         raise RuntimeError("x2 already exists; lifecycle replay refused")
-    proposals = load_json(PHASE / "planning" / "proposals.json")["proposals"][150:]
+    proposals = [row for row in load_json(PHASE / "planning" / "proposals.json")["proposals"] if row["stage"] == "x2"]
+    if len(proposals) != 150:
+        raise RuntimeError("x2 proposal-stage selection did not yield 150 records")
     fixture_rows = fixtures()
     analyses = {row["id"]: analyze(row) for row in fixture_rows}
     transforms = {row["id"]: transformation_checks(row) for row in fixture_rows}
@@ -832,7 +860,7 @@ def baton_text(owner_counts: dict[str, int], effective: dict[str, int]) -> str:
     sections += [
         "## Workload, tests, capabilities, and models\n\nThe phase retains 300 inherited Lyren proposal records at zero Ilyra novelty and completion credit and freezes 300 genuinely new Ilyra contracts. Outcomes are exactly 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. Each stage contains 450 safe predicates, 300 malformed candidates, 300 separate refusal guards, and 300 corrected-copy CLEAN/FIX/REFINE checks. Corrected copies do not erase invalid originals or replay successful solvers.\n\nX1 has twenty focused tests: fifteen separately structured exhaustive-oracle comparisons and five malformed-schema refusals. X2 has thirty focused transformation checks: fifteen deterministic relabeling checks and fifteen order-dual checks. These counts support only the declared tiny input space and do not establish exhaustive correctness, performance, security, empirical calibration, or independent validation.\n\nTwenty owner-local skills and ten saved-evidence runners were created, validated, and used, ten and five per stage. Five successor skill ideas, five successor runner ideas, and one practice recommendation remain proposals. No global skill, package, hook, shared catalogue, or sibling checkout was installed or changed. Five manual hook candidates accepted one valid envelope and refused one invalid envelope each. The invalid inputs remain failed records. These hooks are not installed, trusted, or observed live.\n\nThe fifteen-model atlas uses node count, ideal count, and width as three abstract coordinates. The HTML file is a self-contained accessible evidence table. These are abstract data coordinates, not physical geometry, an open world, consciousness, a production simulation, or a reproduction of any external system.\n",
         "## Mind, Body, and Heart boundaries\n\nGMUT Mind is represented here as disciplined typed finite mathematical specification. The supplied Grand Mandala field-equation forms still lack a complete action, tensor definitions, unit conventions, closure conditions, boundary conditions, identifiable observables, likelihood, and empirical data. Finite order ideals do not estimate alpha, identify Omega_AB, or prove a Theory of Everything.\n\nTHOS Body is represented by exact finite software, explicit schemas, saved witnesses, deterministic corrections, and reversible documentation. It is not an enterprise operating system, safe autonomous controller, operational safety case, deployment benchmark, or production release. No external system was controlled.\n\nFreed ID and CBR Heart are represented by provenance, contested classification, correction, remedy, accessibility, and deployment reservations. A finite order cannot supply consent, rights, cultural legitimacy, or competent authority. No live credential, proof, identity lifecycle, or rights decision was issued. Fifteen labelled design hypotheses remain proposals, not discovered physical or psychological laws. Fifteen broader problem probes remain unsolved. Maori concepts and authority remain under Maori authority. The practice lenses are study perspectives, not qualifications or employment.\n",
-        "## Method Flow and retained failures\n\nThe complete Method Flow is separate from this baton. It preserves three activation-stage wrapper failures, the first planning fixture-normalization failure, every malformed candidate, every malformed focused-test subject, every invalid hook envelope, and any later runtime wrapper failure at zero original credit, with separate bounded recovery witnesses. Passing refusal never converts the rejected input into a success. Source, repository, canonical, route, delivery, and recipient-completion layers remain distinct.\n\nThe exact repository seal preserves only events known before commit. The canonical may execute only after a clean pushed exact final and may succeed once. A success closes the latch and must not be replayed. Route failures and their recoveries are later external overlays and must not be retroactively folded into the immutable seal. The standing verdict remains NOT_READY_FOR_STAGE_20.\n",
+        "## Method Flow and retained failures\n\nThe complete Method Flow is separate from this baton. It preserves three activation-stage wrapper failures, the first planning fixture-normalization failure, the first x1 stage-selection failure, every malformed candidate, every malformed focused-test subject, every invalid hook envelope, and any later runtime wrapper failure at zero original credit, with separate bounded recovery witnesses. Passing refusal never converts the rejected input into a success. Source, repository, canonical, route, delivery, and recipient-completion layers remain distinct.\n\nThe exact repository seal preserves only events known before commit. The canonical may execute only after a clean pushed exact final and may succeed once. A success closes the latch and must not be replayed. Route failures and their recoveries are later external overlays and must not be retroactively folded into the immutable seal. The standing verdict remains NOT_READY_FOR_STAGE_20.\n",
         f"## Prospective {SUCCESSOR} work\n\nA useful next direction may examine finite lattice visualization, accessibility-preserving diagram projection, provenance joins, or an independently structured finite oracle. These are recommendations, not completed capabilities or compulsory choices. Before mutation, reread this baton completely, verify the exact source, manifests, content seal, canonical receipt, terminal-effective overlay, and current v19 controls. Work solo in an additive {SUCCESSOR}-owned D-first lane. Keep Ilyra, Lyren, sibling, shared, standby, and user lanes read-only. Preserve every failure, gap, gate, exact outcome label, file ceiling, and one-success latch.\n\nAfter {SUCCESSOR}'s own exact terminal gate, refresh the formal roster and newest direct controls before resolving the next exact owner. Do not infer a successor from historical prose, precontact it, create a replacement, or resend after an accepted, pending, opaque, or unresolved acknowledgement. Hamish may pause, rename, narrow, redirect, or stop the route at any time.\n\nWith warmth, exact finite structure, inspectability, reversibility, retained-negative discipline, and corrigibility — Ilyra Fen.\n\nPREPARED_BY_ILYRA_FEN = true.\nSENT_BY_ILYRA_FEN = false.\nRECIPIENT_COMPLETION = UNCLAIMED.\n\nLITERAL_EOF_ILYRA_V707_V2\n",
     ]
     text = "\n".join(sections)
@@ -872,7 +900,7 @@ def build_final() -> None:
     x1_counts = load_json(PHASE / "x1" / "method-flow.json")["counts"]
     x2_counts = load_json(PHASE / "x2" / "method-flow.json")["counts"]
     owner_counts = add_counts(add_counts(planning_counts, x1_counts), x2_counts)
-    expected_owner = {"methods": 33, "witnesses": 3124, "pass": 2510, "fail": 614, "negatives": 614, "open_gaps": 21, "exact_gates": 20}
+    expected_owner = {"methods": 34, "witnesses": 3126, "pass": 2511, "fail": 615, "negatives": 615, "open_gaps": 21, "exact_gates": 20}
     if owner_counts != expected_owner:
         raise RuntimeError(f"unexpected owner counts: {owner_counts}")
     effective = add_counts(SOURCE_EFFECTIVE, owner_counts)
@@ -912,8 +940,8 @@ def build_final() -> None:
             "boundary": BOUNDARY,
         },
     )
-    write_json(final / "method-flow-final.json", {"boundary": BOUNDARY, "counts": {"source": SOURCE_EFFECTIVE, "owner": owner_counts, "effective": effective, "source_fold_count": 1}, "planning": "planning/method-flow.json", "x1": "x1/method-flow.json", "x2": "x2/method-flow.json", "runtime_failures": []})
-    write_json(final / "failure-dossier.json", {"boundary": BOUNDARY, "activation_failures": ACTIVATION_FAILURES, "activation_recoveries": ACTIVATION_RECOVERIES, "x1_candidate_failures": 300, "x1_malformed_test_subjects": 5, "x2_candidate_failures": 300, "x2_invalid_hook_subjects": 5, "all_original_failures_retained": True, "refusal_promotes_invalid_subject": False})
+    write_json(final / "method-flow-final.json", {"boundary": BOUNDARY, "counts": {"source": SOURCE_EFFECTIVE, "owner": owner_counts, "effective": effective, "source_fold_count": 1}, "planning": "planning/method-flow.json", "x1": "x1/method-flow.json", "x2": "x2/method-flow.json", "runtime_failures": X1_RUNTIME_FAILURES, "runtime_recoveries": X1_RUNTIME_RECOVERIES})
+    write_json(final / "failure-dossier.json", {"boundary": BOUNDARY, "activation_failures": ACTIVATION_FAILURES, "activation_recoveries": ACTIVATION_RECOVERIES, "x1_runtime_failures": X1_RUNTIME_FAILURES, "x1_runtime_recoveries": X1_RUNTIME_RECOVERIES, "x1_candidate_failures": 300, "x1_malformed_test_subjects": 5, "x2_candidate_failures": 300, "x2_invalid_hook_subjects": 5, "all_original_failures_retained": True, "refusal_promotes_invalid_subject": False})
     write_json(final / "workload.json", {"boundary": BOUNDARY, "inherited": 300, "new": 300, "outcomes": {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15}, "x1": load_json(PHASE / "x1" / "session-summary.json"), "x2": load_json(PHASE / "x2" / "session-summary.json"), "exact_packets_held": 50, "blocked_packets_held": 30})
     write_json(final / "route-candidate.json", {"boundary": BOUNDARY, "from": OWNER, "from_phase": PHASE_ID, "to": SUCCESSOR, "to_phase": SUCCESSOR_PHASE, "state": "PREPARED_NOT_SENT", "requires": ["clean pushed fresh-live-equal exact final", "one successful non-replayed owner-scoped metadata canonical", "fresh v19 roster and authority", "active and archived exact-title uniqueness", "immediate direct-control reread", "duplicate pause redirect rename stop usage privacy evidence safety acknowledgement guards"], "task_creation_or_fork": False, "standby_substitution": False})
     write_json(final / "allowlist.json", {"boundary": BOUNDARY, "owner_prefixes": ["docs/ilyra-fen/v707-v2/"], "file_ceiling": 2000, "commit_ceiling": 4, "shared_and_sibling_lanes": "read_only", "global_installation": False})
