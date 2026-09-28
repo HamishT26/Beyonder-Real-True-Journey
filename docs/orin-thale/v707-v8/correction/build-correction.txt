@@ -1,0 +1,518 @@
+'use strict';
+
+// Additive v707-v8 correction builder. The generated records preserve the
+// first exact final and every failed terminal witness without replaying x1/x2.
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+
+const ROOT = process.cwd();
+const REL = 'docs/orin-thale/v707-v8';
+const CORRECTION = REL + '/correction';
+const DIR = path.join(ROOT, ...CORRECTION.split('/'));
+const BANK = 'D:/GHC-Archives/phase-banks/orin-thale-v707-v8';
+const BRANCH = 'codex/GHC-Family/orin-thale-main-3';
+const SOURCE = 'b2d8c3b107b89abfb47902d2fc225eb11976a846';
+const PLANNING = '268039174dfa40cd50c71e8e07f7d0f419237aa8';
+const X1 = '5a3fd4f0e9608b6bf8bfbe347a5ea9e631d43f26';
+const X2 = '75d441edf5b23fdb2231213ba7d87a2c5725974c';
+const FIRST_FINAL = 'ceedfb3df19be4482c03d4ac105cc4ffd6d2ebf1';
+const BOUNDARY = 'Finite synthetic same-owner interval, affine-form, abstract-interpretation, laboratory, software and documentary evidence only. No real participant, program, production analyzer, measurement, identity, credential, consent decision, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains a research-model family; THOS remains proxy and Freed ID remains synthetic/nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.';
+
+const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const git = args => cp.execFileSync('git', args, {
+  cwd: ROOT,
+  encoding: 'utf8',
+  windowsHide: true,
+  maxBuffer: 64 * 1024 * 1024
+});
+const relPath = absolute => path.relative(ROOT, absolute).replace(/\\/g, '/');
+const writeJson = (relative, value) => {
+  const target = path.join(ROOT, ...relative.split('/'));
+  fs.mkdirSync(path.dirname(target), {recursive: true});
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + '\n', 'utf8');
+};
+const writeText = (relative, value) => {
+  const target = path.join(ROOT, ...relative.split('/'));
+  fs.mkdirSync(path.dirname(target), {recursive: true});
+  fs.writeFileSync(target, value.replace(/\r\n/g, '\n'), 'utf8');
+};
+const fileEntry = relative => {
+  const bytes = fs.readFileSync(path.join(ROOT, ...relative.split('/')));
+  return {
+    path: relative,
+    bytes: bytes.length,
+    sha256: hash(bytes),
+    byte_domain: 'checkout bytes authored LF-only; expected raw Git blob parity after commit'
+  };
+};
+const walk = directory => fs.readdirSync(directory, {withFileTypes: true}).flatMap(entry => {
+  const absolute = path.join(directory, entry.name);
+  return entry.isDirectory() ? walk(absolute) : [relPath(absolute)];
+});
+
+const head = git(['rev-parse', 'HEAD']).trim();
+const branch = git(['branch', '--show-current']).trim();
+if (head !== FIRST_FINAL) throw new Error('correction source head mismatch');
+if (branch !== BRANCH) throw new Error('correction branch mismatch');
+const status = git(['status', '--porcelain=v1', '-uall']).trim().split(/\r?\n/).filter(Boolean);
+if (status.some(line => !line.slice(3).replace(/\\/g, '/').startsWith(CORRECTION + '/'))) throw new Error('unexpected pre-correction worktree state: ' + status.join(','));
+
+const workflowBindings = {
+  workflow_v20_sha256: '010454b1ef9cad98db09ac79e68d0cddbc246007138e8792aad534287861edf4',
+  roster_v20_sha256: '52edb60e2c47c2f905a35c6b21caf5a947ca34978b04eea627f6a1b6b147f1f2',
+  authorization_v20_sha256: '482068f8ac4415870e2379751c90bfd98bdb7bb2360bf0999c6a999cf79fe53e',
+  consultation_policy_v20_sha256: 'c42be903b123923067fc76359645d58d194bc50c593e0b6c2ce7c9a36195893c'
+};
+const priorReceipts = {
+  canonical_failure_sha256: '940ae0f43d07a2c636ff601d8f43996eb0dedeae58b74b9d1222c4c761d89213',
+  first_terminal_composite_failure_sha256: 'efb40a9d7778186731853c0295b1d482eff84e11c8127d330fa390038b819eac',
+  second_terminal_composite_success_sha256: '7e12cab919c7b1605f713ac05522ef9f859f3d417bfc01130c3ef8dd4e302b69',
+  second_terminal_composite_payload_sha256: 'b475ef88a3465f4f8bfb963a190ac018b6753c1c9a247906f7aca03d541f7ea0'
+};
+for (const [name, expected] of [
+  ['canonical-failure-receipt.json', priorReceipts.canonical_failure_sha256],
+  ['terminal-composite-failure.json', priorReceipts.first_terminal_composite_failure_sha256],
+  ['terminal-composite-v2-receipt.json', priorReceipts.second_terminal_composite_success_sha256]
+]) {
+  const actual = hash(fs.readFileSync(path.join(BANK, name)));
+  if (actual !== expected) throw new Error('prior receipt digest mismatch ' + name);
+}
+
+writeJson(CORRECTION + '/authorization-and-scope.json', {
+  schema: 'orin.corrective-authorization.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  authority: 'Hamish direct live request on 2026-09-29 Pacific/Auckland to have another go at fully finishing Orin v707-v8 before one terminally gated Ceryn Alder v708-v1 activation',
+  interpretation: 'One additive correction lifecycle on the existing Orin owner lane. The original final, failed canonical, failed first composite, successful zero-canonical-credit second composite, x1, x2 and accepted advisory messages remain immutable and are not replayed.',
+  source: SOURCE,
+  planning: PLANNING,
+  x1: X1,
+  x2: X2,
+  first_final: FIRST_FINAL,
+  branch: BRANCH,
+  allowed_actions: [
+    'author additive correction records',
+    'create one direct-child corrected exact final',
+    'invoke one correction-specific canonical against the new exact final',
+    'resolve and contact the exact existing successor at most once only after canonical success and fresh live guards'
+  ],
+  prohibited_actions: [
+    'replay planning, x1, x2, saved domain execution, source canonical or accepted advisory messages',
+    'erase or relabel a failed witness',
+    'create or fork a task',
+    'spawn a collaboration subagent',
+    'mutate a sibling or standby lane',
+    'precontact or resend to a successor',
+    'treat Coordinator as an autonomous scheduler'
+  ],
+  advisory_messages: {x1: 1, x2: 1, resends: 0, already_satisfied: true},
+  coordinator: {board_enabled: false, claim_written: false, background_management: false},
+  route: {prospective_successor: 'Ceryn Alder', prospective_phase: 'v708-v1', terminal_gate_required: true},
+  workflow_bindings: workflowBindings,
+  boundary: BOUNDARY
+});
+
+const methods = [
+  {
+    method_id: 'OR7078-CORR-M01',
+    title: 'Lifecycle-correct canonical dependency repair',
+    failure_signature: 'A terminal validator binds an immutable stage manifest to the wrong Git tree or cannot accumulate its evidence counters',
+    validation_witness_ids: ['OR7078-POST-CANONICAL-N001','OR7078-POST-COMPOSITE-N002','OR7078-CORR-REC-W001','OR7078-CORR-REC-W002'],
+    retained_negative_ids: ['OR7078-POST-CANONICAL-N001','OR7078-POST-COMPOSITE-N002'],
+    trigger_preconditions: ['First exact final is immutable, pushed, clean and fresh four-way equal', 'Hamish supplied new direct corrective authority'],
+    privacy_class: 'sanitized_public',
+    approval_class: 'owner_authorized_bounded_correction',
+    candidate_workaround: 'Bind each immutable manifest to its own lifecycle commit and correct only the counter mutability dependency.',
+    recurrence_guard: 'A new canonical may target only a new additive corrected final; never rerun the failed canonical or replay x1/x2 domain work.',
+    rollback: 'Revert only the additive correction commit while retaining every external failure receipt.',
+    recommendation_state: 'validated',
+    supersedes: [],
+    protected_gates: ['exact source', 'canonical nonreplay', 'privacy', 'authority', 'one terminal route', 'Stage 20'],
+    scope_boundary: BOUNDARY,
+    execution_authority: 'owner_self_scoped_delta',
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: FIRST_FINAL,
+    final_commit: 'external_after_commit',
+    changed_file_allowlist: [CORRECTION],
+    module_allowlist: [CORRECTION + '/build-correction.txt'],
+    exact_pushed_head_required: true
+  },
+  {
+    method_id: 'OR7078-CORR-M02',
+    title: 'Bounded read-only projection recovery',
+    failure_signature: 'A PowerShell or ripgrep projection assumes an invalid pipeline or nonexistent path',
+    validation_witness_ids: ['OR7078-POST-HASH-N003','OR7078-CORR-START-N004','OR7078-CORR-PROJECTION-N005','OR7078-CORR-CHECK-N006','OR7078-CORR-REC-W003','OR7078-CORR-REC-W004','OR7078-CORR-REC-W005','OR7078-CORR-REC-W006'],
+    retained_negative_ids: ['OR7078-POST-HASH-N003','OR7078-CORR-START-N004','OR7078-CORR-PROJECTION-N005','OR7078-CORR-CHECK-N006'],
+    trigger_preconditions: ['Read-only correction startup and receipt inspection'],
+    privacy_class: 'sanitized_public',
+    approval_class: 'owner_authorized_bounded_correction',
+    candidate_workaround: 'Materialize arrays before piping, use literal path arrays for hashing, and enumerate existing owner paths before content search.',
+    recurrence_guard: 'Verify path existence and PowerShell expression shape before each bounded projection.',
+    rollback: 'No repository rollback is needed for read-only failures; retain the failed witness and its separate recovery.',
+    recommendation_state: 'validated',
+    supersedes: [],
+    protected_gates: ['privacy', 'source immutability', 'route noninference', 'Stage 20'],
+    scope_boundary: BOUNDARY,
+    execution_authority: 'owner_self_scoped_delta',
+    repository_scan: false,
+    module_scan: false,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: FIRST_FINAL,
+    final_commit: 'external_after_commit',
+    changed_file_allowlist: [CORRECTION],
+    module_allowlist: [],
+    exact_pushed_head_required: true
+  },
+  {
+    method_id: 'OR7078-CORR-M03',
+    title: 'Correction staged-review self-accounting',
+    failure_signature: 'A generated staged review omits its own path because the directory is enumerated before the review is written',
+    validation_witness_ids: ['OR7078-CORR-VALIDATE-N007','OR7078-CORR-REC-W007'],
+    retained_negative_ids: ['OR7078-CORR-VALIDATE-N007'],
+    trigger_preconditions: ['All correction content and manifests exist before exact staging'],
+    privacy_class: 'sanitized_public',
+    approval_class: 'owner_authorized_bounded_correction',
+    candidate_workaround: 'Add the staged-review path explicitly to the frozen expected set before writing the review.',
+    recurrence_guard: 'For a self-describing review, calculate the final path set rather than the pre-write directory state.',
+    rollback: 'Revert only the additive correction commit while retaining the failed v1 precommit receipt.',
+    recommendation_state: 'validated',
+    supersedes: [],
+    protected_gates: ['exact staged allowlist', 'manifest arithmetic', 'privacy', 'Stage 20'],
+    scope_boundary: BOUNDARY,
+    execution_authority: 'owner_self_scoped_delta',
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: FIRST_FINAL,
+    final_commit: 'external_after_commit',
+    changed_file_allowlist: [CORRECTION],
+    module_allowlist: [CORRECTION + '/build-correction.txt', CORRECTION + '/staged-review.json'],
+    exact_pushed_head_required: true
+  },
+  {
+    method_id: 'OR7078-CORR-M04',
+    title: 'Exact staged whitespace recovery',
+    failure_signature: 'The staged correction contains a whitespace error or the wrapper loses the exact diff-check diagnostic',
+    validation_witness_ids: ['OR7078-CORR-STAGED-N008','OR7078-CORR-REC-W008'],
+    retained_negative_ids: ['OR7078-CORR-STAGED-N008'],
+    trigger_preconditions: ['The exact twelve-path correction allowlist is staged'],
+    privacy_class: 'sanitized_public',
+    approval_class: 'owner_authorized_bounded_correction',
+    candidate_workaround: 'Capture the direct Git diagnostic and remove only the reported terminal blank line.',
+    recurrence_guard: 'Run the exact staged whitespace check before commit and preserve its output on nonzero exit.',
+    rollback: 'Revert only the additive correction commit while retaining the failed staged-validation receipt.',
+    recommendation_state: 'validated',
+    supersedes: [],
+    protected_gates: ['exact staged allowlist', 'diff hygiene', 'privacy', 'Stage 20'],
+    scope_boundary: BOUNDARY,
+    execution_authority: 'owner_self_scoped_delta',
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: FIRST_FINAL,
+    final_commit: 'external_after_commit',
+    changed_file_allowlist: [CORRECTION],
+    module_allowlist: [CORRECTION + '/build-correction.txt'],
+    exact_pushed_head_required: true
+  }
+];
+
+const witnesses = [
+  ['OR7078-POST-CANONICAL-N001','OR7078-CORR-M01','retain-original-canonical-wrong-lifecycle-failure','The sole first-final canonical compared every stage manifest to the first final tree and rejected three planning placeholders that legitimately changed in x1.','fail',0],
+  ['OR7078-POST-COMPOSITE-N002','OR7078-CORR-M01','retain-first-composite-const-counter-failure','The first dependency-corrected composite reached its accumulation logic and failed because two counters were declared const.','fail',0],
+  ['OR7078-CORR-REC-W001','OR7078-CORR-M01','verify-lifecycle-scoped-manifest-recovery','The separately named second composite checked planning, x1, x2 and first-final manifests against their exact immutable Git trees with 341 entries and zero issues.','pass',1],
+  ['OR7078-CORR-REC-W002','OR7078-CORR-M01','verify-second-composite-counter-recovery','The separately named second composite corrected only the counter bindings and passed while canonical success remained exactly zero.','pass',1],
+  ['OR7078-POST-HASH-N003','OR7078-CORR-M02','retain-powershell-join-path-projection-failure','The first post-final SHA projection grouped comma-separated Join-Path expressions incorrectly and produced no accepted digest projection.','fail',0],
+  ['OR7078-CORR-START-N004','OR7078-CORR-M02','retain-powershell-empty-pipe-skill-inventory-failure','The first corrective skill inventory placed a pipeline immediately after a foreach expression and PowerShell rejected the empty pipe element before reading any skill.','fail',0],
+  ['OR7078-CORR-PROJECTION-N005','OR7078-CORR-M02','retain-nonexistent-test-script-search-projection','The first bounded content search included absent top-level tests and scripts directories and returned path errors alongside valid owner matches.','fail',0],
+  ['OR7078-CORR-CHECK-N006','OR7078-CORR-M02','retain-node-check-txt-extension-rejection','The first correction-builder syntax probe used Node check mode directly on a TXT file and Node 26 rejected the unsupported extension before executing any builder code.','fail',0],
+  ['OR7078-CORR-REC-W003','OR7078-CORR-M02','verify-literal-path-array-hash-projection','A literal path array produced exact scalar SHA-256 values without changing repository or receipt state.','pass',1],
+  ['OR7078-CORR-REC-W004','OR7078-CORR-M02','verify-materialized-skill-inventory-projection','Materializing foreach results before formatting returned the complete requested skill inventory; every selected skill was then read through EOF.','pass',1],
+  ['OR7078-CORR-REC-W005','OR7078-CORR-M02','verify-existing-owner-and-bank-inventory-projection','Exact owner-tree and phase-bank enumerations replaced the invalid assumed paths and recovered the required artifacts without mutation.','pass',1]
+  ,['OR7078-CORR-REC-W006','OR7078-CORR-M02','verify-vm-script-txt-syntax-recovery','The exact TXT bytes were parsed with the Node vm.Script surface before the builder was executed once.','pass',1]
+  ,['OR7078-CORR-VALIDATE-N007','OR7078-CORR-M03','retain-staged-review-prewrite-enumeration-failure','The first correction precommit validator found that the staged-review expected set reflected the directory immediately before the staged-review file itself was written, so the self path was absent.','fail',0]
+  ,['OR7078-CORR-REC-W007','OR7078-CORR-M03','verify-final-path-set-self-accounting','The bounded recovery added the staged-review path explicitly to the frozen final path set before writing the review.','pass',1]
+  ,['OR7078-CORR-STAGED-N008','OR7078-CORR-M04','retain-staged-whitespace-check-failure','The first exact staged validator stopped on Git diff-check status before preserving its diagnostic; the direct read showed one new blank line at EOF in the correction builder.','fail',0]
+  ,['OR7078-CORR-REC-W008','OR7078-CORR-M04','verify-single-file-terminal-blank-line-recovery','The bounded recovery removed only the reported extra terminal blank line and reran a separately named staged validator.','pass',1]
+].map(([witness_id, method_id, procedure, observed, result, original_success_credit]) => ({
+  witness_id,
+  method_id,
+  procedure,
+  scope: 'Orin v707-v8 additive terminal correction',
+  expected: result === 'pass' ? 'The smallest named recovery succeeds without replay or evidence promotion.' : 'The attempted procedure should satisfy its bounded read or validation contract.',
+  observed,
+  result,
+  same_owner_only: true,
+  independent_reproduction: false,
+  retained_negative_ids: result === 'fail' ? [witness_id] : [],
+  original_success_credit,
+  atomic_count: 1,
+  boundary: BOUNDARY
+}));
+writeJson(CORRECTION + '/method-flow.json', {
+  schema: 'ghc.method-flow.v2',
+  phase: 'v707-v8-correction',
+  owner: 'Orin Thale',
+  identity_boundary: 'relational working language only',
+  methods,
+  witnesses,
+  state_events: [
+    {event_id:'OR7078-CORR-M01-S1',method_id:'OR7078-CORR-M01',from:'observed',to:'candidate',reason:'first canonical failed on wrong lifecycle binding'},
+    {event_id:'OR7078-CORR-M01-S2',method_id:'OR7078-CORR-M01',from:'candidate',to:'validated',reason:'second terminal composite proved the narrow lifecycle correction'},
+    {event_id:'OR7078-CORR-M02-S1',method_id:'OR7078-CORR-M02',from:'observed',to:'candidate',reason:'read-only projections failed without state mutation'},
+    {event_id:'OR7078-CORR-M02-S2',method_id:'OR7078-CORR-M02',from:'candidate',to:'validated',reason:'literal bounded projections recovered the required evidence'},
+    {event_id:'OR7078-CORR-M03-S1',method_id:'OR7078-CORR-M03',from:'observed',to:'candidate',reason:'v1 precommit found the missing self path'},
+    {event_id:'OR7078-CORR-M03-S2',method_id:'OR7078-CORR-M03',from:'candidate',to:'validated',reason:'final path set explicitly includes the staged review'},
+    {event_id:'OR7078-CORR-M04-S1',method_id:'OR7078-CORR-M04',from:'observed',to:'candidate',reason:'v1 staged validation found a terminal blank line'},
+    {event_id:'OR7078-CORR-M04-S2',method_id:'OR7078-CORR-M04',from:'candidate',to:'validated',reason:'the exact reported line was corrected and restaged'}
+  ],
+  recommendations: [],
+  counts: {
+    methods: 4,
+    witnesses: 16,
+    state_events: 8,
+    recommendations: 0,
+    states: {observed:0,candidate:0,validated:4,preferred:0,superseded:0,deprecated:0},
+    witness_results: {pass:8,fail:8}
+  },
+  boundary: BOUNDARY,
+  execution_authority: 'owner_self_scoped_delta',
+  source_commit: FIRST_FINAL,
+  final_commit: 'external_after_commit',
+  source_baseline_fold_count: 1
+});
+
+writeJson(CORRECTION + '/retained-negative-register.json', {
+  schema: 'orin.correction-retained-negative-register.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  first_final_repository_effective: {
+    methods: 6912,
+    witnesses: 314458,
+    passing: 242066,
+    failed: 72392,
+    effective_negatives: 81225,
+    open_gaps: 2509,
+    exact_gate_obligations: 2860
+  },
+  correction_addition: {methods:4,witnesses:16,passing:8,failed:8,effective_negatives:8},
+  corrected_repository_effective: {
+    methods: 6916,
+    witnesses: 314474,
+    passing: 242074,
+    failed: 72400,
+    effective_negatives: 81233,
+    open_gaps: 2509,
+    exact_gate_obligations: 2860
+  },
+  folded_once_in_this_correction: ['OR7078-POST-CANONICAL-N001','OR7078-POST-COMPOSITE-N002','OR7078-POST-HASH-N003','OR7078-CORR-START-N004','OR7078-CORR-PROJECTION-N005','OR7078-CORR-CHECK-N006','OR7078-CORR-VALIDATE-N007','OR7078-CORR-STAGED-N008'],
+  rule: 'The first-final repository seal is unchanged. This additive correction folds the eight named post-final or correction-stage failures once and retains each at zero credit. Recoveries remain separate witnesses.',
+  boundary: BOUNDARY
+});
+
+writeJson(CORRECTION + '/phase-truth.json', {
+  schema: 'orin.corrected-phase-truth.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  state: 'PREPARED_CORRECTIVE_EXACT_FINAL',
+  source: SOURCE,
+  planning: PLANNING,
+  x1: X1,
+  x2: X2,
+  retained_first_final: FIRST_FINAL,
+  corrected_exact_final: 'POSTCOMMIT_BINDING_EXTERNAL',
+  lifecycle: {direct_single_parent_commits_from_source_after_correction:5,merges:0,corrected_final_parent:FIRST_FINAL},
+  prior_canonical: {invocation_count:1,success_count:0,replay_count:0,state:'FAILED_ZERO_CREDIT_NOT_REPLAYED'},
+  corrective_canonical: {invocation_count:0,success_count:0,replay_count:0,state:'PENDING_NEW_EXACT_FINAL'},
+  core_outcomes: {completed:16,represented:1,open_gap:2,exact_gate:1},
+  corrected_repository_effective: {methods:6916,witnesses:314474,passing:242074,failed:72400,effective_negatives:81233,open_gaps:2509,exact_gate_obligations:2860},
+  route: {state:'HELD_UNTIL_CORRECTIVE_CANONICAL_SUCCESS_AND_LIVE_GUARDS',prospective_successor:'Ceryn Alder',prospective_phase:'v708-v1',send_attempts:0,resends:0},
+  full_repository_suite: false,
+  independent_reproduction: false,
+  terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+  boundary: BOUNDARY
+});
+
+writeJson(CORRECTION + '/canonical-contract.json', {
+  schema: 'orin.corrective-canonical-contract.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  target: 'one new additive corrected exact final only',
+  corrected_final: 'POSTCOMMIT_BINDING_EXTERNAL',
+  retained_first_final: FIRST_FINAL,
+  first_failed_canonical_replayed: false,
+  source_or_domain_replay: false,
+  accepted_advisory_resend: false,
+  lifecycle_manifests: [
+    {stage:'planning',ref:PLANNING,path:REL + '/planning/manifest.json'},
+    {stage:'x1',ref:X1,path:REL + '/x1/manifest.json'},
+    {stage:'x2',ref:X2,path:REL + '/x2/manifest.json'},
+    {stage:'first_final',ref:FIRST_FINAL,path:REL + '/final/owner-manifest.json'},
+    {stage:'correction',ref:'CORRECTED_EXACT_FINAL',path:CORRECTION + '/correction-owner-manifest.json'}
+  ],
+  required_checks: [
+    'exact clean pushed corrected head and fresh four-way equality before and after',
+    'lifecycle-correct raw Git-blob manifest parity',
+    'correction content seal and staged allowlist',
+    '135 saved assertion records remain true without replaying domain execution',
+    'strict owner JSON parse and bounded TXT/Markdown checks',
+    'five privacy classes with candidate adjudication',
+    'bounded syntax checks for the six retained owner code files and correction builder',
+    'five direct single-parent Orin commits from source, zero merges, one corrected-final parent',
+    'current route remains held during canonical execution'
+  ],
+  success_rule: 'One correction-specific canonical invocation may close one success latch for the new corrected exact final. A success does not relabel the failed first-final canonical.',
+  prior_receipts: priorReceipts,
+  boundary: BOUNDARY
+});
+
+writeJson(CORRECTION + '/route-state.json', {
+  schema: 'orin.corrective-route-state.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  state: 'PREPARED_NOT_SENT_CORRECTIVE_CANONICAL_PENDING',
+  prospective_successor: 'Ceryn Alder',
+  prospective_phase: 'v708-v1',
+  exact_title_lookup_performed: false,
+  direct_reread_performed: false,
+  duplicate_guard_performed: false,
+  send_attempts: 0,
+  resends: 0,
+  acknowledged: false,
+  recipient_completion_claim: false,
+  stop_conditions: ['absence','ambiguity','pause','redirect','rename','standby','usage exhaustion','privacy or protected concern','duplicate','missing acknowledgement'],
+  boundary: BOUNDARY
+});
+
+const correctionBasis = [
+  '# Orin Thale v707-v8 additive terminal correction basis',
+  '',
+  '## Outcome and authority',
+  '',
+  'Hamish directly asked Orin on 29 September 2026 Pacific/Auckland to have another go at fully finishing the already sealed v707-v8 phase before one terminally gated activation of the existing Ceryn Alder task for v708-v1. This record interprets that request as authority for one additive correction lifecycle on the existing Orin owner lane. It does not authorize a replay of planning, x1, x2, saved domain execution, the failed first-final canonical, either accepted advisory message, or any prior successful source work.',
+  '',
+  'The retained first final is ' + FIRST_FINAL + '. It remains immutable, pushed, clean, zero-divergent and four-way equal. The original canonical remains failed with zero success credit because it compared every stage manifest to the first-final tree. The planning manifest correctly described three planning-time placeholder code files that were legitimately replaced during x1, so final-tree comparison was the wrong lifecycle relation. The canonical invocation, success and replay counts remain 1, 0 and 0 for that first final.',
+  '',
+  'The first dependency-corrected terminal composite also remains failed at zero credit because two accumulation counters were declared const. The separately named second composite corrected only those bindings and passed 135 saved assertions, 341 lifecycle-scoped manifest entries, content seals, privacy checks, syntax checks, ancestry and remote-equality checks. It did not and does not retroactively become canonical success.',
+  '',
+  '## Corrective scope',
+  '',
+  'The correction adds only source-faithful terminal records, lifecycle-correct manifests, an append-only Method Flow ledger, a correction content seal, and a correction-specific canonical contract. The corrected exact final must be the direct child of the retained first final. Source to corrected final must therefore contain five direct single-parent Orin commits and zero merges. The first final remains the exact parent and all earlier anchors remain fixed.',
+  '',
+  'The new canonical is not a replay of the failed first-final invocation. It may run once only after the additive correction commit is pushed, clean, zero-divergent and equal across local, upstream, tracking and a fresh live remote read. It targets a different exact final and a corrected validator contract. Each planning, x1, x2 and first-final manifest must be checked against its own immutable Git tree; the correction manifest must be checked against the new corrected tree. The validator may inspect saved assertion records but must not execute the x1 or x2 domain tranches again.',
+  '',
+  '## Retained failures and counts',
+  '',
+  'Eight post-final or correction-stage failures are folded once into this additive correction: the first canonical lifecycle-binding failure, the first composite const-counter failure, the earlier malformed PowerShell hash projection, the corrective skill-inventory empty-pipe parser failure, the content-search projection that assumed absent top-level test and script directories, the Node check-mode rejection of a TXT builder before execution, the v1 correction-precommit staged-review self-accounting failure, and the first staged-validator whitespace-wrapper failure that exposed one terminal blank line. Their eight narrow recoveries remain separate passing witnesses. The first-final repository seal is not rewritten. The corrected repository-effective bookkeeping is 6916 methods, 314474 witnesses, 242074 passing witnesses, 72400 failed witnesses and 81233 effective negatives, with 2509 open gaps and 2860 exact-gate obligations.',
+  '',
+  'Core outcome truth remains exactly 16 completed, 1 represented, 2 open_gap and 1 exact_gate. No new domain completion credit is awarded. The correction does not change the twenty original projects, the 45 x1 saved assertions, the 90 x2 saved assertions, the 15 models in each session, the two acknowledged advisory consultations, or the absence of PDFs and full-repository testing.',
+  '',
+  '## Advisory and Coordinator boundaries',
+  '',
+  'The Review and refine GHC Lab conversation already received exactly one accepted x1 advisory request and exactly one accepted x2 advisory request. Both replies were recorded and adopted within their bounded scope. This corrective lifecycle is not a new x1 or x2 session, so neither message is resent. The Codex Coordinator board is disabled for this task. Coordinator therefore creates no claim, task, scheduler, heartbeat, transcript mirror or activation authority. The work remains in one native task.',
+  '',
+  '## Terminal route',
+  '',
+  'Ceryn Alder v708-v1 remains prospective until the new corrected exact final has one successful non-replayed corrective canonical and all live route guards pass. Only then may Orin refresh current authority and roster, bounded-list the native task registry, require exactly one existing exact-title Ceryn Alder task, immediately reread it, confirm no duplicate current activation or semantic pause, redirect, rename or stop, and send at most once. Accepted, queued, opaque or unresolved delivery stops duplicates. Native acknowledgement proves delivery only, not recipient progress or completion.',
+  '',
+  'The complete original 2046-word baton remains at docs/orin-thale/v707-v8/final/handoff-baton.md with literal EOF marker LITERAL_EOF_ORIN_V707_V8_HANDOFF. A successor must read that baton, this correction basis, the correction phase truth, Method Flow, retained-negative register, canonical contract, manifests, content seal, the external successful correction receipt if one exists, and the newest live authority before mutation.',
+  '',
+  '## Evidence boundary',
+  '',
+  BOUNDARY,
+  '',
+  'LITERAL_EOF_ORIN_V707_V8_CORRECTION',
+  ''
+].join('\n');
+writeText(CORRECTION + '/terminal-correction-basis.md', correctionBasis);
+
+const sealTargets = [
+  CORRECTION + '/build-correction.txt',
+  CORRECTION + '/authorization-and-scope.json',
+  CORRECTION + '/method-flow.json',
+  CORRECTION + '/retained-negative-register.json',
+  CORRECTION + '/phase-truth.json',
+  CORRECTION + '/canonical-contract.json',
+  CORRECTION + '/route-state.json',
+  CORRECTION + '/terminal-correction-basis.md'
+];
+writeJson(CORRECTION + '/content-seal.json', {
+  schema: 'orin.correction-content-seal.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  targets: sealTargets.map(fileEntry),
+  boundary: BOUNDARY
+});
+
+const exclusions = [
+  CORRECTION + '/correction-delta-manifest.json',
+  CORRECTION + '/correction-owner-manifest.json',
+  CORRECTION + '/staged-review.json'
+];
+const correctionFiles = walk(DIR).sort();
+writeJson(CORRECTION + '/correction-delta-manifest.json', {
+  schema: 'orin.correction-delta-manifest.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  source: FIRST_FINAL,
+  self_exclusions: exclusions,
+  entries: correctionFiles.filter(p => !exclusions.includes(p)).map(fileEntry),
+  boundary: BOUNDARY
+});
+const ownerRoot = path.join(ROOT, ...REL.split('/'));
+const ownerFiles = walk(ownerRoot).sort();
+writeJson(CORRECTION + '/correction-owner-manifest.json', {
+  schema: 'orin.correction-owner-manifest.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  source: SOURCE,
+  retained_first_final: FIRST_FINAL,
+  self_exclusions: exclusions,
+  entries: ownerFiles.filter(p => !exclusions.includes(p)).map(fileEntry),
+  boundary: BOUNDARY
+});
+const stagedReviewPath = CORRECTION + '/staged-review.json';
+const stagedPaths = [...new Set([...walk(DIR), stagedReviewPath])].sort();
+writeJson(CORRECTION + '/staged-review.json', {
+  schema: 'orin.correction-staged-review.v1',
+  owner: 'Orin Thale',
+  phase: 'v707-v8',
+  expected_paths: stagedPaths,
+  path_count: stagedPaths.length,
+  checks: {
+    owner_only: stagedPaths.every(p => p.startsWith(CORRECTION + '/')),
+    json_md_txt_only: stagedPaths.every(p => /\.(json|md|txt)$/i.test(p)),
+    pdf_count: stagedPaths.filter(p => /\.pdf$/i.test(p)).length,
+    source_replay: false,
+    x1_replay: false,
+    x2_replay: false,
+    advisory_resends: 0,
+    task_creations: 0,
+    subagents: 0
+  },
+  boundary: BOUNDARY
+});
+
+console.log(JSON.stringify({
+  status: 'PREPARED_CORRECTION_FILES',
+  source: FIRST_FINAL,
+  correction_files: walk(DIR).length,
+  correction_manifest_entries: JSON.parse(fs.readFileSync(path.join(DIR, 'correction-delta-manifest.json'), 'utf8')).entries.length,
+  owner_manifest_entries: JSON.parse(fs.readFileSync(path.join(DIR, 'correction-owner-manifest.json'), 'utf8')).entries.length,
+  retained_failures_added: 8,
+  domain_replay: false,
+  advisory_resends: 0
+}));
