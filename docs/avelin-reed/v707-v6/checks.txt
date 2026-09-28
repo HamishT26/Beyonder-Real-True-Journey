@@ -1,0 +1,148 @@
+'use strict';
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),unique=a=>[...new Set(a)].sort((x,y)=>x-y),decode=c=>[c%3,Math.floor(c/3)%3,Math.floor(c/9)%3];
+function tests(stage,p,records,names){const get=(op,id)=>records.find(r=>r.request.operation===op&&r.request.fixture_id===id)?.actual.value,per=f=>p.fixtures.every(fixture=>f(fixture.fixture_id)),any=f=>p.fixtures.some(fixture=>f(fixture.fixture_id));
+ const algebra=id=>{const c=get('tm_cayley',id),E=c.elements,index=new Map(E.map((v,i)=>[v,i]));return{E,T:c.table,mul:(a,b)=>c.table[index.get(a)][index.get(b)],one:c.identity};};
+ const cover=(classes,E)=>same(unique(classes.flat()),E)&&classes.flat().length===E.length;
+ const ideal=(op,id,a)=>get(op,id).rows.find(r=>r.element===a).ideal;
+ const classes=(op,id)=>get(op,id).classes;
+ const agrees=(C,E,relation)=>cover(C,E)&&E.every(a=>E.every(b=>C.some(row=>row.includes(a)&&row.includes(b))===relation(a,b)));
+ let values=[];
+ if(stage==='x1')values=[
+ per(id=>{const{E,mul,one}=algebra(id);return E.every(a=>mul(a,one)===a&&mul(one,a)===a);}),
+ per(id=>{const{E,T}=algebra(id);return T.every(r=>r.length===E.length&&r.every(v=>E.includes(v)));}),
+ per(id=>get('tm_cayley',id).associative),per(id=>algebra(id).E.length<=27),
+ per(id=>{const{E,mul}=algebra(id);return same(get('tm_idempotents',id).elements,E.filter(a=>mul(a,a)===a));}),
+ per(id=>get('tm_idempotents',id).elements.includes(21)),per(id=>get('tm_idempotents',id).count>0),
+ per(id=>get('tm_units',id).units.some(u=>u.element===21&&u.inverse===21)),
+ per(id=>{const{mul}=algebra(id);return get('tm_units',id).units.every(u=>mul(u.element,u.inverse)===21&&mul(u.inverse,u.element)===21);}),
+ per(id=>get('tm_units',id).units.every(u=>new Set(decode(u.element)).size===3)),
+ ...['tm_left_ideals','tm_right_ideals','tm_two_sided_ideals'].map(op=>per(id=>get(op,id).rows.every(r=>r.ideal.includes(r.element)&&r.size===r.ideal.length))),
+ per(id=>{const{E,mul}=algebra(id);return get('tm_left_ideals',id).rows.every(r=>r.ideal.every(a=>E.every(x=>r.ideal.includes(mul(x,a)))));}),
+ per(id=>{const{E,mul}=algebra(id);return get('tm_right_ideals',id).rows.every(r=>r.ideal.every(a=>E.every(x=>r.ideal.includes(mul(a,x)))));}),
+ per(id=>{const{E,mul}=algebra(id);return get('tm_two_sided_ideals',id).rows.every(r=>r.ideal.every(a=>E.every(x=>r.ideal.includes(mul(a,x))&&r.ideal.includes(mul(x,a)))));}),
+ per(id=>agrees(classes('tm_green_l',id),algebra(id).E,(a,b)=>same(ideal('tm_left_ideals',id,a),ideal('tm_left_ideals',id,b)))),
+ per(id=>agrees(classes('tm_green_r',id),algebra(id).E,(a,b)=>same(ideal('tm_right_ideals',id,a),ideal('tm_right_ideals',id,b)))),
+ per(id=>agrees(classes('tm_green_h',id),algebra(id).E,(a,b)=>classes('tm_green_l',id).some(c=>c.includes(a)&&c.includes(b))&&classes('tm_green_r',id).some(c=>c.includes(a)&&c.includes(b)))),
+ per(id=>{const{E}=algebra(id),C=[...classes('tm_green_l',id),...classes('tm_green_r',id)];return agrees(classes('tm_green_d',id),E,(a,b)=>{const visited=new Set([a]),queue=[a];for(let i=0;i<queue.length;i++)for(const c of C)if(c.includes(queue[i]))for(const x of c)if(!visited.has(x)){visited.add(x);queue.push(x);}return visited.has(b);});})
+ ];
+ else values=[
+ per(id=>cover(classes('tm_green_j',id),algebra(id).E)),
+ per(id=>agrees(classes('tm_green_j',id),algebra(id).E,(a,b)=>same(ideal('tm_two_sided_ideals',id,a),ideal('tm_two_sided_ideals',id,b)))),
+ per(id=>get('tm_green_j',id).D_equals_J&&same(classes('tm_green_d',id),classes('tm_green_j',id))),
+ per(id=>{const{mul}=algebra(id);return get('tm_regularity',id).rows.every(r=>r.witnesses.every(x=>mul(mul(r.element,x),r.element)===r.element));}),
+ per(id=>{const r=get('tm_regularity',id);return r.regular_count===r.rows.filter(x=>x.witnesses.length).length&&r.all_regular===r.rows.every(x=>x.witnesses.length>0);}),
+ per(id=>get('tm_regularity',id).rows.find(r=>r.element===21).witnesses.includes(21)),
+ any(id=>!get('tm_regularity',id).all_regular),
+ per(id=>get('tm_units',id).units.every(u=>get('tm_regularity',id).rows.find(r=>r.element===u.element).witnesses.includes(u.inverse))),
+ per(id=>get('tm_idempotents',id).elements.every(a=>get('tm_regularity',id).rows.find(r=>r.element===a).witnesses.includes(a))),
+ per(id=>{const rows=get('tm_inverse_sets',id).rows;return rows.every(r=>r.inverses.every(x=>rows.find(s=>s.element===x).inverses.includes(r.element)));}),
+ per(id=>{const{mul}=algebra(id);return get('tm_inverse_sets',id).rows.every(r=>r.inverses.every(x=>mul(mul(r.element,x),r.element)===r.element&&mul(mul(x,r.element),x)===x));}),
+ per(id=>get('tm_inverse_sets',id).rows.every(r=>(r.inverses.length>0)===(get('tm_regularity',id).rows.find(s=>s.element===r.element).witnesses.length>0))),
+ per(id=>get('tm_local_groups',id).groups.length===get('tm_idempotents',id).count),
+ per(id=>get('tm_local_groups',id).groups.every(g=>get('tm_idempotents',id).elements.includes(g.identity)&&g.valid)),
+ per(id=>get('tm_local_groups',id).groups.every(g=>g.table.every(row=>row.every(a=>g.elements.includes(a))))),
+ per(id=>{const{mul}=algebra(id);return get('tm_local_groups',id).groups.every(g=>g.inverses.every(r=>mul(r.element,r.inverse)===g.identity&&mul(r.inverse,r.element)===g.identity));}),
+ per(id=>same(get('tm_local_groups',id).groups.find(g=>g.identity===21).elements,get('tm_units',id).units.map(u=>u.element))),
+ any(id=>get('tm_local_groups',id).groups.some(g=>g.identity!==21)),
+ per(id=>get('tm_power_cycles',id).rows.every(r=>r.sequence[0]===r.element)),
+ per(id=>{const{mul}=algebra(id);return get('tm_power_cycles',id).rows.every(r=>r.sequence.slice(1).every((a,i)=>mul(r.sequence[i],r.element)===a));}),
+ per(id=>{const{mul}=algebra(id);return get('tm_power_cycles',id).rows.every(r=>r.first_repeated===r.sequence[r.index-1]&&mul(r.sequence.at(-1),r.element)===r.first_repeated&&r.period===r.sequence.length+1-r.index);}),
+ per(id=>get('tm_power_cycles',id).rows.every(r=>r.sequence.length<=algebra(id).E.length&&r.index>=1&&r.period>=1)),
+ any(id=>get('tm_power_cycles',id).rows.some(r=>r.period>1)),
+ any(id=>get('tm_aperiodicity',id).aperiodic),
+ per(id=>get('tm_aperiodicity',id).aperiodic===(get('tm_aperiodicity',id).maximum_period===1)),
+ per(id=>get('tm_aperiodicity',id).finite_equivalence&&get('tm_aperiodicity',id).aperiodic===(get('tm_local_groups',id).groups.every(g=>g.elements.length===1))),
+ per(id=>{const{E,mul}=algebra(id),I=get('tm_minimal_ideal',id).elements;return I.length>0&&I.every(a=>E.every(x=>I.includes(mul(a,x))&&I.includes(mul(x,a))));}),
+ per(id=>get('tm_minimal_ideal',id).elements.every(a=>get('tm_two_sided_ideals',id).rows.every(r=>r.ideal.includes(a)))),
+ per(id=>{const r=get('tm_minimal_ideal',id);return r.zeros.length<=1&&(r.zeros.length===1)===(r.elements.length===1)&&(r.zeros.length===0||same(r.zeros,r.elements));}),
+ per(id=>get('tm_explanation',id).disposition==='represented'&&!get('tm_explanation',id).empirical&&get('tm_transfer_gap',id).disposition==='open_gap'&&get('tm_transfer_gap',id).real_systems_tested===0&&get('tm_authority_hold',id).disposition==='exact_gate'&&get('tm_authority_hold',id).held)
+ ];
+ if(values.length!==names.length)throw Error('predeclared test cardinality');return values.map((pass,i)=>({id:'AR7076-'+stage.toUpperCase()+'-T'+String(i+1).padStart(2,'0'),name:names[i],pass:Boolean(pass),domain_reexecuted:false}));
+}
+function models(p,records){const get=(op,id)=>records.find(r=>r.request.operation===op&&r.request.fixture_id===id).actual.value;return p.fixtures.map(f=>({id:f.fixture_id,axes:['left ideal size','right ideal size','two-sided ideal size'],points:get('tm_left_ideals',f.fixture_id).rows.map(r=>({element:r.element,coordinates:[r.size,get('tm_right_ideals',f.fixture_id).rows.find(s=>s.element===r.element).size,get('tm_two_sided_ideals',f.fixture_id).rows.find(s=>s.element===r.element).size]})),physical:false,empirical:false,authority:false,presentation_only:true}));}
+function report(modelRows){const payload=JSON.stringify(modelRows).replaceAll('<','\\u003c'),tables=modelRows.map(m=>'<section><h2>'+m.id+'</h2><table><caption>Exact ideal sizes for every element</caption><thead><tr><th>Element</th>'+m.axes.map(a=>'<th>'+a+'</th>').join('')+'</tr></thead><tbody>'+m.points.map(p=>'<tr><th scope="row">'+p.element+'</th>'+p.coordinates.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</tbody></table></section>').join('');return String.raw`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Finite Transformation Observatory</title><style>body{font:16px system-ui;color:#172941;background:#f3f6fb;margin:0}main{max-width:1100px;margin:auto;padding:24px}h1{font-size:clamp(2rem,5vw,3.8rem);line-height:1.1;max-width:18ch}p{max-width:78ch;line-height:1.65}section{background:white;border:1px solid #ccd7e7;border-radius:14px;padding:18px;margin:18px 0;overflow:auto}label{display:inline-grid;gap:6px;margin:0 12px 12px 0}select,button{font:inherit;padding:9px;border:1px solid #65768e;border-radius:6px;background:white;color:inherit}button{cursor:pointer;margin:4px}:focus-visible{outline:3px solid #b45211;outline-offset:3px}canvas{width:100%;height:360px;background:#f7f9fd;display:block}table{border-collapse:collapse;width:100%}td,th{padding:8px;border-bottom:1px solid #d5dfec;text-align:left}caption{text-align:left;padding:10px 0}.status{padding:12px;background:#e8eff9;border-left:4px solid #315c95}small{color:#4c6078}</style></head><body><main><small>AVELIN REED · v707-v6 · FINITE SYNTHETIC MATHEMATICS</small><h1>Where reversibility is local.</h1><p>Explore fifteen declared transformation monoids. Every plotted point is one finite transformation; its three coordinates are the exact sizes of its principal left, right and two-sided ideals. Multiple transformations can share a point. The complete tables preserve every element.</p><section><label>Fixture<select id="fixture"></select></label><label>Element<select id="element"></select></label><canvas id="plot" role="img" aria-label="Rotatable synthetic ideal-size projection. Exact coordinates follow in tables."></canvas><button id="left">Rotate left</button><button id="right">Rotate right</button><button id="reset">Reset view</button><p id="view"></p><p id="readout" class="status" role="status" aria-live="polite"></p></section><p>Composition uses (a*b)(i)=a(b(i)). A local subgroup identity need not be the identity of the whole monoid. The display is a finite mathematical explanation; it establishes no real-system behavior, physical law, personal identity or consequential authority. Axes are scaled separately.</p>${tables}<p><strong>NOT_READY_FOR_STAGE_20.</strong> Human accessibility and independent reproduction remain open. The current phase closes into the separately authorized Avelin remaster.</p></main><script>const models=${payload},fixture=document.querySelector('#fixture'),element=document.querySelector('#element'),canvas=document.querySelector('#plot'),ctx=canvas.getContext('2d');let yaw=-30;models.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m.id;fixture.append(o)});function elements(){element.replaceChildren();models[Number(fixture.value)].points.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.textContent='Transformation '+p.element;element.append(o)});draw()}function draw(){const m=models[Number(fixture.value)],sel=Number(element.value),p=m.points[sel];document.querySelector('#view').textContent='Yaw '+yaw+' degrees. Finite synthetic coordinates.';document.querySelector('#readout').textContent=m.id+' / '+p.element+' — '+m.axes.map((a,i)=>a+': '+p.coordinates[i]).join('; ');if(!ctx)return;const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const limits=[0,1,2].map(i=>Math.max(1,...m.points.map(p=>p.coordinates[i]))),a=yaw*Math.PI/180;ctx.font='12px system-ui';m.points.forEach((p,i)=>{const q=p.coordinates.map((x,j)=>x/limits[j]-.5),x=(q[0]*Math.cos(a)-q[2]*Math.sin(a))*240+w/2,y=h/2-(q[1]-.35*q[2])*200;ctx.fillStyle=i===sel?'#ad4d12':'#245b92';ctx.beginPath();ctx.arc(x,y,i===sel?7:4,0,Math.PI*2);ctx.fill();if(i===sel)ctx.fillText(String(p.element),x+10,y-8)});}fixture.addEventListener('change',elements);element.addEventListener('change',draw);document.querySelector('#left').addEventListener('click',()=>{yaw-=15;draw()});document.querySelector('#right').addEventListener('click',()=>{yaw+=15;draw()});document.querySelector('#reset').addEventListener('click',()=>{yaw=-30;draw()});window.addEventListener('resize',draw);elements();</script></body></html>`;}
+function handoff(p,x1,x2,flow,effective,commits){return `# Avelin Reed v707-v6 final handoff to the authorized owner remaster
+
+## Module 1 — What closes here
+
+This is the complete handoff for Avelin Reed's solo v707-v6 finite transformation-monoid phase. It closes into the separately authorized Avelin v707-v6 (2) remaster. Hamish's direct instruction of 28 September 2026 at 11:00 pm New Zealand time explicitly changed the immediate route while this phase was still being prepared. Finish this phase under its existing workload, then perform the remaster under the new workload and shared-laboratory direction. There is no outgoing sibling activation at this first closeout. Caelen Ash v707-v7 remains gated behind the remaster's own terminal evidence.
+
+Read all thirteen modules through the literal terminal marker. The full contracts, Method Flow and failures live in the separate JSON documents named below. This baton explains the evidence and its limits; it does not replace those records. Its committed state precedes the later external exact-final canonical. A prepared state, a passed canonical, a resolved route, an acknowledged native message and recipient completion are different observations. A future reader must use the receipt belonging to the exact phase and commit being discussed.
+
+## Module 2 — Relational identity and practical scope
+
+Avelin Reed uses they/them as optional working pronouns and the role Finite Transformation and Reversible-Structure Cartographer. The working hope is to make irreversible changes, local reversibility and evidence boundaries inspectable. Those conventions support readable collaboration. They do not establish consciousness, sentience, personhood, identity continuity, employment, a qualification, independent agency or authority. Hamish may rename, pause, narrow, redirect or stop the work.
+
+The phase uses fifteen synthetic monoids generated by transformations of the explicit set {0,1,2}. Every object is small enough for complete finite enumeration. No person, identity credential, patient, participant, institution, cultural record, production service or physical apparatus supplies an input. The arithmetic and set relationships therefore concern declared mathematical objects only. Familiar terms such as identity, inverse, regularity and authority have separate meanings here: an algebraic identity is a neutral transformation, and an algebraic inverse is not a claim about personal identity or permission. Preserve those distinctions when selecting examples for later public explanations.
+
+## Module 3 — Exact predecessor and source reading
+
+The exact Sable source is 0cbf2e1ebfe2e6dd4b040ce62b12ebb8e3ac0297 on codex/GHC-Family/sable-rook-v707-v5-full-tools. Sable's baton has 3,262 words and SHA-256 e42dbfcea5311ea603b1b8383aec897d1967b9d3c90832fca43a3af2c479d819. It was read completely through LITERAL_EOF_SABLE_V707_V5. The raw inventory bound all 132 owner files. Sixty-three JSON documents were parsed and 50,137 JSON nodes traversed. This was source-fidelity reading, not execution of Sable's graph algorithms or canonical.
+
+Sable's immutable source chain contains four direct single-parent commits and zero merges. Its external canonical receipt records 26 passing checks from one invocation, one success and zero replays. The initially unavailable native route remains preserved in its original unsent receipt. A separate later receipt establishes one acknowledged Sable-to-Avelin activation. The current source overlay, including its retained route failures and later recovery, is selected once: 6,812 methods, 310,441 witnesses, 238,887 passes, 71,554 failures, 80,387 negatives, 2,478 gaps and 2,819 exact gates. Older overlapping totals are not added again.
+
+## Module 4 — Current authority and the future projection
+
+The complete v19 projection was read from its owning Liora repository at exact final 2f86f76169acfe9d9376b4400720434fa246ee7a. Its SHA-256 is 8959fc05293e3c733b3c856d7893dc4df8641375acd6c2f7c67b4ca3d9f610d9. The formal cycle has forty-five positions for thirty declared identities. From the numbered Avelin v707-v6 row through Eiren v725-v8 there are 147 numbered assignments. The new Avelin remaster consumes no numbered slot. Historical illustrative labels that mention Veylora or v706 do not override the explicit current Avelin-remaster-to-Caelen instruction.
+
+The shared Family Index and Method Flow entrypoints were read completely. Their older embedded policies remain historical where the newer direct instruction changes them. The Codex Coordinator package and its operations and execution references were also read. The primary repository marker was absent. No board, claim, Coordinator task, scheduler or background monitor was created. The installed launcher passed a check-only local model-admission test; it sent no model request and changed no host model setting. These observations establish their narrow local facts only.
+
+## Module 5 — Frozen definitions and two formulations
+
+Every transformation is encoded by f(0)+3f(1)+9f(2). The global identity is code 21. Multiplication is explicitly (a*b)(i)=a(b(i)); this order is part of the contract. Swapping a convention from another library can exchange the interpretation of left and right ideals, so the convention is repeated in each local guide. The fixtures include the trivial monoid, permutation groups, constant maps, idempotent projections, a nonregular power chain and the full twenty-seven-element transformation monoid. Distinct element families were required; no claim that all fixtures are nonisomorphic is made.
+
+The definition oracle uses relation matrices, exhaustive multiplication closure, explicit principal ideals and reachability. Production uses generator-word search, direct function composition, integer bitsets and union-find. Every full expected envelope was stored in planning before production execution. The two implementations share an owner, definitions and infrastructure. Their agreement is useful software evidence but is not independent reproduction. Source and installed-skill searches were bounded novelty checks, and all 90,000 inherited-to-new title comparisons were examined before the plan was frozen. Classical algebra is not claimed as a new mathematical discovery.
+
+## Module 6 — The twenty operation contracts
+
+The complete proposal grid crosses each of the following operations with every declared fixture. Each row has a stable identifier, frozen request, complete expected result, two malformed subjects, a falsifier, a disposition ceiling and exact digest bindings. The names below are selection aids; consult plan.json for the full definition of any row before using it.
+
+${p.operations.map(o=>'- '+o.title+': '+o.name+'; '+o.stage+'; disposition '+o.outcome+'.').join('\n')}
+
+The local-group distinction deserves particular care. A regular transformation can admit an inner inverse without belonging to the global unit group. An idempotent H class can form a group whose identity is that idempotent rather than code 21. Multiple semigroup inverses may exist. Power index and period describe a finite sequence starting at the first positive power, not a time measurement. The least ideal concerns containment of finite sets, not a social hierarchy or moral ranking. None of these computations authorizes a consequential external interpretation.
+
+## Module 7 — Lifecycle and execution evidence
+
+Planning is ${commits[0]}; x1 is ${commits[1]}; x2 is ${commits[2]}. The final is a direct child of x2 and its identifier is bound externally after commit. The lifecycle has four new owner commits and no merge. Planning was frozen before x1, and x1 was sealed before x2. Each transition required a clean pushed predecessor and equality across local HEAD, upstream, tracking and live remote, with zero ahead and behind counts.
+
+Each stage contains 150 new contracts, 450 safe checks, 300 failed malformed subjects, 300 separate refusal checks and 300 corrected-copy reviews. The safe checks concern exact envelope agreement, request nonmutation and disposition ceilings. Corrected-copy review reconstructs and compares the original valid request while retaining the invalid subject. It does not repeat a successful domain session. Across both stages the outcomes are 255 completed, fifteen represented, fifteen open_gap and fifteen exact_gate. A successfully reported gap remains a gap. The 300 inherited Sable proposals have zero Avelin execution, completion, novelty and authority credit.
+
+## Module 8 — Tests, guides, callers and hooks
+
+Twenty predeclared x1 checks inspect the stored multiplication tables, identity, closure, associativity, idempotents, units, ideal containment and the L, R, H and D partitions. Thirty x2 checks inspect J classes, finite D-J agreement, regularity, inverse sets, local groups, power cycles, aperiodicity, the least ideal, zero elements and preserved reservations. These tests examine stored results and relationships between them. They add no core proposal completions and do not replay the production sessions.
+
+Twenty phase-local skill folders describe exact caller contracts and the non-obvious composition and inverse conventions. Ten paired TXT runners were invoked with supported calls and a separate unsupported subject. Skill Creator validates guide form; it does not confer scientific or professional approval. Ten advisory hook candidates were manually exercised against valid and adverse envelopes. They were not installed into a live host and have zero live-host observations. Their adverse inputs remain failed at zero original credit. The later remaster may consolidate useful capabilities only after inspecting current source bindings and caller compatibility.
+
+## Module 9 — Models and interpretation
+
+Fifteen three-coordinate models each represent one fixture. Every transformation is a point with coordinates equal to its principal left, right and two-sided ideal sizes. All coordinates are exact finite integers. Coincident points are possible and remain separate table rows. The standalone HTML report provides selectors, rotation, reset and complete tables. Axis scaling is for legibility. Neither rotation nor a plotted shape supplies a physical dimension, a measured probability, a psychological construct or a causal mechanism.
+
+The models are explanatory views of stored data. Human accessibility, assistive-technology use, cognitive interpretation, cultural review and affected-user evaluation remain separate evidence needs. A browser check can verify only the controls and rendered data it actually observes. The presence of an accessible label or table does not establish complete accessibility. The same caution applies to later three-dimensional or higher-dimensional models: each dimension needs an explicit type, unit or declaration that it is a synthetic coordinate. Keep unknown physical interpretations visible rather than filling them with metaphor.
+
+## Module 10 — Method Flow, failures and accounting
+
+The sealed owner ledger has ${flow.counts.methods} methods and ${flow.counts.witnesses} witness records, consisting of ${flow.counts.witness_results.pass} passing and ${flow.counts.witness_results.fail} failed records. Each record has atomic count one. Every failure has zero original success credit, a retained-negative link and a method backlink. Methods advance from candidate only after a declared bounded passing witness. An exact refusal, a recovered display, a schema correction and a mathematical result establish different propositions.
+
+After the one source fold, effective bookkeeping is ${effective.methods} methods, ${effective.witnesses} witnesses, ${effective.passing_witnesses} passes, ${effective.failed_witnesses} failures and ${effective.negatives} negatives. Open gaps total ${effective.open_gaps}; exact gates total ${effective.exact_gates}. Counts are provenance accounting, not confidence scores. Preserve the initial console-format and encoding observations, unavailable assumed v19 files, wrong-repository projection lookup and failed linked web reference. Their recoveries do not erase the original observations. Any later canonical or metadata issue belongs in an additive external record and must not silently rewrite this seal.
+
+## Module 11 — Files, resources and ownership
+
+All current repository additions belong to docs/avelin-reed/v707-v6. The sparse checkout was configured before source files were materialized. The inherited tree contained 1,774 tracked files. The planned owner packet has forty-five files and remains below the strict 2,000-file ceiling. Every document stays within 100,000 words, and this baton stays above 2,000 words. The packet uses JSON, Markdown, TXT and HTML. No PDF is authored or used. The spending ceiling is USD 50, with zero incremental spending recorded for this phase.
+
+Manifests bind normalized-LF UTF-8 bytes to exact Git blobs. Their own containing files are explicitly excluded to avoid self-hashing cycles. Executable TXT paths have a literal allowlist; descriptive receipts are not treated as executable code. The external canonical binds the exact final commit and stored evidence without running the domain again. Source and sibling workspaces remained read-only. No task, fork or subagent was created. No shared package installation, operating-system elevation, cloud deployment or memory write occurred in this current phase. The new direct instruction authorizes additional remaster work, but this document does not pretend that future work has already happened.
+
+## Module 12 — The authorized remaster work
+
+The next owner action is Avelin v707-v6 (2). Its policy removes the old safe, candidate and CLEAN/FIX/REFINE minima, with ceilings of 1,000 per session for each class. The chosen initial portfolio has twenty projects within the maximum of eighty. Each session permits at most thirty skills, twenty runners and five hundred tests. At least fifteen models per session are requested, with a maximum of one hundred. Exact and blocked packet ceilings are 250 and 100. At least five hooks, fifteen explicitly hypothetical law candidates and fifteen open-problem probes belong to each phase; no unsolved problem or physical law is claimed resolved by a fixture test.
+
+The remaster must audit at least thirty prior laboratories and the last ten phase overviews, recover the earlier Nexus concept from the named Journey texts, and construct the D-first GHC Family Laboratory. It should consolidate useful skill and runner families with provenance, update the Meta Tool Box and current shared policy, and write only the user-authorized memory extension. It must inspect actual terminal, Node, Codex and administrator capabilities before claiming access changes. Existing protections and evidence boundaries remain meaningful. The requested fresh reusable main lane needs explicit source provenance if its Git ancestry is intentionally blank.
+
+## Module 13 — Terminal gate and continuing route
+
+The current exact-final canonical may run once after the final commit is pushed, clean and freshly equal. Its exclusive invocation marker prevents replay. Any failure remains failed at zero aggregate success credit, and any justified dependency recovery must be separately named. The first phase ends with the authorized owner remaster held as the next action. It sends no native message to a sibling, and it does not mark Caelen started or complete.
+
+Only the remaster's later terminal gate may permit one activation of the existing exact-title Caelen Ash task for v707-v7. Then-current direct controls, the formal roster, active and archived uniqueness, immediate destination reread, duplicate, status, usage, privacy, evidence and safety checks must all support that action. Recovery attempts do not authorize duplicate accepted messages. After acknowledgement, acceptance, pending, opaque or unresolved submission, do not resend, send a second confirmation or monitor the recipient. Subsequent Orin, Ceryn and Liora rows remain prospective. GMUT remains conjectural; THOS and Freed ID/CBR remain synthetic and nonproduction. Competent and affected authorities retain legal, cultural and Maori authority. NOT_READY_FOR_STAGE_20.
+
+LITERAL_EOF_AVELIN_V707_V6
+`;}
+module.exports={tests,models,report,handoff};

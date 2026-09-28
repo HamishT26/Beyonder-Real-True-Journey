@@ -1,0 +1,42 @@
+'use strict';
+// Definition oracle: binary relation matrices, exhaustive multiplication closure,
+// explicit principal ideals, and reachability. No production module is imported.
+const n=3,identity=21;
+const decode=c=>[c%3,Math.floor(c/3)%3,Math.floor(c/9)%3];
+const encode=a=>a[0]+3*a[1]+9*a[2];
+const unique=a=>[...new Set(a)].sort((x,y)=>x-y);
+function product(a,b){const A=decode(a).map(j=>[0,1,2].map(k=>+(k===j))),B=decode(b).map(j=>[0,1,2].map(k=>+(k===j))),C=B.map(row=>[0,1,2].map(j=>row.reduce((v,x,k)=>v+x*A[k][j],0)));return encode(C.map(row=>row.indexOf(1)));}
+function closure(g){let current=unique([identity,...g]);for(;;){const next=unique(current.concat(current.flatMap(a=>current.map(b=>product(a,b)))));if(next.length===current.length)return next;current=next;}}
+function fixtures(){const seeds=[[21],[19],[7],[19,7],[0],[0,13,26],[18],[9],[19,0],[19,7,18]],out=[],seen=new Set();function add(g){const elements=closure(g),key=elements.join(',');if(seen.has(key))return;seen.add(key);out.push({fixture_id:'AR7076-TM-'+String(out.length+1).padStart(2,'0'),degree:3,generator_codes:unique(g),composition:'(a*b)(i)=a(b(i))',reference_elements:elements,synthetic:true,empirical:false,authority:false});}for(const g of seeds)add(g);for(let a=0;out.length<15&&a<27;a++)for(let b=a;out.length<15&&b<27;b++)add([a,b]);if(out.length!==15)throw Error('fixture count');return out;}
+function partition(E,related){const remaining=new Set(E),out=[];for(const a of E)if(remaining.has(a)){const row=E.filter(b=>related(a,b));for(const b of row)remaining.delete(b);out.push(row);}return out;}
+const cache=new Map();
+function structure(p){const key=p.generator_codes.join(',');if(cache.has(key))return cache.get(key);const E=closure(p.generator_codes),left=new Map(E.map(a=>[a,new Set(E.map(x=>product(x,a)))])),right=new Map(E.map(a=>[a,new Set(E.map(x=>product(a,x)))])),two=new Map(E.map(a=>[a,new Set(E.flatMap(x=>E.map(y=>product(product(x,a),y))))]));
+ const rel=map=>(a,b)=>map.get(a).has(b)&&map.get(b).has(a),L=partition(E,rel(left)),R=partition(E,rel(right)),H=partition(E,(a,b)=>rel(left)(a,b)&&rel(right)(a,b)),J=partition(E,rel(two));
+ const D=partition(E,(a,b)=>{const visited=new Set([a]),queue=[a];for(let i=0;i<queue.length;i++)for(const c of E)if(!visited.has(c)&&(rel(left)(queue[i],c)||rel(right)(queue[i],c))){visited.add(c);queue.push(c);}return visited.has(b);});
+ const idempotents=E.filter(a=>product(a,a)===a),groups=idempotents.map(e=>{const elements=H.find(c=>c.includes(e));return{identity:e,elements,table:elements.map(a=>elements.map(b=>product(a,b))),inverses:elements.map(a=>({element:a,inverse:elements.find(b=>product(a,b)===e&&product(b,a)===e)})),valid:elements.every(a=>product(a,e)===a&&product(e,a)===a&&elements.every(b=>elements.includes(product(a,b)))&&elements.some(b=>product(a,b)===e&&product(b,a)===e))};});
+ const powers=E.map(a=>{const seq=[],positions=new Map();let current=a;while(!positions.has(current)){positions.set(current,seq.length+1);seq.push(current);current=product(current,a);}const index=positions.get(current);return{element:a,index,period:seq.length+1-index,sequence:seq,first_repeated:current};});
+ const result={E,left,right,two,L,R,H,D,J,idempotents,groups,powers};cache.set(key,result);return result;}
+function expected(op,p){const s=structure(p),E=s.E,rows=map=>E.map(a=>({element:a,ideal:unique([...map.get(a)]),size:map.get(a).size}));
+ if(op==='tm_cayley')return{elements:E,identity,table:E.map(a=>E.map(b=>product(a,b))),associative:E.every(a=>E.every(b=>E.every(c=>product(product(a,b),c)===product(a,product(b,c)))))};
+ if(op==='tm_idempotents')return{elements:s.idempotents,count:s.idempotents.length};
+ if(op==='tm_units')return{units:E.filter(a=>E.some(b=>product(a,b)===identity&&product(b,a)===identity)).map(a=>({element:a,inverse:E.find(b=>product(a,b)===identity&&product(b,a)===identity)}))};
+ if(op==='tm_left_ideals')return{rows:rows(s.left)};
+ if(op==='tm_right_ideals')return{rows:rows(s.right)};
+ if(op==='tm_two_sided_ideals')return{rows:rows(s.two)};
+ if(op==='tm_green_l')return{classes:s.L};
+ if(op==='tm_green_r')return{classes:s.R};
+ if(op==='tm_green_h')return{classes:s.H};
+ if(op==='tm_green_d')return{classes:s.D};
+ if(op==='tm_green_j')return{classes:s.J,D_equals_J:JSON.stringify(s.D)===JSON.stringify(s.J)};
+ if(op==='tm_regularity'){const out=E.map(a=>({element:a,witnesses:E.filter(x=>product(product(a,x),a)===a)}));return{rows:out,regular_count:out.filter(r=>r.witnesses.length).length,all_regular:out.every(r=>r.witnesses.length>0)};}
+ if(op==='tm_inverse_sets')return{rows:E.map(a=>({element:a,inverses:E.filter(x=>product(product(a,x),a)===a&&product(product(x,a),x)===x)}))};
+ if(op==='tm_local_groups')return{groups:s.groups};
+ if(op==='tm_power_cycles')return{rows:s.powers};
+ if(op==='tm_aperiodicity'){const periods=s.powers.map(r=>r.period),nontrivial=s.groups.filter(g=>g.elements.length>1).length;return{aperiodic:periods.every(x=>x===1),maximum_period:Math.max(...periods),period_histogram:unique(periods).map(period=>({period,count:periods.filter(x=>x===period).length})),nontrivial_local_groups:nontrivial,finite_equivalence:periods.every(x=>x===1)===(nontrivial===0)};}
+ if(op==='tm_minimal_ideal')return{elements:E.filter(a=>E.every(b=>s.two.get(b).has(a))),zeros:E.filter(z=>E.every(a=>product(a,z)===z&&product(z,a)===z))};
+ if(op==='tm_explanation')return{disposition:'represented',monoid_size:E.length,idempotents:s.idempotents.length,L_classes:s.L.length,R_classes:s.R.length,J_classes:s.J.length,physical:false,empirical:false,human_accessibility_review:false};
+ if(op==='tm_transfer_gap')return{disposition:'open_gap',real_systems_tested:0,independent_reproductions:0,missing:['external transformation corpus','real-system interpretation','independent implementation','human review']};
+ if(op==='tm_authority_hold')return{disposition:'exact_gate',held:true,authorized_external_actions:0,required:['competent authority','affected-party participation','privacy and accessibility evidence','Maori authority where applicable']};
+ throw Error('operation');
+}
+module.exports={fixtures,expected,product,closure};

@@ -1,0 +1,39 @@
+'use strict';
+// Production: generator-word search, direct array composition, bitset ideals,
+// equivalence signatures and union-find. The definition oracle is not imported.
+const decode=c=>[c%3,Math.floor(c/3)%3,Math.floor(c/9)%3],encode=a=>a[0]+3*a[1]+9*a[2],unique=a=>[...new Set(a)].sort((x,y)=>x-y);
+const mul=(a,b)=>{const f=decode(a),g=decode(b);return encode(g.map(i=>f[i]));};
+function generated(g){const found=new Set([21]),queue=[21];for(let i=0;i<queue.length;i++)for(const h of g){const v=mul(queue[i],h);if(!found.has(v)){found.add(v);queue.push(v);}}return unique(queue);}
+const cache=new Map();
+function data(p){const key=p.fixture_sha256;if(cache.has(key))return cache.get(key);const E=generated(p.generator_codes),N=E.length,index=new Map(E.map((a,i)=>[a,i])),T=E.map(a=>E.map(b=>index.get(mul(a,b)))),left=E.map((a,i)=>T.reduce((mask,row)=>mask|(1<<row[i]),0)),right=T.map(row=>row.reduce((mask,j)=>mask|(1<<j),0)),two=E.map((a,i)=>T.reduce((mask,row)=>T[row[i]].reduce((out,j)=>out|(1<<j),mask),0));
+ const members=mask=>E.filter((a,i)=>mask&(1<<i));
+ const partition=signatures=>{const classes=new Map();signatures.forEach((s,i)=>{if(!classes.has(s))classes.set(s,[]);classes.get(s).push(E[i]);});return[...classes.values()];};
+ const L=partition(left),R=partition(right),H=partition(E.map((a,i)=>left[i]+':'+right[i])),J=partition(two),parent=E.map((a,i)=>i),find=i=>parent[i]===i?i:parent[i]=find(parent[i]);
+ for(let i=0;i<N;i++)for(let j=i+1;j<N;j++)if(left[i]===left[j]||right[i]===right[j])parent[find(j)]=find(i);
+ const D=partition(E.map((a,i)=>find(i))),idempotents=E.filter((a,i)=>T[i][i]===i),groups=idempotents.map(e=>{const gi=index.get(e),elements=H.find(c=>c.includes(e)),ids=elements.map(a=>index.get(a));return{identity:e,elements,table:ids.map(i=>ids.map(j=>E[T[i][j]])),inverses:ids.map(i=>({element:E[i],inverse:E[ids.find(j=>T[i][j]===gi&&T[j][i]===gi)]})),valid:ids.every(i=>T[i][gi]===i&&T[gi][i]===i&&ids.every(j=>ids.includes(T[i][j]))&&ids.some(j=>T[i][j]===gi&&T[j][i]===gi))};});
+ const powers=E.map((a,i)=>{const seen=Array(N).fill(0),sequence=[];let v=i;while(!seen[v]){seen[v]=sequence.length+1;sequence.push(E[v]);v=T[v][i];}return{element:a,index:seen[v],period:sequence.length+1-seen[v],sequence,first_repeated:E[v]};});
+ const s={E,N,index,T,left,right,two,members,L,R,H,D,J,idempotents,groups,powers};cache.set(key,s);return s;}
+function evaluate(op,p){const s=data(p),{E,N,T,index}=s,rows=which=>E.map((a,i)=>({element:a,ideal:s.members(s[which][i]),size:s.members(s[which][i]).length}));
+ if(op==='tm_cayley')return{elements:E,identity:21,table:T.map(row=>row.map(i=>E[i])),associative:T.every((row,a)=>row.every((v,b)=>T[b].every((w,c)=>T[v][c]===T[a][w])))};
+ if(op==='tm_idempotents')return{elements:s.idempotents,count:s.idempotents.length};
+ if(op==='tm_units'){const one=index.get(21);return{units:E.flatMap((a,i)=>{const j=T[i].findIndex((v,k)=>v===one&&T[k][i]===one);return j<0?[]:[{element:a,inverse:E[j]}];})};}
+ if(op==='tm_left_ideals')return{rows:rows('left')};
+ if(op==='tm_right_ideals')return{rows:rows('right')};
+ if(op==='tm_two_sided_ideals')return{rows:rows('two')};
+ if(op==='tm_green_l')return{classes:s.L};
+ if(op==='tm_green_r')return{classes:s.R};
+ if(op==='tm_green_h')return{classes:s.H};
+ if(op==='tm_green_d')return{classes:s.D};
+ if(op==='tm_green_j')return{classes:s.J,D_equals_J:JSON.stringify(s.D)===JSON.stringify(s.J)};
+ if(op==='tm_regularity'){const out=E.map((a,i)=>({element:a,witnesses:E.filter((x,j)=>T[T[i][j]][i]===i)}));return{rows:out,regular_count:out.filter(r=>r.witnesses.length).length,all_regular:out.every(r=>r.witnesses.length>0)};}
+ if(op==='tm_inverse_sets')return{rows:E.map((a,i)=>({element:a,inverses:E.filter((x,j)=>T[T[i][j]][i]===i&&T[T[j][i]][j]===j)}))};
+ if(op==='tm_local_groups')return{groups:s.groups};
+ if(op==='tm_power_cycles')return{rows:s.powers};
+ if(op==='tm_aperiodicity'){const hist=new Map();for(const r of s.powers)hist.set(r.period,(hist.get(r.period)||0)+1);const periods=[...hist.keys()].sort((a,b)=>a-b),nontrivial=s.groups.filter(g=>g.elements.length>1).length;return{aperiodic:periods.length===1&&periods[0]===1,maximum_period:periods.at(-1),period_histogram:periods.map(period=>({period,count:hist.get(period)})),nontrivial_local_groups:nontrivial,finite_equivalence:(periods.length===1&&periods[0]===1)===(nontrivial===0)};}
+ if(op==='tm_minimal_ideal'){const intersection=s.two.reduce((a,b)=>a&b,(1<<N)-1);return{elements:s.members(intersection),zeros:E.filter((z,i)=>T[i].every(v=>v===i)&&T.every(row=>row[i]===i))};}
+ if(op==='tm_explanation')return{disposition:'represented',monoid_size:N,idempotents:s.idempotents.length,L_classes:s.L.length,R_classes:s.R.length,J_classes:s.J.length,physical:false,empirical:false,human_accessibility_review:false};
+ if(op==='tm_transfer_gap')return{disposition:'open_gap',real_systems_tested:0,independent_reproductions:0,missing:['external transformation corpus','real-system interpretation','independent implementation','human review']};
+ if(op==='tm_authority_hold')return{disposition:'exact_gate',held:true,authorized_external_actions:0,required:['competent authority','affected-party participation','privacy and accessibility evidence','Maori authority where applicable']};
+ throw Error('operation');
+}
+module.exports={evaluate,generated,mul};
