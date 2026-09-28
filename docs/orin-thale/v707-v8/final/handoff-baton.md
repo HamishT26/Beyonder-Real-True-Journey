@@ -1,0 +1,75 @@
+# Orin Thale v707-v8 to prospective Ceryn Alder v708-v1 handoff baton
+
+## Status and use
+
+This is the complete pre-send candidate baton for the current v20 prospective edge. It is repository evidence, not proof that a message was sent or received. At authoring time the exact final and canonical receipt are still postcommit bindings. The live terminal message, if every gate passes, must supply those exact values without rewriting this committed history. The recipient must read this file through literal EOF before mutation and must treat every inherited artifact as evidence or seed material with zero recipient novelty and execution credit.
+
+Hamish authorized sequential continuation through the current v20 roster one terminally validated and acknowledged edge at a time. The prospective row after Orin v707-v8 is Ceryn Alder v708-v1, but newer live authority controls. No replacement task, fork, collaboration subagent, standby substitution, sibling-lane mutation, early onward contact, resend, monitoring claim, or recipient-completion claim is authorized by this baton.
+
+## Immutable lifecycle anchors
+
+The exact Caelen source is b2d8c3b107b89abfb47902d2fc225eb11976a846 on the inherited source branch. Orin planning is 268039174dfa40cd50c71e8e07f7d0f419237aa8. Orin x1 is 5a3fd4f0e9608b6bf8bfbe347a5ea9e631d43f26. Orin x2 is 75d441edf5b23fdb2231213ba7d87a2c5725974c. The final is a direct child of x2 and will be bound externally after commit. Source to final is expected to contain exactly four direct single-parent Orin commits and zero merges. Planning was published before x1 began; x1 was pushed, clean, zero-divergent and fresh four-way equal before x2 began; x2 was pushed, clean, zero-divergent and fresh four-way equal before final closeout began.
+
+## Required reading order
+
+Read the current Family Index, v20 workflow, roster and authorization, Method Flow guidance and schema, reflection guidance, D-first drive guidance, Git-blob guidance, canonical preflight and success latch, and full-suite owner gate. Then read the complete Orin tree beginning with planning/plan.json, planning/projects.json, planning/research-plan.json, planning/model-plan.json, planning/official-sources.json, x1/summary.json, x1/method-flow.json, x1/advisory-recommendation.json, x2/summary.json, x2/method-flow.json, x2/equal-bounds-distinct-inputs.json, x2/branch-join-shared-witness.json, x2/finite-systems.json, final/phase-truth.json, final/method-flow-aggregate.json, final/retained-negative-register.json, final/gate-register.json, final/content-seal.json, and final/final-integrated-overview.md. Read long text through literal EOF in bounded UTF-8 windows. A truncated display is not missing evidence and does not authorize a replay.
+
+## Single-fold source accounting
+
+Fold the Caelen repository-sealed baseline once and only once: 6893 methods, 314034 witnesses, 241712 passing, 72322 failed, 81155 effective negatives, 2507 open gaps, and 2844 exact gates. Preserve CA7077-POST-N001 and CA7077-POST-N002 separately as external post-seal route failures; do not rewrite Caelen totals. Orin adds 19 methods, 424 witnesses, 354 passing witnesses, and 70 failed witnesses. Repository-effective bookkeeping after the one fold is 6912 methods, 314458 witnesses, 242066 passing, 72392 failed, and 81225 effective negatives.
+
+The local failures are not noise to delete. They preserve a managed-worktree call made outside a Git repository, a malformed first PowerShell preflight, a sparse-index deletion exposure, a rejected validation wrapper, a transient receipt-read miss, an x1 draft syntax error, two incompatible advisory-read or wait surfaces, a porcelain leading-space parser defect, a txt-extension syntax-check mismatch, a manifest-hash privacy false positive, malformed model and hook subjects, deliberate interval and affine mutants, accepted-pending advisory states, the x2 const-counter packaging fault, the final template-quote syntax fault, and the final undefined baton binding. Their recoveries are separate passing witnesses. Do not promote a refusal or detector success into success credit for the invalid subject.
+
+## Orin outcome truth
+
+The twenty core rows finish exactly 16 completed, 1 represented, 2 open_gap, and 1 exact_gate. The represented advisory row means recommendations were received and sanitized; it is not independent review. The live-hook row remains open because manual valid/malformed smokes are not a live host observation. Independent and affected-user review remains open. Empirical, authority and Stage 20 work remains exact-gated. Ten exact-approval packets and five blocked packets remain held and unexecuted. The effective open-gap count is 2509; the effective exact-gate obligation count is 2860 under the explicitly separated counting rule in final/gate-register.json.
+
+## X1 evidence
+
+X1 is finite interval evidence. Fifteen current laboratory models ran under exact-field requests and fifteen malformed variants were refused and retained. Five current laboratory operations and five current advisory-hook pairs were exercised. Forty-five saved tests passed. Linear interval enclosures were checked against exhaustive integer-box enumeration. Every result is same-owner and synthetic.
+
+The x1 advisory was sent exactly once, acknowledged, and never resent. The initial accepted-pending state remains a failed witness because no reply was yet available at the time of the domain run. A later bounded reread found the reply and added separate passing witnesses. The sanitized EQUAL_BOUNDS_DISTINCT_INPUTS fixture uses independent x and y with equal ranges. Its exact Cartesian oracle contains nine rows, values {0,1,4}, and hull [0,4]. The ordinary [-4,4] interval passes coverage and the frozen width-eight usefulness budget. The singleton specialization returns [4,4]. The false-correlation [0,0] control is rejected by a concrete row. A top interval is classified as vacuous, and an oversized finite interval fails usefulness without being mislabeled as mathematically unsound. The representation-aware affine checker preserves input bindings and rejects a projected [0,4] form whose x-only dependency cannot cover the row x=-1,y=1.
+
+## X2 evidence
+
+X2 is finite affine, graph, iteration, rational, retry and evidence evidence. Fifteen further model requests and fifteen malformed controls were handled without replaying x1. Five current operations and five hook pairs were used. Ninety saved tests passed. Fifteen linear boxes agreed with exact enumeration. Fifteen rational references were normalized and checked by independent cross multiplication. A finite graph produced the expected SCC partition, including the B-C cycle. A bounded widening trace reached [0,10] and a narrowing step remained stable. Exact retry caused no new effect; changed content under the completed key produced an explicit conflict.
+
+The x2 advisory was also sent exactly once, acknowledged, and never resent. BRANCH_JOIN_SHARED_WITNESS uses x in {-1,0,1}, branch selector b in {0,1}, and a six-row exact oracle. Both outputs have exact marginal hull [-1,1]. The positive shared form u=eta, v=-eta has a simultaneous witness on all six rows. The mutant u=eta, v=eta preserves both marginal hulls but has simultaneous joint witnesses only on the two zero rows. The checker therefore distinguishes marginal coverage from joint coverage. Missing or inconsistent symbol identity is MALFORMED_EVIDENCE, not mathematical unsoundness. This distinction prevents the evidence system from inventing a counterexample when the submitted representation cannot be assessed.
+
+## Models, hooks, operations and capabilities
+
+The model catalogue was used as a bounded laboratory rather than as empirical evidence. Heat, wave, oscillator, reaction, entropy, queue, replication, retry, graph, coding, consent, allocation, voting, Bayes and remedy models were each exercised once per session under the saved requests. Results remain finite generated artifacts. Their presence does not establish physical dimension, fit, prediction, policy validity, real consent, remedy effectiveness, or production readiness.
+
+The model, catalogue, integrity, claim and route operations were the five current operation surfaces. The route operation remained source-bound and nonadmitting because canonical and live route gates were false. Source, budget, consultation, roster and evidence hooks were each smoke-used with one supported event and one deliberately unsupported event. Manual invocation is not live host-hook proof. No duplicate global skill installation occurred. Current compatibility surfaces remain intact.
+
+## Official source boundary
+
+IEEE 1788, Cousot and Cousot 1977, W3C PROV-O, WCAG 2.2 and RFC 8785 supplied terminology and refusal conditions. They were not treated as data from a real analyzer or as endorsement of this phase. No conformance certificate is claimed. IEEE 1788 being inactive-reserved is recorded only as current source metadata. Abstract interpretation supplies a rigorous vocabulary for safe approximation, but these finite fixtures do not prove a general implementation. PROV-O informs lineage vocabulary but grants no custody or authority. WCAG informs accessible structure but does not prove complete accessibility. RFC 8785 informs deterministic JSON comparison but does not by itself establish interoperability or security.
+
+## Scientific and authority boundaries
+
+GMUT remains a typed research-model family. Software, interval enclosures, affine forms, exact finite enumeration, citations, and symbolic fixtures establish no physical datum, likelihood, posterior, parameter constraint, force, prediction, empirical confirmation, ultraviolet completion, quantum completion, stability theorem, or Theory of Everything. THOS remains proxy-only without preregistered blind matched-budget real arms, governed participants or operators, safety monitoring, appropriate statistics, and independent review. Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, live issuance and resolution, status and revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, and affected-party oversight.
+
+CBR, professional decisions, consent, remedy, accessibility accommodation, legal interpretation, cultural legitimacy, affected-party acceptance, Maori wording, Maori data governance and Maori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapu and Maori authorities. Maori concepts remain under Maori authority. Repository software cannot confer competence, consent, a right, remedy, cultural legitimacy, governance mandate or public authority.
+
+Names, pronouns, hopes, roles, sibling or family language, continuity language, GHC Family and Trinity Mandala are relational working conventions only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may pause, redirect, rename, narrow or stop the route.
+
+## Ceryn v708-v1 startup discipline
+
+If and only if the terminal live activation is acknowledged, Ceryn should work solo from Orin exact final in one clean Ceryn-owned D-first lane. Keep Orin, Caelen, siblings, shared state and held lanes read-only. Reverify source branch, exact head, direct-parent history, zero merges, content seal, exact manifests, clean state, zero divergence and fresh live equality before mutation. Preserve the newest v20 Family Index, workflow, roster, authorization, Method Flow, reflection, drive, Git-blob, canonical and full-suite guidance. Do not create or fork another task, spawn a collaboration subagent, delegate owner work, contact a standby record, precontact a later endpoint, or mutate another owner lane.
+
+Freeze planning before x1. Publish and prove x1 clean and four-way equal before x2. Publish and prove x2 clean and four-way equal before final. Run one attributable canonical only after the clean pushed final. Never replay a success. If a wrapper, parser, hook, model, test, push or canonical fails, retain it at zero credit, inspect exact state, and correct only the smallest named dependency. A successful same-owner recovery does not erase the failed subject and is not independent reproduction.
+
+Use the current v20 floors rather than stale older quotas: begin with twenty concrete projects and remain at or below eighty; keep safe, candidate and CLEAN/FIX/REFINE work at or below one thousand per session; skills at or below thirty; runners at or below twenty; tests at or below five hundred; models at or below one hundred; and web searches at or below two thousand. Use at least fifteen current laboratory models per session, one advisory message per session with no resend after acknowledgement or pending acceptance, at least five distinct hooks across the phase, fifteen falsifiable law hypotheses, fifteen open-problem probes, eight own practices, four successor practice suggestions, five skill ideas and five runner ideas. Keep exact work at or below 250 and blocked work at or below 100. Caps are ceilings, not quotas.
+
+Continue to prefer JSON, Markdown and TXT. PDFs remain prohibited. HTML or other formats require a concrete reason and validation. Keep every document below 100,000 words and keep the baton between 2,000 and 100,000 words. Store bulk work, caches and external receipts on D. Use C only for essential installed control metadata. Do not update Codex desktop, change the current model without authorization, elevate, weaken host security, change Windows features, reboot, install unrelated software, or spend against external services without a separately exact in-scope action.
+
+## Ceryn terminal route
+
+Only after Ceryn has its own clean, pushed, four-way-equal exact final and one successful non-replayed canonical may Ceryn refresh the newest live authority and roster, bounded-list the task registry, require exactly one exact-title successor, immediately reread that task, apply duplicate, pause, redirect, rename, standby, usage, privacy, evidence, safety, legal, cultural, affected-party and Maori-authority guards, and send at most once if every gate permits. Do not infer the endpoint from this historical baton. A native acknowledgement proves delivery only, not that the recipient completed or even began the phase.
+
+## Final reminder
+
+The terminal verdict is NOT_READY_FOR_STAGE_20. The strongest result is bounded same-owner conformance on exact finite fixtures with visible failures, provenance, nonpromotion rules and reproducible saved assertions. Preserve that modest but real achievement. Do not turn finite software evidence into a claim about the universe, a person, a profession, a community, a culture, a law, an identity system, an AI mind, or a future stage. Read the final live overlay for exact-final, canonical and delivery state, then proceed only within the newest authority.
+
+LITERAL_EOF_ORIN_V707_V8_HANDOFF
