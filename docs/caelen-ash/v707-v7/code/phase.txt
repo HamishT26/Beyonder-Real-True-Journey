@@ -96,7 +96,7 @@ function requireHead(expected) {
 }
 
 function ownerStatus(requireClean = false) {
-  const output = git(['status', '--porcelain=v1', '-uall']);
+  const output = cp.execFileSync('git', ['status', '--porcelain=v1', '-uall'], { cwd: REPO, encoding: 'utf8', windowsHide: true, maxBuffer: 128 * 1024 * 1024 }).replace(/\r?\n$/, '');
   const rows = output ? output.split(/\r?\n/).filter(Boolean) : [];
   const outside = rows.filter(row => {
     const item = row.slice(3).replace(/\\/g, '/');
@@ -497,12 +497,18 @@ function runSession(stage) {
   }
   const mutationTests = [];
   const base = fixtureEvents(stage, 0);
+  const cachedPermissionFixture = fixtureEvents(stage, 13);
+  const cachedPermissionGuarded = runtime.reduceLedger(cachedPermissionFixture);
   const mutations = [
     { id: 'duplicate-id', run: () => runtime.reduceLedger([...base, { ...base[0] }]), expected_error: 'duplicate_id' },
     { id: 'missing-parent', run: () => runtime.reduceLedger(base.map((row, index) => index === 1 && row.kind === 'correct' ? { ...row, parent: 'absent-parent' } : row)), expected_error: 'missing_parent' },
     { id: 'unknown-field', run: () => runtime.reduceLedger(base.map((row, index) => index === 0 ? { ...row, authority_granted: true } : row)), expected_error: 'event_fields' },
     { id: 'erase-original', run: () => runtime.reduceLedger(base, { erase_original: true }), detector: value => value.originals_preserved === false },
-    { id: 'cached-permission', run: () => runtime.reduceLedger(fixtureEvents(stage, 13), { cached_permission: true }), detector: value => value.decisions.length > 0 }
+    {
+      id: 'cached-permission',
+      run: () => runtime.reduceLedger(cachedPermissionFixture, { cached_permission: true }),
+      detector: value => value.allowed_publications > cachedPermissionGuarded.allowed_publications && value.denied_publications < cachedPermissionGuarded.denied_publications
+    }
   ];
   for (const mutation of mutations) {
     let detected = false;

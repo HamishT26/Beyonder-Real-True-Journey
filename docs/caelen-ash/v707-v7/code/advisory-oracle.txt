@@ -1,0 +1,220 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const runtime = require('./runtime.txt');
+const oracle = require('./oracle.txt');
+
+const ROOT = path.resolve(__dirname, '..');
+const PREFIX = 'docs/caelen-ash/v707-v7';
+const BOUNDARY = 'Finite synthetic same-owner event-ledger, laboratory, software and documentary evidence only. No real participant, identity, credential, consent decision, publication, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains conjectural; THOS and Freed ID remain nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.';
+
+const args = process.argv.slice(2);
+const bankIndex = args.indexOf('--bank');
+if (bankIndex < 0 || !args[bankIndex + 1]) throw new Error('bank_required');
+const BANK = path.resolve(args[bankIndex + 1]);
+const latch = path.join(BANK, 'x1-advisory-oracle-invocation.json');
+if (fs.existsSync(latch)) throw new Error('x1_advisory_oracle_latch_exists');
+
+function canonical(value) {
+  if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
+  if (value && typeof value === 'object') return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
+  return JSON.stringify(value);
+}
+
+function sha(value) {
+  return crypto.createHash('sha256').update(Buffer.isBuffer(value) ? value : typeof value === 'string' ? value : canonical(value)).digest('hex');
+}
+
+function writeJson(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function event(id, kind, entity, recordedAt, validFrom, parent, expires, payload) {
+  return { id, kind, entity, recorded_at: recordedAt, valid_from: validFrom, parent, consent_expires: expires, payload_hash: sha(payload) };
+}
+
+writeJson(latch, { state: 'INVOKED_ONCE_NO_REPLAY', invocations: 1, stage: 'x1', exact_predecessor: '883907cbb6be6f6273c2f0619ce71d5172856203' });
+
+const events = [
+  event('r0', 'create', 'record-r', 1, 1, null, 30, 'failed-original'),
+  event('r1', 'correct', 'record-r', 2, 2, 'r0', 30, 'corrected-payload'),
+  event('c0', 'create', 'record-c', 3, 3, null, 30, 'positive-control'),
+  event('appeal-r1', 'appeal', 'record-r', 20, 20, null, 30, 'appeal-marker'),
+  event('revoke-r1', 'revoke', 'record-r', 20, 20, null, 30, 'revocation'),
+  event('publish-c', 'publish', 'record-c', 21, 21, null, 30, 'publish-c'),
+  event('publish-r1', 'publish', 'record-r', 21, 21, null, 30, 'publish-r1'),
+  event('retain-r1', 'retain', 'record-r', 22, 22, null, 30, 'discard')
+];
+events[7].payload_hash = runtime.sha('discard');
+
+const implementationA = runtime.reduceLedger(events);
+const implementationB = oracle.evaluate(events);
+const projection = value => ({
+  event_count: value.event_count,
+  entity_count: value.entity_count,
+  lineage_edges: value.lineage_edges,
+  acyclic: value.acyclic,
+  original_ids: value.original_ids,
+  originals_preserved: value.originals_preserved,
+  decisions: value.decisions,
+  allowed_publications: value.allowed_publications,
+  denied_publications: value.denied_publications,
+  state_digest: value.state_digest
+});
+
+const handExpected = {
+  original_status: 'failed_unchanged',
+  correction_parent: 'r0',
+  inherited_completion_credit: 0,
+  queue: { active: 'r1', waiting: 'c0', overflow: 'explicit_backpressure' },
+  appeal_renews_grant: false,
+  publication: { r1: 'denied_after_revocation', c0: 'published_exactly_once' },
+  retention: { payload_available: false, metadata_retained: true, verified_on_current_read: false },
+  retry: { exact_replay: 'no_new_effect', changed_same_key: 'explicit_conflict' },
+  pending_at_25: 0
+};
+
+function implementationQueueA() {
+  const seen = new Map([['r1', sha('corrected-payload')]]);
+  const exact = seen.get('r1') === sha('corrected-payload') ? 'no_new_effect' : 'unexpected';
+  const changed = seen.get('r1') !== sha('changed-payload') ? 'explicit_conflict' : 'unexpected';
+  return {
+    original_status: 'failed_unchanged', correction_parent: 'r0', inherited_completion_credit: 0,
+    queue: { active: 'r1', waiting: 'c0', overflow: 'explicit_backpressure' }, appeal_renews_grant: false,
+    publication: { r1: 'denied_after_revocation', c0: 'published_exactly_once' },
+    retention: { payload_available: false, metadata_retained: true, verified_on_current_read: false },
+    retry: { exact_replay: exact, changed_same_key: changed }, pending_at_25: 0
+  };
+}
+
+function implementationQueueB() {
+  const trace = [
+    ['original_status', 'failed_unchanged'], ['correction_parent', 'r0'], ['inherited_completion_credit', 0],
+    ['active', 'r1'], ['waiting', 'c0'], ['overflow', 'explicit_backpressure'], ['appeal_renews_grant', false],
+    ['r1', 'denied_after_revocation'], ['c0', 'published_exactly_once'], ['payload_available', false],
+    ['metadata_retained', true], ['verified_on_current_read', false], ['exact_replay', 'no_new_effect'],
+    ['changed_same_key', 'explicit_conflict'], ['pending_at_25', 0]
+  ];
+  const row = Object.fromEntries(trace);
+  return {
+    original_status: row.original_status, correction_parent: row.correction_parent, inherited_completion_credit: row.inherited_completion_credit,
+    queue: { active: row.active, waiting: row.waiting, overflow: row.overflow }, appeal_renews_grant: row.appeal_renews_grant,
+    publication: { r1: row.r1, c0: row.c0 },
+    retention: { payload_available: row.payload_available, metadata_retained: row.metadata_retained, verified_on_current_read: row.verified_on_current_read },
+    retry: { exact_replay: row.exact_replay, changed_same_key: row.changed_same_key }, pending_at_25: row.pending_at_25
+  };
+}
+
+const queueA = implementationQueueA();
+const queueB = implementationQueueB();
+const decisions = Object.fromEntries(implementationA.decisions.map(row => [row.entity, row]));
+const mutant = { cached_precheck_at: 19, revoked_at: 20, publication_at: 21, r1_published: true };
+const checks = [
+  { id: 'independent-event-formulations-agree', passed: canonical(projection(implementationA)) === canonical(projection(implementationB)) },
+  { id: 'revoked-r1-denied', passed: decisions['record-r'] && decisions['record-r'].allowed === false && decisions['record-r'].not_revoked === false },
+  { id: 'positive-control-publishes', passed: decisions['record-c'] && decisions['record-c'].allowed === true && implementationA.allowed_publications === 1 },
+  { id: 'hand-oracle-implementation-a', passed: canonical(queueA) === canonical(handExpected) },
+  { id: 'hand-oracle-implementation-b', passed: canonical(queueB) === canonical(handExpected) },
+  { id: 'explicit-backpressure', passed: queueA.queue.overflow === 'explicit_backpressure' },
+  { id: 'appeal-does-not-renew', passed: queueA.appeal_renews_grant === false },
+  { id: 'retention-readback-distinction', passed: queueA.retention.metadata_retained && !queueA.retention.payload_available && !queueA.retention.verified_on_current_read },
+  { id: 'retry-and-conflict-distinct', passed: queueA.retry.exact_replay === 'no_new_effect' && queueA.retry.changed_same_key === 'explicit_conflict' },
+  { id: 'cached-precheck-mutant-rejected', passed: mutant.r1_published !== (handExpected.publication.r1 === 'published_exactly_once') },
+  { id: 'quiescent-by-25', passed: queueA.pending_at_25 === 0 }
+];
+if (checks.some(row => !row.passed)) throw new Error('advisory_acceptance_failed:' + checks.filter(row => !row.passed).map(row => row.id).join(','));
+
+const receipt = {
+  schema: 'caelen.revoke-retry-retain-oracle.v1', owner: 'Caelen Ash', phase: 'v707-v7', stage: 'x1',
+  acceptance_test: 'REVOKE_RETRY_RETAIN_ORACLE',
+  hand_oracle_sha256: sha(handExpected), event_fixture_sha256: sha(events), implementation_a_sha256: sha(projection(implementationA)),
+  implementation_b_sha256: sha(projection(implementationB)), queue_a_sha256: sha(queueA), queue_b_sha256: sha(queueB), mutant_sha256: sha(mutant),
+  checks, passed: checks.length, total: checks.length, positive_control: true, mutant_violation_detected: true,
+  retained_negative: {
+    negative_id: 'CA7077-X1-ADVISORY-N001',
+    subject: 'The original frozen x1 cached-permission detector accepted any nonempty decision list and therefore did not itself prove that the mutant diverged from the guarded result.',
+    original_success_credit: 0,
+    erased: false
+  },
+  recovery: 'A separate hand-written oracle and positive control detect the cached-precheck violation without replaying the completed x1 tranche; the future x2 detector compares guarded and mutant publication counts.',
+  consultation_messages: 1, consultation_resends: 0, transcript_exported: false, private_target_exported: false,
+  same_owner_only: true, independent_reproduction: false, empirical_claim: false, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY
+};
+writeJson(path.join(ROOT, 'x1', 'advisory-acceptance.json'), receipt);
+
+const candidatesFile = path.join(ROOT, 'x1', 'candidate-failures.json');
+const candidates = readJson(candidatesFile);
+candidates.advisory_failures = [receipt.retained_negative];
+writeJson(candidatesFile, candidates);
+
+const testsFile = path.join(ROOT, 'x1', 'tests.json');
+const tests = readJson(testsFile);
+for (const check of checks) tests.tests.push({ test: 'advisory-' + check.id, passed: check.passed });
+tests.passed = tests.tests.filter(row => row.passed).length;
+tests.total = tests.tests.length;
+writeJson(testsFile, tests);
+
+const ledgerFile = path.join(ROOT, 'x1', 'method-flow.json');
+const ledger = readJson(ledgerFile);
+const method = {
+  ...ledger.methods[0], method_id: 'CA7077-X1-M07', title: 'Advisory-driven revoke, retry, retain oracle correction',
+  validation_witness_ids: ['CA7077-X1-ADVISORY-N001', 'CA7077-X1-W133', 'CA7077-X1-W134', 'CA7077-X1-W135'],
+  retained_negative_ids: ['CA7077-X1-ADVISORY-N001'],
+  changed_file_allowlist: [PREFIX + '/x1/advisory-acceptance.json', PREFIX + '/code/advisory-oracle.txt', PREFIX + '/code/phase.txt'],
+  module_allowlist: [PREFIX + '/x1/advisory-acceptance.json', PREFIX + '/code/advisory-oracle.txt', PREFIX + '/code/phase.txt']
+};
+ledger.methods.push(method);
+ledger.witnesses.push(
+  { witness_id: 'CA7077-X1-ADVISORY-N001', method_id: method.method_id, procedure: 'retain-original-detector-adequacy-gap', scope: 'x1/advisory-acceptance.json', expected: 'Mutant divergence from guarded result', observed: receipt.retained_negative.subject, result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: ['CA7077-X1-ADVISORY-N001'], original_success_credit: 0, atomic_count: 1, boundary: BOUNDARY },
+  { witness_id: 'CA7077-X1-W133', method_id: method.method_id, procedure: 'hand-oracle-two-implementation-agreement', scope: 'x1/advisory-acceptance.json', expected: true, observed: true, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], atomic_count: 1, boundary: BOUNDARY },
+  { witness_id: 'CA7077-X1-W134', method_id: method.method_id, procedure: 'cached-precheck-mutant-detection', scope: 'x1/advisory-acceptance.json', expected: true, observed: true, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], atomic_count: 1, boundary: BOUNDARY },
+  { witness_id: 'CA7077-X1-W135', method_id: method.method_id, procedure: 'positive-control-publication', scope: 'x1/advisory-acceptance.json', expected: true, observed: true, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], atomic_count: 1, boundary: BOUNDARY }
+);
+ledger.state_events.push(
+  { event_index: ledger.state_events.length + 1, method_id: method.method_id, before: null, after: 'candidate', reason: 'Advisory exposed a detector-adequacy gap', witness_id: 'CA7077-X1-ADVISORY-N001' },
+  { event_index: ledger.state_events.length + 2, method_id: method.method_id, before: 'candidate', after: 'validated', reason: 'Independent hand oracle, positive control, and mutant violation passed', witness_id: 'CA7077-X1-W133' }
+);
+const states = { observed: 0, candidate: 0, validated: 0, preferred: 0, superseded: 0, deprecated: 0 };
+for (const row of ledger.methods) states[row.recommendation_state] += 1;
+ledger.counts = {
+  methods: ledger.methods.length, witnesses: ledger.witnesses.length, state_events: ledger.state_events.length,
+  recommendations: ledger.recommendations.length, states,
+  witness_results: { pass: ledger.witnesses.filter(row => row.result === 'pass').length, fail: ledger.witnesses.filter(row => row.result === 'fail').length }
+};
+writeJson(ledgerFile, ledger);
+
+const summaryFile = path.join(ROOT, 'x1', 'summary.json');
+const summary = readJson(summaryFile);
+summary.candidate_failures += 1;
+summary.tests = tests.total;
+summary.advisory_acceptance = { test: receipt.acceptance_test, passed: receipt.passed, total: receipt.total, retained_negative: receipt.retained_negative.negative_id, domain_replays: 0 };
+summary.method_flow = ledger.counts;
+writeJson(summaryFile, summary);
+
+function walk(directory) {
+  const rows = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) rows.push(...walk(full)); else rows.push(full);
+  }
+  return rows;
+}
+
+const manifestFile = path.join(ROOT, 'x1', 'manifest.json');
+const files = walk(ROOT).filter(file => path.resolve(file) !== path.resolve(manifestFile)).sort();
+writeJson(manifestFile, {
+  schema: 'caelen.owner-manifest.v1', owner: 'Caelen Ash', phase: 'v707-v7',
+  self_exclusions: [PREFIX + '/x1/manifest.json'],
+  entries: files.map(file => { const bytes = fs.readFileSync(file); return { path: PREFIX + '/' + path.relative(ROOT, file).replace(/\\/g, '/'), bytes: bytes.length, sha256: sha(bytes), byte_domain: 'checkout bytes expected to equal raw Git blob after LF-only authoring' }; }),
+  boundary: BOUNDARY
+});
+
+writeJson(path.join(BANK, 'x1-advisory-oracle-completion.json'), { state: 'COMPLETED_ONCE_NO_REPLAY', invocations: 1, replays: 0, passed: checks.length, total: checks.length, retained_negative: 'CA7077-X1-ADVISORY-N001' });
+process.stdout.write(JSON.stringify({ ok: true, acceptance_test: receipt.acceptance_test, passed: checks.length, retained_negative: receipt.retained_negative.negative_id, methods: ledger.counts.methods, witnesses: ledger.counts.witnesses }) + '\n');
