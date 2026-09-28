@@ -1,3 +1,5 @@
 'use strict';
-// Planned finite interval and affine-form runtime. Implemented and executed only in x1/x2.
-module.exports={planned:true,empirical_claim:false};
+function interval(lo,hi,source){if(!Number.isFinite(lo)||!Number.isFinite(hi)||lo>hi)throw Error('invalid_interval');return{lo,hi,source:[source]};}
+function scale(a,x){return a>=0?{lo:a*x.lo,hi:a*x.hi}:{lo:a*x.hi,hi:a*x.lo};}
+function linear(x,y,a,b,c){const ax=scale(a,x),by=scale(b,y);return{lo:ax.lo+by.lo+c,hi:ax.hi+by.hi+c,provenance:[...x.source,...y.source,'linear-transfer']};}
+module.exports={interval,scale,linear,empirical_claim:false};

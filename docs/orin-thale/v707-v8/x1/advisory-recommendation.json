@@ -1,0 +1,100 @@
+{
+  "schema": "orin.advisory-recommendation.v1",
+  "owner": "Orin Thale",
+  "phase": "v707-v8",
+  "stage_received": "x1",
+  "target_stage": "x2",
+  "recommendation": {
+    "recommendation_id": "EQUAL_BOUNDS_DISTINCT_INPUTS",
+    "state": "adopted_for_x2",
+    "frozen_input": {
+      "x": [
+        -1,
+        0,
+        1
+      ],
+      "y": [
+        -1,
+        0,
+        1
+      ],
+      "independent": true,
+      "program": [
+        "d = x - y",
+        "r = d * d"
+      ]
+    },
+    "exact_oracle": {
+      "values": [
+        0,
+        1,
+        4
+      ],
+      "interval_hull": [
+        0,
+        4
+      ],
+      "rows": 9
+    },
+    "positive_controls": [
+      {
+        "kind": "ordinary_interval",
+        "expected_enclosure": [
+          -4,
+          4
+        ]
+      },
+      {
+        "kind": "singleton",
+        "x": [
+          -1,
+          -1
+        ],
+        "y": [
+          1,
+          1
+        ],
+        "expected": [
+          4,
+          4
+        ]
+      }
+    ],
+    "negative_controls": [
+      {
+        "kind": "false_correlation",
+        "reported": [
+          0,
+          0
+        ],
+        "counterexample": {
+          "x": -1,
+          "y": 1,
+          "result": 4
+        }
+      },
+      {
+        "kind": "vacuous_top",
+        "classification": "contains oracle but fails usefulness"
+      },
+      {
+        "kind": "oversized_finite",
+        "reported": [
+          -1000000,
+          1000000
+        ],
+        "classification": "fails usefulness"
+      }
+    ],
+    "acceptance": {
+      "all_nine_cases_enclosed": true,
+      "representation_aware_affine_binding": true,
+      "finite_width_max": 8,
+      "singleton_exact": true,
+      "mutants_classified": true
+    },
+    "authority": "advisory only",
+    "independent_reproduction": false
+  },
+  "boundary": "Finite synthetic same-owner interval, abstract-interpretation, laboratory, software and documentary evidence only. No real participant, program, production analyzer, measurement, identity, credential, consent decision, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains a research-model family; THOS remains proxy and Freed ID remains synthetic/nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

@@ -1,3 +1,3 @@
 'use strict';
-// Planned exhaustive finite oracle. Implemented and executed only in x1/x2.
-module.exports={planned:true,independent_reproduction:false};
+function exhaustive(x,y,a,b,c){const v=[];for(let i=Math.ceil(x.lo);i<=Math.floor(x.hi);i++)for(let j=Math.ceil(y.lo);j<=Math.floor(y.hi);j++)v.push(a*i+b*j+c);return{lo:Math.min(...v),hi:Math.max(...v),samples:v.length};}
+module.exports={exhaustive,independent_reproduction:false};
