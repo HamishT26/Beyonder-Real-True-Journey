@@ -1,0 +1,127 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const cp = require('child_process');
+const phase = require('./phase.txt');
+
+const raw = process.argv.slice(2);
+const args = {};
+for (let index = 0; index < raw.length; index += 1) {
+  if (!raw[index].startsWith('--')) continue;
+  const key = raw[index].slice(2);
+  const next = raw[index + 1];
+  args[key] = next && !next.startsWith('--') ? next : true;
+  if (args[key] !== true) index += 1;
+}
+for (const key of ['bank', 'expected-head', 'plan', 'x1']) if (!args[key]) throw new Error(key + '_required');
+const BANK = path.resolve(args.bank);
+const expectedHead = args['expected-head'];
+const latch = path.join(BANK, 'final-invocation.json');
+if (fs.existsSync(latch)) throw new Error('final_latch_exists');
+phase.requireHead(expectedHead);
+const status = cp.execFileSync('git', ['status', '--porcelain=v1', '-uall'], { cwd: phase.REPO, encoding: 'utf8', windowsHide: true }).replace(/\r/g, '').trimEnd().split('\n').filter(Boolean);
+const outside = status.filter(row => {
+  const item = row.slice(3).replace(/\\/g, '/');
+  return !item.startsWith(phase.PREFIX + '/');
+});
+if (outside.length) throw new Error('outside_owner_scope:' + outside.join(','));
+if (fs.existsSync(path.join(phase.ROOT, 'final'))) throw new Error('final_directory_already_exists');
+
+function writeBank(name, value) {
+  const file = path.join(BANK, name);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+
+writeBank('final-invocation.json', {
+  state: 'INVOKED_ONCE_OWNER_SCOPED_PACKAGING', invocations: 1, exact_head: expectedHead,
+  plan: args.plan, x1: args.x1, source_domain_replays: 0, x1_replays: 0, x2_replays: 0,
+  short_candidate_preflight_words: 1202
+});
+
+const flow = phase.aggregateFlow();
+const projects = [
+  ...phase.readJson(path.join(phase.ROOT, 'x1', 'project-outcomes.json')).projects,
+  ...phase.readJson(path.join(phase.ROOT, 'x2', 'project-outcomes.json')).projects
+];
+const outcomes = projects.reduce((acc, row) => { acc[row.outcome] = (acc[row.outcome] || 0) + 1; return acc; }, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 });
+const truth = {
+  schema: 'caelen.phase-truth.v20', owner: phase.OWNER, phase: phase.PHASE, branch: phase.BRANCH, source: phase.SOURCE,
+  ancestry: { source_orphan_lineage_preserved: true, planning: args.plan, x1: args.x1, x2: expectedHead, final: 'external_after_commit' },
+  accounting: { source_baseline: { methods: 6877, witnesses: 313756, passing_witnesses: 241493, failed_witnesses: 72263, negatives: 81096, open_gaps: 2505, exact_gates: 2843 }, source_fold_count: 1, own: flow.own, effective: flow.effective, counts_are_not_confidence_scores: true },
+  outcomes, projects: projects.length, models: { x1: 15, x2: 15 },
+  consultation: { x1_messages: 1, x1_reply_received: true, x2_messages: 1, x2_reply_received: false, x2_reply_open_gap: true, resends: 0, private_target_exported: false, independent_review: false },
+  hooks: { selected: 5, manual_accept_refuse_smokes: 10, live_host_observations: 0 },
+  recovery: { x2_full_replays: 0, saved_model_calls_replayed: 0, isolated_event_dependency_reexecutions: 2, retained_failures: ['CA7077-X2-N001', 'CA7077-X2-REC-N002'] },
+  source_execution_credit: 0, source_domain_replays: 0, source_canonical_replays: 0,
+  exact_packets_held: 10, blocked_packets_held: 5,
+  route: { state: 'PREPARED_NOT_SENT', successor: 'Orin Thale', phase: 'v707-v8' },
+  canonical: { state: 'PREPARED_NOT_INVOKED', maximum_invocations: 1 },
+  terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: phase.BOUNDARY
+};
+
+phase.writeJson('final/phase-truth.json', truth);
+phase.writeJson('final/method-flow-index.json', { ledgers: ['planning', 'x1', 'x2'].map(stage => ({ path: phase.PREFIX + '/' + stage + '/method-flow.json', counts: phase.readJson(path.join(phase.ROOT, stage, 'method-flow.json')).counts })), accounting: truth.accounting, boundary: phase.BOUNDARY });
+phase.writeJson('final/failure-ledger.json', {
+  startup: phase.readJson(path.join(BANK, 'startup-failures.json')),
+  planning_failures: phase.readJson(path.join(phase.ROOT, 'planning', 'method-flow.json')).witnesses.filter(row => row.result === 'fail').map(row => row.witness_id),
+  x1_failures: phase.readJson(path.join(phase.ROOT, 'x1', 'method-flow.json')).witnesses.filter(row => row.result === 'fail').map(row => row.witness_id),
+  x2_failures: phase.readJson(path.join(phase.ROOT, 'x2', 'method-flow.json')).witnesses.filter(row => row.result === 'fail').map(row => row.witness_id),
+  recovery_rewrites_failure: false, boundary: phase.BOUNDARY
+});
+phase.writeJson('final/requirements-audit.json', {
+  projects_initial: 20, project_cap: 80, models_x1: 15, models_x2: 15, consultations_x1: 1, consultations_x2: 1,
+  consultation_resends: 0, hooks: 5, law_hypotheses: 15, open_problem_probes: 15, practices: 8,
+  successor_suggestions: 4, skill_ideas: 5, runner_ideas: 5, exact_packets_held: 10, blocked_packets_held: 5,
+  branch_file_ceiling: 2000, pdfs: 0, spend_usd: 0, full_repository_suite: false,
+  source_domain_replay: false, source_canonical_replay: false, x2_full_replay: false, saved_model_calls_replayed: 0,
+  boundary: phase.BOUNDARY
+});
+phase.writeJson('final/wellbeing.json', { workload_bounded: true, caps_not_quotas: true, failures_retained: true, sessions_separated: true, no_real_participants: true, user_can_pause_redirect_or_stop: true, relational_language_only: true, boundary: phase.BOUNDARY });
+phase.writeJson('final/source-faithful-ledger.json', { source_commit: phase.SOURCE, source_bindings: phase.readJson(path.join(phase.ROOT, 'planning', 'source-bindings.json')).entries, baseline: truth.accounting.source_baseline, fold_count: 1, source_execution_credit: 0, boundary: phase.BOUNDARY });
+
+const appendix = `## Module 14 — X1 advisory intake and falsifiability correction
+
+The first advisory message was acknowledged once and received one substantive reply. The reply was treated as bounded source material rather than authority. It identified a publication-time check/use race, the difference between exact retry and changed content under one key, and the difference between retained metadata, available payload, and bytes verified on the current read. Caelen adopted those ideas through a separate hand-written REVOKE_RETRY_RETAIN_ORACLE with two formulations, explicit backpressure, an appeal that cannot renew a grant, a long-lived positive control, retention-state separation, and a deliberately faulty cached-precheck control. The 11 acceptance checks passed within that finite fixture. The original cached-permission detector was still retained as CA7077-X1-ADVISORY-N001 because its criterion merely required a nonempty decision list. Its earlier bounded criterion pass was not rewritten into adequate mutant detection. This is same-owner synthetic conformance only, not independent review, real consent, or production authorization.
+
+## Module 15 — X2 advisory state and open recommendation gap
+
+The second advisory message was also acknowledged exactly once and visibly entered the existing Review and refine GHC Lab conversation. No resend occurred. The conversation later returned idle without an agent reply, so there is no x2 recommendation to attribute, adopt, paraphrase, or silently invent. The repository records reply_received false and preserves the requested additional adversarial mutation as an open advisory gap. X2 therefore used only the already received x1 recommendation and Caelen frozen planning. Delivery of a question is distinct from reception of an answer, and either is distinct from validation, authority, or recipient completion. No conversation identifier, private URL, transcript, screenshot, session stream, or private route is exported. A later reply, if any, cannot retroactively alter this sealed phase without a separately authorized and additive continuation.
+
+## Module 16 — X2 partial failure and isolated recovery chain
+
+The once-only x2 invocation saved all fifteen laboratory model outputs and their requests before stopping at CA7077-X2-N001. The missing-parent mutation had selected an array position; x2 reverses fixture order, so that position was not the correction event and the detector correctly refused success. The first isolated recovery changed the selector to semantic event kind but then stopped at CA7077-X2-REC-N002 because every planned x2 publication occurred before expiry, making guarded and cached-permission outcomes identical. The second recovery froze a dedicated decision exactly at the record expiry. Strict less-than permission denied it while the mutant reused the later event expiry and allowed it. Both failures remain zero-credit. No saved model call and no full x2 tranche was replayed. Two unsaved event-dependency reexecutions are disclosed, and runners, hooks, ledger construction, and packaging ran for the first time only after the discriminating fixture passed.
+
+## Module 17 — Outcome and Method Flow interpretation
+
+Twenty Caelen projects span the two sessions. Their core dispositions use only completed, represented, open_gap, and exact_gate. A completed disposition means that its bounded software or documentary contract met its declared finite checks; it does not mean a real system, person, institution, scientific theory, entitlement, or remedy was validated. Represented work remains proxy structure. Open gaps remain unmet evidence needs. Exact gates remain unexecuted authority or external-evidence requirements. Planning, x1, and x2 Method Flow ledgers retain every failed mutation, malformed request, malformed hook, advisory gap, wrapper error, parser error, and recovery link alongside separate passing witnesses. Counts describe ledger population, not probabilities or confidence. A later correction may supersede a method recommendation, but it may not erase the failed witness or award original-success credit to the failed subject.
+
+## Module 18 — Official-source status and citation ceiling
+
+Current primary materials were used only for vocabulary and refusal conditions. W3C PROV-DM supports describing entities, activities, agents, derivation, revision, and provenance without making the repository an external authority. The W3C Verifiable Credentials Data Model 2.0 supplies status and revocation vocabulary without establishing real credentials, holders, issuers, keys, proofs, or trust. RFC 9162 supplies append-only transparency-log concepts without demonstrating a deployed certificate log. SQLite atomic-commit and transaction documentation supplies recovery and transaction language without certifying this event model as a production database. WCAG 2.2 supplies accessibility vocabulary without a complete accessibility evaluation. Citations are not observations, measurements, endorsements, participant evidence, interoperability tests, legal interpretations, cultural ratification, or delegated authority. Any newer draft remains a watch item unless explicitly selected and bounded.
+
+## Module 19 — Exact validation and privacy limits
+
+The owner validation surface is deliberately narrower than a complete repository suite. It parses every Caelen JSON artifact, checks the bounded text word ceiling, adjudicates five raw-identifier and privacy classes, validates Method Flow schema links, replays declared manifest entries, checks staged paths, and verifies direct ancestry, commit count, zero merges, one final parent, branch identity, clean state, typed divergence, and fresh remote equality. These checks can detect many structural mistakes, but absence of a scanner hit is not proof of complete privacy, security, or confidentiality. Static documentation is not an accessibility study. Same-owner dual implementations are not independent reproduction. Manual hook smokes are not live host observations. The full repository suite remains outside Caelen scope. A single metadata canonical may bind the final tree after push; it cannot turn synthetic software into empirical or authority evidence.
+
+## Module 20 — Three-pillar synthesis without category collapse
+
+Freed ID and CBR Heart remains primary because the phase makes source binding, correction, consent-at-publication, revocation, disclosure restraint, appeal, remedy vacancy, and authority holds inspectable. THOS Body contributes bounded queues, backpressure, retry latches, acknowledgement separation, deterministic scheduling, and recovery discipline. GMUT Mind contributes typed variables, finite transformations, independent formulations, explicit tolerances, and a firewall between mathematical analogy and physics. These pillars can share evidence discipline without being declared one natural law. The software does not show that identity, consent, cognition, gravity, ethics, and governance are physically equivalent. It supplies only a small laboratory for checking whether stated finite rules remain coherent under declared inputs and mutations. GMUT empirical confirmation, THOS operational effectiveness, Freed ID trust, CBR legitimacy, AGI or ASI, and Stage 20 all remain open or exact-gated.
+
+## Module 21 — Orin continuation and delivery separation
+
+Orin may begin v707-v8 only after Caelen final is committed, pushed, clean, one-parent, within caps, fresh-four-way equal, and bound by one successful non-replayed owner-scoped canonical. The live user authority, current v20 roster, usage posture, active and archived title uniqueness, exact direct-control reread, duplicate guard, privacy guard, and acknowledgement guard must still agree at the terminal edge. The repository baton can be prepared before that edge, but preparation is not delivery. A native send acknowledgement means one message was accepted by the application; it does not mean Orin read it, began work, or completed anything. No substitute task, fork, collaboration subagent, standby task, or newly created recipient is permitted. If any route fact is absent, ambiguous, paused, redirected, renamed, exhausted, or protected by a gate, the correct state is held rather than inferred.
+
+`;
+
+const base = phase.handoffText(truth).replace(/## Literal EOF\s+LITERAL_EOF_CAELEN_V707_V7\s*$/, '');
+const baton = base.trimEnd() + '\n\n' + appendix + '## Literal EOF\n\nLITERAL_EOF_CAELEN_V707_V7\n';
+const words = (baton.match(/\S+/g) || []).length;
+if (words < 2000 || words > 100000) throw new Error('baton_word_bounds:' + words);
+fs.writeFileSync(path.join(phase.ROOT, 'final', 'handoff.md'), baton.replace(/\r\n/g, '\n'), 'utf8');
+phase.writeJson('final/handoff-metadata.json', { words, bytes: Buffer.byteLength(baton), sha256: phase.sha(baton), literal_eof: 'LITERAL_EOF_CAELEN_V707_V7', original_candidate_words: 1202, packaging_recovery: 'bounded_modules_inserted_before_literal_eof' });
+phase.writeJson('final/closeout-receipt.json', { schema: 'caelen.closeout-receipt.v1', invocations: 1, successful_packaging: true, source_replays: 0, x1_replays: 0, x2_full_replays: 0, saved_model_calls_replayed: 0, baton_words: words, outcome_counts: outcomes, terminal_verdict: truth.terminal_verdict, boundary: phase.BOUNDARY });
+phase.manifest('final/manifest.json');
+writeBank('final-completion.json', { state: 'COMPLETED_ONCE_OWNER_SCOPED_PACKAGING', invocations: 1, source_replays: 0, x1_replays: 0, x2_replays: 0, baton_words: words, outcomes });
+process.stdout.write(JSON.stringify({ ok: true, stage: 'final', outcomes, accounting: truth.accounting, baton_words: words }) + '\n');
