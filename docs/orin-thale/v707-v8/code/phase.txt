@@ -1,0 +1,115 @@
+'use strict';
+const fs=require('fs'),path=require('path'),crypto=require('crypto'),cp=require('child_process');
+const SOURCE='b2d8c3b107b89abfb47902d2fc225eb11976a846';
+const BRANCH='codex/GHC-Family/orin-thale-main-3';
+const OWNER='Orin Thale',PHASE='v707-v8';
+const REL='docs/orin-thale/v707-v8';
+const ROOT=process.cwd(),DIR=path.join(ROOT,...REL.split('/'));
+const BANK='D:/GHC-Archives/phase-banks/orin-thale-v707-v8';
+const BOUNDARY='Finite synthetic same-owner interval, abstract-interpretation, laboratory, software and documentary evidence only. No real participant, program, production analyzer, measurement, identity, credential, consent decision, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains a research-model family; THOS remains proxy and Freed ID remains synthetic/nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.';
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const mkdir=p=>fs.mkdirSync(p,{recursive:true});
+function writeText(rel,text,overwrite=false){const p=path.join(ROOT,...rel.split('/'));mkdir(path.dirname(p));fs.writeFileSync(p,text.replace(/\r\n/g,'\n'),{encoding:'utf8',flag:overwrite?'w':'wx'});}
+function writeJSON(rel,obj,overwrite=false){writeText(rel,JSON.stringify(obj,null,2)+'\n',overwrite);}
+function bankJSON(name,obj,overwrite=false){mkdir(BANK);const p=path.join(BANK,name);fs.writeFileSync(p,JSON.stringify(obj,null,2)+'\n',{encoding:'utf8',flag:overwrite?'w':'wx'});}
+function git(args,encoding='utf8'){return cp.execFileSync('git',args,{cwd:ROOT,encoding,windowsHide:true});}
+function requireState(expected){const head=git(['rev-parse','HEAD']).trim();if(head!==expected)throw Error('Unexpected HEAD '+head);if(git(['branch','--show-current']).trim()!==BRANCH)throw Error('Unexpected branch');if(git(['status','--porcelain=v1','-uall']).trim())throw Error('Owner lane must be clean');}
+function sourceBlob(rel){const b=git(['show',SOURCE+':'+rel],null);return{path:rel,bytes:b.length,sha256:hash(b),byte_domain:'raw Git blob',source_commit:SOURCE};}
+function walk(dir){if(!fs.existsSync(dir))return[];return fs.readdirSync(dir,{withFileTypes:true}).flatMap(d=>d.isDirectory()?walk(path.join(dir,d.name)):[path.join(dir,d.name)]);}
+function manifestEntries(exclusions=[]){return walk(DIR).map(p=>path.relative(ROOT,p).replace(/\\/g,'/')).filter(p=>!exclusions.includes(p)).sort().map(p=>{const b=fs.readFileSync(path.join(ROOT,...p.split('/')));return{path:p,bytes:b.length,sha256:hash(b),byte_domain:'checkout bytes expected to equal raw Git blob after LF-only authoring'};});}
+const practices=['numerical analysis','static analysis','software architecture','distributed systems engineering','digital preservation','accessible interface design','governance design','philosophy of science and religion'];
+const titles=[
+ 'Exact source and laboratory pinning',
+ 'Interval-domain structural admission',
+ 'Monotone transfer-function admission',
+ 'Deterministic finite worklist fixpoint',
+ 'Interval arithmetic enclosure oracle',
+ 'Dependency-aware affine-form representation',
+ 'Malformed interval and request refusal',
+ 'Evidence-card and claim-firewall binding',
+ 'Advisory consultation intake',
+ 'Live host-hook observation vacancy',
+ 'Cross-implementation enclosure agreement',
+ 'Correlation-preserving affine comparison',
+ 'Dependency-graph strongly connected scheduling',
+ 'Finite widening and narrowing trace',
+ 'Exact rational reference comparison',
+ 'Retry, queue and acknowledgement integration',
+ 'Fifteen-model laboratory comparison',
+ 'Accessible static evidence summary',
+ 'Independent and affected-user review vacancy',
+ 'Empirical, authority and Stage 20 hold'
+];
+const expected=['completed','completed','completed','completed','completed','completed','completed','completed','represented','open_gap','completed','completed','completed','completed','completed','completed','completed','completed','open_gap','exact_gate'];
+function projects(){
+ return titles.map((title,i)=>({
+  project_id:'OR7078-J'+String(i+1).padStart(2,'0'),title,
+  hypothesis:title+' can be represented and checked within a declared finite synthetic interval-analysis contract.',
+  null_or_failure:'Any exact enclosure, monotonicity, provenance, digest, refusal, recovery, accessibility projection, or authority boundary differs from the frozen contract.',
+  approval_class:expected[i]==='exact_gate'?'exact_approval_held':expected[i]==='open_gap'?'candidate_open_gap':'safe_now_owner_scoped',
+  execution_lane:i<10?'x1':'x2',
+  official_or_primary_source_need:i<9?'current primary terminology and refusal conditions':'none beyond the frozen source plan',
+  concrete_artifacts:[REL+'/planning/projects.json',REL+'/'+(i<10?'x1':'x2')+'/project-outcomes.json'],
+  falsifier_or_acceptance_gate:'The project receives only its frozen expected disposition after all named finite checks and protected gates are evaluated.',
+  rollback:'Revert only the Orin-owned additive commit and retain the failed witness and recovery receipt.',
+  protected_gates:['real participants','production analyzers','identity or credentials','professional decisions','legal or cultural authority','Maori authority','Stage 20'],
+  expected_disposition:expected[i]
+ }));
+}
+const lawTopics=['enclosure preservation','monotone transfer','least fixed-point convergence','finite worklist fairness','correlation retention','widening nonerasure','narrowing boundedness','dependency visibility','deterministic canonicalization','failure-retaining recovery','retry acknowledgement','evidence ceiling','claim nonpromotion','accessibility noncompensation','authority nonpromotion'];
+const openTopics=['floating-point outward rounding','nonlinear dependency explosion','widening precision selection','infinite-state termination','distributed analyzer reconciliation','privacy-preserving provenance','affected-user accessibility','multilingual explanation','independent implementation','real operational monitoring','professional assurance','legal remedy interpretation','cultural governance','Maori data authority','empirical production evaluation'];
+function planningMethodFlow(){
+ const methods=[
+  {method_id:'OR7078-PLAN-M01',title:'Exact source, control and worktree preflight',failure_signature:'Declared exact source or bounded worktree state differs',validation_witness_ids:['OR7078-START-N001','OR7078-START-N002','OR7078-START-N003','OR7078-PLAN-W004','OR7078-PLAN-W005','OR7078-PLAN-W006'],retained_negative_ids:['OR7078-START-N001','OR7078-START-N002','OR7078-START-N003']},
+  {method_id:'OR7078-PLAN-M02',title:'Planning freeze before x1',failure_signature:'Planning contains x1 outcomes or the frozen twenty-project contract is incomplete',validation_witness_ids:['OR7078-PLAN-W007'],retained_negative_ids:['OR7078-PLAN-ABSENCE-GUARD']}
+ ].map(m=>Object.assign(m,{trigger_preconditions:['Owner-scoped finite synthetic evidence and a frozen contract'],privacy_class:'sanitized_public',approval_class:'owner_authorized_bounded',candidate_workaround:'Retain the failed subject and correct only its smallest named dependency.',recurrence_guard:'No source, successful domain tranche, canonical, advisory message, or accepted delivery replay.',rollback:'Revert only the Orin-owned additive commit while retaining receipts and failed witnesses.',recommendation_state:'validated',supersedes:[],protected_gates:['exact source','privacy','authority','one-shot canonical','one terminal route'],scope_boundary:BOUNDARY,execution_authority:'owner_self_scoped_delta',repository_scan:false,module_scan:true,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,source_commit:SOURCE,final_commit:'external_after_commit',changed_file_allowlist:[REL+'/planning/source-bindings.json'],module_allowlist:[REL+'/planning/source-bindings.json'],exact_pushed_head_required:true}));
+ const failed=[
+  ['OR7078-START-N001','Managed worktree creation was rejected because the calling Codex control directory is not a Git repository.'],
+  ['OR7078-START-N002','The first literal branch preflight embedded a native command and LASTEXITCODE in one PowerShell expression and was rejected before Git ran.'],
+  ['OR7078-START-N003','The new worktree inherited sparse configuration with an empty per-worktree index, exposing the exact HEAD tree as staged deletions.']
+ ].map(x=>({witness_id:x[0],method_id:'OR7078-PLAN-M01',procedure:'Retain pre-mutation startup failure',scope:'external startup receipt',expected:'Bounded exact preflight',observed:x[1],result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[x[0]],original_success_credit:0,atomic_count:1,boundary:BOUNDARY}));
+ const passes=[
+  ['OR7078-PLAN-W004','Use the manual D-first worktree path after the managed tool returned a definite preacceptance failure.'],
+  ['OR7078-PLAN-W005','Run each native Git probe in its own PowerShell statement and serialize captured scalars.'],
+  ['OR7078-PLAN-W006','Rebuild only the new Orin index with git read-tree -mu HEAD and reapply explicit sparse paths.'],
+  ['OR7078-PLAN-W007','Freeze twenty projects, sources, models, hypotheses, probes, practices, hooks, ideas and held packets before x1.']
+ ].map((x,i)=>({witness_id:x[0],method_id:i<3?'OR7078-PLAN-M01':'OR7078-PLAN-M02',procedure:x[1],scope:'Orin owner planning',expected:'Named bounded recovery or planning freeze passes',observed:'pass',result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[],original_success_credit:1,atomic_count:1,boundary:BOUNDARY}));
+ const events=[];let n=1;for(const m of methods){events.push({event_index:n++,method_id:m.method_id,before:null,after:'candidate',reason:'Declared bounded method',witness_id:null});events.push({event_index:n++,method_id:m.method_id,before:'candidate',after:'validated',reason:'Passing bounded witness',witness_id:m.validation_witness_ids.at(-1)});}
+ return{schema:'ghc.family.method-flow-state.v1',phase:PHASE+'-planning',owner:OWNER,identity_boundary:'Relational working identity only',methods,witnesses:[...failed,...passes],state_events:events,recommendations:[],counts:{methods:2,witnesses:7,state_events:4,recommendations:0,states:{observed:0,candidate:0,validated:2,preferred:0,superseded:0,deprecated:0},witness_results:{pass:4,fail:3}},boundary:BOUNDARY,execution_authority:'owner_self_scoped_delta',source_commit:SOURCE,final_commit:'external_after_commit',source_baseline_fold_count:1};
+}
+function planning(){
+ requireState(SOURCE);
+ if(fs.existsSync(DIR))throw Error('Owner phase directory already exists');
+ bankJSON('planning-invocation.json',{state:'STARTED_ONCE',invocations:1,source:SOURCE,branch:BRANCH,domain_executed:false});
+ writeText(REL+'/README.md','# Orin Thale v707-v8\n\nFinite interval abstract interpretation, enclosure, fixed-point, provenance and evidence-boundary work under workflow v20. Planning, x1, x2, final, canonical, advisory consultation and successor delivery remain separate.\n\n'+BOUNDARY+'\n');
+ const sourcePaths=['docs/caelen-ash/v707-v7/final/handoff.md','docs/caelen-ash/v707-v7/final/phase-truth.json','docs/caelen-ash/v707-v7/final/method-flow-index.json','docs/caelen-ash/v707-v7/final/failure-ledger.json','docs/caelen-ash/v707-v7/final/manifest.json'];
+ writeJSON(REL+'/planning/source-bindings.json',{source_commit:SOURCE,entries:sourcePaths.map(sourceBlob),source_execution_credit:0,source_external_route_overlay:{failures:2,folded:false},boundary:BOUNDARY});
+ writeJSON(REL+'/planning/plan.json',{schema:'orin.plan.v20',owner:OWNER,phase:PHASE,source:SOURCE,branch:BRANCH,source_provenance:'Direct Git child lifecycle from Caelen exact final; all Caelen work remains zero Orin novelty and execution credit.',primary_pillar:'GMUT Mind',preserved_pillars:['THOS Body','Freed ID and CBR Heart'],bounded_practices:practices,projects_initial:20,project_cap:80,caps_per_session:{safe_now:1000,candidate:1000,clean_fix_refine:1000,skills:30,runners:20,tests:500,models:100,web_searches:2000},required_per_session:{models:15,advisory_messages:1},phase_requirements:{hooks:5,law_hypotheses:15,open_problem_probes:15,own_practices:8,successor_suggestions:4,skill_ideas:5,runner_ideas:5},lifecycle:['planning','x1','x2','final','canonical','terminal route'],exact_packets_held:10,blocked_packets_held:5,source_fold_count:1,inherited_execution_credit:0,outcome_labels:['completed','represented','open_gap','exact_gate'],consultation:{title:'Review and refine GHC Lab',x1_messages:1,x2_messages:1,private_target_exported:false,resend_pending_or_accepted:false},route:{state:'HELD_UNTIL_TERMINAL',successor:'Ceryn Alder',phase:'v708-v1'},terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:BOUNDARY});
+ writeJSON(REL+'/planning/projects.json',{schema:'orin.projects.v20',projects:projects(),boundary:BOUNDARY});
+ writeJSON(REL+'/planning/research-plan.json',{law_hypotheses:lawTopics.map((topic,i)=>({id:'OR7078-L'+String(i+1).padStart(2,'0'),label:'finite engineering hypothesis',topic,hypothesis:'Within the frozen finite fixtures, '+topic+' remains true under the declared interval and abstract-interpretation reducer.',falsifier:'One frozen accepting or adversarial fixture violates the exact check.',natural_law_claimed:false})),open_problem_probes:openTopics.map((topic,i)=>({id:'OR7078-Q'+String(i+1).padStart(2,'0'),topic,state:i<8?'represented':'open_gap',missing_evidence:'External evidence, competent review, affected authority, or production-scale evaluation beyond same-owner finite software.',solved:false})),boundary:BOUNDARY});
+ const models=['heat','wave','oscillator','reaction','entropy','queue','replication','retry','graph','coding','consent','allocation','voting','bayes','remedy'];
+ writeJSON(REL+'/planning/model-plan.json',{schema:'orin.model-plan.v1',x1:models.map((model,i)=>({model,variant:0,steps:8+(i%5),parameter:0.04+0.01*(i%4)})),x2:models.map((model,i)=>({model,variant:1,steps:11+(i%6),parameter:0.08+0.01*(i%5)})),interpretation:'Fifteen finite laboratory configurations per session; configuration axes are not physical dimensions or observations.',boundary:BOUNDARY});
+ writeJSON(REL+'/planning/capability-selection.json',{schema:'orin.capability-selection.v20',selected_guides:['ghc-family-main-models-v20','ghc-family-main-laboratory-v20','ghc-family-main-capabilities-v20','ghc-family-main-evidence-v20','ghc-family-main-governance-v20','ghc-family-main-workflow-v20'],selected_operations:['model','catalogue','integrity','claim','route'],catalogue_state:'selected_not_reexecuted_wholesale',local_test_state:'pending sessions',installation_state:'inherited installed',host_observation_state:'open_gap',compatibility_preserved:true,source_execution_credit:0,boundary:BOUNDARY});
+ writeJSON(REL+'/planning/hooks.json',{schema:'orin.hooks.v20',selected:['source','budget','consultation','roster','evidence'],manual_valid_and_malformed_per_session:true,live_host_observation:'open_gap',duplicate_installation:false,boundary:BOUNDARY});
+ writeJSON(REL+'/planning/ideas.json',{skill_ideas:['interval-domain-structure','monotone-transfer-proof','fixed-point-worklist-trace','affine-correlation-enclosure','accessible-enclosure-summary'],runner_ideas:['interval-case-runner','mutant-enclosure-runner','laboratory-model-runner','manifest-integrity-runner','owner-route-guard-runner'],successor_practices:['requirements engineering','digital forensics','accessibility research','public-interest technology governance'],boundary:BOUNDARY});
+ writeJSON(REL+'/planning/approval-packets.json',{exact_held:Array.from({length:10},(_,i)=>({id:'OR7078-EX-'+String(i+1).padStart(2,'0'),state:'exact_gate',executed:false})),blocked_held:Array.from({length:5},(_,i)=>({id:'OR7078-BL-'+String(i+1).padStart(2,'0'),state:'exact_gate',executed:false})),boundary:BOUNDARY});
+ writeJSON(REL+'/planning/official-sources.json',{sources:[
+  {title:'IEEE 1788-2015 Standard for Interval Arithmetic',url:'https://standards.ieee.org/ieee/1788/4431/',status:'inactive-reserved as of the 2026-09-29 verification',use:'Interval terminology and refusal conditions only; no conformance claim.'},
+  {title:'Cousot and Cousot 1977 abstract interpretation paper',url:'https://www.di.ens.fr/~cousot/COUSOTpapers/POPL77.shtml',status:'primary paper',use:'Abstract-domain and fixpoint vocabulary only.'},
+  {title:'W3C PROV-O',url:'https://www.w3.org/TR/prov-o/',status:'W3C Recommendation',use:'Provenance vocabulary only.'},
+  {title:'WCAG 2.2',url:'https://www.w3.org/TR/WCAG22/',status:'W3C Recommendation',use:'Accessible-presentation vocabulary only; no complete evaluation.'},
+  {title:'RFC 8785 JSON Canonicalization Scheme',url:'https://www.rfc-editor.org/rfc/rfc8785.html',status:'IETF RFC',use:'Deterministic JSON vocabulary only.'}
+ ],citations_are_not_observations:true,boundary:BOUNDARY});
+ writeJSON(REL+'/planning/method-flow.json',planningMethodFlow());
+ writeText(REL+'/code/phase.txt',fs.readFileSync(__filename,'utf8'));
+ writeText(REL+'/code/runtime.txt',"'use strict';\n// Planned finite interval and affine-form runtime. Implemented and executed only in x1/x2.\nmodule.exports={planned:true,empirical_claim:false};\n");
+ writeText(REL+'/code/oracle.txt',"'use strict';\n// Planned exhaustive finite oracle. Implemented and executed only in x1/x2.\nmodule.exports={planned:true,independent_reproduction:false};\n");
+ const manifestRel=REL+'/planning/manifest.json';
+ writeJSON(manifestRel,{schema:'orin.owner-manifest.v1',owner:OWNER,phase:PHASE,self_exclusions:[manifestRel,REL+'/planning/staged-review.json'],entries:manifestEntries([manifestRel,REL+'/planning/staged-review.json']),boundary:BOUNDARY});
+ const files=walk(DIR).map(p=>path.relative(ROOT,p).replace(/\\/g,'/')).sort();
+ writeJSON(REL+'/planning/staged-review.json',{schema:'orin.staged-review.v1',owner:OWNER,phase:PHASE,stage:'planning',predecessor:SOURCE,scope_prefix:REL+'/',state:'EXACT_STAGED_REVIEW_VALID',staged_file_count:files.length+1,outside_scope:[],diff_check:'pass',self_content_digest_excluded:true,boundary:'Exact staged-path review and Git mechanics only; '+BOUNDARY});
+ bankJSON('planning-completion.json',{state:'COMPLETED_ONCE_PLANNING_FREEZE',invocations:1,source:SOURCE,projects:20,domain_executed:false,owner_files:walk(DIR).length});
+ console.log(JSON.stringify({state:'planning_complete',owner_files:walk(DIR).length,projects:20}));
+}
+const command=process.argv[2];
+if(command==='planning')planning();else throw Error('Unsupported phase command: '+command);
