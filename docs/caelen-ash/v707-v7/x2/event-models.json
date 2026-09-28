@@ -1,0 +1,1184 @@
+{
+  "schema": "caelen.event-models.v1",
+  "stage": "x2",
+  "count": 15,
+  "models": [
+    {
+      "model_id": "CA7077-X2-E01",
+      "events": [
+        {
+          "id": "x2-appeal-01",
+          "kind": "appeal",
+          "entity": "synthetic-record-01",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "d2a5639c4d3b19b300670777b2b8453af9163c741875ec751276cde9a5fc568f"
+        },
+        {
+          "id": "x2-publish-01",
+          "kind": "publish",
+          "entity": "synthetic-record-01",
+          "recorded_at": 5,
+          "valid_from": 5,
+          "parent": null,
+          "consent_expires": 21,
+          "payload_hash": "89b27463a85be065e8aa9e936e74511d3fa40bce01a3fb4598e0f0b83aa609d9"
+        },
+        {
+          "id": "x2-retain-01",
+          "kind": "retain",
+          "entity": "synthetic-record-01",
+          "recorded_at": 4,
+          "valid_from": 4,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "109fa9f54c849bb7c2e983911b0d3d75bd7e947c157dee7c012ea29648058191"
+        },
+        {
+          "id": "x2-revoke-01",
+          "kind": "revoke",
+          "entity": "synthetic-record-01",
+          "recorded_at": 3,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "4fea288a1b4c5a8baf510d87d301d9f136a2e36143710e85c7a25e6b9beeded0"
+        },
+        {
+          "id": "x2-correct-01",
+          "kind": "correct",
+          "entity": "synthetic-record-01",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-01",
+          "consent_expires": 11,
+          "payload_hash": "17f2118593a2f7d740c7b42217e3d6c2e5c33a527f7b6a53c2e616e6340e083c"
+        },
+        {
+          "id": "x2-create-01",
+          "kind": "create",
+          "entity": "synthetic-record-01",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "8bec2ea707c6ae8e2bb9bd84e31a7f4e5a68f79f525084a4d9f548975e11b23a"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 6,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-01",
+            "to": "x2-correct-01"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-01"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-01",
+            "entity": "synthetic-record-01",
+            "decision_time": 5,
+            "allowed": false,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": false,
+            "current_record": "x2-correct-01"
+          }
+        ],
+        "allowed_publications": 0,
+        "denied_publications": 1,
+        "state_digest": "c4abe4ec2482d39a3230c6f5b1f7a03ce7f6148dfd78396c7c3561f259d73138"
+      },
+      "expected_digest": "9d70f54e05d951561299773201c9501cf9e711fb845f4c5d35b946f3bdf99cce",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E02",
+      "events": [
+        {
+          "id": "x2-appeal-02",
+          "kind": "appeal",
+          "entity": "synthetic-record-02",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "231ba16f9f3a499f16e885995a23b70af36feb31760659a50aa5975c518f34be"
+        },
+        {
+          "id": "x2-publish-02",
+          "kind": "publish",
+          "entity": "synthetic-record-02",
+          "recorded_at": 5,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 22,
+          "payload_hash": "7cfea46278008977a0b2d2bbf445d5973b0d779cacad033fd9b9dcb67342c0b7"
+        },
+        {
+          "id": "x2-create-02",
+          "kind": "create",
+          "entity": "synthetic-record-02",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "ef59b386485bfd34b750480e4a35ca433582b74a3bbb8526ca053221a6ff0866"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 3,
+        "entity_count": 1,
+        "lineage_edges": [],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-02"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-02",
+            "entity": "synthetic-record-02",
+            "decision_time": 6,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-create-02"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "c757d47c29782c4b6582473d0af2c91831f83ad4e79df3af6daabb425f8e74bf"
+      },
+      "expected_digest": "cf2f6b5c6aee7427c178766bd307bb460db09506a2abbb4d2289c0838110c31e",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E03",
+      "events": [
+        {
+          "id": "x2-appeal-03",
+          "kind": "appeal",
+          "entity": "synthetic-record-03",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "ba72f89a9c765ee4433e78e97979aba5c25a9ab23e68328387e1d4918714c6b9"
+        },
+        {
+          "id": "x2-publish-03",
+          "kind": "publish",
+          "entity": "synthetic-record-03",
+          "recorded_at": 5,
+          "valid_from": 7,
+          "parent": null,
+          "consent_expires": 23,
+          "payload_hash": "c965d82cc0d5f8b96393b5168cc5b9c389b952cad004b3d43104a9aa8037ff0b"
+        },
+        {
+          "id": "x2-correct-03",
+          "kind": "correct",
+          "entity": "synthetic-record-03",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-03",
+          "consent_expires": 13,
+          "payload_hash": "6bf92f6113132d47040ffd6db8eb47a446ccb712b379ba1bc79f9a16dd1bf177"
+        },
+        {
+          "id": "x2-create-03",
+          "kind": "create",
+          "entity": "synthetic-record-03",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "49869bfb06e90fe457c3d460e1df3f1f732709f9a7bd3edc65a01b7f713b30fd"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 4,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-03",
+            "to": "x2-correct-03"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-03"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-03",
+            "entity": "synthetic-record-03",
+            "decision_time": 7,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-correct-03"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "f41a8d96b0240e29da1c81f52de0d9c1a9b29bb2f67352cc472edb22479d667f"
+      },
+      "expected_digest": "d3f290652e787506ba9610b6cfb6ae0007c1b18da2f2fed9d2f5dfc4f2a6e03a",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E04",
+      "events": [
+        {
+          "id": "x2-appeal-04",
+          "kind": "appeal",
+          "entity": "synthetic-record-04",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 14,
+          "payload_hash": "6178474cd85911109b1d5aaaaf7143817b8f3d044166f7cc33cf5050f69cd28d"
+        },
+        {
+          "id": "x2-publish-04",
+          "kind": "publish",
+          "entity": "synthetic-record-04",
+          "recorded_at": 5,
+          "valid_from": 8,
+          "parent": null,
+          "consent_expires": 24,
+          "payload_hash": "ed58f47e3077c769aeca3facfaa96cba12c9b40bdd1643133373b13373ff61f5"
+        },
+        {
+          "id": "x2-revoke-04",
+          "kind": "revoke",
+          "entity": "synthetic-record-04",
+          "recorded_at": 3,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 14,
+          "payload_hash": "9f2d169f5f197599b37f48887be85e40d88f8e0039712ac6b157a639da49173c"
+        },
+        {
+          "id": "x2-create-04",
+          "kind": "create",
+          "entity": "synthetic-record-04",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 14,
+          "payload_hash": "d9690134b8a3e9bbc54751ee00cfb26fcf5dc2b31bd5211cd63053b3d73e22ae"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 4,
+        "entity_count": 1,
+        "lineage_edges": [],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-04"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-04",
+            "entity": "synthetic-record-04",
+            "decision_time": 8,
+            "allowed": false,
+            "consent_valid": true,
+            "not_revoked": false,
+            "retained": true,
+            "current_record": "x2-create-04"
+          }
+        ],
+        "allowed_publications": 0,
+        "denied_publications": 1,
+        "state_digest": "747480cce7a454da49bf4040644c602d4dbd958ed536ed9946fbd51fcc7a6802"
+      },
+      "expected_digest": "3f56a590f1233e4f4e0abd3124025fb1420016ee86f4b3c597bb436a1c6f39be",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E05",
+      "events": [
+        {
+          "id": "x2-appeal-05",
+          "kind": "appeal",
+          "entity": "synthetic-record-05",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "67dd6c22db412c3792c0f153acc545a65dd4b7233dc2be4fb29e75570e56f27b"
+        },
+        {
+          "id": "x2-publish-05",
+          "kind": "publish",
+          "entity": "synthetic-record-05",
+          "recorded_at": 5,
+          "valid_from": 9,
+          "parent": null,
+          "consent_expires": 21,
+          "payload_hash": "daf1b4ee31fabcbf6631400e2114f53a734d42ec83bc5d0a94931eab0b85fd47"
+        },
+        {
+          "id": "x2-correct-05",
+          "kind": "correct",
+          "entity": "synthetic-record-05",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-05",
+          "consent_expires": 11,
+          "payload_hash": "75e211a2bf78de46d90e3f456588271c3507bcffa2ad62433ef0a269347cacb7"
+        },
+        {
+          "id": "x2-create-05",
+          "kind": "create",
+          "entity": "synthetic-record-05",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "def49204225c4b3e2075e760be86748ba514eb36e8f0106cb51de79f59310e8c"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 4,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-05",
+            "to": "x2-correct-05"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-05"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-05",
+            "entity": "synthetic-record-05",
+            "decision_time": 9,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-correct-05"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "914728513239ce24b35427e6458e86e5a51da65786c7270b04bab49060f831dc"
+      },
+      "expected_digest": "0e0d3102607f3255a913c8e70f0e9eea87c964a3fa5c8ee08c10b5e689d8be02",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E06",
+      "events": [
+        {
+          "id": "x2-appeal-06",
+          "kind": "appeal",
+          "entity": "synthetic-record-06",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "c135d5d587ae38df4a7c255e29f0d0fbaa556e1d649d882a5a4473d59c0d399a"
+        },
+        {
+          "id": "x2-publish-06",
+          "kind": "publish",
+          "entity": "synthetic-record-06",
+          "recorded_at": 5,
+          "valid_from": 10,
+          "parent": null,
+          "consent_expires": 22,
+          "payload_hash": "d23d534b80a12a29d87a3e09d05b274373616776304015cd6f74a65aaf4bd904"
+        },
+        {
+          "id": "x2-retain-06",
+          "kind": "retain",
+          "entity": "synthetic-record-06",
+          "recorded_at": 4,
+          "valid_from": 4,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "109fa9f54c849bb7c2e983911b0d3d75bd7e947c157dee7c012ea29648058191"
+        },
+        {
+          "id": "x2-create-06",
+          "kind": "create",
+          "entity": "synthetic-record-06",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "0bce4c3fbbb2fd353ada3e53152626f3e858e2d2766bb75bd61898a58fcd5443"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 4,
+        "entity_count": 1,
+        "lineage_edges": [],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-06"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-06",
+            "entity": "synthetic-record-06",
+            "decision_time": 10,
+            "allowed": false,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": false,
+            "current_record": "x2-create-06"
+          }
+        ],
+        "allowed_publications": 0,
+        "denied_publications": 1,
+        "state_digest": "6b60272c443d67abdd506bb964ac38bd8f42a16fb578770c9d5d49448866d9d3"
+      },
+      "expected_digest": "cc88c8ec9eda9c964df8a3a08dae4bb3fa026ff2b75e9004eb228ff4a6c44658",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E07",
+      "events": [
+        {
+          "id": "x2-appeal-07",
+          "kind": "appeal",
+          "entity": "synthetic-record-07",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "9e2d8725d8bcdf284b871b4ef2a7be14f1353679d382b132ce57fb56fed21b4f"
+        },
+        {
+          "id": "x2-publish-07",
+          "kind": "publish",
+          "entity": "synthetic-record-07",
+          "recorded_at": 5,
+          "valid_from": 11,
+          "parent": null,
+          "consent_expires": 23,
+          "payload_hash": "272e28c23ce6c498af170a6735773d6943f83261b48e11c4b71581410bd27aa0"
+        },
+        {
+          "id": "x2-revoke-07",
+          "kind": "revoke",
+          "entity": "synthetic-record-07",
+          "recorded_at": 3,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "b140837da36436b5fa2be45c8ca5f0a512aba2e145c05523117cbbf22847b982"
+        },
+        {
+          "id": "x2-correct-07",
+          "kind": "correct",
+          "entity": "synthetic-record-07",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-07",
+          "consent_expires": 13,
+          "payload_hash": "1f36e38433d4d51f77caaaa97bcac5088c4fe6f922ba0677c3b9a93a6a92b13b"
+        },
+        {
+          "id": "x2-create-07",
+          "kind": "create",
+          "entity": "synthetic-record-07",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "07524b6ed7c6db80d0871cc8b91619c88aa021f5812ab9fe6738b9e56bc65313"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 5,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-07",
+            "to": "x2-correct-07"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-07"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-07",
+            "entity": "synthetic-record-07",
+            "decision_time": 11,
+            "allowed": false,
+            "consent_valid": true,
+            "not_revoked": false,
+            "retained": true,
+            "current_record": "x2-correct-07"
+          }
+        ],
+        "allowed_publications": 0,
+        "denied_publications": 1,
+        "state_digest": "6556fefe6dba90f7ec9b4b8baa94e3cb13531d295aa56b0f23a93929e854a442"
+      },
+      "expected_digest": "3f944effa672649efdad918b67339c00c73ff655920b48c7b5de1227977106db",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E08",
+      "events": [
+        {
+          "id": "x2-appeal-08",
+          "kind": "appeal",
+          "entity": "synthetic-record-08",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 14,
+          "payload_hash": "0cb79c6891f9f802ecd08b90554ab6b1da682bcdf774faf0f2794a103e08249b"
+        },
+        {
+          "id": "x2-publish-08",
+          "kind": "publish",
+          "entity": "synthetic-record-08",
+          "recorded_at": 5,
+          "valid_from": 5,
+          "parent": null,
+          "consent_expires": 24,
+          "payload_hash": "f502b3d5e7be6e00f964a8bc9e6c1ee395882c6fb6b30e4eb61ff1b1846809f8"
+        },
+        {
+          "id": "x2-create-08",
+          "kind": "create",
+          "entity": "synthetic-record-08",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 14,
+          "payload_hash": "ce1f2b7082ad87e8a17137cf10fc8db2f9da26d6acaf28c9b34898d59e6f29ed"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 3,
+        "entity_count": 1,
+        "lineage_edges": [],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-08"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-08",
+            "entity": "synthetic-record-08",
+            "decision_time": 5,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-create-08"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "7ae84eb71cd9900a0e9a600e5036796d43706752ebc6123e11bf15435ed4b084"
+      },
+      "expected_digest": "7e6ce70d43009ea896f480a3aeb03d85937fb680e3f37769a30e61f22997c71f",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E09",
+      "events": [
+        {
+          "id": "x2-appeal-09",
+          "kind": "appeal",
+          "entity": "synthetic-record-09",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "96c9737cd551a8af62854c7c60a7a523c2a72eeff60436fcc80fd86f6f23bfc2"
+        },
+        {
+          "id": "x2-publish-09",
+          "kind": "publish",
+          "entity": "synthetic-record-09",
+          "recorded_at": 5,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 21,
+          "payload_hash": "2c1627306c4c1b65f7f7c2743645c9ffefa661483df673f3312bcb1511433552"
+        },
+        {
+          "id": "x2-correct-09",
+          "kind": "correct",
+          "entity": "synthetic-record-09",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-09",
+          "consent_expires": 11,
+          "payload_hash": "e91447cbbb2107b171c223a191355ba19384095ad423ff9c197ed45f6c578d74"
+        },
+        {
+          "id": "x2-create-09",
+          "kind": "create",
+          "entity": "synthetic-record-09",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "a17245164e139298aea7cca26cb10db642d7c9849c6ccd18fd44c8227a87e304"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 4,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-09",
+            "to": "x2-correct-09"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-09"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-09",
+            "entity": "synthetic-record-09",
+            "decision_time": 6,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-correct-09"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "93f5751a0d474154cb5bed76adfe1c1aebc0e30be7558ee628187240e201b3e3"
+      },
+      "expected_digest": "52422a9bc96e4acf0daae1e02fc1231ce2655314c2bcb8100628938289d49a02",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E10",
+      "events": [
+        {
+          "id": "x2-appeal-10",
+          "kind": "appeal",
+          "entity": "synthetic-record-10",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "4adc906c78a1a03e374ad776578c1293bf07509dccdf567807acfd5208359a91"
+        },
+        {
+          "id": "x2-publish-10",
+          "kind": "publish",
+          "entity": "synthetic-record-10",
+          "recorded_at": 5,
+          "valid_from": 7,
+          "parent": null,
+          "consent_expires": 22,
+          "payload_hash": "967377ed5b67497064e8d8d35ee0b5ac20479d43809cebcd476ed6008a74d128"
+        },
+        {
+          "id": "x2-revoke-10",
+          "kind": "revoke",
+          "entity": "synthetic-record-10",
+          "recorded_at": 3,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "7fc6ed568ab39245e317271cf3c62a8d8156d252c7deedf4c71320d7942dc147"
+        },
+        {
+          "id": "x2-create-10",
+          "kind": "create",
+          "entity": "synthetic-record-10",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "27a07173f3255f0a056cab1c371eb18f5a76f2ddc0a2ada9fd04da09da985e81"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 4,
+        "entity_count": 1,
+        "lineage_edges": [],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-10"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-10",
+            "entity": "synthetic-record-10",
+            "decision_time": 7,
+            "allowed": false,
+            "consent_valid": true,
+            "not_revoked": false,
+            "retained": true,
+            "current_record": "x2-create-10"
+          }
+        ],
+        "allowed_publications": 0,
+        "denied_publications": 1,
+        "state_digest": "b2adee6b15d72a65c31d9dd8a847aed6188a360e84cd89bc030865dd94438ea6"
+      },
+      "expected_digest": "f0c52fa4a53ab52b50bf469fe94821474ecf2316df82bc7eb067f9a8f5c546cf",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E11",
+      "events": [
+        {
+          "id": "x2-appeal-11",
+          "kind": "appeal",
+          "entity": "synthetic-record-11",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "f037199b31f292faecd86a08221617b2049a6ce762866d0fb98c22c7d01d2610"
+        },
+        {
+          "id": "x2-publish-11",
+          "kind": "publish",
+          "entity": "synthetic-record-11",
+          "recorded_at": 5,
+          "valid_from": 8,
+          "parent": null,
+          "consent_expires": 23,
+          "payload_hash": "f75c563251e6f069db543761cd64328667a10c36d44e8602173283500ebad80f"
+        },
+        {
+          "id": "x2-retain-11",
+          "kind": "retain",
+          "entity": "synthetic-record-11",
+          "recorded_at": 4,
+          "valid_from": 4,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "109fa9f54c849bb7c2e983911b0d3d75bd7e947c157dee7c012ea29648058191"
+        },
+        {
+          "id": "x2-correct-11",
+          "kind": "correct",
+          "entity": "synthetic-record-11",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-11",
+          "consent_expires": 13,
+          "payload_hash": "9852968a3d9c7cd0a388382a62abfd082fd90e4eba6045d9d018b391cd15fd7a"
+        },
+        {
+          "id": "x2-create-11",
+          "kind": "create",
+          "entity": "synthetic-record-11",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "6c9d1b0826ccd3d12823b4893b96c9899abc89d5f32792098ec0243bea9375b5"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 5,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-11",
+            "to": "x2-correct-11"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-11"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-11",
+            "entity": "synthetic-record-11",
+            "decision_time": 8,
+            "allowed": false,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": false,
+            "current_record": "x2-correct-11"
+          }
+        ],
+        "allowed_publications": 0,
+        "denied_publications": 1,
+        "state_digest": "b921c60692c5e4b1adabfc92795576112f01b7d2d7740b46d409dc463a58a416"
+      },
+      "expected_digest": "35cd0979a4155f9926fa0c4f5bc34ee8c9e9075f4b7357f020a7525e40d486fe",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E12",
+      "events": [
+        {
+          "id": "x2-appeal-12",
+          "kind": "appeal",
+          "entity": "synthetic-record-12",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 14,
+          "payload_hash": "8f8fc9ce82ba4ac741f0eacafb0b787b63e7d205458f006e7950695eade6ff63"
+        },
+        {
+          "id": "x2-publish-12",
+          "kind": "publish",
+          "entity": "synthetic-record-12",
+          "recorded_at": 5,
+          "valid_from": 9,
+          "parent": null,
+          "consent_expires": 24,
+          "payload_hash": "3ad1dfd6b22290b5b7303ac94c5ceb02eba1637a7a74044a315816e93b0cf88f"
+        },
+        {
+          "id": "x2-create-12",
+          "kind": "create",
+          "entity": "synthetic-record-12",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 14,
+          "payload_hash": "457adf303d416963431606354d5cf5f145253b1c6c85f709c78f1326aa3fe2c4"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 3,
+        "entity_count": 1,
+        "lineage_edges": [],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-12"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-12",
+            "entity": "synthetic-record-12",
+            "decision_time": 9,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-create-12"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "e921aa228462f1b24b8218666d09a83b7d9d996758356fc8ad54a3deacff3cbf"
+      },
+      "expected_digest": "e0eb6fc569325a665932341c1d185679ee29d04ad6e9f605e08aa044cb566a18",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E13",
+      "events": [
+        {
+          "id": "x2-appeal-13",
+          "kind": "appeal",
+          "entity": "synthetic-record-13",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "64a64c5a3cfdeb51ae8d65104041b5f9cac0284b9b1c4f2987e633126a2b7bb7"
+        },
+        {
+          "id": "x2-publish-13",
+          "kind": "publish",
+          "entity": "synthetic-record-13",
+          "recorded_at": 5,
+          "valid_from": 10,
+          "parent": null,
+          "consent_expires": 21,
+          "payload_hash": "02c418d0718f8ef78b777fa6d6fccfa32cbf2bb514a54a36b728e7c0735f255f"
+        },
+        {
+          "id": "x2-revoke-13",
+          "kind": "revoke",
+          "entity": "synthetic-record-13",
+          "recorded_at": 3,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "88440361940fed19b7ed718a170689d99c4e29cbfa97f4eec5ba086f5765d019"
+        },
+        {
+          "id": "x2-correct-13",
+          "kind": "correct",
+          "entity": "synthetic-record-13",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-13",
+          "consent_expires": 11,
+          "payload_hash": "373b436096ce73bfcf7a1768e408880cdd595845b23915555bd7f6748cd19694"
+        },
+        {
+          "id": "x2-create-13",
+          "kind": "create",
+          "entity": "synthetic-record-13",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 11,
+          "payload_hash": "037688737432891a40f02d3b8ff060d5954522cd23a15187be84250a9dc0f411"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 5,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-13",
+            "to": "x2-correct-13"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-13"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-13",
+            "entity": "synthetic-record-13",
+            "decision_time": 10,
+            "allowed": false,
+            "consent_valid": true,
+            "not_revoked": false,
+            "retained": true,
+            "current_record": "x2-correct-13"
+          }
+        ],
+        "allowed_publications": 0,
+        "denied_publications": 1,
+        "state_digest": "eee9c85604b368bfcb48ba80be25adbac477e59c3d78f582fc93684725c827eb"
+      },
+      "expected_digest": "c8ea4cb62d1030faa6ba48cdc7cda4ca37ac0f47f266bee75b50f62967e937e0",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E14",
+      "events": [
+        {
+          "id": "x2-appeal-14",
+          "kind": "appeal",
+          "entity": "synthetic-record-14",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "9d44c889c741f2564fab8641786a31fad8d1881b3dda93d927a99a8526d01b04"
+        },
+        {
+          "id": "x2-publish-14",
+          "kind": "publish",
+          "entity": "synthetic-record-14",
+          "recorded_at": 5,
+          "valid_from": 11,
+          "parent": null,
+          "consent_expires": 22,
+          "payload_hash": "dabcf106e8f9aa1992a097d9f5a4e594f208da77771cee7286329738fd74d519"
+        },
+        {
+          "id": "x2-create-14",
+          "kind": "create",
+          "entity": "synthetic-record-14",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 12,
+          "payload_hash": "7c51ce0160f45a20bec0879eb6683a2ed8a83336674a6ba35698f9ef5c9a5325"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 3,
+        "entity_count": 1,
+        "lineage_edges": [],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-14"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-14",
+            "entity": "synthetic-record-14",
+            "decision_time": 11,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-create-14"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "ac56cd910dcaa12367973f90a8e37181d900bfd9982ab1be29c590a1bff6c905"
+      },
+      "expected_digest": "5e9d60b8eba36bb26097525e368eb461eedc379890d0f728d64348957dc1f6ba",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    },
+    {
+      "model_id": "CA7077-X2-E15",
+      "events": [
+        {
+          "id": "x2-appeal-15",
+          "kind": "appeal",
+          "entity": "synthetic-record-15",
+          "recorded_at": 6,
+          "valid_from": 6,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "0b58b01bfa268086b7102392b4b570e3d0daa258af1d751f80b443fa5edeab36"
+        },
+        {
+          "id": "x2-publish-15",
+          "kind": "publish",
+          "entity": "synthetic-record-15",
+          "recorded_at": 5,
+          "valid_from": 5,
+          "parent": null,
+          "consent_expires": 23,
+          "payload_hash": "1bc28736c329c75a2b79fbf43e74c96909a5fab5d6524c7001b5a3343f5d484b"
+        },
+        {
+          "id": "x2-correct-15",
+          "kind": "correct",
+          "entity": "synthetic-record-15",
+          "recorded_at": 2,
+          "valid_from": 2,
+          "parent": "x2-create-15",
+          "consent_expires": 13,
+          "payload_hash": "01f286d03f412d300881d17bf5c6c626879f46286437efad0262045c36d147f1"
+        },
+        {
+          "id": "x2-create-15",
+          "kind": "create",
+          "entity": "synthetic-record-15",
+          "recorded_at": 1,
+          "valid_from": 1,
+          "parent": null,
+          "consent_expires": 13,
+          "payload_hash": "2a17f77552c6af4f46e18dbe6825a80c5c553eb7991f7ef97828a88160213186"
+        }
+      ],
+      "actual": {
+        "schema": "caelen.event-ledger-result.v1",
+        "event_count": 4,
+        "entity_count": 1,
+        "lineage_edges": [
+          {
+            "from": "x2-create-15",
+            "to": "x2-correct-15"
+          }
+        ],
+        "acyclic": true,
+        "original_ids": [
+          "x2-create-15"
+        ],
+        "originals_preserved": true,
+        "decisions": [
+          {
+            "event_id": "x2-publish-15",
+            "entity": "synthetic-record-15",
+            "decision_time": 5,
+            "allowed": true,
+            "consent_valid": true,
+            "not_revoked": true,
+            "retained": true,
+            "current_record": "x2-correct-15"
+          }
+        ],
+        "allowed_publications": 1,
+        "denied_publications": 0,
+        "state_digest": "816940d51d05390ee1ea45e5e13051038768cb3fd3bc26e5262870b147284418"
+      },
+      "expected_digest": "0b300242b86458c894553ea331e5b5c196114d9c428885d6738d827033db98c4",
+      "agreement": true,
+      "dependency_reexecution_after_unsaved_partial_result": true,
+      "dependency_reexecution_attempt": 2
+    }
+  ],
+  "isolated_dependency_reexecutions": 2,
+  "boundary": "Finite synthetic same-owner event-ledger, laboratory, software and documentary evidence only. No real participant, identity, credential, consent decision, publication, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains conjectural; THOS and Freed ID remain nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

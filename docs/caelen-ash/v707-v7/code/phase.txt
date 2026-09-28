@@ -497,11 +497,13 @@ function runSession(stage) {
   }
   const mutationTests = [];
   const base = fixtureEvents(stage, 0);
-  const cachedPermissionFixture = fixtureEvents(stage, 13);
+  const cachedPermissionBase = fixtureEvents(stage, 13);
+  const cachedPermissionExpiry = cachedPermissionBase.find(row => row.kind === 'correct')?.consent_expires || cachedPermissionBase.find(row => row.kind === 'create').consent_expires;
+  const cachedPermissionFixture = cachedPermissionBase.map(row => row.kind === 'publish' ? { ...row, valid_from: cachedPermissionExpiry } : row);
   const cachedPermissionGuarded = runtime.reduceLedger(cachedPermissionFixture);
   const mutations = [
     { id: 'duplicate-id', run: () => runtime.reduceLedger([...base, { ...base[0] }]), expected_error: 'duplicate_id' },
-    { id: 'missing-parent', run: () => runtime.reduceLedger(base.map((row, index) => index === 1 && row.kind === 'correct' ? { ...row, parent: 'absent-parent' } : row)), expected_error: 'missing_parent' },
+    { id: 'missing-parent', run: () => runtime.reduceLedger(base.map(row => row.kind === 'correct' ? { ...row, parent: 'absent-parent' } : row)), expected_error: 'missing_parent' },
     { id: 'unknown-field', run: () => runtime.reduceLedger(base.map((row, index) => index === 0 ? { ...row, authority_granted: true } : row)), expected_error: 'event_fields' },
     { id: 'erase-original', run: () => runtime.reduceLedger(base, { erase_original: true }), detector: value => value.originals_preserved === false },
     {
@@ -837,9 +839,17 @@ function canonicalRun() {
   if (payload.successes !== 1) process.exitCode = 1;
 }
 
-if (COMMAND === 'plan') plan();
-else if (COMMAND === 'x1' || COMMAND === 'x2') runSession(COMMAND);
-else if (COMMAND === 'final') finalBuild();
-else if (COMMAND === 'validate') validateStage(ARGS.stage);
-else if (COMMAND === 'canonical') canonicalRun();
-else throw new Error('command must be plan, x1, x2, final, validate, or canonical');
+module.exports = {
+  OWNER, PHASE, SOURCE, BRANCH, PREFIX, ROOT, REPO, MODEL_NAMES, HOOK_NAMES, BOUNDARY,
+  canonical, sha, writeJson, readJson, bankJson, git, requireHead, ownerStatus, walk, manifest,
+  fixtureEvents, runProcess, invokeRunner, runHooks, makeLedger
+};
+
+if (require.main === module) {
+  if (COMMAND === 'plan') plan();
+  else if (COMMAND === 'x1' || COMMAND === 'x2') runSession(COMMAND);
+  else if (COMMAND === 'final') finalBuild();
+  else if (COMMAND === 'validate') validateStage(ARGS.stage);
+  else if (COMMAND === 'canonical') canonicalRun();
+  else throw new Error('command must be plan, x1, x2, final, validate, or canonical');
+}

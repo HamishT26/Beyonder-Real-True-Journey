@@ -1,0 +1,198 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const phase = require('./phase.txt');
+const runtime = require('./runtime.txt');
+const oracle = require('./oracle.txt');
+
+const raw = process.argv.slice(2);
+const args = {};
+for (let index = 0; index < raw.length; index += 1) {
+  if (!raw[index].startsWith('--')) continue;
+  const key = raw[index].slice(2);
+  const value = raw[index + 1];
+  args[key] = value && !value.startsWith('--') ? value : true;
+  if (args[key] !== true) index += 1;
+}
+if (!args.bank || !args['expected-head'] || !args['lab-release']) throw new Error('bank_expected_head_and_lab_release_required');
+const BANK = path.resolve(args.bank);
+const expectedHead = args['expected-head'];
+const labRelease = path.resolve(args['lab-release']);
+const recoveryAttempt = String(args['recovery-attempt'] || '1');
+if (!['1', '2'].includes(recoveryAttempt)) throw new Error('recovery_attempt');
+const secondRecovery = recoveryAttempt === '2';
+const latch = path.join(BANK, secondRecovery ? 'x2-recovery-2-invocation.json' : 'x2-recovery-invocation.json');
+const failedLatch = path.join(BANK, 'x2-invocation.json');
+const originalCompletion = path.join(BANK, 'x2-completion.json');
+if (!fs.existsSync(failedLatch)) throw new Error('failed_x2_latch_missing');
+if (secondRecovery && !fs.existsSync(path.join(BANK, 'x2-recovery-invocation.json'))) throw new Error('first_recovery_latch_missing');
+if (fs.existsSync(originalCompletion)) throw new Error('original_x2_already_completed');
+if (fs.existsSync(latch)) throw new Error('x2_recovery_latch_exists');
+phase.requireHead(expectedHead);
+const rows = phase.ownerStatus(false);
+if (rows.some(row => !row.includes('docs/caelen-ash/v707-v7/x2/') && !row.includes('docs\\caelen-ash\\v707-v7\\x2/') && !row.includes('docs/caelen-ash/v707-v7/code/phase.txt') && !row.includes('docs/caelen-ash/v707-v7/code/x2-recovery.txt'))) throw new Error('unexpected_recovery_scope');
+
+function writeBank(name, value) {
+  const file = path.join(BANK, name);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+
+writeBank(secondRecovery ? 'x2-recovery-2-invocation.json' : 'x2-recovery-invocation.json', {
+  state: 'INVOKED_ONCE_ISOLATED_DEPENDENCY_CONTINUATION', invocations: 1, full_x2_replays: 0,
+  saved_model_calls_replayed: 0, unsaved_event_dependency_reexecutions: Number(recoveryAttempt), exact_head: expectedHead,
+  retained_failures: secondRecovery ? ['CA7077-X2-N001', 'CA7077-X2-REC-N002'] : ['CA7077-X2-N001']
+});
+
+const consultation = JSON.parse(fs.readFileSync(path.join(BANK, 'x2-consultation.json'), 'utf8'));
+if (consultation.stage !== 'x2' || consultation.send_attempts !== 1 || consultation.acknowledged !== true || consultation.resends !== 0) throw new Error('x2_consultation_contract');
+const modelPlan = phase.readJson(path.join(phase.ROOT, 'planning', 'model-plan.json')).x2;
+const modelSummaries = [];
+const candidateFailures = [];
+const repairReceipts = [];
+for (let index = 0; index < modelPlan.length; index += 1) {
+  const request = modelPlan[index];
+  const outputFile = path.join(phase.ROOT, 'x2', 'models', request.model + '.json');
+  const requestFile = outputFile + '.request.json';
+  const invalidRequest = path.join(BANK, 'x2-invalid-model-' + String(index + 1).padStart(2, '0') + '.json.request.json');
+  if (!fs.existsSync(outputFile) || !fs.existsSync(requestFile) || !fs.existsSync(invalidRequest)) throw new Error('saved_model_evidence_missing:' + request.model);
+  const output = phase.readJson(outputFile);
+  modelSummaries.push({ model: request.model, request, schema: output.schema, rows: output.rows.length, frames: output.frames.length, metrics_sha256: phase.sha(output.metrics), empirical_claim: output.empirical_claim, recovered_from_saved_failed_invocation_output: true });
+  const negativeId = 'CA7077-X2-MODEL-N' + String(index + 1).padStart(2, '0');
+  candidateFailures.push({ negative_id: negativeId, subject: { model: request.model, invalid_variant: 9 }, result: 'fail', original_success_credit: 0, refusal_status: 'nonzero_observed_before_later_failure', evidence: 'Control flow reached event mutation stage only after every invalid model request was refused.', retained: true });
+  repairReceipts.push({ id: 'CA7077-X2-MODEL-R' + String(index + 1).padStart(2, '0'), repaired_model: request.model, result_sha256: phase.sha(fs.readFileSync(outputFile)), separate_from_failed_subject: true, saved_output_reused_without_model_rerun: true });
+}
+
+const projection = value => ({
+  event_count: value.event_count, entity_count: value.entity_count, lineage_edges: value.lineage_edges,
+  acyclic: value.acyclic, original_ids: value.original_ids, originals_preserved: value.originals_preserved,
+  decisions: value.decisions, allowed_publications: value.allowed_publications,
+  denied_publications: value.denied_publications, state_digest: value.state_digest
+});
+const eventModels = [];
+for (let index = 0; index < 15; index += 1) {
+  const events = phase.fixtureEvents('x2', index);
+  const actual = runtime.reduceLedger(events);
+  const expected = oracle.evaluate(events);
+  const agreement = phase.canonical(projection(actual)) === phase.canonical(projection(expected));
+  if (!agreement) throw new Error('event_oracle_disagreement:' + index);
+  eventModels.push({ model_id: 'CA7077-X2-E' + String(index + 1).padStart(2, '0'), events, actual, expected_digest: phase.sha(projection(expected)), agreement, dependency_reexecution_after_unsaved_partial_result: true, dependency_reexecution_attempt: Number(recoveryAttempt) });
+}
+
+const base = phase.fixtureEvents('x2', 0);
+const cachedPermissionBase = phase.fixtureEvents('x2', 13);
+const cachedPermissionExpiry = cachedPermissionBase.find(row => row.kind === 'correct')?.consent_expires || cachedPermissionBase.find(row => row.kind === 'create').consent_expires;
+const cachedPermissionFixture = cachedPermissionBase.map(row => row.kind === 'publish' ? { ...row, valid_from: cachedPermissionExpiry } : row);
+const cachedPermissionGuarded = runtime.reduceLedger(cachedPermissionFixture);
+const mutations = [
+  { id: 'duplicate-id', run: () => runtime.reduceLedger([...base, { ...base[0] }]), expected_error: 'duplicate_id' },
+  { id: 'missing-parent', run: () => runtime.reduceLedger(base.map(row => row.kind === 'correct' ? { ...row, parent: 'absent-parent' } : row)), expected_error: 'missing_parent' },
+  { id: 'unknown-field', run: () => runtime.reduceLedger(base.map((row, index) => index === 0 ? { ...row, authority_granted: true } : row)), expected_error: 'event_fields' },
+  { id: 'erase-original', run: () => runtime.reduceLedger(base, { erase_original: true }), detector: value => value.originals_preserved === false },
+  { id: 'cached-permission', run: () => runtime.reduceLedger(cachedPermissionFixture, { cached_permission: true }), detector: value => value.allowed_publications > cachedPermissionGuarded.allowed_publications && value.denied_publications < cachedPermissionGuarded.denied_publications }
+];
+const mutationTests = [];
+for (const mutation of mutations) {
+  let detected = false;
+  let observed = null;
+  try {
+    const value = mutation.run();
+    observed = mutation.detector ? mutation.detector(value) : false;
+    detected = Boolean(observed);
+  } catch (error) {
+    observed = error.message;
+    detected = mutation.expected_error ? error.message === mutation.expected_error : false;
+  }
+  if (!detected) throw new Error('recovery_mutation_not_detected:' + mutation.id);
+  mutationTests.push({ negative_id: 'CA7077-X2-EVENT-' + mutation.id, result: 'fail', original_success_credit: 0, detected: true, observed });
+}
+
+const runnerCases = [
+  { operation: 'catalogue', valid: { query: 'finite', limit: 5 }, invalid: { query: 'finite', limit: 0 } },
+  { operation: 'integrity', valid: (() => { const content = 'x2-integrity'; return { path: 'docs/caelen-ash/v707-v7/x2/summary.json', content, bytes: Buffer.byteLength(content), sha256: phase.sha(content) }; })(), invalid: { path: 'Z:/not-allowed', content: 'x', bytes: 1, sha256: phase.sha('x') } },
+  { operation: 'claim', valid: { issuer: 'synthetic-caelen', subject: 'finite-event-ledger', claim: 'bounded workflow description', evidence: 'x2-saved-results', kind: 'workflow_description' }, invalid: { issuer: 'synthetic-caelen', subject: 'finite-event-ledger', claim: 'bounded', evidence: 'saved', kind: 'workflow_description', extra: true } },
+  { operation: 'route', valid: { owner: phase.OWNER, phase: phase.PHASE, canonical: false, unique: false, direct_controls: true, accepted: false, uncertain: false, usage_open: true }, invalid: { owner: phase.OWNER, phase: phase.PHASE, canonical: 'no', unique: false, direct_controls: true, accepted: false, uncertain: false, usage_open: true } }
+];
+const runnerReceipts = [{ operation: 'model', accepted: modelSummaries.length === 15, rejected_invalid: candidateFailures.length === 15, saved_outputs_reused: true, model_calls_replayed: 0 }];
+for (const item of runnerCases) {
+  const validOutput = path.join(BANK, 'x2-' + item.operation + '-valid.json');
+  const good = phase.invokeRunner(labRelease, item.operation, item.valid, validOutput);
+  if (good.result.status !== 0) throw new Error('runner_valid_failed:' + item.operation);
+  const goodValue = phase.readJson(validOutput);
+  const invalidOutput = path.join(BANK, 'x2-' + item.operation + '-invalid-output.json');
+  const bad = phase.invokeRunner(labRelease, item.operation, item.invalid, invalidOutput);
+  if (bad.result.status === 0) throw new Error('runner_invalid_accepted:' + item.operation);
+  runnerReceipts.push({ operation: item.operation, accepted: true, accepted_summary_sha256: phase.sha(goodValue), invalid_result: 'fail', original_success_credit: 0, refusal_status: bad.result.status });
+}
+const hooks = phase.runHooks(labRelease, 'x2');
+if (hooks.some(row => row.accepted_status !== 0 || row.accepted.continue !== true || row.malformed_refusal.continue !== true)) throw new Error('hook_smoke_failed');
+
+const tests = [];
+for (const row of modelSummaries) tests.push({ test: 'lab-model-' + row.model, passed: row.schema === 'ghc.finite-model.v1' && row.empirical_claim === false });
+for (const row of eventModels) tests.push({ test: 'event-agreement-' + row.model_id, passed: row.agreement });
+for (const row of mutationTests) tests.push({ test: 'mutation-' + row.negative_id, passed: row.detected });
+for (const row of runnerReceipts) tests.push({ test: 'runner-' + row.operation, passed: row.accepted === true });
+for (const row of hooks) tests.push({ test: 'hook-' + row.hook, passed: row.accepted.continue === true && row.malformed_refusal.continue === true });
+if (tests.some(row => !row.passed)) throw new Error('recovery_session_test_failed');
+const projects = phase.readJson(path.join(phase.ROOT, 'planning', 'projects.json')).projects.filter(row => row.session === 'x2').map(row => ({ project_id: row.project_id, title: row.title, outcome: row.expected_disposition, evidence: 'x2 bounded saved result', source_execution_credit: 0 }));
+
+phase.writeJson('x2/model-summary.json', { schema: 'caelen.lab-model-summary.v1', stage: 'x2', count: modelSummaries.length, models: modelSummaries, model_calls_replayed: 0, boundary: phase.BOUNDARY });
+phase.writeJson('x2/event-models.json', { schema: 'caelen.event-models.v1', stage: 'x2', count: eventModels.length, models: eventModels, isolated_dependency_reexecutions: Number(recoveryAttempt), boundary: phase.BOUNDARY });
+phase.writeJson('x2/candidate-failures.json', { invocation_failures: [
+  { negative_id: 'CA7077-X2-N001', result: 'fail', original_success_credit: 0, retained: true },
+  ...(secondRecovery ? [{ negative_id: 'CA7077-X2-REC-N002', result: 'fail', original_success_credit: 0, retained: true }] : [])
+], model_failures: candidateFailures, event_mutations: mutationTests, original_success_credit: 0, boundary: phase.BOUNDARY });
+phase.writeJson('x2/repair-receipts.json', { repairs: repairReceipts, failed_subjects_rewritten: false, model_calls_replayed: 0, boundary: phase.BOUNDARY });
+phase.writeJson('x2/runner-receipts.json', { runners: runnerReceipts, inherited_installation_credit: 0, boundary: phase.BOUNDARY });
+phase.writeJson('x2/hook-smokes.json', { hooks, live_host_observations: 0, boundary: phase.BOUNDARY });
+phase.writeJson('x2/consultation.json', { ...consultation, private_target_exported: false, transcript_exported: false, screenshot_exported: false, advisory_not_authority: true, boundary: phase.BOUNDARY });
+phase.writeJson('x2/tests.json', { tests, passed: tests.filter(row => row.passed).length, total: tests.length, independent_reproduction: false, boundary: phase.BOUNDARY });
+phase.writeJson('x2/project-outcomes.json', { projects, counts: projects.reduce((acc, row) => { acc[row.outcome] = (acc[row.outcome] || 0) + 1; return acc; }, {}), boundary: phase.BOUNDARY });
+phase.writeJson('x2/recovery.json', { schema: 'caelen.x2-isolated-recovery.v1', retained_failures: secondRecovery ? ['CA7077-X2-N001', 'CA7077-X2-REC-N002'] : ['CA7077-X2-N001'], full_x2_replay: false, saved_model_calls_replayed: 0, unsaved_event_dependency_reexecutions: Number(recoveryAttempt), downstream_runner_and_hook_work_first_execution: true, original_success_credit: 0, boundary: phase.BOUNDARY });
+
+const witnessSpecs = [];
+for (const row of modelSummaries) witnessSpecs.push({ method: 'CA7077-X2-M01', procedure: 'saved-lab-model-' + row.model, scope: 'x2/models/' + row.model + '.json', expected: 'Declared finite model output saved before later failure', observed: row.schema, result: 'pass' });
+for (const row of candidateFailures) {
+  witnessSpecs.push({ id: row.negative_id, method: 'CA7077-X2-M01', procedure: 'retain-invalid-model-subject', scope: 'x2/candidate-failures.json', expected: 'Valid variant', observed: 'Invalid variant refused before later failure', result: 'fail', negatives: [row.negative_id] });
+  witnessSpecs.push({ method: 'CA7077-X2-M01', procedure: 'separate-model-refusal-' + row.subject.model, scope: 'x2/candidate-failures.json', expected: 'Guard refuses malformed request', observed: 'Refusal preserved through control-flow evidence', result: 'pass' });
+}
+for (const row of eventModels) witnessSpecs.push({ method: 'CA7077-X2-M02', procedure: 'event-oracle-' + row.model_id, scope: 'x2/event-models.json', expected: 'Independent same-owner formulations agree', observed: row.agreement, result: 'pass' });
+for (const row of mutationTests) {
+  witnessSpecs.push({ id: row.negative_id, method: 'CA7077-X2-M02', procedure: 'retain-event-mutant', scope: 'x2/candidate-failures.json', expected: 'Valid event contract', observed: row.observed, result: 'fail', negatives: [row.negative_id] });
+  witnessSpecs.push({ method: 'CA7077-X2-M02', procedure: 'separate-mutant-detection-' + row.negative_id, scope: 'x2/candidate-failures.json', expected: true, observed: row.detected, result: 'pass' });
+}
+for (const row of runnerReceipts) witnessSpecs.push({ method: 'CA7077-X2-M03', procedure: 'runner-' + row.operation, scope: 'x2/runner-receipts.json', expected: 'Valid accepted and invalid refused', observed: row, result: 'pass' });
+for (const row of hooks) {
+  const negative = 'CA7077-X2-HOOK-' + row.hook.toUpperCase();
+  witnessSpecs.push({ id: negative, method: 'CA7077-X2-M04', procedure: 'retain-malformed-hook-subject', scope: 'x2/hook-smokes.json', expected: 'Valid SessionStart envelope', observed: 'Malformed envelope refused nonblockingly', result: 'fail', negatives: [negative] });
+  witnessSpecs.push({ method: 'CA7077-X2-M04', procedure: 'hook-accept-and-refuse-' + row.hook, scope: 'x2/hook-smokes.json', expected: true, observed: true, result: 'pass' });
+}
+witnessSpecs.push({ method: 'CA7077-X2-M05', procedure: 'advisory-send-once', scope: 'x2/consultation.json', expected: 'One acknowledged advisory message during x2', observed: consultation.acknowledged, result: 'pass' });
+for (const row of tests) witnessSpecs.push({ method: 'CA7077-X2-M06', procedure: row.test, scope: 'x2/tests.json', expected: true, observed: row.passed, result: 'pass' });
+witnessSpecs.push({ id: 'CA7077-X2-N001', method: 'CA7077-X2-M07', procedure: 'retain-position-sensitive-mutation-failure', scope: 'x2/recovery.json', expected: 'Correction selected by semantic kind', observed: 'Array-position selector missed reversed correction', result: 'fail', negatives: ['CA7077-X2-N001'] });
+if (secondRecovery) witnessSpecs.push({ id: 'CA7077-X2-REC-N002', method: 'CA7077-X2-M07', procedure: 'retain-nondiscriminating-cached-permission-fixture', scope: 'x2/recovery.json', expected: 'Guarded and mutant publication outcomes differ', observed: 'Planned x2 publication preceded expiry so outcomes did not differ', result: 'fail', negatives: ['CA7077-X2-REC-N002'] });
+witnessSpecs.push({ method: 'CA7077-X2-M07', procedure: 'isolated-dependency-recovery', scope: 'x2/recovery.json', expected: 'No model or full x2 replay', observed: { full_x2_replay: false, saved_model_calls_replayed: 0, event_dependency_reexecutions: Number(recoveryAttempt) }, result: 'pass' });
+
+const ledger = phase.makeLedger('x2', [
+  ['CA7077-X2-M01', 'Fifteen saved finite laboratory models and retained malformed-request refusals', 'CA7077-X2-MODEL-FAILURES', [phase.PREFIX + '/x2/model-summary.json']],
+  ['CA7077-X2-M02', 'Recovered finite event-ledger and independent oracle dependency', 'CA7077-X2-EVENT-MUTANTS', [phase.PREFIX + '/x2/event-models.json']],
+  ['CA7077-X2-M03', 'Family-current laboratory runner smokes', 'CA7077-X2-RUNNER-REFUSALS', [phase.PREFIX + '/x2/runner-receipts.json']],
+  ['CA7077-X2-M04', 'Five advisory hook accept/refuse smokes', 'CA7077-X2-HOOK-REFUSALS', [phase.PREFIX + '/x2/hook-smokes.json']],
+  ['CA7077-X2-M05', 'One advisory consultation message and open reply gap', 'CA7077-X2-CONSULTATION-NONAUTHORITY', [phase.PREFIX + '/x2/consultation.json']],
+  ['CA7077-X2-M06', 'Owner-session bounded tests', 'CA7077-X2-TEST-BOUNDARY', [phase.PREFIX + '/x2/tests.json']],
+  ['CA7077-X2-M07', 'Isolated dependency recovery without full tranche replay', 'CA7077-X2-N001', [phase.PREFIX + '/x2/recovery.json']]
+], witnessSpecs);
+phase.writeJson('x2/method-flow.json', ledger);
+phase.writeJson('x2/summary.json', {
+  schema: 'caelen.session-summary.v1', owner: phase.OWNER, phase: phase.PHASE, stage: 'x2', predecessor: expectedHead,
+  projects: projects.length, models: modelSummaries.length, event_models: eventModels.length,
+  candidate_failures: candidateFailures.length + mutationTests.length + (secondRecovery ? 2 : 1), repairs: repairReceipts.length,
+  runners: runnerReceipts.length, hooks: hooks.length, tests: tests.length,
+  consultation: { send_attempts: consultation.send_attempts, acknowledged: consultation.acknowledged, reply_received: consultation.reply_received, recommendations: consultation.recommendations || [] },
+  method_flow: ledger.counts, domain_replays: 0, isolated_dependency_reexecutions: Number(recoveryAttempt), saved_model_calls_replayed: 0,
+  terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: phase.BOUNDARY
+});
+phase.manifest('x2/manifest.json');
+writeBank(secondRecovery ? 'x2-recovery-2-completion.json' : 'x2-recovery-completion.json', { state: 'COMPLETED_ONCE_ISOLATED_DEPENDENCY_RECOVERY', invocations: 1, full_x2_replays: 0, saved_model_calls_replayed: 0, event_dependency_reexecutions: Number(recoveryAttempt), models: 15, consultation_messages: 1, retained_failures: secondRecovery ? ['CA7077-X2-N001', 'CA7077-X2-REC-N002'] : ['CA7077-X2-N001'] });
+process.stdout.write(JSON.stringify({ ok: true, stage: 'x2-recovery', models_reused: modelSummaries.length, model_calls_replayed: 0, event_models: eventModels.length, tests: tests.length, consultation_reply: Boolean(consultation.reply_received), method_flow: ledger.counts }) + '\n');
