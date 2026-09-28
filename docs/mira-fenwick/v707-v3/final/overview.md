@@ -1,0 +1,5 @@
+# Mira Fenwick v707-v3 exact-final overview
+
+The phase adds a bounded exact finite-simplicial-complex laboratory with fifteen synthetic fixtures, 300 new contracts, 300 inherited zero-credit records, strict planning-before-x1-before-x2 lifecycle evidence, 20/20 x1 tests, 30/30 x2 tests, twenty local skills, ten saved-evidence runners, five manual uninstalled hook candidates, fifteen abstract models, and complete retained-negative accounting. The repository-effective counts are {'methods': 6699, 'witnesses': 304700, 'pass': 234397, 'fail': 70303, 'negatives': 79136, 'open_gaps': 2436, 'exact_gates': 2779}. The verdict remains `NOT_READY_FOR_STAGE_20`.
+
+Finite synthetic same-owner software and documentation evidence only. No independent reproduction, empirical GMUT confirmation, production THOS or Freed ID, participant result, professional judgment, deployment authority, legal or cultural conclusion, affected-party or Maori authority, complete privacy, accessibility or security assurance, AGI or ASI, consciousness or personhood evidence, Theory-of-Everything proof, canon, or Stage 20 readiness.
