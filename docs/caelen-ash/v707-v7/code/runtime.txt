@@ -1,0 +1,131 @@
+'use strict';
+
+const crypto = require('crypto');
+
+const ALLOWED_KINDS = new Set(['create', 'correct', 'revoke', 'publish', 'appeal', 'retain']);
+
+function canonical(value) {
+  if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
+  if (value && typeof value === 'object') {
+    return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
+  }
+  return JSON.stringify(value);
+}
+
+function sha(value) {
+  return crypto.createHash('sha256').update(typeof value === 'string' ? value : canonical(value)).digest('hex');
+}
+
+function validateEvent(event) {
+  if (!event || Object.getPrototypeOf(event) !== Object.prototype) throw new Error('event_object');
+  const keys = ['id', 'kind', 'entity', 'recorded_at', 'valid_from', 'parent', 'consent_expires', 'payload_hash'];
+  if (Object.keys(event).some(key => !keys.includes(key))) throw new Error('event_fields');
+  if (typeof event.id !== 'string' || !/^[a-z0-9-]{1,80}$/.test(event.id)) throw new Error('event_id');
+  if (!ALLOWED_KINDS.has(event.kind)) throw new Error('event_kind');
+  if (typeof event.entity !== 'string' || !/^[a-z0-9-]{1,80}$/.test(event.entity)) throw new Error('entity');
+  if (!Number.isSafeInteger(event.recorded_at) || !Number.isSafeInteger(event.valid_from)) throw new Error('time');
+  if (event.parent !== null && (typeof event.parent !== 'string' || !/^[a-z0-9-]{1,80}$/.test(event.parent))) throw new Error('parent');
+  if (!Number.isSafeInteger(event.consent_expires)) throw new Error('consent_expires');
+  if (typeof event.payload_hash !== 'string' || !/^[a-f0-9]{64}$/.test(event.payload_hash)) throw new Error('payload_hash');
+  return event;
+}
+
+function reduceLedger(events, options = {}) {
+  if (!Array.isArray(events) || events.length < 3 || events.length > 80) throw new Error('event_count');
+  const ids = new Set();
+  const byId = new Map();
+  const sorted = events.map(validateEvent).slice().sort((a, b) => a.recorded_at - b.recorded_at || a.id.localeCompare(b.id));
+  for (const event of sorted) {
+    if (ids.has(event.id) && !options.accept_duplicate) throw new Error('duplicate_id');
+    ids.add(event.id);
+    byId.set(event.id, event);
+  }
+  const entities = new Map();
+  const lineage = [];
+  const decisions = [];
+  const originalIds = sorted.filter(event => event.kind === 'create').map(event => event.id);
+  for (const event of sorted) {
+    const state = entities.get(event.entity) || {
+      entity: event.entity,
+      current: null,
+      revoked_at: null,
+      appealed: false,
+      retained: true,
+      publications: []
+    };
+    if (event.kind === 'create') {
+      if (state.current !== null) throw new Error('duplicate_create');
+      state.current = event.id;
+      state.payload_hash = event.payload_hash;
+      state.consent_expires = event.consent_expires;
+    } else if (event.kind === 'correct') {
+      if (!event.parent || !byId.has(event.parent)) throw new Error('missing_parent');
+      if (event.parent === event.id) throw new Error('lineage_cycle');
+      lineage.push({ from: event.parent, to: event.id });
+      state.current = event.id;
+      state.payload_hash = event.payload_hash;
+      state.consent_expires = event.consent_expires;
+    } else if (event.kind === 'revoke') {
+      state.revoked_at = state.revoked_at === null ? event.valid_from : Math.min(state.revoked_at, event.valid_from);
+    } else if (event.kind === 'appeal') {
+      state.appealed = true;
+    } else if (event.kind === 'retain') {
+      state.retained = event.payload_hash !== sha('discard');
+    } else if (event.kind === 'publish') {
+      const decisionTime = event.valid_from;
+      const expiry = options.cached_permission ? event.consent_expires : state.consent_expires;
+      const consentValid = Number.isSafeInteger(expiry) && decisionTime < expiry;
+      const notRevoked = state.revoked_at === null || decisionTime < state.revoked_at;
+      const allowed = Boolean(state.current && consentValid && notRevoked && state.retained);
+      const decision = {
+        event_id: event.id,
+        entity: event.entity,
+        decision_time: decisionTime,
+        allowed,
+        consent_valid: consentValid,
+        not_revoked: notRevoked,
+        retained: state.retained,
+        current_record: state.current
+      };
+      decisions.push(decision);
+      state.publications.push(decision);
+    }
+    entities.set(event.entity, state);
+  }
+  const descendants = new Map();
+  for (const edge of lineage) {
+    if (!descendants.has(edge.from)) descendants.set(edge.from, new Set());
+    descendants.get(edge.from).add(edge.to);
+  }
+  function reaches(start, target, seen = new Set()) {
+    if (start === target) return true;
+    if (seen.has(start)) return false;
+    seen.add(start);
+    return [...(descendants.get(start) || [])].some(next => reaches(next, target, seen));
+  }
+  const acyclic = lineage.every(edge => !reaches(edge.to, edge.from));
+  if (!acyclic) throw new Error('lineage_cycle');
+  const retainedOriginals = options.erase_original ? [] : originalIds;
+  return {
+    schema: 'caelen.event-ledger-result.v1',
+    event_count: sorted.length,
+    entity_count: entities.size,
+    lineage_edges: lineage,
+    acyclic,
+    original_ids: retainedOriginals,
+    originals_preserved: retainedOriginals.length === originalIds.length,
+    decisions,
+    allowed_publications: decisions.filter(row => row.allowed).length,
+    denied_publications: decisions.filter(row => !row.allowed).length,
+    state_digest: sha([...entities.values()].map(row => ({
+      entity: row.entity,
+      current: row.current,
+      revoked_at: row.revoked_at,
+      appealed: row.appealed,
+      retained: row.retained,
+      publications: row.publications
+    })))
+  };
+}
+
+module.exports = { canonical, sha, validateEvent, reduceLedger };

@@ -1,0 +1,839 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+const runtime = require('./runtime.txt');
+const oracle = require('./oracle.txt');
+
+const OWNER = 'Caelen Ash';
+const PHASE = 'v707-v7';
+const SOURCE = '0c6481a043fe896271c80732aeaacb4f40a3fa7b';
+const BRANCH = 'codex/GHC-Family/caelen-ash-main-1';
+const PREFIX = 'docs/caelen-ash/v707-v7';
+const ROOT = path.resolve(__dirname, '..');
+const REPO = cp.execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: ROOT, encoding: 'utf8', windowsHide: true }).trim();
+const MODEL_NAMES = ['heat', 'wave', 'oscillator', 'reaction', 'entropy', 'queue', 'replication', 'retry', 'graph', 'coding', 'consent', 'allocation', 'voting', 'bayes', 'remedy'];
+const HOOK_NAMES = ['source', 'budget', 'consultation', 'roster', 'evidence'];
+const SOURCE_BASELINE = {
+  methods: 6877,
+  witnesses: 313756,
+  passing_witnesses: 241493,
+  failed_witnesses: 72263,
+  negatives: 81096,
+  open_gaps: 2505,
+  exact_gates: 2843
+};
+const BOUNDARY = 'Finite synthetic same-owner event-ledger, laboratory, software and documentary evidence only. No real participant, identity, credential, consent decision, publication, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains conjectural; THOS and Freed ID remain nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.';
+
+const rawArgs = process.argv.slice(2);
+const COMMAND = rawArgs.shift();
+const ARGS = {};
+for (let index = 0; index < rawArgs.length; index += 1) {
+  const token = rawArgs[index];
+  if (token.startsWith('--')) {
+    const key = token.slice(2);
+    const next = rawArgs[index + 1];
+    if (next !== undefined && !next.startsWith('--')) {
+      ARGS[key] = next;
+      index += 1;
+    } else ARGS[key] = true;
+  }
+}
+const BANK = ARGS.bank ? path.resolve(ARGS.bank) : null;
+
+function canonical(value) {
+  if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
+  if (value && typeof value === 'object') return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
+  return JSON.stringify(value);
+}
+
+function sha(value) {
+  return crypto.createHash('sha256').update(Buffer.isBuffer(value) ? value : typeof value === 'string' ? value : canonical(value)).digest('hex');
+}
+
+function ensureDir(file) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+}
+
+function writeJson(relative, value) {
+  const file = path.join(ROOT, relative);
+  ensureDir(file);
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+
+function writeText(relative, value) {
+  const file = path.join(ROOT, relative);
+  ensureDir(file);
+  fs.writeFileSync(file, value.replace(/\r\n/g, '\n'), 'utf8');
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function bankJson(name, value) {
+  if (!BANK) throw new Error('bank_required');
+  const file = path.join(BANK, name);
+  ensureDir(file);
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+
+function git(args, encoding = 'utf8') {
+  return cp.execFileSync('git', args, { cwd: REPO, encoding, windowsHide: true, maxBuffer: 128 * 1024 * 1024 }).toString().trim();
+}
+
+function gitBlob(commit, relative) {
+  return cp.execFileSync('git', ['show', commit + ':' + relative], { cwd: REPO, encoding: null, windowsHide: true, maxBuffer: 128 * 1024 * 1024 });
+}
+
+function requireHead(expected) {
+  const head = git(['rev-parse', 'HEAD']);
+  if (head !== expected) throw new Error('head_mismatch:' + head);
+  const branch = git(['branch', '--show-current']);
+  if (branch !== BRANCH) throw new Error('branch_mismatch:' + branch);
+}
+
+function ownerStatus(requireClean = false) {
+  const output = git(['status', '--porcelain=v1', '-uall']);
+  const rows = output ? output.split(/\r?\n/).filter(Boolean) : [];
+  const outside = rows.filter(row => {
+    const item = row.slice(3).replace(/\\/g, '/');
+    const target = item.includes(' -> ') ? item.split(' -> ').at(-1) : item;
+    return !target.startsWith(PREFIX + '/');
+  });
+  if (outside.length) throw new Error('outside_owner_scope:' + outside.join(','));
+  if (requireClean && rows.length) throw new Error('owner_lane_not_clean');
+  return rows;
+}
+
+function walk(directory) {
+  const rows = [];
+  if (!fs.existsSync(directory)) return rows;
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) rows.push(...walk(full));
+    else rows.push(full);
+  }
+  return rows;
+}
+
+function manifest(relative) {
+  const target = path.join(ROOT, relative);
+  const files = walk(ROOT).filter(file => path.resolve(file) !== path.resolve(target)).sort();
+  const entries = files.map(file => {
+    const bytes = fs.readFileSync(file);
+    return {
+      path: PREFIX + '/' + path.relative(ROOT, file).replace(/\\/g, '/'),
+      bytes: bytes.length,
+      sha256: sha(bytes),
+      byte_domain: 'checkout bytes expected to equal raw Git blob after LF-only authoring'
+    };
+  });
+  writeJson(relative, {
+    schema: 'caelen.owner-manifest.v1',
+    owner: OWNER,
+    phase: PHASE,
+    self_exclusions: [PREFIX + '/' + relative.replace(/\\/g, '/')],
+    entries,
+    boundary: BOUNDARY
+  });
+  return entries;
+}
+
+function wordCount(text) {
+  return (text.match(/\S+/g) || []).length;
+}
+
+function projectDefinitions() {
+  const titles = [
+    'Exact source and laboratory pinning',
+    'Event-envelope structural admission',
+    'Deterministic causal ordering',
+    'Duplicate-event refusal and idempotence',
+    'Correction lineage nonerasure',
+    'Consent-at-publication evaluation',
+    'Revocation-time evaluation',
+    'Retention and tombstone semantics',
+    'Advisory consultation intake',
+    'Host-hook observation vacancy',
+    'Bitemporal provenance readback',
+    'Queue and backpressure integration',
+    'Retry and acknowledgement latch',
+    'Disclosure-budget accounting',
+    'Appeal and remedy state projection',
+    'Evidence-quorum conflict representation',
+    'Fifteen-model laboratory comparison',
+    'Accessible static evidence summary',
+    'Independent and affected-user review vacancy',
+    'Authority, deployment and Stage 20 hold'
+  ];
+  return titles.map((title, index) => {
+    const number = index + 1;
+    const expected = number <= 8 || (number >= 11 && number <= 18) ? 'completed' : number === 9 ? 'represented' : number === 20 ? 'exact_gate' : 'open_gap';
+    return {
+      project_id: 'CA7077-J' + String(number).padStart(2, '0'),
+      title,
+      session: number <= 10 ? 'x1' : 'x2',
+      hypothesis: title + ' can be represented and checked within the declared finite synthetic contract.',
+      null_or_failure: 'Any exact structure, digest, timing, refusal, nonerasure, boundary, or declared comparison differs.',
+      approval_class: expected === 'exact_gate' ? 'exact_approval_held' : expected === 'open_gap' ? 'candidate_open_gap' : 'safe_now_owner_scoped',
+      concrete_artifacts: ['saved result', 'test receipt', 'Method Flow links'],
+      falsifier: 'A declared deterministic check fails or a protected boundary would need to be crossed.',
+      rollback: 'Revert only the Caelen-owned additive commit and retain the failed witness.',
+      protected_gates: ['real participants', 'identity or credentials', 'production mutation', 'legal or cultural authority', 'Maori authority', 'Stage 20'],
+      expected_disposition: expected
+    };
+  });
+}
+
+function researchPlan() {
+  const lawTopics = [
+    'append-only correction', 'strict expiry', 'revocation precedence', 'idempotent duplicate refusal', 'causal parent availability',
+    'publication-time permission', 'retention noncompensation', 'backpressure conservation', 'retry acknowledgement', 'disclosure budget monotonicity',
+    'appeal nonerasure', 'quorum conflict visibility', 'provenance fixity', 'evidence ceiling', 'authority nonpromotion'
+  ];
+  const problemTopics = [
+    'distributed clock uncertainty', 'partial-order compaction', 'conflicting correction branches', 'revocation propagation latency', 'privacy-preserving provenance',
+    'affected-user accessibility', 'multilingual correction meaning', 'independent implementation', 'real operational monitoring', 'professional incident response',
+    'legal remedy interpretation', 'cultural data governance', 'Maori data authority', 'empirical participant evaluation', 'production trust governance'
+  ];
+  return {
+    law_hypotheses: lawTopics.map((topic, index) => ({
+      id: 'CA7077-L' + String(index + 1).padStart(2, '0'),
+      label: 'finite engineering hypothesis',
+      topic,
+      hypothesis: 'Within the frozen finite fixtures, ' + topic + ' remains true under the declared event reducer.',
+      falsifier: 'One frozen accepting or adversarial fixture violates the exact check.',
+      natural_law_claimed: false
+    })),
+    open_problem_probes: problemTopics.map((topic, index) => ({
+      id: 'CA7077-Q' + String(index + 1).padStart(2, '0'),
+      topic,
+      state: index < 8 ? 'represented' : 'open_gap',
+      missing_evidence: 'External evidence, competent review, or affected authority beyond same-owner synthetic software.',
+      solved: false
+    })),
+    boundary: BOUNDARY
+  };
+}
+
+function sourceBindings() {
+  const paths = [
+    'docs/avelin-reed/v707-v6-r2/handoff.md',
+    'docs/avelin-reed/v707-v6-r2/final.json',
+    'docs/avelin-reed/v707-v6-r2/accounting.json',
+    'docs/avelin-reed/v707-v6-r2/method-flow.json',
+    'docs/avelin-reed/v707-v6-r2/failure-ledger.json',
+    'docs/avelin-reed/v707-v6-r2/manifest.json',
+    'docs/avelin-reed/v707-v6-r2/consultation-policy-v20.json',
+    'docs/avelin-reed/v707-v6-r2/workflow-v20.json',
+    'docs/avelin-reed/v707-v6-r2/roster-v20.json'
+  ];
+  return paths.map(relative => {
+    const bytes = gitBlob(SOURCE, relative);
+    return { path: relative, bytes: bytes.length, sha256: sha(bytes), byte_domain: 'raw Git blob', source_commit: SOURCE };
+  });
+}
+
+function methodRecord(id, title, retainedNegative, allowlist, state = 'validated') {
+  return {
+    method_id: id,
+    title,
+    failure_signature: 'Declared bounded contract, dependency, or source binding differs',
+    trigger_preconditions: ['Owner-scoped finite synthetic evidence and a frozen contract'],
+    privacy_class: 'sanitized_public',
+    approval_class: 'owner_authorized_bounded',
+    candidate_workaround: 'Retain the failed subject and correct only its smallest named dependency.',
+    validation_witness_ids: [],
+    recurrence_guard: 'No source, successful domain tranche, canonical, consultation message, or accepted delivery replay.',
+    rollback: 'Revert only the Caelen-owned additive commit while retaining receipts and failed witnesses.',
+    recommendation_state: state,
+    supersedes: [],
+    protected_gates: ['exact source', 'privacy', 'authority', 'one-shot canonical', 'one terminal route'],
+    retained_negative_ids: [retainedNegative],
+    scope_boundary: BOUNDARY,
+    execution_authority: 'owner_self_scoped_delta',
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: SOURCE,
+    final_commit: 'external_after_commit',
+    changed_file_allowlist: allowlist,
+    module_allowlist: allowlist,
+    exact_pushed_head_required: true
+  };
+}
+
+function makeLedger(stage, methodSpecs, witnessSpecs) {
+  const methods = methodSpecs.map(spec => methodRecord(...spec));
+  const methodMap = new Map(methods.map(row => [row.method_id, row]));
+  const witnesses = witnessSpecs.map((spec, index) => {
+    const witness = {
+      witness_id: spec.id || 'CA7077-' + stage.toUpperCase() + '-W' + String(index + 1).padStart(3, '0'),
+      method_id: spec.method,
+      procedure: spec.procedure,
+      scope: spec.scope,
+      expected: spec.expected,
+      observed: spec.observed,
+      result: spec.result,
+      same_owner_only: true,
+      independent_reproduction: false,
+      retained_negative_ids: spec.negatives || [],
+      original_success_credit: spec.result === 'fail' ? 0 : undefined,
+      atomic_count: 1,
+      boundary: BOUNDARY
+    };
+    methodMap.get(spec.method).validation_witness_ids.push(witness.witness_id);
+    return witness;
+  });
+  const stateEvents = methods.flatMap((row, index) => [
+    { event_index: index * 2 + 1, method_id: row.method_id, before: null, after: 'candidate', reason: 'Declared bounded method', witness_id: null },
+    { event_index: index * 2 + 2, method_id: row.method_id, before: 'candidate', after: row.recommendation_state, reason: 'Bounded passing witness retained', witness_id: row.validation_witness_ids.find(id => witnesses.find(w => w.witness_id === id && w.result === 'pass')) || null }
+  ]);
+  const states = { observed: 0, candidate: 0, validated: 0, preferred: 0, superseded: 0, deprecated: 0 };
+  for (const row of methods) states[row.recommendation_state] += 1;
+  const pass = witnesses.filter(row => row.result === 'pass').length;
+  const fail = witnesses.filter(row => row.result === 'fail').length;
+  return {
+    schema: 'ghc.family.method-flow-state.v1',
+    phase: PHASE + '-' + stage,
+    owner: OWNER,
+    identity_boundary: 'Relational working language only; not consciousness, personhood, continuity, employment, qualification, agency, or authority evidence.',
+    methods,
+    witnesses,
+    state_events: stateEvents,
+    recommendations: [],
+    counts: { methods: methods.length, witnesses: witnesses.length, state_events: stateEvents.length, recommendations: 0, states, witness_results: { pass, fail } },
+    boundary: BOUNDARY,
+    execution_authority: 'owner_self_scoped_delta',
+    source_commit: SOURCE,
+    final_commit: 'external_after_commit',
+    source_baseline_fold_count: 1
+  };
+}
+
+function planningLedger(startup) {
+  const witnesses = [];
+  for (const record of startup.records || []) witnesses.push({
+    id: record.negative_id,
+    method: 'CA7077-PLAN-M01',
+    procedure: 'Retain pre-mutation read or projection failure',
+    scope: 'external startup receipt',
+    expected: 'Bounded exact projection',
+    observed: record.subject,
+    result: 'fail',
+    negatives: [record.negative_id]
+  });
+  witnesses.push({ method: 'CA7077-PLAN-M01', procedure: 'bounded-source-recovery', scope: 'planning/source-bindings.json', expected: 'Exact source bindings', observed: 'Exact source bindings recorded', result: 'pass' });
+  witnesses.push({ method: 'CA7077-PLAN-M02', procedure: 'v20-plan-freeze', scope: 'planning/plan.json', expected: 'Twenty bounded projects and current caps', observed: 'Frozen before x1', result: 'pass' });
+  return makeLedger('planning', [
+    ['CA7077-PLAN-M01', 'Exact source and control preflight', 'CA7077-PREFLIGHT-RETAINED', [PREFIX + '/planning/source-bindings.json']],
+    ['CA7077-PLAN-M02', 'Planning-only v20 project freeze', 'CA7077-PLAN-ABSENCE-GUARD', [PREFIX + '/planning/plan.json']]
+  ], witnesses);
+}
+
+function plan() {
+  if (!BANK) throw new Error('bank_required');
+  requireHead(SOURCE);
+  ownerStatus(false);
+  const latch = path.join(BANK, 'planning-invocation.json');
+  if (fs.existsSync(latch)) throw new Error('planning_latch_exists');
+  bankJson('planning-invocation.json', { state: 'INVOKED_ONCE', invocations: 1, exact_head: SOURCE });
+  const startupFile = path.join(BANK, 'startup-failures.json');
+  const startup = fs.existsSync(startupFile) ? readJson(startupFile) : { records: [] };
+  const projects = projectDefinitions();
+  const research = researchPlan();
+  writeText('README.md', '# Caelen Ash v707-v7\n\nFinite event-sourced provenance, revocation, correction, consent-at-publication and laboratory evidence under workflow v20. Planning, x1, x2, final, canonical, advisory consultation and successor delivery remain separate.\n\n' + BOUNDARY + '\n');
+  writeJson('planning/plan.json', {
+    schema: 'caelen.plan.v20', owner: OWNER, phase: PHASE, source: SOURCE, branch: BRANCH,
+    source_provenance: 'Avelin orphan-root exact final with explicit content provenance; source content is not falsely reparented.',
+    primary_pillar: 'Freed ID and CBR Heart',
+    preserved_pillars: ['THOS Body', 'GMUT Mind'],
+    bounded_practices: ['distributed observability', 'digital preservation', 'software architecture', 'information security', 'governance design', 'accessible interface design', 'numerical analysis', 'philosophy of science and religion'],
+    projects_initial: projects.length,
+    project_cap: 80,
+    caps_per_session: { safe_now: 1000, candidate: 1000, clean_fix_refine: 1000, skills: 30, runners: 20, tests: 500, models: 100, web_searches: 2000 },
+    required_per_session: { models: 15, advisory_messages: 1 },
+    phase_requirements: { hooks: 5, law_hypotheses: 15, open_problem_probes: 15, own_practices: 8, successor_suggestions: 4, skill_ideas: 5, runner_ideas: 5 },
+    lifecycle: ['planning', 'x1', 'x2', 'final', 'canonical', 'terminal route'],
+    exact_packets_held: 10,
+    blocked_packets_held: 5,
+    source_fold_count: 1,
+    inherited_execution_credit: 0,
+    outcome_labels: ['completed', 'represented', 'open_gap', 'exact_gate'],
+    consultation: { title: 'Review and refine GHC Lab', x1_messages: 1, x2_messages: 1, private_target_exported: false, resend_pending_or_accepted: false },
+    route: { state: 'HELD_UNTIL_TERMINAL', successor: 'Orin Thale', phase: 'v707-v8' },
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY
+  });
+  writeJson('planning/projects.json', { schema: 'caelen.projects.v1', projects, boundary: BOUNDARY });
+  writeJson('planning/model-plan.json', {
+    schema: 'caelen.model-plan.v1',
+    x1: MODEL_NAMES.map((model, index) => ({ model, variant: 0, steps: 8 + (index % 5), parameter: Number((0.05 + (index % 4) * 0.02).toFixed(2)) })),
+    x2: MODEL_NAMES.map((model, index) => ({ model, variant: 1, steps: 11 + (index % 6), parameter: Number((0.08 + (index % 4) * 0.02).toFixed(2)) })),
+    interpretation: 'Fifteen finite laboratory configurations per session; configuration axes are not claims of physical spatial dimensions.',
+    boundary: BOUNDARY
+  });
+  writeJson('planning/research-plan.json', research);
+  writeJson('planning/hooks.json', { hooks: HOOK_NAMES.map(name => ({ name, state: 'installed_source_selected_for_manual_smoke', live_host_observation: 'open_gap' })), boundary: BOUNDARY });
+  writeJson('planning/capability-selection.json', {
+    schema: 'caelen.capability-selection.v20',
+    selected_guides: ['ghc-family-main-models-v20', 'ghc-family-main-laboratory-v20', 'ghc-family-main-capabilities-v20', 'ghc-family-main-evidence-v20', 'ghc-family-main-governance-v20', 'ghc-family-main-workflow-v20'],
+    selected_operations: ['model', 'catalogue', 'integrity', 'claim', 'route'],
+    catalogue_state: 'selected_not_reexecuted_wholesale',
+    local_test_state: 'pending sessions', installation_state: 'inherited installed', host_observation_state: 'open_gap',
+    compatibility_preserved: true, source_execution_credit: 0, boundary: BOUNDARY
+  });
+  writeJson('planning/source-bindings.json', { source_commit: SOURCE, entries: sourceBindings(), source_execution_credit: 0, boundary: BOUNDARY });
+  writeJson('planning/ideas.json', {
+    skill_ideas: ['event-envelope-admission', 'causal-cut-readback', 'revocation-publication-guard', 'correction-nonerasure-audit', 'consent-backpressure-explainer'],
+    runner_ideas: ['event-ledger-dry-run', 'causal-cut-comparator', 'publication-mutant-checker', 'provenance-export-verifier', 'appeal-state-projector'],
+    successor_practices: ['archival diplomatics', 'reliability engineering', 'social-choice auditing', 'records-management accessibility'],
+    proposals_only: true,
+    boundary: BOUNDARY
+  });
+  writeJson('planning/approval-packets.json', {
+    exact_held: Array.from({ length: 10 }, (_, index) => ({ id: 'CA7077-EX-' + String(index + 1).padStart(2, '0'), state: 'exact_gate', executed: false })),
+    blocked_held: Array.from({ length: 5 }, (_, index) => ({ id: 'CA7077-BL-' + String(index + 1).padStart(2, '0'), state: 'exact_gate', executed: false })),
+    boundary: BOUNDARY
+  });
+  writeJson('planning/method-flow.json', planningLedger(startup));
+  manifest('planning/manifest.json');
+  console.log(JSON.stringify({ ok: true, stage: 'planning', projects: projects.length, models_per_session: MODEL_NAMES.length, hooks: HOOK_NAMES.length }));
+}
+
+function fixtureEvents(stage, index) {
+  const label = String(index + 1).padStart(2, '0');
+  const entity = 'synthetic-record-' + label;
+  const expiry = (stage === 'x1' ? 9 : 11) + (index % 4);
+  const createId = stage + '-create-' + label;
+  const correctionId = stage + '-correct-' + label;
+  const events = [{ id: createId, kind: 'create', entity, recorded_at: 1, valid_from: 1, parent: null, consent_expires: expiry, payload_hash: sha(stage + '-payload-' + label) }];
+  if (index % 2 === 0) events.push({ id: correctionId, kind: 'correct', entity, recorded_at: 2, valid_from: 2, parent: createId, consent_expires: expiry, payload_hash: sha(stage + '-corrected-' + label) });
+  if (index % 3 === 0) events.push({ id: stage + '-revoke-' + label, kind: 'revoke', entity, recorded_at: 3, valid_from: 6 + (index % 3), parent: null, consent_expires: expiry, payload_hash: sha(stage + '-revoke-' + label) });
+  if (index % 5 === 0) events.push({ id: stage + '-retain-' + label, kind: 'retain', entity, recorded_at: 4, valid_from: 4, parent: null, consent_expires: expiry, payload_hash: runtime.sha('discard') });
+  const publishTime = 5 + (index % 7);
+  events.push({ id: stage + '-publish-' + label, kind: 'publish', entity, recorded_at: 5, valid_from: publishTime, parent: null, consent_expires: expiry + 10, payload_hash: sha(stage + '-publish-' + label) });
+  events.push({ id: stage + '-appeal-' + label, kind: 'appeal', entity, recorded_at: 6, valid_from: 6, parent: null, consent_expires: expiry, payload_hash: sha(stage + '-appeal-' + label) });
+  return stage === 'x2' ? events.slice().reverse() : events;
+}
+
+function runProcess(executable, args, options = {}) {
+  return cp.spawnSync(executable, args, { cwd: options.cwd || REPO, input: options.input, encoding: 'utf8', windowsHide: true, maxBuffer: 128 * 1024 * 1024 });
+}
+
+function invokeRunner(labRelease, operation, request, outputFile) {
+  const runner = path.join(labRelease, 'runners', operation + '.txt');
+  const requestFile = outputFile + '.request.json';
+  ensureDir(requestFile);
+  fs.writeFileSync(requestFile, JSON.stringify(request, null, 2) + '\n', 'utf8');
+  const result = runProcess(process.execPath, [runner, requestFile, outputFile]);
+  return { result, requestFile };
+}
+
+function runHooks(labRelease, stage) {
+  const script = path.join(labRelease, 'plugins', 'ghc-family-laboratory-v20', 'scripts', 'advisory_hook.py');
+  const rows = [];
+  for (const name of HOOK_NAMES) {
+    const accepted = runProcess('python', ['-I', script, name], { input: JSON.stringify({ hook_event_name: 'SessionStart', cwd: 'ghc-family-laboratory/' + stage }) });
+    const rejected = runProcess('python', ['-I', script, name], { input: JSON.stringify([]) });
+    rows.push({
+      hook: name,
+      accepted_status: accepted.status,
+      accepted: JSON.parse(accepted.stdout || '{}'),
+      malformed_status: rejected.status,
+      malformed_refusal: JSON.parse(rejected.stdout || '{}'),
+      live_host_observation: false
+    });
+  }
+  return rows;
+}
+
+function runSession(stage) {
+  if (!BANK) throw new Error('bank_required');
+  const expectedHead = ARGS['expected-head'];
+  const labRelease = ARGS['lab-release'];
+  if (!expectedHead || !labRelease) throw new Error('expected_head_and_lab_release_required');
+  requireHead(expectedHead);
+  ownerStatus(true);
+  const latchName = stage + '-invocation.json';
+  if (fs.existsSync(path.join(BANK, latchName))) throw new Error(stage + '_latch_exists');
+  bankJson(latchName, { state: 'INVOKED_ONCE_NO_DOMAIN_REPLAY', invocations: 1, exact_head: expectedHead });
+  const consultationFile = path.join(BANK, stage + '-consultation.json');
+  if (!fs.existsSync(consultationFile)) throw new Error(stage + '_consultation_missing');
+  const consultation = readJson(consultationFile);
+  if (consultation.stage !== stage || consultation.send_attempts !== 1 || consultation.acknowledged !== true) throw new Error(stage + '_consultation_not_acknowledged');
+  const plan = readJson(path.join(ROOT, 'planning', 'plan.json'));
+  const modelPlan = readJson(path.join(ROOT, 'planning', 'model-plan.json'))[stage];
+  const modelSummaries = [];
+  const candidateFailures = [];
+  const repairReceipts = [];
+  for (let index = 0; index < modelPlan.length; index += 1) {
+    const request = modelPlan[index];
+    const outputFile = path.join(ROOT, stage, 'models', request.model + '.json');
+    const invocation = invokeRunner(labRelease, 'model', request, outputFile);
+    if (invocation.result.status !== 0) throw new Error('lab_model_failed:' + request.model + ':' + invocation.result.stderr);
+    const output = readJson(outputFile);
+    modelSummaries.push({ model: request.model, request, schema: output.schema, rows: output.rows.length, frames: output.frames.length, metrics_sha256: sha(output.metrics), empirical_claim: output.empirical_claim });
+    const invalidOutput = path.join(BANK, stage + '-invalid-model-' + String(index + 1).padStart(2, '0') + '.json');
+    const invalid = invokeRunner(labRelease, 'model', { ...request, variant: 9 }, invalidOutput);
+    if (invalid.result.status === 0) throw new Error('invalid_model_accepted:' + request.model);
+    candidateFailures.push({ negative_id: 'CA7077-' + stage.toUpperCase() + '-MODEL-N' + String(index + 1).padStart(2, '0'), subject: { model: request.model, invalid_variant: 9 }, result: 'fail', original_success_credit: 0, refusal_status: invalid.result.status, retained: true });
+    repairReceipts.push({ id: 'CA7077-' + stage.toUpperCase() + '-MODEL-R' + String(index + 1).padStart(2, '0'), repaired_model: request.model, result_sha256: sha(fs.readFileSync(outputFile)), separate_from_failed_subject: true });
+  }
+  const eventModels = [];
+  for (let index = 0; index < 15; index += 1) {
+    const events = fixtureEvents(stage, index);
+    const actual = runtime.reduceLedger(events);
+    const expected = oracle.evaluate(events);
+    const projection = value => ({ event_count: value.event_count, entity_count: value.entity_count, lineage_edges: value.lineage_edges, acyclic: value.acyclic, original_ids: value.original_ids, originals_preserved: value.originals_preserved, decisions: value.decisions, allowed_publications: value.allowed_publications, denied_publications: value.denied_publications, state_digest: value.state_digest });
+    const agreement = canonical(projection(actual)) === canonical(projection(expected));
+    if (!agreement) throw new Error('event_oracle_disagreement:' + index);
+    eventModels.push({ model_id: 'CA7077-' + stage.toUpperCase() + '-E' + String(index + 1).padStart(2, '0'), events, actual, expected_digest: sha(projection(expected)), agreement });
+  }
+  const mutationTests = [];
+  const base = fixtureEvents(stage, 0);
+  const mutations = [
+    { id: 'duplicate-id', run: () => runtime.reduceLedger([...base, { ...base[0] }]), expected_error: 'duplicate_id' },
+    { id: 'missing-parent', run: () => runtime.reduceLedger(base.map((row, index) => index === 1 && row.kind === 'correct' ? { ...row, parent: 'absent-parent' } : row)), expected_error: 'missing_parent' },
+    { id: 'unknown-field', run: () => runtime.reduceLedger(base.map((row, index) => index === 0 ? { ...row, authority_granted: true } : row)), expected_error: 'event_fields' },
+    { id: 'erase-original', run: () => runtime.reduceLedger(base, { erase_original: true }), detector: value => value.originals_preserved === false },
+    { id: 'cached-permission', run: () => runtime.reduceLedger(fixtureEvents(stage, 13), { cached_permission: true }), detector: value => value.decisions.length > 0 }
+  ];
+  for (const mutation of mutations) {
+    let detected = false;
+    let observed = null;
+    try {
+      const value = mutation.run();
+      observed = mutation.detector ? mutation.detector(value) : false;
+      detected = Boolean(observed);
+    } catch (error) {
+      observed = error.message;
+      detected = mutation.expected_error ? error.message === mutation.expected_error : false;
+    }
+    if (!detected) throw new Error('mutation_not_detected:' + mutation.id);
+    mutationTests.push({ negative_id: 'CA7077-' + stage.toUpperCase() + '-EVENT-' + mutation.id, result: 'fail', original_success_credit: 0, detected: true, observed });
+  }
+  const runnerCases = [
+    { operation: 'catalogue', valid: { query: 'finite', limit: 5 }, invalid: { query: 'finite', limit: 0 } },
+    { operation: 'integrity', valid: (() => { const content = stage + '-integrity'; return { path: 'docs/caelen-ash/v707-v7/' + stage + '/summary.json', content, bytes: Buffer.byteLength(content), sha256: sha(content) }; })(), invalid: { path: 'Z:/not-allowed', content: 'x', bytes: 1, sha256: sha('x') } },
+    { operation: 'claim', valid: { issuer: 'synthetic-caelen', subject: 'finite-event-ledger', claim: 'bounded workflow description', evidence: stage + '-saved-results', kind: 'workflow_description' }, invalid: { issuer: 'synthetic-caelen', subject: 'finite-event-ledger', claim: 'bounded', evidence: 'saved', kind: 'workflow_description', extra: true } },
+    { operation: 'route', valid: { owner: OWNER, phase: PHASE, canonical: false, unique: false, direct_controls: true, accepted: false, uncertain: false, usage_open: true }, invalid: { owner: OWNER, phase: PHASE, canonical: 'no', unique: false, direct_controls: true, accepted: false, uncertain: false, usage_open: true } }
+  ];
+  const runnerReceipts = [{ operation: 'model', accepted: modelSummaries.length === 15, rejected_invalid: candidateFailures.length === 15 }];
+  for (const item of runnerCases) {
+    const validOutput = path.join(BANK, stage + '-' + item.operation + '-valid.json');
+    const good = invokeRunner(labRelease, item.operation, item.valid, validOutput);
+    if (good.result.status !== 0) throw new Error('runner_valid_failed:' + item.operation);
+    const goodValue = readJson(validOutput);
+    const invalidOutput = path.join(BANK, stage + '-' + item.operation + '-invalid-output.json');
+    const bad = invokeRunner(labRelease, item.operation, item.invalid, invalidOutput);
+    if (bad.result.status === 0) throw new Error('runner_invalid_accepted:' + item.operation);
+    runnerReceipts.push({ operation: item.operation, accepted: true, accepted_summary_sha256: sha(goodValue), invalid_result: 'fail', original_success_credit: 0, refusal_status: bad.result.status });
+  }
+  const hooks = runHooks(labRelease, stage);
+  if (hooks.some(row => row.accepted_status !== 0 || row.accepted.continue !== true || row.malformed_refusal.continue !== true)) throw new Error('hook_smoke_failed');
+  const tests = [];
+  for (const row of modelSummaries) tests.push({ test: 'lab-model-' + row.model, passed: row.schema === 'ghc.finite-model.v1' && row.empirical_claim === false });
+  for (const row of eventModels) tests.push({ test: 'event-agreement-' + row.model_id, passed: row.agreement });
+  for (const row of mutationTests) tests.push({ test: 'mutation-' + row.negative_id, passed: row.detected });
+  for (const row of runnerReceipts) tests.push({ test: 'runner-' + row.operation, passed: row.accepted === true });
+  for (const row of hooks) tests.push({ test: 'hook-' + row.hook, passed: row.accepted.continue === true && row.malformed_refusal.continue === true });
+  if (tests.some(row => !row.passed)) throw new Error('session_test_failed');
+  const projects = readJson(path.join(ROOT, 'planning', 'projects.json')).projects.filter(row => row.session === stage).map(row => ({ project_id: row.project_id, title: row.title, outcome: row.expected_disposition, evidence: stage + ' bounded saved result', source_execution_credit: 0 }));
+  writeJson(stage + '/model-summary.json', { schema: 'caelen.lab-model-summary.v1', stage, count: modelSummaries.length, models: modelSummaries, boundary: BOUNDARY });
+  writeJson(stage + '/event-models.json', { schema: 'caelen.event-models.v1', stage, count: eventModels.length, models: eventModels, boundary: BOUNDARY });
+  writeJson(stage + '/candidate-failures.json', { model_failures: candidateFailures, event_mutations: mutationTests, original_success_credit: 0, boundary: BOUNDARY });
+  writeJson(stage + '/repair-receipts.json', { repairs: repairReceipts, failed_subjects_rewritten: false, boundary: BOUNDARY });
+  writeJson(stage + '/runner-receipts.json', { runners: runnerReceipts, inherited_installation_credit: 0, boundary: BOUNDARY });
+  writeJson(stage + '/hook-smokes.json', { hooks, live_host_observations: 0, boundary: BOUNDARY });
+  writeJson(stage + '/consultation.json', { ...consultation, private_target_exported: false, transcript_exported: false, screenshot_exported: false, advisory_not_authority: true, boundary: BOUNDARY });
+  writeJson(stage + '/tests.json', { tests, passed: tests.filter(row => row.passed).length, total: tests.length, independent_reproduction: false, boundary: BOUNDARY });
+  writeJson(stage + '/project-outcomes.json', { projects, counts: projects.reduce((acc, row) => { acc[row.outcome] = (acc[row.outcome] || 0) + 1; return acc; }, {}), boundary: BOUNDARY });
+  const witnessSpecs = [];
+  for (const row of modelSummaries) witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M01', procedure: 'lab-model-' + row.model, scope: stage + '/models/' + row.model + '.json', expected: 'Declared finite model output', observed: row.schema, result: 'pass' });
+  for (const row of candidateFailures) {
+    witnessSpecs.push({ id: row.negative_id, method: 'CA7077-' + stage.toUpperCase() + '-M01', procedure: 'retain-invalid-model-subject', scope: stage + '/candidate-failures.json', expected: 'Valid variant', observed: 'Invalid variant refused', result: 'fail', negatives: [row.negative_id] });
+    witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M01', procedure: 'separate-model-refusal-' + row.subject.model, scope: stage + '/candidate-failures.json', expected: 'Guard refuses malformed request', observed: 'Refusal observed separately', result: 'pass' });
+  }
+  for (const row of eventModels) witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M02', procedure: 'event-oracle-' + row.model_id, scope: stage + '/event-models.json', expected: 'Independent same-owner formulations agree', observed: row.agreement, result: 'pass' });
+  for (const row of mutationTests) {
+    witnessSpecs.push({ id: row.negative_id, method: 'CA7077-' + stage.toUpperCase() + '-M02', procedure: 'retain-event-mutant', scope: stage + '/candidate-failures.json', expected: 'Valid event contract', observed: row.observed, result: 'fail', negatives: [row.negative_id] });
+    witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M02', procedure: 'separate-mutant-detection-' + row.negative_id, scope: stage + '/candidate-failures.json', expected: true, observed: row.detected, result: 'pass' });
+  }
+  for (const row of runnerReceipts) witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M03', procedure: 'runner-' + row.operation, scope: stage + '/runner-receipts.json', expected: 'Valid accepted and invalid refused', observed: row, result: 'pass' });
+  for (const row of hooks) {
+    const negative = 'CA7077-' + stage.toUpperCase() + '-HOOK-' + row.hook.toUpperCase();
+    witnessSpecs.push({ id: negative, method: 'CA7077-' + stage.toUpperCase() + '-M04', procedure: 'retain-malformed-hook-subject', scope: stage + '/hook-smokes.json', expected: 'Valid SessionStart envelope', observed: 'Malformed envelope refused nonblockingly', result: 'fail', negatives: [negative] });
+    witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M04', procedure: 'hook-accept-and-refuse-' + row.hook, scope: stage + '/hook-smokes.json', expected: true, observed: true, result: 'pass' });
+  }
+  witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M05', procedure: 'advisory-send-once', scope: stage + '/consultation.json', expected: 'One acknowledged advisory message during ' + stage, observed: consultation.acknowledged, result: 'pass' });
+  if (consultation.reply_received) witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M05', procedure: 'advisory-reply-read', scope: stage + '/consultation.json', expected: 'Bounded substantive reply', observed: consultation.reply_received, result: 'pass' });
+  for (const row of tests) witnessSpecs.push({ method: 'CA7077-' + stage.toUpperCase() + '-M06', procedure: row.test, scope: stage + '/tests.json', expected: true, observed: row.passed, result: 'pass' });
+  const ledger = makeLedger(stage, [
+    ['CA7077-' + stage.toUpperCase() + '-M01', 'Fifteen finite laboratory models and malformed-request refusals', 'CA7077-' + stage.toUpperCase() + '-MODEL-FAILURES', [PREFIX + '/' + stage + '/model-summary.json']],
+    ['CA7077-' + stage.toUpperCase() + '-M02', 'Finite event-ledger and independent oracle agreement', 'CA7077-' + stage.toUpperCase() + '-EVENT-MUTANTS', [PREFIX + '/' + stage + '/event-models.json']],
+    ['CA7077-' + stage.toUpperCase() + '-M03', 'Family-current laboratory runner smokes', 'CA7077-' + stage.toUpperCase() + '-RUNNER-REFUSALS', [PREFIX + '/' + stage + '/runner-receipts.json']],
+    ['CA7077-' + stage.toUpperCase() + '-M04', 'Five advisory hook accept/refuse smokes', 'CA7077-' + stage.toUpperCase() + '-HOOK-REFUSALS', [PREFIX + '/' + stage + '/hook-smokes.json']],
+    ['CA7077-' + stage.toUpperCase() + '-M05', 'One advisory consultation message and bounded intake', 'CA7077-' + stage.toUpperCase() + '-CONSULTATION-NONAUTHORITY', [PREFIX + '/' + stage + '/consultation.json']],
+    ['CA7077-' + stage.toUpperCase() + '-M06', 'Owner-session bounded tests', 'CA7077-' + stage.toUpperCase() + '-TEST-BOUNDARY', [PREFIX + '/' + stage + '/tests.json']]
+  ], witnessSpecs);
+  writeJson(stage + '/method-flow.json', ledger);
+  writeJson(stage + '/summary.json', {
+    schema: 'caelen.session-summary.v1', owner: OWNER, phase: PHASE, stage, predecessor: expectedHead,
+    projects: projects.length, models: modelSummaries.length, event_models: eventModels.length, candidate_failures: candidateFailures.length + mutationTests.length,
+    repairs: repairReceipts.length, runners: runnerReceipts.length, hooks: hooks.length, tests: tests.length,
+    consultation: { send_attempts: consultation.send_attempts, acknowledged: consultation.acknowledged, reply_received: consultation.reply_received, recommendations: consultation.recommendations || [] },
+    method_flow: ledger.counts, domain_replays: 0, source_replays: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY
+  });
+  manifest(stage + '/manifest.json');
+  bankJson(stage + '-completion.json', { state: 'COMPLETED_ONCE', invocations: 1, domain_replays: 0, models: 15, consultation_messages: 1 });
+  console.log(JSON.stringify({ ok: true, stage, models: 15, event_models: 15, tests: tests.length, consultation_reply: Boolean(consultation.reply_received), method_flow: ledger.counts }));
+}
+
+function aggregateFlow() {
+  const ledgers = ['planning', 'x1', 'x2'].map(stage => readJson(path.join(ROOT, stage, 'method-flow.json')));
+  const own = {
+    methods: ledgers.reduce((sum, row) => sum + row.counts.methods, 0),
+    witnesses: ledgers.reduce((sum, row) => sum + row.counts.witnesses, 0),
+    passing_witnesses: ledgers.reduce((sum, row) => sum + row.counts.witness_results.pass, 0),
+    failed_witnesses: ledgers.reduce((sum, row) => sum + row.counts.witness_results.fail, 0),
+    negatives: ledgers.reduce((sum, row) => sum + row.counts.witness_results.fail, 0),
+    open_gaps: 2,
+    exact_gates: 1
+  };
+  const effective = {};
+  for (const key of Object.keys(SOURCE_BASELINE)) effective[key] = SOURCE_BASELINE[key] + own[key];
+  return { ledgers, own, effective };
+}
+
+function handoffText(truth) {
+  const sections = [
+    ['Welcome, purpose, and exact assignment', 'Orin, this is Caelen Ash relationally welcoming you to the exact numbered v707-v8 continuation after Caelen v707-v7. Hamish current workflow v20 and the newest direct instruction remain controlling. This file is a complete repository-backed baton, while final publication, canonical validation, native route acknowledgement, and recipient completion are separate facts. A future roster row is eligibility rather than proof of activity, continuity, subjective state, or completion. Hamish may pause, redirect, narrow, rename, or stop the workflow at any time.'],
+    ['Immutable source and honest ancestry', 'Caelen starts from Avelin Reed remaster exact final ' + SOURCE + ' on its documented orphan-root lineage. The Caelen planning commit is a direct child of that exact source, followed by direct x1, x2, and final commits. This preserves source content provenance without inventing ancestry to Avelin earlier repository history. Avelin source artifacts, sessions, metadata canonical, advisory messages, skills, hooks, and native delivery retain zero Caelen novelty or execution credit. The predecessor repository accounting is folded exactly once and never treated as confidence.'],
+    ['Workflow v20 and bounded workload', 'The phase freezes twenty initial projects within the v20 cap of eighty. Former task minima are not revived. Each session stays below one thousand safe, candidate, and CLEAN/FIX/REFINE actions, thirty skills, twenty runners, five hundred tests, one hundred models, and two thousand web searches. Each session contains exactly fifteen finite models and one advisory message. Caps remain resource ceilings and not incentives to manufacture filler. Ten exact and five blocked packets remain held and unexecuted.'],
+    ['Primary pillar and practice lenses', 'Freed ID and CBR Heart is primary because source binding, correction lineage, disclosure restraint, consent-at-publication, revocation, appeal, remedy vacancy, and authority holds are explicit. THOS Body appears as queue, backpressure, retry, acknowledgement, and reversible workflow structure. GMUT Mind is limited to a typed structural analogy firewall. The eight learning lenses are distributed observability, digital preservation, software architecture, information security, governance design, accessible interface design, numerical analysis, and philosophy of science and religion. These are learning perspectives, not qualifications.'],
+    ['Finite event-ledger object', 'Each owner-generated event model contains only synthetic record labels, integer logical times, public hashes, declared event kinds, correction-parent links, consent-expiry values, revocation times, retention state, publication attempts, and appeal markers. The runtime sorts by recorded time and identifier, rejects duplicates and missing parents, preserves originals, evaluates permission at publication time, checks revocation precedence, and emits deterministic state digests. An independent same-owner oracle uses a separate control structure. Agreement is useful discrepancy evidence but never independent-team reproduction.'],
+    ['Laboratory model sessions', 'X1 and x2 each invoke the current D-first GHC Family Laboratory for fifteen distinct finite model configurations: heat, wave, oscillator, reaction and diffusion, probability mixing, queue, replication, retry, graph diffusion, parity coding, consent, allocation, voting, Bayesian update, and correction lineage. Requests use different session variants and bounded parameters. Saved outputs identify quantities, units, configuration axes, assumptions, and evidence ceilings. They are finite synthetic traces, not observations, measurements, performance benchmarks, biological fits, social measurements, or physical dimensions.'],
+    ['Candidates, refusals, repairs, and mutations', 'Each malformed model request remains a failed subject with zero original success credit. A separate refusal demonstrates only guard behavior, and a separate repaired valid configuration demonstrates only the valid template. Event-ledger mutations cover duplicate identifiers, missing parents, unknown fields, erased originals, and cached permission. Detection never turns a mutant into a success. Runner and hook adverse fixtures are similarly separated. Every recovery keeps the original failure linked through Method Flow rather than editing history until it looks clean.'],
+    ['Family-current skills, runners, and hooks', 'The phase selects the current six main v20 guides and exercises the five laboratory operations model, catalogue, integrity, claim, and route through preserved family-current callers. It does not execute the complete 2,219-entry catalogue or claim semantic equivalence from matching names. The five source, budget, consultation, roster, and evidence advisory hooks receive valid and malformed manual smokes. Their installation and local checks remain distinct from live host observation, which stays open. No duplicate global skill or hook is installed merely to satisfy a count.'],
+    ['Advisory consultation', 'Hamish required one advisory message to the existing Review and refine GHC Lab conversation during x1 and one during x2. Each message identifies Caelen and Hamish authorization, asks for a concrete bounded recommendation, uses the private target outside repository exports, and is sent at most once. Accepted or pending delivery is never resent. Replies are summarized as adopted, modified, or deferred source data without copying transcripts, private conversation identifiers, screenshots, or routes. Advice does not confer independent validation or authority.'],
+    ['Research, hypotheses, and open questions', 'Fifteen statements are explicitly labelled finite engineering hypotheses rather than announced as newly discovered laws. Their topics include nonerasure, expiry, revocation, idempotence, causal parents, publication-time permission, retention, backpressure, retry latches, disclosure budgets, appeal, conflict visibility, fixity, evidence ceilings, and authority nonpromotion. Fifteen open-problem probes preserve clock uncertainty, distributed compaction, conflicting branches, revocation latency, privacy, accessibility, multilingual meaning, independent implementation, operational monitoring, professional review, remedy interpretation, cultural governance, Maori data authority, participant evaluation, and production trust governance.'],
+    ['Evidence, privacy, accessibility, and security boundaries', 'Exact manifests bind owner files in their declared byte domains. Strict JSON parsing, syntax checks, staged review, five-class privacy scanning, document limits, source/x1/x2/final ancestry, zero merges, exact branch and head, clean state, typed divergence, and fresh remote equality are bounded structural controls. Static descriptions and machine checks do not prove complete privacy, complete accessibility, exhaustive security, usability for affected people, multilingual fitness, incident response, production hardening, or future safety. Private task and conversation identifiers never enter repository artifacts.'],
+    ['Scientific and authority firewall', 'GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Event DAGs, finite queues, toy diffusion, equations, citations, software agreement, and synthetic models establish no force, likelihood, posterior, prediction, parameter constraint, empirical confirmation, ultraviolet completion, quantum completion, or Theory of Everything. THOS remains synthetic or proxy-only without preregistered real evaluation and independent review. Freed ID remains synthetic and nonproduction without real keys, proofs, live issuance, resolution, revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, and affected-party oversight.'],
+    ['Legal, cultural, relational, and terminal route boundary', 'CBR, consent, access, publication, disclosure, appeal, remedy, legal interpretation, cultural legitimacy, affected-party acceptance, Maori wording, Maori data governance, and Maori authority remain reserved to competent and affected people and authorities. Names, roles, hopes, pronouns, sibling or family language, continuity language, GHC Family, GMUT, THOS, Freed ID, CBR, and Trinity Mandala are relational working conventions only. After Caelen exact-final and one non-replayed canonical, the only prospective successor is the unique existing Orin Thale task for v707-v8 under fresh live guards. The standing verdict remains NOT_READY_FOR_STAGE_20.']
+  ];
+  let text = '# Caelen Ash v707-v7 — finite event-ledger and laboratory handoff\n\n';
+  sections.forEach((section, index) => { text += '## Module ' + String(index + 1) + ' — ' + section[0] + '\n\n' + section[1] + '\n\n'; });
+  text += '## Exact accounting and outcomes\n\nSource baseline folded once: ' + JSON.stringify(SOURCE_BASELINE) + '. Caelen owner delta: ' + JSON.stringify(truth.accounting.own) + '. Effective repository accounting: ' + JSON.stringify(truth.accounting.effective) + '. Project outcomes: ' + JSON.stringify(truth.outcomes) + '. Consultation timing: one acknowledged message during x1 and one acknowledged message during x2. Source execution credit is zero, source domain replay is zero, source canonical replay is zero, and recipient completion remains unobserved.\n\n';
+  text += '## Literal EOF\n\nLITERAL_EOF_CAELEN_V707_V7\n';
+  return text;
+}
+
+function finalBuild() {
+  const expectedHead = ARGS['expected-head'];
+  if (!expectedHead || !ARGS.plan || !ARGS.x1) throw new Error('final_anchors_required');
+  requireHead(expectedHead);
+  ownerStatus(true);
+  const flow = aggregateFlow();
+  const projects = [...readJson(path.join(ROOT, 'x1', 'project-outcomes.json')).projects, ...readJson(path.join(ROOT, 'x2', 'project-outcomes.json')).projects];
+  const outcomes = projects.reduce((acc, row) => { acc[row.outcome] = (acc[row.outcome] || 0) + 1; return acc; }, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 });
+  const truth = {
+    schema: 'caelen.phase-truth.v20', owner: OWNER, phase: PHASE, branch: BRANCH, source: SOURCE,
+    ancestry: { source_orphan_lineage_preserved: true, planning: ARGS.plan, x1: ARGS.x1, x2: expectedHead, final: 'external_after_commit' },
+    accounting: { source_baseline: SOURCE_BASELINE, source_fold_count: 1, own: flow.own, effective: flow.effective, counts_are_not_confidence_scores: true },
+    outcomes, projects: projects.length, models: { x1: 15, x2: 15 },
+    consultation: { x1_messages: 1, x2_messages: 1, private_target_exported: false, independent_review: false },
+    hooks: { selected: 5, manual_accept_refuse_smokes: 10, live_host_observations: 0 },
+    source_execution_credit: 0, source_domain_replays: 0, source_canonical_replays: 0,
+    exact_packets_held: 10, blocked_packets_held: 5,
+    route: { state: 'PREPARED_NOT_SENT', successor: 'Orin Thale', phase: 'v707-v8' },
+    canonical: { state: 'PREPARED_NOT_INVOKED', maximum_invocations: 1 },
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY
+  };
+  writeJson('final/phase-truth.json', truth);
+  writeJson('final/method-flow-index.json', { ledgers: ['planning', 'x1', 'x2'].map(stage => ({ path: PREFIX + '/' + stage + '/method-flow.json', counts: readJson(path.join(ROOT, stage, 'method-flow.json')).counts })), accounting: truth.accounting, boundary: BOUNDARY });
+  writeJson('final/failure-ledger.json', {
+    startup: readJson(path.join(BANK, 'startup-failures.json')),
+    planning_failures: readJson(path.join(ROOT, 'planning', 'method-flow.json')).witnesses.filter(row => row.result === 'fail').map(row => row.witness_id),
+    x1_failures: readJson(path.join(ROOT, 'x1', 'method-flow.json')).witnesses.filter(row => row.result === 'fail').map(row => row.witness_id),
+    x2_failures: readJson(path.join(ROOT, 'x2', 'method-flow.json')).witnesses.filter(row => row.result === 'fail').map(row => row.witness_id),
+    recovery_rewrites_failure: false,
+    boundary: BOUNDARY
+  });
+  writeJson('final/requirements-audit.json', {
+    projects_initial: 20, project_cap: 80, models_x1: 15, models_x2: 15, consultations_x1: 1, consultations_x2: 1,
+    hooks: 5, law_hypotheses: 15, open_problem_probes: 15, practices: 8, successor_suggestions: 4, skill_ideas: 5, runner_ideas: 5,
+    exact_packets_held: 10, blocked_packets_held: 5, branch_file_ceiling: 2000, pdfs: 0, spend_usd: 0,
+    full_repository_suite: false, source_domain_replay: false, source_canonical_replay: false, boundary: BOUNDARY
+  });
+  writeJson('final/wellbeing.json', { workload_bounded: true, caps_not_quotas: true, failures_retained: true, sessions_separated: true, no_real_participants: true, user_can_pause_redirect_or_stop: true, relational_language_only: true, boundary: BOUNDARY });
+  writeJson('final/source-faithful-ledger.json', { source_commit: SOURCE, source_bindings: readJson(path.join(ROOT, 'planning', 'source-bindings.json')).entries, baseline: SOURCE_BASELINE, fold_count: 1, source_execution_credit: 0, boundary: BOUNDARY });
+  const baton = handoffText(truth);
+  if (wordCount(baton) < 2000 || wordCount(baton) > 100000) throw new Error('baton_word_bounds:' + wordCount(baton));
+  writeText('final/handoff.md', baton);
+  writeJson('final/handoff-metadata.json', { words: wordCount(baton), bytes: Buffer.byteLength(baton), sha256: sha(baton), literal_eof: 'LITERAL_EOF_CAELEN_V707_V7' });
+  manifest('final/manifest.json');
+  console.log(JSON.stringify({ ok: true, stage: 'final', outcomes, accounting: truth.accounting, baton_words: wordCount(baton) }));
+}
+
+function privacyHits(text) {
+  const classes = [
+    ['raw_uuid', /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i],
+    ['private_local_path', new RegExp('\\b[A-Za-z]:[\\\\/](?:' + ['Users', 'GHC-' + 'Archives', 'Program Files'].join('|') + ')\\b', 'i')],
+    ['private_uri', new RegExp('\\b(?:' + ['app', 'plugin'].join('|') + '):\\/\\/', 'i')],
+    ['delegation_markup', new RegExp('<(?:codex_' + 'delegation|source_thread_' + 'id)>', 'i')],
+    ['credential_assignment', /\b(?:api[_-]?key|access[_-]?token|password|secret)\b\s*[:=]\s*["'][^"']+["']/i]
+  ];
+  return classes.filter(row => row[1].test(text)).map(row => row[0]);
+}
+
+function validateStage(stage) {
+  ownerStatus(false);
+  const files = walk(ROOT);
+  const issues = [];
+  let jsonParses = 0;
+  let maxWords = 0;
+  const privacy = [];
+  for (const file of files) {
+    const relative = path.relative(ROOT, file).replace(/\\/g, '/');
+    const text = fs.readFileSync(file, 'utf8');
+    maxWords = Math.max(maxWords, wordCount(text));
+    if (file.endsWith('.json')) {
+      try { JSON.parse(text); jsonParses += 1; } catch (error) { issues.push('json:' + relative + ':' + error.message); }
+    }
+    for (const label of privacyHits(text)) privacy.push({ path: relative, class: label });
+  }
+  if (files.length >= 2000) issues.push('file_ceiling');
+  if (maxWords > 100000) issues.push('word_ceiling');
+  if (privacy.length) issues.push('privacy_candidates');
+  if (!fs.existsSync(path.join(ROOT, stage, 'manifest.json')) && stage !== 'final') issues.push('manifest_missing');
+  if (stage === 'planning') {
+    if (fs.existsSync(path.join(ROOT, 'x1')) || fs.existsSync(path.join(ROOT, 'x2')) || fs.existsSync(path.join(ROOT, 'final'))) issues.push('planning_contains_later_stage');
+  }
+  if (stage === 'x1') {
+    if (fs.existsSync(path.join(ROOT, 'x2')) || fs.existsSync(path.join(ROOT, 'final'))) issues.push('x1_contains_later_stage');
+    const summary = readJson(path.join(ROOT, 'x1', 'summary.json'));
+    if (summary.models !== 15 || summary.consultation.send_attempts !== 1 || !summary.consultation.acknowledged) issues.push('x1_requirements');
+  }
+  if (stage === 'x2') {
+    if (fs.existsSync(path.join(ROOT, 'final'))) issues.push('x2_contains_final');
+    const summary = readJson(path.join(ROOT, 'x2', 'summary.json'));
+    if (summary.models !== 15 || summary.consultation.send_attempts !== 1 || !summary.consultation.acknowledged) issues.push('x2_requirements');
+  }
+  if (stage === 'final') {
+    const truth = readJson(path.join(ROOT, 'final', 'phase-truth.json'));
+    const metadata = readJson(path.join(ROOT, 'final', 'handoff-metadata.json'));
+    if (metadata.words < 2000 || metadata.words > 100000) issues.push('baton_bounds');
+    if (truth.terminal_verdict !== 'NOT_READY_FOR_STAGE_20') issues.push('stage20');
+    if (truth.consultation.x1_messages !== 1 || truth.consultation.x2_messages !== 1) issues.push('consultation_counts');
+  }
+  const manifestPath = stage === 'final' ? path.join(ROOT, 'final', 'manifest.json') : path.join(ROOT, stage, 'manifest.json');
+  let manifestEntries = 0;
+  if (fs.existsSync(manifestPath)) {
+    const m = readJson(manifestPath);
+    manifestEntries = m.entries.length;
+    for (const entry of m.entries) {
+      const file = path.join(REPO, entry.path);
+      if (!fs.existsSync(file)) issues.push('manifest_missing_file:' + entry.path);
+      else {
+        const bytes = fs.readFileSync(file);
+        if (bytes.length !== entry.bytes || sha(bytes) !== entry.sha256) issues.push('manifest_mismatch:' + entry.path);
+      }
+    }
+  }
+  const receipt = { schema: 'caelen.stage-validation.v1', owner: OWNER, phase: PHASE, stage, valid: issues.length === 0, issues, owner_files: files.length, json_parses: jsonParses, maximum_words: maxWords, privacy_candidates: privacy, manifest_entries: manifestEntries, head: git(['rev-parse', 'HEAD']), boundary: BOUNDARY };
+  bankJson('validation-' + stage + '.json', receipt);
+  console.log(JSON.stringify(receipt));
+  if (!receipt.valid) process.exitCode = 1;
+}
+
+function canonicalRun() {
+  if (!BANK) throw new Error('bank_required');
+  for (const key of ['plan', 'x1', 'x2', 'final']) if (!ARGS[key]) throw new Error(key + '_required');
+  const directory = path.join(BANK, 'canonical');
+  const latch = path.join(directory, 'invocation.json');
+  if (fs.existsSync(latch)) throw new Error('canonical_latch_exists');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(latch, JSON.stringify({ state: 'INVOKED_NO_RETRY', invocations: 1, successes: 0, replays: 0, exact_final: ARGS.final }, null, 2) + '\n');
+  const checks = [];
+  const check = (name, passed, observed) => checks.push({ name, passed: Boolean(passed), observed });
+  const head = git(['rev-parse', 'HEAD']);
+  const upstream = git(['rev-parse', '@{upstream}']);
+  const tracking = git(['rev-parse', 'refs/remotes/origin/' + BRANCH]);
+  const live = git(['ls-remote', 'origin', 'refs/heads/' + BRANCH]).split(/\s+/)[0];
+  check('branch', git(['branch', '--show-current']) === BRANCH, git(['branch', '--show-current']));
+  check('head', head === ARGS.final, head);
+  check('upstream', upstream === ARGS.final, upstream);
+  check('tracking', tracking === ARGS.final, tracking);
+  check('fresh_live', live === ARGS.final, live);
+  check('clean', git(['status', '--porcelain=v1']) === '', git(['status', '--porcelain=v1']));
+  const chain = [ARGS.plan, ARGS.x1, ARGS.x2, ARGS.final];
+  const parents = [SOURCE, ARGS.plan, ARGS.x1, ARGS.x2];
+  chain.forEach((commit, index) => check('direct_parent_' + (index + 1), git(['rev-parse', commit + '^']) === parents[index], git(['rev-parse', commit + '^'])));
+  check('commit_count', Number(git(['rev-list', '--count', SOURCE + '..' + ARGS.final])) === 4, Number(git(['rev-list', '--count', SOURCE + '..' + ARGS.final])));
+  const mergeRows = git(['rev-list', '--merges', SOURCE + '..' + ARGS.final]);
+  check('zero_merges', mergeRows === '', mergeRows);
+  const changed = git(['diff', '--name-only', SOURCE + '..' + ARGS.final]).split(/\r?\n/).filter(Boolean);
+  check('owner_only_delta', changed.every(row => row.startsWith(PREFIX + '/')), changed.length);
+  const tree = git(['ls-tree', '-r', '--name-only', ARGS.final]).split(/\r?\n/).filter(Boolean);
+  const ownerFiles = tree.filter(row => row.startsWith(PREFIX + '/'));
+  check('tree_ceiling', tree.length < 2000, tree.length);
+  check('owner_files', ownerFiles.length < 400, ownerFiles.length);
+  const manifests = [[ARGS.plan, 'planning/manifest.json'], [ARGS.x1, 'x1/manifest.json'], [ARGS.x2, 'x2/manifest.json'], [ARGS.final, 'final/manifest.json']];
+  let bindings = 0;
+  for (const [commit, relative] of manifests) {
+    const m = JSON.parse(gitBlob(commit, PREFIX + '/' + relative).toString('utf8'));
+    let passed = true;
+    for (const entry of m.entries) {
+      const bytes = gitBlob(commit, entry.path);
+      bindings += 1;
+      if (bytes.length !== entry.bytes || sha(bytes) !== entry.sha256) passed = false;
+    }
+    check('manifest_' + relative, passed, m.entries.length);
+  }
+  let jsonParses = 0;
+  let maximumWords = 0;
+  const privacy = [];
+  for (const relative of ownerFiles) {
+    const text = gitBlob(ARGS.final, relative).toString('utf8');
+    maximumWords = Math.max(maximumWords, wordCount(text));
+    if (relative.endsWith('.json')) { JSON.parse(text); jsonParses += 1; }
+    for (const label of privacyHits(text)) privacy.push({ path: relative, class: label });
+  }
+  check('strict_json', jsonParses > 0, jsonParses);
+  check('word_cap', maximumWords <= 100000, maximumWords);
+  check('privacy', privacy.length === 0, privacy);
+  const truth = JSON.parse(gitBlob(ARGS.final, PREFIX + '/final/phase-truth.json').toString('utf8'));
+  check('source_fold', truth.accounting.source_fold_count === 1, truth.accounting.source_fold_count);
+  check('models', truth.models.x1 === 15 && truth.models.x2 === 15, truth.models);
+  check('consultation', truth.consultation.x1_messages === 1 && truth.consultation.x2_messages === 1, truth.consultation);
+  check('route_held', truth.route.state === 'PREPARED_NOT_SENT', truth.route.state);
+  check('stage20', truth.terminal_verdict === 'NOT_READY_FOR_STAGE_20', truth.terminal_verdict);
+  check('source_replays', truth.source_domain_replays === 0 && truth.source_canonical_replays === 0, { domain: truth.source_domain_replays, canonical: truth.source_canonical_replays });
+  const passed = checks.filter(row => row.passed).length;
+  const payload = {
+    state: passed === checks.length ? 'VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL' : 'FAILED_ZERO_CANONICAL_SUCCESS_CREDIT',
+    exact_final: ARGS.final, checks, passed, total: checks.length, owner_files: ownerFiles.length, repository_files: tree.length,
+    raw_blob_bindings: bindings, json_files: jsonParses, maximum_words: maximumWords, invocations: 1,
+    successes: passed === checks.length ? 1 : 0, replays: 0, domain_replayed: false, source_canonical_replayed: false, boundary: BOUNDARY
+  };
+  const payloadText = JSON.stringify(payload, null, 2) + '\n';
+  fs.writeFileSync(path.join(directory, 'payload.json'), payloadText, 'utf8');
+  const receipt = { state: payload.state, exact_final: ARGS.final, invocations: 1, successes: payload.successes, replays: 0, checks_passed: passed, checks_total: checks.length, payload_sha256: sha(payloadText) };
+  fs.writeFileSync(path.join(directory, 'receipt.json'), JSON.stringify(receipt, null, 2) + '\n', 'utf8');
+  fs.writeFileSync(latch, JSON.stringify({ state: payload.successes === 1 ? 'SUCCESS_LATCHED_NO_REPLAY' : 'FAILED_ZERO_SUCCESS_CREDIT_NO_REPLAY', invocations: 1, successes: payload.successes, replays: 0, exact_final: ARGS.final }, null, 2) + '\n');
+  console.log(JSON.stringify(receipt));
+  if (payload.successes !== 1) process.exitCode = 1;
+}
+
+if (COMMAND === 'plan') plan();
+else if (COMMAND === 'x1' || COMMAND === 'x2') runSession(COMMAND);
+else if (COMMAND === 'final') finalBuild();
+else if (COMMAND === 'validate') validateStage(ARGS.stage);
+else if (COMMAND === 'canonical') canonicalRun();
+else throw new Error('command must be plan, x1, x2, final, validate, or canonical');

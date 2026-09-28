@@ -1,0 +1,97 @@
+'use strict';
+
+const crypto = require('crypto');
+
+function stable(value) {
+  if (Array.isArray(value)) return '[' + value.map(stable).join(',') + ']';
+  if (value && typeof value === 'object') return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + stable(value[key])).join(',') + '}';
+  return JSON.stringify(value);
+}
+
+function digest(value) {
+  return crypto.createHash('sha256').update(typeof value === 'string' ? value : stable(value)).digest('hex');
+}
+
+function evaluate(events) {
+  const ordered = events.slice().sort((left, right) => left.recorded_at - right.recorded_at || left.id.localeCompare(right.id));
+  const rows = {};
+  const edges = [];
+  const originals = [];
+  const decisions = [];
+  for (const event of ordered) {
+    if (!rows[event.entity]) rows[event.entity] = {
+      entity: event.entity,
+      current: null,
+      revoked_at: null,
+      appealed: false,
+      retained: true,
+      publications: []
+    };
+    const state = rows[event.entity];
+    switch (event.kind) {
+      case 'create':
+        originals.push(event.id);
+        state.current = event.id;
+        state.payload_hash = event.payload_hash;
+        state.consent_expires = event.consent_expires;
+        break;
+      case 'correct':
+        edges.push({ from: event.parent, to: event.id });
+        state.current = event.id;
+        state.payload_hash = event.payload_hash;
+        state.consent_expires = event.consent_expires;
+        break;
+      case 'revoke':
+        state.revoked_at = state.revoked_at === null ? event.valid_from : Math.min(state.revoked_at, event.valid_from);
+        break;
+      case 'appeal':
+        state.appealed = true;
+        break;
+      case 'retain':
+        state.retained = event.payload_hash !== digest('discard');
+        break;
+      case 'publish': {
+        const consentValid = Number.isSafeInteger(state.consent_expires) && event.valid_from < state.consent_expires;
+        const notRevoked = state.revoked_at === null || event.valid_from < state.revoked_at;
+        const decision = {
+          event_id: event.id,
+          entity: event.entity,
+          decision_time: event.valid_from,
+          allowed: Boolean(state.current && consentValid && notRevoked && state.retained),
+          consent_valid: consentValid,
+          not_revoked: notRevoked,
+          retained: state.retained,
+          current_record: state.current
+        };
+        decisions.push(decision);
+        state.publications.push(decision);
+        break;
+      }
+      default:
+        throw new Error('unsupported_kind');
+    }
+  }
+  const values = Object.values(rows).map(row => ({
+    entity: row.entity,
+    current: row.current,
+    revoked_at: row.revoked_at,
+    appealed: row.appealed,
+    retained: row.retained,
+    publications: row.publications
+  }));
+  return {
+    schema: 'caelen.event-ledger-oracle.v1',
+    event_count: ordered.length,
+    entity_count: values.length,
+    lineage_edges: edges,
+    acyclic: edges.every(edge => edge.from !== edge.to),
+    original_ids: originals,
+    originals_preserved: true,
+    decisions,
+    allowed_publications: decisions.filter(row => row.allowed).length,
+    denied_publications: decisions.filter(row => !row.allowed).length,
+    state_digest: digest(values)
+  };
+}
+
+module.exports = { stable, digest, evaluate };
