@@ -1,0 +1,257 @@
+{
+  "schema": "orin.equal-bounds-distinct-inputs.v1",
+  "input": {
+    "x": [
+      -1,
+      0,
+      1
+    ],
+    "y": [
+      -1,
+      0,
+      1
+    ],
+    "independent": true
+  },
+  "program": [
+    "d = x - y",
+    "r = d * d"
+  ],
+  "rows": [
+    {
+      "x": -1,
+      "y": -1,
+      "result": 0
+    },
+    {
+      "x": -1,
+      "y": 0,
+      "result": 1
+    },
+    {
+      "x": -1,
+      "y": 1,
+      "result": 4
+    },
+    {
+      "x": 0,
+      "y": -1,
+      "result": 1
+    },
+    {
+      "x": 0,
+      "y": 0,
+      "result": 0
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "result": 1
+    },
+    {
+      "x": 1,
+      "y": -1,
+      "result": 4
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "result": 1
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "result": 0
+    }
+  ],
+  "exact_values": [
+    0,
+    1,
+    4
+  ],
+  "exact_hull": [
+    0,
+    4
+  ],
+  "ordinary_interval": {
+    "lo": -4,
+    "hi": 4,
+    "source": [
+      "x-independent",
+      "y-independent",
+      "difference-neg",
+      "difference",
+      "x-independent",
+      "y-independent",
+      "difference-neg",
+      "difference",
+      "ordinary-interval-square"
+    ]
+  },
+  "positive_affine": {
+    "center": 2,
+    "coefficients": {
+      "x": 0,
+      "y": 0
+    },
+    "fresh_error_radius": 2,
+    "projected_interval": [
+      0,
+      4
+    ]
+  },
+  "faulty_affine": {
+    "center": 2,
+    "coefficients": {
+      "x": 2,
+      "y": 0
+    },
+    "fresh_error_radius": 0,
+    "projected_interval": [
+      0,
+      4
+    ]
+  },
+  "singleton": {
+    "lo": 4,
+    "hi": 4,
+    "source": [
+      "single-x",
+      "single-y",
+      "single-d-neg",
+      "single-d",
+      "single-x",
+      "single-y",
+      "single-d-neg",
+      "single-d",
+      "single-square"
+    ]
+  },
+  "tests": [
+    {
+      "id": "equal-bounds-coverage--1--1",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive--1--1",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage--1-0",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive--1-0",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage--1-1",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive--1-1",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage-0--1",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive-0--1",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage-0-0",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive-0-0",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage-0-1",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive-0-1",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage-1--1",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive-1--1",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage-1-0",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive-1-0",
+      "passed": true
+    },
+    {
+      "id": "equal-bounds-coverage-1-1",
+      "passed": true
+    },
+    {
+      "id": "affine-binding-positive-1-1",
+      "passed": true
+    },
+    {
+      "id": "exact-hull",
+      "passed": true
+    },
+    {
+      "id": "ordinary-baseline",
+      "passed": true
+    },
+    {
+      "id": "finite-width-budget",
+      "passed": true
+    },
+    {
+      "id": "singleton-exact",
+      "passed": true
+    },
+    {
+      "id": "faulty-affine-rejected",
+      "passed": true
+    }
+  ],
+  "mutants": [
+    {
+      "negative_id": "OR7078-X2-MUT-FALSE-CORRELATION",
+      "subject": "Equal numeric bounds merged into one input symbol and reported [0,0]",
+      "detected": true,
+      "classification": "unsound",
+      "original_success_credit": 0
+    },
+    {
+      "negative_id": "OR7078-X2-MUT-VACUOUS-TOP",
+      "subject": "Always-top interval",
+      "detected": true,
+      "classification": "contains oracle but fails usefulness",
+      "original_success_credit": 0
+    },
+    {
+      "negative_id": "OR7078-X2-MUT-OVERSIZED-FINITE",
+      "subject": "Finite [-1000000,1000000] enclosure",
+      "detected": true,
+      "classification": "sound on fixture but fails usefulness budget",
+      "original_success_credit": 0
+    },
+    {
+      "negative_id": "OR7078-X2-MUT-AFFINE-BINDING",
+      "subject": "Projected [0,4] with false x-only dependency",
+      "detected": true,
+      "classification": "representation-aware unsoundness",
+      "original_success_credit": 0
+    }
+  ],
+  "advisory_source": "sanitized x1 reply adopted for x2",
+  "independent_reproduction": false,
+  "boundary": "Finite synthetic same-owner interval, affine-form, abstract-interpretation, laboratory, software and documentary evidence only. No real participant, program, production analyzer, measurement, identity, credential, consent decision, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains a research-model family; THOS remains proxy and Freed ID remains synthetic/nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

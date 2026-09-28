@@ -1,0 +1,177 @@
+{
+  "schema": "orin.branch-join-shared-witness.v1",
+  "recommendation_id": "BRANCH_JOIN_SHARED_WITNESS",
+  "program": [
+    "x in {-1,0,1}",
+    "b in {0,1}",
+    "if b=0 then (u,v)=(x,-x) else (u,v)=(-x,x)",
+    "join"
+  ],
+  "rows": [
+    {
+      "x": -1,
+      "b": 0,
+      "u": -1,
+      "v": 1
+    },
+    {
+      "x": -1,
+      "b": 1,
+      "u": 1,
+      "v": -1
+    },
+    {
+      "x": 0,
+      "b": 0,
+      "u": 0,
+      "v": 0
+    },
+    {
+      "x": 0,
+      "b": 1,
+      "u": 0,
+      "v": 0
+    },
+    {
+      "x": 1,
+      "b": 0,
+      "u": 1,
+      "v": -1
+    },
+    {
+      "x": 1,
+      "b": 1,
+      "u": -1,
+      "v": 1
+    }
+  ],
+  "exact_marginal_hulls": {
+    "u": [
+      -1,
+      1
+    ],
+    "v": [
+      -1,
+      1
+    ]
+  },
+  "exact_pair_set": [
+    [
+      -1,
+      1
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      -1
+    ]
+  ],
+  "positive_control": {
+    "u": "eta",
+    "v": "-eta",
+    "eta": [
+      -1,
+      1
+    ],
+    "joint_coverage": 6,
+    "total": 6
+  },
+  "mutant": {
+    "negative_id": "OR7078-X2-MUT-BRANCH-SHARED-SIGN",
+    "u": "eta",
+    "v": "eta",
+    "marginal_coverage": 6,
+    "joint_coverage": 2,
+    "total": 6,
+    "counterexample": {
+      "x": -1,
+      "b": 0,
+      "u": -1,
+      "v": 1,
+      "first_requires_eta": -1,
+      "second_requires_eta": 1,
+      "covered": false
+    },
+    "original_success_credit": 0
+  },
+  "malformed_evidence": {
+    "negative_id": "OR7078-X2-MALFORMED-EVIDENCE-N002",
+    "subject": "Missing global symbol table or inconsistent symbol identity",
+    "classification": "MALFORMED_EVIDENCE",
+    "mathematical_unsoundness_claim": false,
+    "acceptance_withheld": true,
+    "original_success_credit": 0
+  },
+  "precision_budget": {
+    "maximum_width_each": 2,
+    "classification_separate_from_soundness": true
+  },
+  "tests": [
+    {
+      "id": "branch-positive-joint--1-0",
+      "passed": true
+    },
+    {
+      "id": "branch-mutant-marginal--1-0",
+      "passed": true
+    },
+    {
+      "id": "branch-positive-joint--1-1",
+      "passed": true
+    },
+    {
+      "id": "branch-mutant-marginal--1-1",
+      "passed": true
+    },
+    {
+      "id": "branch-positive-joint-0-0",
+      "passed": true
+    },
+    {
+      "id": "branch-mutant-marginal-0-0",
+      "passed": true
+    },
+    {
+      "id": "branch-positive-joint-0-1",
+      "passed": true
+    },
+    {
+      "id": "branch-mutant-marginal-0-1",
+      "passed": true
+    },
+    {
+      "id": "branch-positive-joint-1-0",
+      "passed": true
+    },
+    {
+      "id": "branch-mutant-marginal-1-0",
+      "passed": true
+    },
+    {
+      "id": "branch-positive-joint-1-1",
+      "passed": true
+    },
+    {
+      "id": "branch-mutant-marginal-1-1",
+      "passed": true
+    },
+    {
+      "id": "branch-mutant-joint-count",
+      "passed": true
+    },
+    {
+      "id": "branch-positive-width",
+      "passed": true
+    },
+    {
+      "id": "branch-malformed-evidence-classification",
+      "passed": true
+    }
+  ],
+  "advisory_source": "sanitized x2 reply",
+  "independent_reproduction": false,
+  "boundary": "Finite synthetic same-owner interval, affine-form, abstract-interpretation, laboratory, software and documentary evidence only. No real participant, program, production analyzer, measurement, identity, credential, consent decision, remedy, professional act, legal or cultural determination, affected-party approval, or Maori-authority act occurred. GMUT remains a research-model family; THOS remains proxy and Freed ID remains synthetic/nonproduction. Relational names and family language are not consciousness, personhood, continuity, qualification, agency or authority evidence. No independent reproduction, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

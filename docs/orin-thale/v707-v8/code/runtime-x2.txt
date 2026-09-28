@@ -1,0 +1,4 @@
+'use strict';
+function interval(lo,hi){if(!Number.isFinite(lo)||!Number.isFinite(hi)||lo>hi)throw Error('invalid_interval');return{lo,hi};}
+function multiply(a,b){const v=[a.lo*b.lo,a.lo*b.hi,a.hi*b.lo,a.hi*b.hi];return{lo:Math.min(...v),hi:Math.max(...v)};}
+module.exports={interval,multiply,empirical_claim:false};
