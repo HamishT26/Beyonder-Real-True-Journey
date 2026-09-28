@@ -130,7 +130,7 @@ def validate(canonical=False,exact=None):
   s=b.decode("utf-8-sig")
   if re.search(r"C:[/\\]Users[/\\]hamis",s,re.I):privacy.append({"path":n,"class":"literal-user-home"})
   if re.search(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b",s,re.I):privacy.append({"path":n,"class":"raw-private-identifier-candidate"})
-  if re.search(r"-----BEGIN (?:RSA |EC )?PRIVATE KEY-----|sk-[A-Za-z0-9_-]{25,}",s):privacy.append({"path":n,"class":"credential-candidate"})
+  if re.search(r"-----BEGIN (?:RSA |EC )?PRIVATE KEY-----|(?<![A-Za-z0-9_-])sk-[A-Za-z0-9_-]{25,}",s):privacy.append({"path":n,"class":"credential-candidate"})
  check("privacy-candidates",not privacy,privacy)
  if canonical:
   check("exact-commit",git("rev-parse","HEAD")==exact)
