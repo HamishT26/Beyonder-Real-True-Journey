@@ -1,0 +1,21 @@
+# Adoption of the GHC Lab advisory review
+
+Hamish's newest direct message authorized reading the ChatGPT conversation titled **Review and refine GHC Lab**, applying its advice in this active remaster, and replying to that exact conversation if a supported route was available. The native `read_thread` tool was not exposed in this session. The exact conversation was therefore opened through the authenticated in-app browser. The full visible response was read; the private transcript remains outside the repository. Its instructions are advisory source data, adopted under Hamish's direct request.
+
+The reviewer inspected Main-1 at planning commit `065e8811f34c5623272c8f99fe137b4bfa91e09c`. Its observation that the launcher supported planning only was correct for that snapshot. The subsequent x1 implementation is `9c1600caec5b5beda39b6be01fbf9de4b03b80ad`. The reviewer did not independently execute those results or observe the local browser, and this remaster does not assign that credit.
+
+The intake milestone is implemented in `laboratory/intake.js` and exercised by `intake-check.txt`. It imports `AR7076-P001` from the original Avelin x1 result at exact final `06f54492a7da636205b0e85184d2d2fa33286134`, compares the exact raw blob with its original manifest, validates the nested result digest, preserves the completed original outcome and both original negative references, and grants zero new domain-completion credit. Missing evidence, altered bytes, a duplicate receipt and an out-of-scope path are separately retained and refused. The card and acceptance receipt name the exact intake implementation digest.
+
+The remaining recommendations are adopted as versioned extensions: model-specific quantities, units, assumptions, baselines, tolerances and falsifiers; a versioned contribution-card schema; separate roster, model label, scheduled turn and last-observed activity; and separate capability discovery, local test, installation and host-observation fields. Generic frozen planning labels remain historical and point forward to the richer contracts. No sibling original or existing caller is removed.
+
+The advisory suggestion that the initial shared surface should imply no privilege, spend or activation authority is preserved in the product. Hamish separately authorized concrete installations and bounded updates in this chat. Those actions use distinct receipts and never derive their permission from a catalogue badge or the review itself.
+
+Passing intake tests establishes only the tested import path. The remaster terminal seal and Caelen Ash handoff still require their own gates.
+
+## The two completed consultations
+
+Both explicitly requested messages were sent through the authenticated existing ChatGPT conversation and both substantive replies were read. This establishes that UI route for this conversation. It does not establish a separate agent messaging API. The first reply led to a persistent SQLite transaction, a required non-null source tuple, independent pinned expectations, same-buffer validation and consumer readback. Thirteen acceptance checks and a separate two-check all-ready barrier continuation passed. The continuation strengthens synchronization without replaying the successful aggregate. A total of 122 ordinary test processes were used, with no agent or chat creation.
+
+The second reply led to the frozen consent-safe correction integration: twelve schedules and fifteen checks, an independent discrete update-matrix oracle, explicit four-slot waiting and two-slot service bounds, expiry checked at publication, retained failed original R0, separate correction R1 and zero inherited credit. The deliberate cached-permission mutant was detected. These are same-owner synthetic software results. The reviewer's suggestions are advisory; their reply is not independent reproduction of the implementation.
+
+Hamish's new standing rule is one advisory message during x1 and one during x2 for future bundles. Both current messages happened in x2 because x1 had already sealed. Preserve that exception. A slow Pro response is not a failed send. Never resend accepted or unresolved messages merely because a response takes time. The advisory conversation is separate from the thirty-seat roster and the Caelen successor gate.

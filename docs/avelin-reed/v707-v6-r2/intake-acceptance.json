@@ -1,0 +1,82 @@
+{
+  "schema": "ghc.lab.intake-acceptance.v1",
+  "source": {
+    "commit": "06f54492a7da636205b0e85184d2d2fa33286134",
+    "path": "docs/avelin-reed/v707-v6/x1.json"
+  },
+  "source_sha256": "54e896a717b331ddf2a24ae19bcc8729479b823fe4c76147aacd18652531b8f4",
+  "source_manifest_sha256": "0722a37b27d6f029e0b93a16d91ff5a8b4b1f60e417ac0daad916e03638cc422",
+  "lab_version_sha256": "71a1e2763d80408649d720a8e37b99bf3e07e583d1b2bb593309321835b5a57a",
+  "card_id": "610852db82aa4735a9facafbe917d21036130802e2cb70ef61485e297fa14f92",
+  "checks": [
+    {
+      "id": "source-byte-binding",
+      "pass": true
+    },
+    {
+      "id": "original-outcome-preserved",
+      "pass": true
+    },
+    {
+      "id": "original-not-mutated",
+      "pass": true
+    },
+    {
+      "id": "one-receipt-only",
+      "pass": true
+    },
+    {
+      "id": "missing-evidence-refusal",
+      "pass": true,
+      "negative_id": "missing-evidence"
+    },
+    {
+      "id": "changed-checksum-refusal",
+      "pass": true,
+      "negative_id": "changed-checksum"
+    },
+    {
+      "id": "duplicate-receipt-refusal",
+      "pass": true,
+      "negative_id": "duplicate-receipt"
+    },
+    {
+      "id": "out-of-scope-file-refusal",
+      "pass": true,
+      "negative_id": "out-of-scope-file"
+    }
+  ],
+  "negatives": [
+    {
+      "id": "missing-evidence",
+      "original_success_credit": 0,
+      "result": "fail",
+      "retained": true,
+      "error": "missing evidence"
+    },
+    {
+      "id": "changed-checksum",
+      "original_success_credit": 0,
+      "result": "fail",
+      "retained": true,
+      "error": "source checksum mismatch"
+    },
+    {
+      "id": "duplicate-receipt",
+      "original_success_credit": 0,
+      "result": "fail",
+      "retained": true,
+      "error": "duplicate receipt"
+    },
+    {
+      "id": "out-of-scope-file",
+      "original_success_credit": 0,
+      "result": "fail",
+      "retained": true,
+      "error": "out-of-scope source"
+    }
+  ],
+  "passed": 8,
+  "total": 8,
+  "scope": "One bounded intake path. Not independent reproduction, empirical validation, whole-remaster completion or successor authorization."
+}

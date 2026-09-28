@@ -1,0 +1,46 @@
+'use strict';
+if(process.env.GHC_MODEL_GUARD!=='v16')throw Error('Registered phase launcher required');
+const fs=require('fs'),path=require('path'),M=require('../../../laboratory/models.js'),O=require('../../../laboratory/operations.js');
+const plan=JSON.parse(fs.readFileSync(path.join(__dirname,'integration-plan.json'),'utf8')),bank='D:/GHC-Archives/phase-banks/avelin-reed-v707-v6-r2/integration';
+fs.mkdirSync(bank,{recursive:false});
+const runtime=M.simulate(plan.model),size=9,N=81,alpha=0.1;
+let oracle=Array.from({length:N},(_,i)=>Math.exp(-((i%size-4)**2+(Math.floor(i/size)-4)**2)/4));
+const matrix=Array.from({length:N},()=>Array(N).fill(0));
+for(let row=0;row<N;row++){const x=row%size,y=Math.floor(row/size);matrix[row][row]=1-4*alpha;for(const col of [y*size+(x+1)%size,y*size+(x+size-1)%size,((y+1)%size)*size+x,((y+size-1)%size)*size+x])matrix[row][col]+=alpha;}
+for(let t=0;t<24;t++)oracle=matrix.map(row=>row.reduce((sum,w,j)=>sum+w*oracle[j],0));
+const field=runtime.frames.at(-1).map(p=>p.value),error=(a,b)=>Math.max(...a.map((x,i)=>Math.abs(x-b[i]))),maxError=error(field,oracle);
+const bad=[...field];bad[0]+=0.001;
+const R0={id:'R0',field:bad,result:'fail',original_success_credit:0,error:error(bad,oracle)},r0Hash=O.hash(O.canonical(R0));
+const R1={id:'R1',field,parent:'R0',parent_sha256:r0Hash,error:maxError,inherited_completion_credit:0};
+function executeCase(id,publishAt,expires,saturated,mutant=false){
+ const dir=path.join(bank,id);fs.mkdirSync(dir);
+ const waiting=[],active=[],terminal=[],events=[],published=[];let peakWaiting=0,peakService=0;
+ const grant={subject:'synthetic-fixture',scope:'publish-local-viewer',scopes:['publish-local-viewer'],expires,withdrawn:false};
+ const enqueueAllowed=M.consentAllows({...grant,time:19});
+ const submit=(job,time)=>{if(job.id==='R0'){terminal.push({id:job.id,state:'numerically_invalid',at:time});events.push({time,action:'refuse-numerical',id:job.id});return;}if(waiting.length>=4){terminal.push({id:job.id,state:'backpressure',at:time});events.push({time,action:'backpressure',id:job.id});return;}waiting.push(job);peakWaiting=Math.max(peakWaiting,waiting.length);events.push({time,action:'enqueue',id:job.id,occupancy:waiting.length});};
+ if(saturated){active.push({id:'active-A'},{id:'active-B'});peakService=2;}
+ submit(R0,19);submit(R1,19);
+ if(saturated){for(let i=0;i<3;i++)submit({id:'filler-'+i},19);submit({id:'overflow'},19);}
+ const r0Before=O.canonical(R0);
+ // A controlled scheduler holds service until the requested event time.
+ for(let time=publishAt;time<=32;time++){
+  while(active.length){const job=active.shift();terminal.push({id:job.id,state:'completed-housekeeping',at:time});}
+  while(active.length<2&&waiting.length){const job=waiting.shift();active.push(job);peakService=Math.max(peakService,active.length);events.push({time,action:'service',id:job.id,waiting:waiting.length,active:active.length});if(job.id==='R1'){
+   const allowed=mutant?enqueueAllowed:M.consentAllows({...grant,time});
+   const state=allowed?'published':'permission_denied';terminal.push({id:'R1',state,at:time});
+   if(allowed){const receipt={record:R1,published_at:time,grant_expires:expires,permission_scope:grant.scope,parent_failure:R0,new_domain_completion_credit:0};fs.writeFileSync(path.join(dir,'published.json'),JSON.stringify(receipt)+'\n',{flag:'wx'});published.push({id:'R1',at:time});}
+  }}
+  // Publication is the protected event; subsequent completion is just service-slot cleanup.
+  for(let i=active.length-1;i>=0;i--)if(active[i].id==='R1')active.splice(i,1);
+  if(!waiting.length&&!active.length)break;
+ }
+ const expected=publishAt<expires,submitted=saturated?8:2; // two active jobs, R0/R1, three fillers and one overflow
+ const checks={R0_never_publishes:published.every(p=>p.id!=='R0'),permission_exact:published.length===(expected?1:0)&&published.every(p=>p.at<expires),numerical:maxError<=1e-10,waiting_capacity:peakWaiting<=4,service_capacity:peakService<=2,lineage:R1.parent==='R0'&&R1.parent_sha256===r0Hash&&O.canonical(R0)===r0Before&&R0.original_success_credit===0,terminal_accounting:terminal.length===submitted&&new Set(terminal.map(t=>t.id)).size===submitted&&terminal.every(t=>t.at<=32),positive_control:expires!==30||published.length===1,backpressure_explicit:!saturated||terminal.some(t=>t.id==='overflow'&&t.state==='backpressure')};
+ const result={id,publish_at:publishAt,expires,saturated,mutant,expected_publish:expected,observed_publications:published,max_error:maxError,peak_waiting:peakWaiting,peak_service:peakService,terminal,events,checks,pass:Object.values(checks).every(Boolean)};
+ fs.writeFileSync(path.join(dir,'trace.json'),JSON.stringify(result,null,2)+'\n');return result;
+}
+const cases=[];let ordinal=0;for(const expires of [20,30])for(const time of [19,20,21])for(const saturated of [false,true])cases.push(executeCase('case-'+(++ordinal),time,expires,saturated));
+const mutant=executeCase('mutant-cached-consent',21,20,true,true);
+const checks=[{id:'matrix-oracle-agreement',pass:maxError<=1e-10},{id:'bad-original-detected',pass:R0.error>1e-10},...cases.map(c=>({id:c.id,pass:c.pass})),{id:'cached-consent-mutant-detected',pass:!mutant.pass&&!mutant.checks.permission_exact&&mutant.observed_publications.length===1}];
+const payload={schema:'ghc.consent-safe-correction.v1',plan_sha256:O.hash(fs.readFileSync(path.join(__dirname,'integration-plan.json'))),code_sha256:O.hash(fs.readFileSync(__filename)),model_sha256:O.hash(fs.readFileSync(path.join(__dirname,'../../../laboratory/models.js'))),matrix_cases:cases,oracle:{method:'explicit dense update matrix',dimensions:[81,81],steps:24,maximum_absolute_error:maxError},retained_failed_original:{id:'R0',sha256:r0Hash,error:R0.error,original_success_credit:0},correction:{id:'R1',parent:'R0',parent_sha256:r0Hash,inherited_completion_credit:0},mutant,checks,passed:checks.filter(c=>c.pass).length,total:checks.length,new_agents:0,empirical_validation:false,authority_claim:false};
+fs.writeFileSync(path.join(__dirname,'cross-pillar-integration.json'),JSON.stringify(payload,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({passed:payload.passed,total:payload.total,maximum_absolute_error:maxError,mutant_detected:!mutant.pass}));if(payload.passed!==payload.total)process.exitCode=1;

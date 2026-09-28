@@ -9,7 +9,7 @@ function routeGuard(q){exactKeys(q,['owner','phase','canonical','unique','direct
 function integrity(q){exactKeys(q,['path','bytes','sha256','content']);if(!safeRelative(q.path)||typeof q.content!=='string'||q.content.length>1000000||!Number.isSafeInteger(q.bytes)||q.bytes<0||!/^[a-f0-9]{64}$/.test(q.sha256))throw Error('Invalid integrity input');return{valid:Buffer.byteLength(q.content)===q.bytes&&hash(q.content)===q.sha256,path:q.path};}
 function execute(operation,q,dataDir=path.join(__dirname,'data')){
  if(operation==='model')return models.simulate(q);
- if(operation==='catalogue')return queryCatalogue(q,JSON.parse(fs.readFileSync(path.join(dataDir,'skills.json'),'utf8')));
+ if(operation==='catalogue'){const index=JSON.parse(fs.readFileSync(path.join(dataDir,'skills.json'),'utf8'));const rows=Array.isArray(index)?index:index.chunks.flatMap(c=>{if(!/^skills-[1-9][0-9]*\.json$/.test(c.file))throw Error('Invalid catalogue chunk');const b=fs.readFileSync(path.join(dataDir,c.file));if(hash(b)!==c.sha256)throw Error('Catalogue digest mismatch');return JSON.parse(b);});return queryCatalogue(q,rows);}
  if(operation==='route')return routeGuard(q);
  if(operation==='integrity')return integrity(q);
  if(operation==='claim')return models.claimCheck(q);

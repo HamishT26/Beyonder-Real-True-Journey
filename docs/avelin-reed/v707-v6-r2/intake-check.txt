@@ -1,0 +1,17 @@
+'use strict';
+if(process.env.GHC_MODEL_GUARD!=='v16')throw Error('Registered phase launcher required');
+const fs=require('fs'),path=require('path'),cp=require('child_process'),{hash}=require('../../../laboratory/operations.js'),{ingest}=require('../../../laboratory/intake.js');
+const root=path.resolve(__dirname,'../../..'),source={commit:'06f54492a7da636205b0e85184d2d2fa33286134',path:'docs/avelin-reed/v707-v6/x1.json'},lane='D:/GHC-Archives/worktrees/avelin-reed-v707-v6-full-tools';
+const git=p=>cp.execFileSync('git',['-C',lane,'show',source.commit+':'+p],{maxBuffer:4*1024*1024,windowsHide:true});
+const blob=git(source.path),manifest=JSON.parse(git('docs/avelin-reed/v707-v6/manifest.json')),labVersion=hash(fs.readFileSync(path.join(root,'laboratory/intake.js'))),allow=[source],state=new Set();
+const request={source,blob,manifest,contractId:'AR7076-P001',labVersion};
+const card=ingest(request,state,allow),negatives=[],checks=[];
+for(const [id,change,expected] of [
+ ['missing-evidence',{blob:null},'missing evidence'],
+ ['changed-checksum',{blob:Buffer.concat([blob,Buffer.from(' ')])},'source checksum mismatch'],
+ ['duplicate-receipt',{},'duplicate receipt'],
+ ['out-of-scope-file',{source:{...source,path:'config.toml'}},'out-of-scope source']
+]){let error;try{ingest({...request,...change},state,allow);}catch(e){error=e.message;}negatives.push({id,original_success_credit:0,result:'fail',retained:true,error});checks.push({id:id+'-refusal',pass:error===expected,negative_id:id});}
+checks.unshift({id:'source-byte-binding',pass:card.source.sha256===manifest.entries.find(r=>r.path===source.path).sha256},{id:'original-outcome-preserved',pass:card.original_outcome==='completed'&&card.new_domain_completion_credit===0},{id:'original-not-mutated',pass:hash(git(source.path))===hash(blob)},{id:'one-receipt-only',pass:state.size===1});
+const receipt={schema:'ghc.lab.intake-acceptance.v1',source,source_sha256:hash(blob),source_manifest_sha256:hash(git('docs/avelin-reed/v707-v6/manifest.json')),lab_version_sha256:labVersion,card_id:card.receipt_id,checks,negatives,passed:checks.filter(c=>c.pass).length,total:checks.length,scope:'One bounded intake path. Not independent reproduction, empirical validation, whole-remaster completion or successor authorization.'};
+fs.writeFileSync(path.join(root,'laboratory/data/intake-card.json'),JSON.stringify(card,null,2)+'\n',{flag:'wx'});fs.writeFileSync(path.join(__dirname,'intake-acceptance.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({passed:receipt.passed,total:receipt.total,negative_subjects:4,new_domain_credit:0}));if(receipt.passed!==receipt.total)process.exitCode=1;

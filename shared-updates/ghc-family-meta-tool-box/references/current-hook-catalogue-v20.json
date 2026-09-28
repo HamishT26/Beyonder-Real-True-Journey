@@ -1,0 +1,86 @@
+{
+  "schema": "ghc.hook-catalogue.v20",
+  "discovered_files": [
+    {
+      "plugin": "codex-coordinator",
+      "version": "0.4.0",
+      "sha256": "f48f534a54a3d64a5101c7fb0722f33729f04d4fcbabdc688f54403630cf5b62",
+      "relative": "openai-curated-remote/codex-coordinator/0.4.0/hooks/hooks.json",
+      "state": "catalogued_only"
+    },
+    {
+      "plugin": "ghc-family-ilyra-coupled-workflow-hooks",
+      "version": "1.0.0",
+      "sha256": "cb45e8da69828d0676c938ff9df29e4fba40376fce2918c12b39b11cd750a7a7",
+      "relative": "personal/ghc-family-ilyra-coupled-workflow-hooks/1.0.0/hooks/hooks.json",
+      "state": "catalogued_only"
+    },
+    {
+      "plugin": "ghc-family-laboratory-v20",
+      "version": "0.1.0",
+      "sha256": "f53f4acf87575ed85121940321aa0aad15636b79c154e2c21c0d8c61769ed28d",
+      "relative": "personal/ghc-family-laboratory-v20/0.1.0/hooks/hooks.json",
+      "state": "catalogued_only"
+    },
+    {
+      "plugin": "ghc-family-phase-guard-hooks",
+      "version": "0.1.0",
+      "sha256": "dbbbf1b33895a96024b5802bcb2eeacccda822c7de06c84c2a49259d9bbf4b01",
+      "relative": "personal/ghc-family-phase-guard-hooks/0.1.0/hooks/hooks.json",
+      "state": "catalogued_only"
+    },
+    {
+      "plugin": "ghc-family-talen-robust-workflow-hooks",
+      "version": "1.0.0",
+      "sha256": "48ec91824a305f32beef3fa04ff022c0a6b07a6e686b74398476818b6df5566f",
+      "relative": "personal/ghc-family-talen-robust-workflow-hooks/1.0.0/hooks/hooks.json",
+      "state": "catalogued_only"
+    }
+  ],
+  "new_plugin": "ghc-family-laboratory-v20",
+  "new_hooks": 5,
+  "manual_checks": 10,
+  "host_observed_events": 0,
+  "source": {
+    "hooks": {
+      "SessionStart": [
+        {
+          "matcher": "startup|resume|clear|compact",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" source",
+              "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" source",
+              "timeout": 5
+            },
+            {
+              "type": "command",
+              "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" budget",
+              "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" budget",
+              "timeout": 5
+            },
+            {
+              "type": "command",
+              "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" consultation",
+              "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" consultation",
+              "timeout": 5
+            },
+            {
+              "type": "command",
+              "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" roster",
+              "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" roster",
+              "timeout": 5
+            },
+            {
+              "type": "command",
+              "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" evidence",
+              "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" evidence",
+              "timeout": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "duplicate_policy": "Reuse source/budget/consultation/roster/evidence advisory checks; do not create equivalent hooks merely for a quota."
+}

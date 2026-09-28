@@ -1,0 +1,1387 @@
+{
+  "schema": "ghc.consent-safe-correction.v1",
+  "plan_sha256": "fc1898387815bf9abeef3b72e102d0944acd93637fb409c844087c6eb4e6d26a",
+  "code_sha256": "b9689d63c597d0b83834ba952a3e1693d698aab53bec5b5a5a51d570c815fa7d",
+  "model_sha256": "1ada3150726c8a0d793513250d936687eb43d011a2fdc9109ce7df34e506c025",
+  "matrix_cases": [
+    {
+      "id": "case-1",
+      "publish_at": 19,
+      "expires": 20,
+      "saturated": false,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 19
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 1,
+      "peak_service": 1,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 19
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "service",
+          "id": "R1",
+          "waiting": 0,
+          "active": 1
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-2",
+      "publish_at": 19,
+      "expires": 20,
+      "saturated": true,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 19
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 4,
+      "peak_service": 2,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "overflow",
+          "state": "backpressure",
+          "at": 19
+        },
+        {
+          "id": "active-A",
+          "state": "completed-housekeeping",
+          "at": 19
+        },
+        {
+          "id": "active-B",
+          "state": "completed-housekeeping",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 19
+        },
+        {
+          "id": "filler-0",
+          "state": "completed-housekeeping",
+          "at": 20
+        },
+        {
+          "id": "filler-1",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "filler-2",
+          "state": "completed-housekeeping",
+          "at": 21
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-0",
+          "occupancy": 2
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-1",
+          "occupancy": 3
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-2",
+          "occupancy": 4
+        },
+        {
+          "time": 19,
+          "action": "backpressure",
+          "id": "overflow"
+        },
+        {
+          "time": 19,
+          "action": "service",
+          "id": "R1",
+          "waiting": 3,
+          "active": 1
+        },
+        {
+          "time": 19,
+          "action": "service",
+          "id": "filler-0",
+          "waiting": 2,
+          "active": 2
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "filler-1",
+          "waiting": 1,
+          "active": 1
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "filler-2",
+          "waiting": 0,
+          "active": 2
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-3",
+      "publish_at": 20,
+      "expires": 20,
+      "saturated": false,
+      "mutant": false,
+      "expected_publish": false,
+      "observed_publications": [],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 1,
+      "peak_service": 1,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "permission_denied",
+          "at": 20
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "R1",
+          "waiting": 0,
+          "active": 1
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-4",
+      "publish_at": 20,
+      "expires": 20,
+      "saturated": true,
+      "mutant": false,
+      "expected_publish": false,
+      "observed_publications": [],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 4,
+      "peak_service": 2,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "overflow",
+          "state": "backpressure",
+          "at": 19
+        },
+        {
+          "id": "active-A",
+          "state": "completed-housekeeping",
+          "at": 20
+        },
+        {
+          "id": "active-B",
+          "state": "completed-housekeeping",
+          "at": 20
+        },
+        {
+          "id": "R1",
+          "state": "permission_denied",
+          "at": 20
+        },
+        {
+          "id": "filler-0",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "filler-1",
+          "state": "completed-housekeeping",
+          "at": 22
+        },
+        {
+          "id": "filler-2",
+          "state": "completed-housekeeping",
+          "at": 22
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-0",
+          "occupancy": 2
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-1",
+          "occupancy": 3
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-2",
+          "occupancy": 4
+        },
+        {
+          "time": 19,
+          "action": "backpressure",
+          "id": "overflow"
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "R1",
+          "waiting": 3,
+          "active": 1
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "filler-0",
+          "waiting": 2,
+          "active": 2
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "filler-1",
+          "waiting": 1,
+          "active": 1
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "filler-2",
+          "waiting": 0,
+          "active": 2
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-5",
+      "publish_at": 21,
+      "expires": 20,
+      "saturated": false,
+      "mutant": false,
+      "expected_publish": false,
+      "observed_publications": [],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 1,
+      "peak_service": 1,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "permission_denied",
+          "at": 21
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "R1",
+          "waiting": 0,
+          "active": 1
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-6",
+      "publish_at": 21,
+      "expires": 20,
+      "saturated": true,
+      "mutant": false,
+      "expected_publish": false,
+      "observed_publications": [],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 4,
+      "peak_service": 2,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "overflow",
+          "state": "backpressure",
+          "at": 19
+        },
+        {
+          "id": "active-A",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "active-B",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "R1",
+          "state": "permission_denied",
+          "at": 21
+        },
+        {
+          "id": "filler-0",
+          "state": "completed-housekeeping",
+          "at": 22
+        },
+        {
+          "id": "filler-1",
+          "state": "completed-housekeeping",
+          "at": 23
+        },
+        {
+          "id": "filler-2",
+          "state": "completed-housekeeping",
+          "at": 23
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-0",
+          "occupancy": 2
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-1",
+          "occupancy": 3
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-2",
+          "occupancy": 4
+        },
+        {
+          "time": 19,
+          "action": "backpressure",
+          "id": "overflow"
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "R1",
+          "waiting": 3,
+          "active": 1
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "filler-0",
+          "waiting": 2,
+          "active": 2
+        },
+        {
+          "time": 22,
+          "action": "service",
+          "id": "filler-1",
+          "waiting": 1,
+          "active": 1
+        },
+        {
+          "time": 22,
+          "action": "service",
+          "id": "filler-2",
+          "waiting": 0,
+          "active": 2
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-7",
+      "publish_at": 19,
+      "expires": 30,
+      "saturated": false,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 19
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 1,
+      "peak_service": 1,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 19
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "service",
+          "id": "R1",
+          "waiting": 0,
+          "active": 1
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-8",
+      "publish_at": 19,
+      "expires": 30,
+      "saturated": true,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 19
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 4,
+      "peak_service": 2,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "overflow",
+          "state": "backpressure",
+          "at": 19
+        },
+        {
+          "id": "active-A",
+          "state": "completed-housekeeping",
+          "at": 19
+        },
+        {
+          "id": "active-B",
+          "state": "completed-housekeeping",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 19
+        },
+        {
+          "id": "filler-0",
+          "state": "completed-housekeeping",
+          "at": 20
+        },
+        {
+          "id": "filler-1",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "filler-2",
+          "state": "completed-housekeeping",
+          "at": 21
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-0",
+          "occupancy": 2
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-1",
+          "occupancy": 3
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-2",
+          "occupancy": 4
+        },
+        {
+          "time": 19,
+          "action": "backpressure",
+          "id": "overflow"
+        },
+        {
+          "time": 19,
+          "action": "service",
+          "id": "R1",
+          "waiting": 3,
+          "active": 1
+        },
+        {
+          "time": 19,
+          "action": "service",
+          "id": "filler-0",
+          "waiting": 2,
+          "active": 2
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "filler-1",
+          "waiting": 1,
+          "active": 1
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "filler-2",
+          "waiting": 0,
+          "active": 2
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-9",
+      "publish_at": 20,
+      "expires": 30,
+      "saturated": false,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 20
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 1,
+      "peak_service": 1,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 20
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "R1",
+          "waiting": 0,
+          "active": 1
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-10",
+      "publish_at": 20,
+      "expires": 30,
+      "saturated": true,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 20
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 4,
+      "peak_service": 2,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "overflow",
+          "state": "backpressure",
+          "at": 19
+        },
+        {
+          "id": "active-A",
+          "state": "completed-housekeeping",
+          "at": 20
+        },
+        {
+          "id": "active-B",
+          "state": "completed-housekeeping",
+          "at": 20
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 20
+        },
+        {
+          "id": "filler-0",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "filler-1",
+          "state": "completed-housekeeping",
+          "at": 22
+        },
+        {
+          "id": "filler-2",
+          "state": "completed-housekeeping",
+          "at": 22
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-0",
+          "occupancy": 2
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-1",
+          "occupancy": 3
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-2",
+          "occupancy": 4
+        },
+        {
+          "time": 19,
+          "action": "backpressure",
+          "id": "overflow"
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "R1",
+          "waiting": 3,
+          "active": 1
+        },
+        {
+          "time": 20,
+          "action": "service",
+          "id": "filler-0",
+          "waiting": 2,
+          "active": 2
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "filler-1",
+          "waiting": 1,
+          "active": 1
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "filler-2",
+          "waiting": 0,
+          "active": 2
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-11",
+      "publish_at": 21,
+      "expires": 30,
+      "saturated": false,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 21
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 1,
+      "peak_service": 1,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 21
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "R1",
+          "waiting": 0,
+          "active": 1
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    },
+    {
+      "id": "case-12",
+      "publish_at": 21,
+      "expires": 30,
+      "saturated": true,
+      "mutant": false,
+      "expected_publish": true,
+      "observed_publications": [
+        {
+          "id": "R1",
+          "at": 21
+        }
+      ],
+      "max_error": 1.6653345369377348e-16,
+      "peak_waiting": 4,
+      "peak_service": 2,
+      "terminal": [
+        {
+          "id": "R0",
+          "state": "numerically_invalid",
+          "at": 19
+        },
+        {
+          "id": "overflow",
+          "state": "backpressure",
+          "at": 19
+        },
+        {
+          "id": "active-A",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "active-B",
+          "state": "completed-housekeeping",
+          "at": 21
+        },
+        {
+          "id": "R1",
+          "state": "published",
+          "at": 21
+        },
+        {
+          "id": "filler-0",
+          "state": "completed-housekeeping",
+          "at": 22
+        },
+        {
+          "id": "filler-1",
+          "state": "completed-housekeeping",
+          "at": 23
+        },
+        {
+          "id": "filler-2",
+          "state": "completed-housekeeping",
+          "at": 23
+        }
+      ],
+      "events": [
+        {
+          "time": 19,
+          "action": "refuse-numerical",
+          "id": "R0"
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "R1",
+          "occupancy": 1
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-0",
+          "occupancy": 2
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-1",
+          "occupancy": 3
+        },
+        {
+          "time": 19,
+          "action": "enqueue",
+          "id": "filler-2",
+          "occupancy": 4
+        },
+        {
+          "time": 19,
+          "action": "backpressure",
+          "id": "overflow"
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "R1",
+          "waiting": 3,
+          "active": 1
+        },
+        {
+          "time": 21,
+          "action": "service",
+          "id": "filler-0",
+          "waiting": 2,
+          "active": 2
+        },
+        {
+          "time": 22,
+          "action": "service",
+          "id": "filler-1",
+          "waiting": 1,
+          "active": 1
+        },
+        {
+          "time": 22,
+          "action": "service",
+          "id": "filler-2",
+          "waiting": 0,
+          "active": 2
+        }
+      ],
+      "checks": {
+        "R0_never_publishes": true,
+        "permission_exact": true,
+        "numerical": true,
+        "waiting_capacity": true,
+        "service_capacity": true,
+        "lineage": true,
+        "terminal_accounting": true,
+        "positive_control": true,
+        "backpressure_explicit": true
+      },
+      "pass": true
+    }
+  ],
+  "oracle": {
+    "method": "explicit dense update matrix",
+    "dimensions": [
+      81,
+      81
+    ],
+    "steps": 24,
+    "maximum_absolute_error": 1.6653345369377348e-16
+  },
+  "retained_failed_original": {
+    "id": "R0",
+    "sha256": "9dd38e635946d6f725dab248e33a93899e206e22261da7f592f53e4061279c1c",
+    "error": 0.000999999999999987,
+    "original_success_credit": 0
+  },
+  "correction": {
+    "id": "R1",
+    "parent": "R0",
+    "parent_sha256": "9dd38e635946d6f725dab248e33a93899e206e22261da7f592f53e4061279c1c",
+    "inherited_completion_credit": 0
+  },
+  "mutant": {
+    "id": "mutant-cached-consent",
+    "publish_at": 21,
+    "expires": 20,
+    "saturated": true,
+    "mutant": true,
+    "expected_publish": false,
+    "observed_publications": [
+      {
+        "id": "R1",
+        "at": 21
+      }
+    ],
+    "max_error": 1.6653345369377348e-16,
+    "peak_waiting": 4,
+    "peak_service": 2,
+    "terminal": [
+      {
+        "id": "R0",
+        "state": "numerically_invalid",
+        "at": 19
+      },
+      {
+        "id": "overflow",
+        "state": "backpressure",
+        "at": 19
+      },
+      {
+        "id": "active-A",
+        "state": "completed-housekeeping",
+        "at": 21
+      },
+      {
+        "id": "active-B",
+        "state": "completed-housekeeping",
+        "at": 21
+      },
+      {
+        "id": "R1",
+        "state": "published",
+        "at": 21
+      },
+      {
+        "id": "filler-0",
+        "state": "completed-housekeeping",
+        "at": 22
+      },
+      {
+        "id": "filler-1",
+        "state": "completed-housekeeping",
+        "at": 23
+      },
+      {
+        "id": "filler-2",
+        "state": "completed-housekeeping",
+        "at": 23
+      }
+    ],
+    "events": [
+      {
+        "time": 19,
+        "action": "refuse-numerical",
+        "id": "R0"
+      },
+      {
+        "time": 19,
+        "action": "enqueue",
+        "id": "R1",
+        "occupancy": 1
+      },
+      {
+        "time": 19,
+        "action": "enqueue",
+        "id": "filler-0",
+        "occupancy": 2
+      },
+      {
+        "time": 19,
+        "action": "enqueue",
+        "id": "filler-1",
+        "occupancy": 3
+      },
+      {
+        "time": 19,
+        "action": "enqueue",
+        "id": "filler-2",
+        "occupancy": 4
+      },
+      {
+        "time": 19,
+        "action": "backpressure",
+        "id": "overflow"
+      },
+      {
+        "time": 21,
+        "action": "service",
+        "id": "R1",
+        "waiting": 3,
+        "active": 1
+      },
+      {
+        "time": 21,
+        "action": "service",
+        "id": "filler-0",
+        "waiting": 2,
+        "active": 2
+      },
+      {
+        "time": 22,
+        "action": "service",
+        "id": "filler-1",
+        "waiting": 1,
+        "active": 1
+      },
+      {
+        "time": 22,
+        "action": "service",
+        "id": "filler-2",
+        "waiting": 0,
+        "active": 2
+      }
+    ],
+    "checks": {
+      "R0_never_publishes": true,
+      "permission_exact": false,
+      "numerical": true,
+      "waiting_capacity": true,
+      "service_capacity": true,
+      "lineage": true,
+      "terminal_accounting": true,
+      "positive_control": true,
+      "backpressure_explicit": true
+    },
+    "pass": false
+  },
+  "checks": [
+    {
+      "id": "matrix-oracle-agreement",
+      "pass": true
+    },
+    {
+      "id": "bad-original-detected",
+      "pass": true
+    },
+    {
+      "id": "case-1",
+      "pass": true
+    },
+    {
+      "id": "case-2",
+      "pass": true
+    },
+    {
+      "id": "case-3",
+      "pass": true
+    },
+    {
+      "id": "case-4",
+      "pass": true
+    },
+    {
+      "id": "case-5",
+      "pass": true
+    },
+    {
+      "id": "case-6",
+      "pass": true
+    },
+    {
+      "id": "case-7",
+      "pass": true
+    },
+    {
+      "id": "case-8",
+      "pass": true
+    },
+    {
+      "id": "case-9",
+      "pass": true
+    },
+    {
+      "id": "case-10",
+      "pass": true
+    },
+    {
+      "id": "case-11",
+      "pass": true
+    },
+    {
+      "id": "case-12",
+      "pass": true
+    },
+    {
+      "id": "cached-consent-mutant-detected",
+      "pass": true
+    }
+  ],
+  "passed": 15,
+  "total": 15,
+  "new_agents": 0,
+  "empirical_validation": false,
+  "authority_claim": false
+}

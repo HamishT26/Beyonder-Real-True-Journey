@@ -1,0 +1,41 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" source",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" source",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" budget",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" budget",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" consultation",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" consultation",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" roster",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" roster",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python3 -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" evidence",
+            "commandWindows": "python -I \"${PLUGIN_ROOT}/scripts/advisory_hook.py\" evidence",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

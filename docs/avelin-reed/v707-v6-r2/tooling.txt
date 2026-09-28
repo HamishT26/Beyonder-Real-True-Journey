@@ -1,0 +1,6 @@
+'use strict';
+if(process.env.GHC_MODEL_GUARD!=='v16')throw Error('Registered phase launcher required');
+const cp=require('child_process'),path=require('path'),os=require('os'),command=process.argv[2];
+const scripts={research:'research-probes.py',contracts:'refine-contracts.py',atomic:'intake-atomic-tests.py',barrier:'intake-barrier-tests.py',promote:'promote.py'};
+if(!Object.hasOwn(scripts,command))throw Error('Unsupported bounded operation');
+const r=cp.spawnSync(path.join(os.homedir(),'AppData/Local/Programs/Python/Python312/python.exe'),['-X','utf8','-B',path.join(__dirname,scripts[command])],{stdio:'inherit',windowsHide:true});process.exitCode=r.status??1;
