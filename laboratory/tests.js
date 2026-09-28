@@ -1,0 +1,42 @@
+'use strict';
+const M=require('./models.js'),O=require('./operations.js');
+const near=(a,b,t=1e-9)=>Math.abs(a-b)<=t;
+const sum=a=>a.reduce((s,x)=>s+x,0);
+function runTests(results,variant){
+ const tests=[];const check=(id,fn)=>{try{tests.push({id,pass:!!fn()});}catch(e){tests.push({id,pass:false,error:e.message});}};
+ for(const r of results){const id=r.request.model;check(id+'-finite',()=>r.rows.length>0&&r.rows.every(p=>Object.values(p).every(Number.isFinite)));check(id+'-time-coverage',()=>r.frames.length===r.request.steps+1&&r.frames.every((f,t)=>f.length>0&&f.every(p=>p.t===t)));check(id+'-evidence-ceiling',()=>!r.empirical_claim&&!r.physical_spatial_dimension_claim&&r.dimensions.length===4);}
+ const by=Object.fromEntries(results.map(r=>[r.request.model,r]));
+ check('heat-mass-conservation',()=>by.heat.frames.every(f=>near(sum(f.map(p=>p.value)),by.heat.metrics.initial_mass)));
+ check('heat-maximum-principle',()=>by.heat.rows.every(p=>p.value>=-1e-12&&p.value<=1+1e-12));
+ check('wave-zero-mean',()=>by.wave.frames.every(f=>Math.abs(sum(f.map(p=>p.value)))<1e-9));
+ check('wave-bounded-discrete-trace',()=>by.wave.rows.every(p=>Math.abs(p.value)<1.2));
+ check('oscillator-energy-bound',()=>by.oscillator.rows.every(p=>p.value<=0.53)&&by.oscillator.metrics.final_energy<0.51);
+ check('reaction-invariant-interval',()=>by.reaction.rows.every(p=>p.value>=0&&p.value<=1));
+ check('mixing-probability-conservation',()=>by.entropy.frames.every(f=>near(sum(f.map(p=>p.value)),1)&&f.every(p=>p.value>=0)));
+ check('mixing-entropy-monotone',()=>by.entropy.metrics.entropy_trace.every((x,i,a)=>i===0||x+1e-12>=a[i-1]));
+ check('queue-flow-conservation',()=>by.queue.metrics.total_arrivals-by.queue.metrics.total_served===by.queue.metrics.backlog&&by.queue.rows.every(p=>p.value>=0));
+ check('replica-component-monotonicity',()=>by.replication.frames.every((f,t,a)=>t===0||f.every((p,i)=>p.x>=a[t-1][i].x&&p.y>=a[t-1][i].y)));
+ check('vector-concurrency-known-case',()=>M.compareVectors([1,0],[0,1])==='concurrent'&&M.compareVectors([0,1],[1,1])==='before');
+ check('retry-geometric-closed-form',()=>{const r=by.retry,m=r.metrics;return near(m.expected_attempts,(1-(1-m.success_probability)**m.maximum_attempts)/m.success_probability)&&!m.duplicate_after_ack;});
+ check('graph-mass-conservation',()=>by.graph.frames.every(f=>near(sum(f.map(p=>p.value)),1)&&f.every(p=>p.value>=0)));
+ check('parity-independent-popcount',()=>by.coding.rows.every(p=>p.value===(p.y.toString(2).split('1').length-1)%2));
+ check('parity-even-error-counterexample',()=>by.coding.rows.filter(p=>p.y===3).every(p=>p.value===0));
+ check('consent-expiry-and-withdrawal',()=>by.consent.rows.every(p=>p.value===(p.t<Math.min(by.consent.metrics.expires,by.consent.metrics.withdraw_at)?1:0)));
+ check('allocation-budget-conservation',()=>by.allocation.frames.every((f,t)=>near(sum(f.map(p=>p.value)),t/by.allocation.request.steps*sum(by.allocation.metrics.demand))));
+ check('allocation-demand-bounds',()=>by.allocation.rows.every(p=>p.value>=0&&p.value<=p.y+1e-10));
+ check('waterfill-known-example',()=>JSON.stringify(M.waterfill([1,4,8],7))==='[1,3,3]');
+ check('voting-cycle-known-profile',()=>variant?by.voting.metrics.condorcet_winner===0:by.voting.metrics.cycle&&by.voting.metrics.condorcet_winner===null);
+ check('bayes-closed-form',()=>{const r=by.bayes,n=r.request.steps,k=variant?2:1;return r.metrics.alpha===k+n-Math.floor(n/3)&&r.metrics.beta===k+Math.floor(n/3)&&near(r.metrics.mean,r.metrics.alpha/(2*k+n));});
+ check('remedy-original-retained',()=>by.remedy.metrics.original_preserved&&by.remedy.metrics.records[0].original_success_credit===0&&by.remedy.metrics.records.length===1+Math.floor(by.remedy.request.steps/(variant?4:5)));
+ check('integrity-known-digest',()=>O.hash('abc')==='ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
+ check('canonical-object-order',()=>O.canonical({z:1,a:{y:3,x:2}})==='{"a":{"x":2,"y":3},"z":1}'&&O.canonical([2,1])==='[2,1]');
+ check('relative-path-admission',()=>O.safeRelative('data/labs.json'));
+ check('traversal-refusal',()=>['../config.toml','C:/config','/config','a\\b','a//b','a/./b'].every(p=>!O.safeRelative(p)));
+ const route={owner:'Caelen Ash',phase:'v707-v7',canonical:true,unique:true,direct_controls:true,accepted:false,uncertain:false,usage_open:true};
+ check('route-declared-edge',()=>O.routeGuard(route).admitted&&!O.routeGuard({...route,owner:'Veylora Quen'}).admitted);
+ check('accepted-or-uncertain-stops-duplicate',()=>!O.routeGuard({...route,accepted:true}).admitted&&!O.routeGuard({...route,uncertain:true}).admitted);
+ check('claim-consciousness-reserved',()=>M.claimCheck({issuer:'synthetic',subject:'role',claim:'conscious',evidence:'software metadata',kind:'consciousness'}).state==='exact_gate');
+ check('claim-software-description-only',()=>M.claimCheck({issuer:'synthetic',subject:'role',claim:'name metadata',evidence:'fixture',kind:'description'}).state==='represented');
+ return tests;
+}
+module.exports={runTests};

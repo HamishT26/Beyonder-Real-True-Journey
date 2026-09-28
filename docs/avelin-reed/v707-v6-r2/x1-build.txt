@@ -1,0 +1,3 @@
+'use strict';
+if(process.env.GHC_MODEL_GUARD!=='v16')throw Error('Registered phase launcher required');
+const cp=require('child_process');const r=cp.spawnSync(require('path').join(require('os').homedir(),'AppData/Local/Programs/Python/Python312/python.exe'),['-X','utf8','-B',__dirname+'/build-data.py'],{stdio:'inherit',windowsHide:true});process.exitCode=r.status??1;
