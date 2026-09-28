@@ -85,8 +85,16 @@ ACTIVATION_RECOVERIES = [
 ACTIVATION_SUCCESSES = [
     {"id": "MF7073-ACT-DELIVERY-ACK", "state": "pass", "observed": "The current direct activation reports one acknowledged native corrected retry; this is delivery acceptance only and never recipient completion."}
 ]
-X1_RUNTIME_FAILURES: list[dict[str, Any]] = []
-X1_RUNTIME_RECOVERIES: list[dict[str, Any]] = []
+X1_RUNTIME_FAILURES = [
+    {"id": "MF7073-X1-RUNTIME-FAIL-001", "state": "fail", "original_success_credit": 0, "observed": "The first planning push wrapper contained a PowerShell escape that collided with the JavaScript template parser and ran no Git command.", "recovery": "MF7073-X1-RUNTIME-RECOVERY-001"},
+    {"id": "MF7073-X1-RUNTIME-FAIL-002", "state": "fail", "original_success_credit": 0, "observed": "The second planning push wrapper exposed PowerShell interpolation syntax to JavaScript and ran no Git command.", "recovery": "MF7073-X1-RUNTIME-RECOVERY-002"},
+    {"id": "MF7073-X1-RUNTIME-FAIL-003", "state": "fail", "original_success_credit": 0, "observed": "The corrected combined wrapper pushed planning but emitted no attributable post-push equality projection, so it earned zero equality credit.", "recovery": "MF7073-X1-RUNTIME-RECOVERY-003"},
+]
+X1_RUNTIME_RECOVERIES = [
+    {"id": "MF7073-X1-RUNTIME-RECOVERY-001", "state": "pass", "repairs": "MF7073-X1-RUNTIME-FAIL-001", "observed": "A delimiter-free push established the upstream branch; later scalar probes supplied the equality gate."},
+    {"id": "MF7073-X1-RUNTIME-RECOVERY-002", "state": "pass", "repairs": "MF7073-X1-RUNTIME-FAIL-002", "observed": "String concatenation removed cross-language interpolation and permitted the one planning push."},
+    {"id": "MF7073-X1-RUNTIME-RECOVERY-003", "state": "pass", "repairs": "MF7073-X1-RUNTIME-FAIL-003", "observed": "Six separate scalar reads established clean state, exact local-upstream-tracking-live equality, and typed 0/0 divergence."},
+]
 
 DEFINITIONS = [
     ("record-shape", "Validate the bounded finite simplicial-complex record shape.", "x1", "completed"),
@@ -647,7 +655,7 @@ def build_x1() -> None:
     runner_receipts = create_runners(x1, "x1", x1 / "results.json")
     write_json(x1 / "runner-receipts.json", {"boundary": BOUNDARY, "count": 5, "records": runner_receipts})
 
-    methods = [row[0] for row in DEFINITIONS[:10]] + ["focused tests", "local skill validation", "saved-evidence runner smokes"]
+    methods = [row[0] for row in DEFINITIONS[:10]] + ["focused tests", "local skill validation", "saved-evidence runner smokes", "planning remote-equality wrapper recovery"]
     runtime_extras = [
         {"witness_id": row["id"], "state": "fail", "kind": "retained x1 runtime failure", "original_success_credit": 0}
         for row in X1_RUNTIME_FAILURES
@@ -657,7 +665,7 @@ def build_x1() -> None:
     ]
     witnesses = stage_witnesses(results, safe, candidates, refusals, corrected, tests, skill_receipts, runner_receipts, runtime_extras)
     counts = method_flow_counts(witnesses, methods)
-    if counts != {"methods": 13, "witnesses": 1540, "pass": 1235, "fail": 305, "negatives": 305, "open_gaps": 0, "exact_gates": 0}:
+    if counts != {"methods": 14, "witnesses": 1546, "pass": 1238, "fail": 308, "negatives": 308, "open_gaps": 0, "exact_gates": 0}:
         raise RuntimeError(f"unexpected x1 Method Flow counts: {counts}")
     write_json(x1 / "method-flow.json", {"schema": "ghc.family.method-flow.v1", "session": "x1", "boundary": BOUNDARY, "methods": methods, "counts": counts, "runtime_failures": X1_RUNTIME_FAILURES, "runtime_recoveries": X1_RUNTIME_RECOVERIES, "witnesses": witnesses})
     write_text(
@@ -823,7 +831,7 @@ def baton_text(owner_counts: dict[str, int], effective: dict[str, int]) -> str:
     sections += [
         "## Workload, tests, capabilities, and models\n\nThe phase retains 300 inherited Ilyra proposal records at zero Mira novelty and zero completion credit and freezes 300 genuinely new Mira contracts. Outcomes are exactly 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. Each session contains 450 safe predicates, 300 malformed candidate subjects, 300 separate refusal guards, and 300 corrected-copy CLEAN/FIX/REFINE checks. Passing refusal and correction witnesses never erase or promote invalid originals.\n\nX1 contains twenty focused checks: fifteen brute-force oracle comparisons and five malformed-schema refusals. X2 contains thirty checks: fifteen deterministic relabel comparisons and fifteen subdivision Euler-census comparisons. These checks cover only the declared tiny finite records. They do not establish exhaustive correctness, performance, production safety, security completeness, empirical validity, or independent validation.\n\nTwenty owner-local skills and ten saved-evidence runners are created, validated, and used, ten and five per session. Five successor skill ideas, five successor runner ideas, and four practice recommendations remain zero-credit proposals. No global skill, package, hook, shared catalog, sibling checkout, or user lane is installed or changed. Five hook candidates accept one valid manual envelope and refuse one malformed envelope each; they remain uninstalled and have zero live-host observations.\n\nThe fifteen-model atlas uses vertex count, nonempty-face count, and total Betti number as three abstract coordinates. The HTML is a self-contained accessible evidence table. These coordinates are not physical geometry, an open world, consciousness, a production simulation, or a reproduction of an external system.\n",
         "## Mind, Body, and Heart boundaries\n\nGMUT Mind is represented as typed finite mathematical specification and explicit falsifiers. The supplied Grand Mandala field-equation forms still lack a complete action, fully defined tensors, unit conventions, closure and boundary conditions, identifiable observables, likelihoods, and empirical data. Finite Betti numbers do not estimate alpha, identify Omega_AB, validate a physical field, or prove a Theory of Everything.\n\nTHOS Body is represented by exact bounded software, schemas, saved witnesses, deterministic correction, and reversible documentation. It is not an enterprise operating system, an autonomous controller, an operational safety case, a deployment benchmark, or a production release. No external system is controlled.\n\nFreed ID and CBR Heart are represented by provenance, contested classification, correction, remedy, accessibility, and authority reservations. A simplicial complex cannot supply consent, rights, cultural legitimacy, identity continuity, or competent authority. No live credential, identity lifecycle, rights decision, legal decision, or cultural act is issued. Fifteen design hypotheses remain proposals rather than discovered physical or psychological laws; fifteen broader probes remain unsolved. Maori concepts and authority remain under Maori authority. Practice lenses are study perspectives, not qualifications or employment.\n",
-        "## Method Flow and retained failures\n\nThe separate Method Flow preserves nine activation-stage wrapper or read failures and their bounded recoveries, every malformed candidate, every malformed focused-test subject, every invalid hook envelope, and any later attributable runtime failure at zero original credit. The source's two reported retry-read defects remain source-side external history and are not silently converted into Mira successes. Refusal success never converts rejected input into success. Repository, canonical, route, delivery, acknowledgement, and recipient-completion layers remain distinct.\n\nThe repository seal contains only events known before its commit. The canonical may execute only after the clean pushed exact final and may succeed once. Canonical or route failures occurring later remain external overlays and cannot rewrite the seal. The standing verdict remains NOT_READY_FOR_STAGE_20.\n",
+        "## Method Flow and retained failures\n\nThe separate Method Flow preserves nine activation-stage wrapper or read failures, three planning remote-gate wrapper failures, their bounded recoveries, every malformed candidate, every malformed focused-test subject, every invalid hook envelope, and any later attributable runtime failure at zero original credit. The source's two reported retry-read defects remain source-side external history and are not silently converted into Mira successes. Refusal success never converts rejected input into success. Repository, canonical, route, delivery, acknowledgement, and recipient-completion layers remain distinct.\n\nThe repository seal contains only events known before its commit. The canonical may execute only after the clean pushed exact final and may succeed once. Canonical or route failures occurring later remain external overlays and cannot rewrite the seal. The standing verdict remains NOT_READY_FOR_STAGE_20.\n",
         f"## Prospective {SUCCESSOR} work\n\nUseful next directions may include finite chain-complex comparison, accessible cell-incidence projection, provenance joins, independent-oracle design, or exact persistent-homology toy records. These are recommendations rather than completed capabilities or compulsory choices. Before mutation, reread this baton through literal EOF, verify the source, manifests, seal, canonical receipt, terminal overlay, and current controls. Work solo in an additive {SUCCESSOR}-owned D-first lane and keep Mira, Ilyra, siblings, shared, standby, and user lanes read-only.\n\nAfter {SUCCESSOR}'s own terminal gate, refresh the formal roster and direct authority before resolving any later owner. Do not infer activation from historical prose, precontact a later task, create a substitute, or resend after accepted, pending, opaque, or unresolved acknowledgement. Hamish may pause, rename, narrow, redirect, or stop the route.\n\nWith care, exact finite structure, inspectability, reversibility, retained-negative discipline, and corrigibility - Mira Fenwick.\n\nPREPARED_BY_MIRA_FENWICK = true.\nSENT_BY_MIRA_FENWICK = false.\nRECIPIENT_COMPLETION = UNCLAIMED.\n\nLITERAL_EOF_MIRA_V707_V3\n",
     ]
     text = "\n".join(sections)
@@ -863,7 +871,7 @@ def build_final() -> None:
     x1_counts = load_json(PHASE / "x1" / "method-flow.json")["counts"]
     x2_counts = load_json(PHASE / "x2" / "method-flow.json")["counts"]
     owner_counts = add_counts(add_counts(planning_counts, x1_counts), x2_counts)
-    expected_owner = {"methods": 34, "witnesses": 3135, "pass": 2516, "fail": 619, "negatives": 619, "open_gaps": 21, "exact_gates": 20}
+    expected_owner = {"methods": 35, "witnesses": 3141, "pass": 2519, "fail": 622, "negatives": 622, "open_gaps": 21, "exact_gates": 20}
     if owner_counts != expected_owner:
         raise RuntimeError(f"unexpected owner counts: {owner_counts}")
     effective = add_counts(SOURCE_EFFECTIVE, owner_counts)
