@@ -1,0 +1,442 @@
+{
+  "schema": "liora.projects.v708-v2.v1",
+  "count": 20,
+  "cap": 80,
+  "projects": [
+    {
+      "project_id": "LI7082-P01",
+      "title": "Decision-table shape and digest",
+      "stage": "x1",
+      "hypothesis": "A bounded decision table can be normalized without changing row order or declared values.",
+      "null_or_failure_condition": "Duplicate object labels, unknown attributes, Boolean-as-integer values, or a changed digest are rejected.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991",
+        "rfc8785"
+      ],
+      "concrete_artifacts": [
+        "x1/code/rough_set.py",
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Independent shape and digest checks agree for all fifteen fixtures.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_real_data",
+        "no_identity_decision"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P02",
+      "title": "Indiscernibility partition",
+      "stage": "x1",
+      "hypothesis": "Equality on a declared attribute subset induces a deterministic partition of the finite universe.",
+      "null_or_failure_condition": "A block overlaps another block, omits an object, or changes under row permutation.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Direct grouping and pairwise-equivalence closure return identical sorted blocks.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_empirical_promotion"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P03",
+      "title": "Target lower approximation",
+      "stage": "x1",
+      "hypothesis": "The lower approximation is exactly the union of indiscernibility blocks contained in the target.",
+      "null_or_failure_condition": "Any included block crosses the target or any contained block is omitted.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Block-union and object-neighborhood formulations agree.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_classification_authority"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P04",
+      "title": "Target upper approximation",
+      "stage": "x1",
+      "hypothesis": "The upper approximation is exactly the union of blocks intersecting the target.",
+      "null_or_failure_condition": "An intersecting block is omitted or a disjoint block is included.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Block-union and object-neighborhood formulations agree.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_classification_authority"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P05",
+      "title": "Boundary and negative regions",
+      "stage": "x1",
+      "hypothesis": "Boundary and negative regions form the declared upper-minus-lower and universe-minus-upper sets.",
+      "null_or_failure_condition": "The three regions overlap incorrectly or fail their declared set identities.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Exact set identities pass for all fixtures.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_empirical_promotion"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P06",
+      "title": "Approximation accuracy and rough membership",
+      "stage": "x1",
+      "hypothesis": "Exact rational accuracy and neighborhood membership stay within their declared bounds.",
+      "null_or_failure_condition": "A denominator is zero without an explicit convention or a value falls outside zero through one.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json",
+        "x1/models"
+      ],
+      "acceptance_or_falsifier_gate": "Fraction arithmetic and counted-set definitions agree.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_probability_claim"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P07",
+      "title": "Positive region and dependency degree",
+      "stage": "x1",
+      "hypothesis": "The positive region is the union of lower approximations of decision classes and yields an exact rational dependency degree.",
+      "null_or_failure_condition": "Decision classes fail to partition known decisions or dependency leaves zero through one.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Class-by-class and object-certainty formulations agree.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_causal_claim"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P08",
+      "title": "Discernibility matrix",
+      "stage": "x1",
+      "hypothesis": "Pairs with different decisions expose the exact condition attributes that discern them.",
+      "null_or_failure_condition": "A same-decision pair contributes or a differing attribute is lost.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Symmetry and direct attribute-difference checks pass.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_feature_selection_authority"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P09",
+      "title": "Minimal reduct enumeration",
+      "stage": "x1",
+      "hypothesis": "For at most four condition attributes, exhaustive subsets can identify inclusion-minimal dependency-preserving reducts.",
+      "null_or_failure_condition": "A reported reduct does not preserve dependency or has a preserving proper subset.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Exhaustive minimality witnesses pass under the declared cap.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "bounded_search_only"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P10",
+      "title": "Core attribute intersection",
+      "stage": "x1",
+      "hypothesis": "The rough-set core is the exact intersection of all enumerated reducts.",
+      "null_or_failure_condition": "A core attribute is absent from a reduct or a universally present reduct attribute is omitted.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x1/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Direct intersection and per-attribute necessity checks agree.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "bounded_search_only"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P11",
+      "title": "Decision consistency census",
+      "stage": "x2",
+      "hypothesis": "Condition blocks can be labelled consistently, inconsistently, or partly unknown without erasing conflicts.",
+      "null_or_failure_condition": "A conflicting known decision is collapsed into a single label.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991",
+        "prov-o"
+      ],
+      "concrete_artifacts": [
+        "x2/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Block decision sets and conflict witnesses match.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "conflict_nonerasure"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P12",
+      "title": "Pessimistic missing-value neighborhoods",
+      "stage": "x2",
+      "hypothesis": "A declared conservative neighborhood can require known equality except for self-membership.",
+      "null_or_failure_condition": "Unknown values silently match nonself objects or symmetry fails.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x2/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Pairwise neighborhood checks and declared relation properties pass.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "semantics_declared_not_standard_claim"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P13",
+      "title": "Optimistic missing-value neighborhoods",
+      "stage": "x2",
+      "hypothesis": "A declared permissive neighborhood can match when either compared value is missing.",
+      "null_or_failure_condition": "Known unequal values match or symmetry fails.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "pawlak-1991"
+      ],
+      "concrete_artifacts": [
+        "x2/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Pairwise checks pass and nontransitivity is reported rather than hidden.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "semantics_declared_not_standard_claim"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P14",
+      "title": "Finite dominance cones",
+      "stage": "x2",
+      "hypothesis": "Known ordinal condition values induce bounded upward and downward dominance cones.",
+      "null_or_failure_condition": "Missing values are silently ordered or reflexivity fails on known rows.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "drsa-primary"
+      ],
+      "concrete_artifacts": [
+        "x2/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Direct pairwise and cone membership checks agree.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_preference_authority"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P15",
+      "title": "Dominance approximation checks",
+      "stage": "x2",
+      "hypothesis": "Declared upward and downward class unions admit exact finite lower and upper dominance approximations.",
+      "null_or_failure_condition": "The approximation uses the wrong cone orientation or violates lower-subset-upper.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "drsa-primary"
+      ],
+      "concrete_artifacts": [
+        "x2/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Dual orientation checks pass on all applicable fixtures.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_decision_authority"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P16",
+      "title": "Refinement and correction lineage",
+      "stage": "x2",
+      "hypothesis": "Adding condition attributes refines indiscernibility and corrections can preserve both original and replacement digests.",
+      "null_or_failure_condition": "A refined block crosses a coarse block or original evidence disappears.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "prov-o",
+        "rfc8785"
+      ],
+      "concrete_artifacts": [
+        "x2/results/contracts.json"
+      ],
+      "acceptance_or_falsifier_gate": "Refinement witnesses and PROV-style correction links validate.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "correction_nonerasure"
+      ],
+      "expected_disposition": "completed"
+    },
+    {
+      "project_id": "LI7082-P17",
+      "title": "Accessible three-coordinate projections",
+      "stage": "x2",
+      "hypothesis": "Lower size, boundary size, and upper size can be presented as a compact inspection aid.",
+      "null_or_failure_condition": "A coordinate is described as physical, empirical, or complete accessibility evidence.",
+      "approval_class": "safe_now_owner_scoped",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "wcag22"
+      ],
+      "concrete_artifacts": [
+        "x2/models",
+        "x2/accessible-overview.md"
+      ],
+      "acceptance_or_falsifier_gate": "Fifteen X2 projections bind exact source results and carry an analogy firewall.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "no_physical_simulation_claim",
+        "no_accessibility_complete_claim"
+      ],
+      "expected_disposition": "represented"
+    },
+    {
+      "project_id": "LI7082-P18",
+      "title": "Empirical calibration vacancy",
+      "stage": "x2",
+      "hypothesis": "Real measurement quality and decision utility require governed data and a preregistered evaluation.",
+      "null_or_failure_condition": "Synthetic fixtures are promoted into empirical calibration or professional validity.",
+      "approval_class": "open_gap",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [],
+      "concrete_artifacts": [
+        "final/gate-register.json"
+      ],
+      "acceptance_or_falsifier_gate": "Remain open until governed real evidence, appropriate statistics, and independent review exist.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "real_data_required",
+        "independent_review_required"
+      ],
+      "expected_disposition": "open_gap"
+    },
+    {
+      "project_id": "LI7082-P19",
+      "title": "Independent reproduction and affected-user evaluation vacancy",
+      "stage": "x2",
+      "hypothesis": "Independent implementation and affected-user evaluation are needed for broader confidence.",
+      "null_or_failure_condition": "Same-owner tests or static structure are described as independent reproduction or complete accessibility.",
+      "approval_class": "open_gap",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [
+        "wcag22"
+      ],
+      "concrete_artifacts": [
+        "final/gate-register.json"
+      ],
+      "acceptance_or_falsifier_gate": "Remain open pending an independent team and affected-user accessibility review.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "independent_team_required",
+        "affected_user_review_required"
+      ],
+      "expected_disposition": "open_gap"
+    },
+    {
+      "project_id": "LI7082-P20",
+      "title": "Classification, remedy, and cultural authority hold",
+      "stage": "x2",
+      "hypothesis": "Real classification, remedy, cultural interpretation, and Maori data decisions require competent and affected authority.",
+      "null_or_failure_condition": "Repository software is allowed to confer a right, identity, remedy, cultural legitimacy, or Maori authority.",
+      "approval_class": "exact_gate",
+      "execution_lane": "owner_self_scoped_delta",
+      "official_or_primary_source_needs": [],
+      "concrete_artifacts": [
+        "final/gate-register.json"
+      ],
+      "acceptance_or_falsifier_gate": "Remain unexecuted unless action-specific evidence and competent affected authority are present.",
+      "rollback_or_recovery": "Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.",
+      "protected_gates": [
+        "legal_authority",
+        "affected_party_authority",
+        "maori_authority"
+      ],
+      "expected_disposition": "exact_gate"
+    }
+  ],
+  "outcomes_expected": {
+    "completed": 16,
+    "represented": 1,
+    "open_gap": 2,
+    "exact_gate": 1
+  },
+  "boundary": "Finite synthetic same-owner rough-set mathematical, software, and documentary evidence only. No real participant, dataset, measurement, classification, identity decision, professional act, legal or cultural interpretation, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, or Stage 20 credit. NOT_READY_FOR_STAGE_20."
+}
