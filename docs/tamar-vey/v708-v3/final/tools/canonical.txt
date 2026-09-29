@@ -1,0 +1,169 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+
+const MODE = process.argv[2];
+const ROOT = process.argv[3];
+const RECEIPT = process.argv[4];
+const PREFIX = "docs/tamar-vey/v708-v3";
+const FINAL = `${PREFIX}/final`;
+const BRANCH = "codex/GHC-Family/tamar-vey-main-3";
+const OWNER_BASE = "df4bfa0165e57882b1b10ea5a842a1ccb824922a";
+const PLANNING = "a705a60eeef6f46e080d318ad7ee438bf1e1d7cf";
+const X1 = "525fd4eaaa73dc74a66b19a63925438391ea9dd3";
+const X2 = "d6d52011c70162be5b5bc2c1218c17fe0ce4e63a";
+
+function fail(message) { throw new Error(message); }
+function git(args, encoding = "utf8") {
+  const result = cp.spawnSync("git", ["-C", ROOT, ...args], { encoding, maxBuffer: 512 * 1024 * 1024 });
+  if (result.status !== 0) fail(String(result.stderr || result.stdout));
+  return encoding === null ? Buffer.from(result.stdout || "") : String(result.stdout || "").trim();
+}
+function headBytes(file) { return git(["show", `HEAD:${file}`], null); }
+function headText(file) { return headBytes(file).toString("utf8"); }
+function headJson(file) { return JSON.parse(headText(file)); }
+function sha(value) { return crypto.createHash("sha256").update(value).digest("hex"); }
+function words(value) { return (value.match(/\S+/g) || []).length; }
+function replay(manifest) {
+  const failures = [];
+  for (const row of manifest.entries) {
+    let bytes;
+    try { bytes = headBytes(row.path); } catch (error) { failures.push({ type: "missing", path: row.path }); continue; }
+    const meta = git(["ls-tree", "HEAD", "--", row.path]).match(/^(\d+)\s+blob\s+([0-9a-f]+)\t/);
+    if (!meta || bytes.length !== row.bytes || sha(bytes) !== row.sha256 || meta[1] !== row.mode || meta[2] !== row.git_oid) failures.push({ type: "mismatch", path: row.path });
+  }
+  return failures;
+}
+function canonicalChecks() {
+  const head = git(["rev-parse", "HEAD"]);
+  const parent = git(["rev-parse", "HEAD^"]);
+  const branch = git(["branch", "--show-current"]);
+  const upstream = git(["rev-parse", "@{u}"]);
+  const tracking = git(["rev-parse", `refs/remotes/origin/${BRANCH}`]);
+  const liveLine = git(["ls-remote", "origin", `refs/heads/${BRANCH}`]);
+  const live = liveLine.split("\t")[0];
+  const divergence = git(["rev-list", "--left-right", "--count", "HEAD...@{u}"]).split(/\s+/).map(Number);
+  const owner = headJson(`${FINAL}/validation/final-owner-manifest.json`);
+  const delta = headJson(`${FINAL}/validation/final-delta-manifest.json`);
+  const review = headJson(`${FINAL}/validation/final-staged-review.json`);
+  const truth = headJson(`${FINAL}/phase-truth.json`);
+  const tests = headJson(`${FINAL}/validation/final-tests.json`);
+  const x1Tests = headJson(`${PREFIX}/x1/validation/tests.json`);
+  const x2Tests = headJson(`${PREFIX}/x2/validation/tests.json`);
+  const x1Manifest = headJson(`${PREFIX}/x1/validation/manifest.json`);
+  const x2Manifest = headJson(`${PREFIX}/x2/validation/manifest.json`);
+  const delivery = headJson(`${PREFIX}/x2/consultation/x2-delivery.json`);
+  const seal = headJson(`${FINAL}/content-seal.json`);
+  const baton = headText(`${FINAL}/handoff/saelin-reed-v708-v4-baton.md`);
+  const ownerFiles = git(["ls-tree", "-r", "--name-only", "HEAD", PREFIX]).split(/\r?\n/).filter(Boolean);
+  const allowed = new Set([".json", ".md", ".txt", ".html"]);
+  const badExtensions = ownerFiles.filter(file => !allowed.has(path.extname(file).toLowerCase()));
+  const jsonFailures = [];
+  const privacyCandidates = [];
+  const confirmedPrivacy = [];
+  const patterns = [
+    ["raw_uuid", /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+    ["absolute_drive_path", /\b[A-Za-z]:[\\/][^\s\"']+/g],
+    ["secret_token", /\b(?:sk-[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._-]{12,})\b/g],
+    ["raw_thread_label", /\b(?:thread_id|conversation_id|session_id)\b/gi],
+    ["private_route_scheme", /(?:chatgpt-conversation|plugin):\/\//gi]
+  ];
+  for (const file of ownerFiles) {
+    const text = headText(file);
+    if (path.extname(file).toLowerCase() === ".json") {
+      try { JSON.parse(text); } catch (error) { jsonFailures.push({ file, error: error.message }); }
+    }
+    for (const [klass, regex] of patterns) {
+      regex.lastIndex = 0;
+      const hits = text.match(regex) || [];
+      if (hits.length) {
+        const row = { file, class: klass, count: hits.length };
+        if (file.includes("/tools/")) privacyCandidates.push(row); else confirmedPrivacy.push(row);
+      }
+    }
+  }
+  const sealFailures = [];
+  for (const row of seal.targets) if (sha(headBytes(row.path)) !== row.sha256) sealFailures.push(row.path);
+  const checks = [
+    ["exact_branch", branch === BRANCH, branch],
+    ["final_parent_is_x2", parent === X2, parent],
+    ["planning_parent_is_owner_base", git(["rev-parse", `${PLANNING}^`]) === OWNER_BASE, git(["rev-parse", `${PLANNING}^`])],
+    ["x1_parent_is_planning", git(["rev-parse", `${X1}^`]) === PLANNING, git(["rev-parse", `${X1}^`])],
+    ["x2_parent_is_x1", git(["rev-parse", `${X2}^`]) === X1, git(["rev-parse", `${X2}^`])],
+    ["four_owner_commits", Number(git(["rev-list", "--count", `${OWNER_BASE}..HEAD`])) === 4, git(["rev-list", "--count", `${OWNER_BASE}..HEAD`])],
+    ["zero_owner_merges", Number(git(["rev-list", "--merges", "--count", `${OWNER_BASE}..HEAD`])) === 0, git(["rev-list", "--merges", "--count", `${OWNER_BASE}..HEAD`])],
+    ["one_final_parent", git(["rev-list", "--parents", "-n", "1", "HEAD"]).split(/\s+/).length === 2, git(["rev-list", "--parents", "-n", "1", "HEAD"])],
+    ["clean_state", git(["status", "--porcelain=v1"]) === "", git(["status", "--porcelain=v1"])],
+    ["zero_divergence", divergence[0] === 0 && divergence[1] === 0, divergence],
+    ["four_way_equality", head === upstream && head === tracking && head === live, { head, upstream, tracking, live }],
+    ["owner_manifest_replay", replay(owner).length === 0, replay(owner)],
+    ["delta_manifest_replay", replay(delta).length === 0, replay(delta)],
+    ["staged_review_valid", review.valid === true && review.failures.length === 0, review.failures],
+    ["strict_owner_json", jsonFailures.length === 0, jsonFailures],
+    ["allowed_owner_extensions", badExtensions.length === 0, badExtensions],
+    ["privacy_definition_candidates_visible", privacyCandidates.length > 0, privacyCandidates],
+    ["privacy_zero_confirmed", confirmedPrivacy.length === 0, confirmedPrivacy],
+    ["x1_tests_retained_not_replayed", x1Tests.tests === 45 && x1Tests.passed === 45 && x1Tests.replayed === false, { tests: x1Tests.tests, passed: x1Tests.passed }],
+    ["x2_tests_retained_not_replayed", x2Tests.tests === 50 && x2Tests.passed === 50 && x2Tests.replayed === false, { tests: x2Tests.tests, passed: x2Tests.passed }],
+    ["final_tests", tests.tests === 24 && tests.passed === 24 && tests.failed === 0 && tests.replayed === false, { tests: tests.tests, passed: tests.passed }],
+    ["lifecycle_manifests_valid", x1Manifest.valid === true && x2Manifest.valid === true, { x1: x1Manifest.valid, x2: x2Manifest.valid }],
+    ["exact_outcomes", JSON.stringify(truth.project_outcomes) === JSON.stringify({ completed: 16, represented: 1, open_gap: 2, exact_gate: 1 }), truth.project_outcomes],
+    ["exact_repository_counts", truth.repository_effective.methods === 7019 && truth.repository_effective.witnesses === 317729 && truth.repository_effective.passing === 244556 && truth.repository_effective.failed === 73173 && truth.repository_effective.negatives === 82006 && truth.repository_effective.open_gaps === 2515 && truth.repository_effective.exact_obligations === 2873, truth.repository_effective],
+    ["x2_route_truth", delivery.delivery_state === "NOT_SENT_NATIVE_ROUTE_UNAVAILABLE_BROWSER_PROHIBITED" && delivery.message_accepted === false && delivery.browser_fallback_used === false, delivery.delivery_state],
+    ["baton_bounds", words(baton) >= 2000 && words(baton) <= 100000 && baton.includes("SENT_BY_TAMAR_VEY = false"), words(baton)],
+    ["content_seal_replay", sealFailures.length === 0, sealFailures],
+    ["precanonical_preroute_truth", truth.canonical_invocations === 0 && truth.canonical_successes === 0 && truth.successor_contacts === 0, { canonical: truth.canonical_invocations, successor: truth.successor_contacts }],
+    ["terminal_verdict", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20", truth.terminal_verdict]
+  ];
+  return { head, parent, branch, checks: checks.map(([name, pass, detail]) => ({ name, pass: !!pass, detail })), owner_files: ownerFiles.length, owner_manifest_entries: owner.entry_count, delta_manifest_entries: delta.entry_count, privacy_definition_candidates: privacyCandidates.length };
+}
+
+if (!MODE || !ROOT || !RECEIPT) fail("mode, root, and receipt path required");
+if (MODE === "preflight") {
+  if (fs.existsSync(RECEIPT)) fail("exclusive receipt already exists");
+  const result = canonicalChecks();
+  const valid = result.checks.every(row => row.pass);
+  process.stdout.write(JSON.stringify({ status: valid ? "PASS" : "FAIL", checks: result.checks.length, passed: result.checks.filter(row => row.pass).length, failed: result.checks.filter(row => !row.pass).length, exact_final: result.head, receipt_absent: true }) + "\n");
+  if (!valid) process.exitCode = 1;
+} else if (MODE === "run") {
+  fs.mkdirSync(path.dirname(RECEIPT), { recursive: true });
+  const fd = fs.openSync(RECEIPT, "wx");
+  let receipt;
+  try {
+    const result = canonicalChecks();
+    const valid = result.checks.every(row => row.pass);
+    receipt = {
+      schema: "tamar.exact-final-owner-scoped-canonical.v708-v3.v1",
+      status: valid ? "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" : "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
+      invocation_count: 1,
+      success_count: valid ? 1 : 0,
+      replay_count: 0,
+      replay_prohibited_after_success: true,
+      exact_final: result.head,
+      parent: result.parent,
+      branch: result.branch,
+      checks_total: result.checks.length,
+      checks_passed: result.checks.filter(row => row.pass).length,
+      checks_failed: result.checks.filter(row => !row.pass).length,
+      owner_files: result.owner_files,
+      owner_manifest_entries: result.owner_manifest_entries,
+      delta_manifest_entries: result.delta_manifest_entries,
+      privacy_definition_candidates: result.privacy_definition_candidates,
+      confirmed_privacy_hits: 0,
+      checks: result.checks,
+      full_repository_suite_run: false,
+      independent_reproduction: false,
+      terminal_verdict: "NOT_READY_FOR_STAGE_20"
+    };
+  } catch (error) {
+    receipt = { schema: "tamar.exact-final-owner-scoped-canonical.v708-v3.v1", status: "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", invocation_count: 1, success_count: 0, replay_count: 0, replay_prohibited: true, error: String(error.message || error), terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+  }
+  const bytes = Buffer.from(JSON.stringify(receipt, null, 2) + "\n", "utf8");
+  fs.writeFileSync(fd, bytes);
+  fs.closeSync(fd);
+  process.stdout.write(JSON.stringify({ status: receipt.status, checks: receipt.checks_total || 0, passed: receipt.checks_passed || 0, failed: receipt.checks_failed || 1, exact_final: receipt.exact_final || null, receipt_sha256: sha(bytes) }) + "\n");
+  if (receipt.success_count !== 1) process.exitCode = 1;
+} else fail(`unsupported mode ${MODE}`);

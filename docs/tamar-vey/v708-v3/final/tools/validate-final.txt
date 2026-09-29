@@ -1,0 +1,239 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+const vm = require("node:vm");
+
+const MODE = process.argv[2];
+const ROOT = process.argv[3];
+const PREFIX = "docs/tamar-vey/v708-v3";
+const FINAL_PREFIX = `${PREFIX}/final`;
+const FINAL = path.join(ROOT || "", ...FINAL_PREFIX.split("/"));
+const OWNER_BASE = "df4bfa0165e57882b1b10ea5a842a1ccb824922a";
+const PLANNING = "a705a60eeef6f46e080d318ad7ee438bf1e1d7cf";
+const X1 = "525fd4eaaa73dc74a66b19a63925438391ea9dd3";
+const X2 = "d6d52011c70162be5b5bc2c1218c17fe0ce4e63a";
+const DELTA = `${FINAL_PREFIX}/validation/final-delta-manifest.json`;
+const OWNER = `${FINAL_PREFIX}/validation/final-owner-manifest.json`;
+const REVIEW = `${FINAL_PREFIX}/validation/final-staged-review.json`;
+const EXCLUSIONS = [DELTA, OWNER, REVIEW];
+const BOUNDARY = "Finite synthetic same-owner final validation only. Same-owner software evidence is not independent reproduction, empirical confirmation, production certification, complete privacy or accessibility assurance, exhaustive security, professional validation, legal or cultural ratification, Maori authority, proof, canon, or Stage 20 authority. NOT_READY_FOR_STAGE_20.";
+
+function fail(message) { throw new Error(message); }
+function git(args, encoding = "utf8") {
+  const result = cp.spawnSync("git", ["-C", ROOT, ...args], { encoding, maxBuffer: 256 * 1024 * 1024 });
+  if (result.status !== 0) fail(String(result.stderr || result.stdout));
+  return encoding === null ? Buffer.from(result.stdout || "") : String(result.stdout || "").trim();
+}
+function load(relative) { return JSON.parse(fs.readFileSync(path.join(ROOT, ...relative.split("/")), "utf8")); }
+function put(relative, value) {
+  const target = path.join(ROOT, ...relative.split("/"));
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8");
+}
+function walk(folder) {
+  const rows = [];
+  for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
+    const full = path.join(folder, entry.name);
+    if (entry.isDirectory()) rows.push(...walk(full)); else rows.push(full);
+  }
+  return rows;
+}
+function rel(file) { return path.relative(ROOT, file).replaceAll("\\", "/"); }
+function sha(buffer) { return crypto.createHash("sha256").update(buffer).digest("hex"); }
+function words(text) { return (text.match(/\S+/g) || []).length; }
+function statusRows() { return git(["status", "--porcelain=v1", "--untracked-files=all"]).split(/\r?\n/).filter(Boolean); }
+function stagedRows() { return git(["diff", "--cached", "--name-only", "--diff-filter=ACMRTUXB"]).split(/\r?\n/).filter(Boolean).sort(); }
+function stagedDeleted() { return git(["diff", "--cached", "--name-only", "--diff-filter=D"]).split(/\r?\n/).filter(Boolean); }
+function blob(file) { return git(["show", `:${file}`], null); }
+function meta(file) {
+  const match = git(["ls-files", "-s", "--", file]).match(/^(\d+)\s+([0-9a-f]+)\s+\d+\t/);
+  if (!match) fail(`missing index entry ${file}`);
+  return { mode: match[1], git_oid: match[2] };
+}
+function parent(commit) { return git(["rev-parse", `${commit}^`]); }
+
+function commonChecks() {
+  const files = walk(FINAL).map(rel).sort();
+  const allowed = new Set([".json", ".md", ".txt", ".html"]);
+  const badExtensions = files.filter(file => !allowed.has(path.extname(file).toLowerCase()));
+  const jsonFailures = [];
+  const privacy = [];
+  const patterns = [
+    ["raw_uuid", /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+    ["absolute_drive_path", /\b[A-Za-z]:[\\/][^\s\"']+/g],
+    ["secret_token", /\b(?:sk-[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._-]{12,})\b/g],
+    ["raw_thread_label", /\b(?:thread_id|conversation_id|session_id)\b/gi],
+    ["private_route_scheme", /(?:chatgpt-conversation|plugin):\/\//gi]
+  ];
+  let maxWords = 0;
+  let maxFile = null;
+  for (const file of files) {
+    const text = fs.readFileSync(path.join(ROOT, ...file.split("/")), "utf8");
+    const count = words(text);
+    if (count > maxWords) { maxWords = count; maxFile = file; }
+    if (path.extname(file).toLowerCase() === ".json") {
+      try { JSON.parse(text); } catch (error) { jsonFailures.push({ file, error: error.message }); }
+    }
+    for (const [klass, regex] of patterns) {
+      regex.lastIndex = 0;
+      const hits = text.match(regex) || [];
+      if (hits.length) privacy.push({ file, class: klass, count: hits.length });
+    }
+  }
+  const definitionCandidates = privacy.filter(row => row.file.includes("/tools/"));
+  const confirmed = privacy.filter(row => !row.file.includes("/tools/"));
+  const truth = load(`${FINAL_PREFIX}/phase-truth.json`);
+  const method = load(`${FINAL_PREFIX}/method-flow-final.json`);
+  const lifecycle = load(`${FINAL_PREFIX}/lifecycle-replay.json`);
+  const seal = load(`${FINAL_PREFIX}/content-seal.json`);
+  const complete = load(`${FINAL_PREFIX}/complete-incomplete-checklist.json`);
+  const x1Truth = load(`${PREFIX}/x1/phase-truth.json`);
+  const x2Truth = load(`${PREFIX}/x2/phase-truth.json`);
+  const x1Tests = load(`${PREFIX}/x1/validation/tests.json`);
+  const x2Tests = load(`${PREFIX}/x2/validation/tests.json`);
+  const delivery = load(`${PREFIX}/x2/consultation/x2-delivery.json`);
+  const prevalidationOverlay = load(`${FINAL_PREFIX}/validation/prevalidation-method-flow-overlay.json`);
+  const batonText = fs.readFileSync(path.join(ROOT, ...`${FINAL_PREFIX}/handoff/saelin-reed-v708-v4-baton.md`.split("/")), "utf8");
+  const sealFailures = [];
+  for (const row of seal.targets) {
+    const bytes = fs.readFileSync(path.join(ROOT, ...row.path.split("/")));
+    if (sha(bytes) !== row.sha256) sealFailures.push(row.path);
+  }
+  const dirty = statusRows();
+  const checks = [
+    ["allowed_extensions", badExtensions.length === 0, badExtensions],
+    ["strict_json", jsonFailures.length === 0, jsonFailures],
+    ["document_ceiling", maxWords <= 100000, { max_words: maxWords, file: maxFile }],
+    ["file_ceiling", files.length < 2000, files.length],
+    ["head_is_x2", git(["rev-parse", "HEAD"]) === X2, git(["rev-parse", "HEAD"])],
+    ["planning_parent", parent(PLANNING) === OWNER_BASE, parent(PLANNING)],
+    ["x1_parent", parent(X1) === PLANNING, parent(X1)],
+    ["x2_parent", parent(X2) === X1, parent(X2)],
+    ["prior_stages_immutable", git(["diff", "--name-only", "HEAD", "--", `${PREFIX}/planning`, `${PREFIX}/x1`, `${PREFIX}/x2`]) === "", null],
+    ["final_only_dirty_scope", dirty.every(row => row.slice(3).replaceAll("\\", "/").startsWith(`${FINAL_PREFIX}/`)), dirty],
+    ["outcomes", JSON.stringify(truth.project_outcomes) === JSON.stringify({ completed: 16, represented: 1, open_gap: 2, exact_gate: 1 }), truth.project_outcomes],
+    ["repository_accounting", truth.repository_effective.methods === 7019 && truth.repository_effective.witnesses === 317729 && truth.repository_effective.passing === 244556 && truth.repository_effective.failed === 73173 && truth.repository_effective.negatives === 82006 && truth.repository_effective.open_gaps === 2515 && truth.repository_effective.exact_obligations === 2873, truth.repository_effective],
+    ["method_alignment", JSON.stringify(method.repository_effective) === JSON.stringify(truth.repository_effective) && method.closeout_methods.length === 6 && method.closeout_witnesses.length === 6 && prevalidationOverlay.effective_repository_counts.methods === 7019, method.repository_effective],
+    ["x1_tests_once", x1Tests.tests === 45 && x1Tests.passed === 45 && x1Tests.replayed === false && x1Truth.methods === 22, { tests: x1Tests.tests, passed: x1Tests.passed }],
+    ["x2_tests_once", x2Tests.tests === 50 && x2Tests.passed === 50 && x2Tests.replayed === false && x2Truth.methods === 17, { tests: x2Tests.tests, passed: x2Tests.passed }],
+    ["x2_route_closed_unsent", delivery.delivery_state === "NOT_SENT_NATIVE_ROUTE_UNAVAILABLE_BROWSER_PROHIBITED" && delivery.delivery_attempts === 1 && delivery.resends === 0 && delivery.message_accepted === false && delivery.browser_fallback_used === false, delivery.delivery_state],
+    ["baton_word_floor", words(batonText) >= 2000 && words(batonText) <= 100000, words(batonText)],
+    ["method_flow_separate", !batonText.includes("TV7083-X2-M001") && fs.existsSync(path.join(ROOT, ...`${FINAL_PREFIX}/method-flow-final.json`.split("/"))), true],
+    ["content_seal", seal.target_count === 10 && sealFailures.length === 0, sealFailures],
+    ["source_not_git_parent", truth.source_is_content_provenance_not_git_parent === true && lifecycle.source_is_content_provenance_not_git_parent === true, true],
+    ["scanner_definitions_visible", definitionCandidates.length > 0, definitionCandidates],
+    ["privacy_zero_confirmed", confirmed.length === 0, confirmed],
+    ["terminal_boundary", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20" && complete.terminal_verdict === "NOT_READY_FOR_STAGE_20", truth.terminal_verdict],
+    ["precanonical_and_preroute", truth.canonical_invocations === 0 && truth.canonical_successes === 0 && truth.successor_contacts === 0, { canonical: truth.canonical_invocations, successor: truth.successor_contacts }]
+  ];
+  return { files, maxWords, checks: checks.map(([name, pass, detail]) => ({ name, pass: !!pass, detail })) };
+}
+
+function runTests() {
+  const result = commonChecks();
+  const valid = result.checks.every(row => row.pass);
+  put(`${FINAL_PREFIX}/validation/final-tests.json`, {
+    schema: "tamar.final-tests.v708-v3.v1",
+    valid,
+    tests: result.checks.length,
+    passed: result.checks.filter(row => row.pass).length,
+    failed: result.checks.filter(row => !row.pass).length,
+    replayed: false,
+    checks: result.checks,
+    boundary: BOUNDARY
+  });
+  process.stdout.write(JSON.stringify({ status: valid ? "PASS" : "FAIL", tests: result.checks.length, passed: result.checks.filter(row => row.pass).length, failed: result.checks.filter(row => !row.pass).length }) + "\n");
+  if (!valid) process.exitCode = 1;
+}
+
+function preflight() {
+  const tests = load(`${FINAL_PREFIX}/validation/final-tests.json`);
+  const checks = [
+    { name: "stored_final_tests", pass: tests.valid === true && tests.tests === 24 && tests.passed === 24 && tests.failed === 0 && tests.replayed === false },
+    { name: "head_still_x2", pass: git(["rev-parse", "HEAD"]) === X2 },
+    { name: "only_final_dirty", pass: statusRows().every(row => row.slice(3).replaceAll("\\", "/").startsWith(`${FINAL_PREFIX}/`)) },
+    { name: "no_staged_deletions", pass: stagedDeleted().length === 0 },
+    { name: "canonical_not_invoked", pass: load(`${FINAL_PREFIX}/phase-truth.json`).canonical_invocations === 0 },
+    { name: "successor_not_contacted", pass: load(`${FINAL_PREFIX}/phase-truth.json`).successor_contacts === 0 }
+  ];
+  const valid = checks.every(row => row.pass);
+  put(`${FINAL_PREFIX}/validation/final-preflight.json`, { schema: "tamar.final-preflight.v708-v3.v1", valid, checks_total: checks.length, checks_passed: checks.filter(row => row.pass).length, checks_failed: checks.filter(row => !row.pass).length, checks, tests_replayed: false, canonical_invocation: false, boundary: BOUNDARY });
+  process.stdout.write(JSON.stringify({ status: valid ? "PASS" : "FAIL", checks: checks.length, passed: checks.filter(row => row.pass).length, failed: checks.filter(row => !row.pass).length }) + "\n");
+  if (!valid) process.exitCode = 1;
+}
+
+function manifest() {
+  if (EXCLUSIONS.some(file => fs.existsSync(path.join(ROOT, ...file.split("/"))))) fail("manifest or review already exists");
+  const staged = stagedRows();
+  if (!staged.length || staged.some(file => !file.startsWith(`${FINAL_PREFIX}/`)) || stagedDeleted().length) fail("invalid staged scope");
+  const deltaEntries = staged.filter(file => !EXCLUSIONS.includes(file)).map(file => {
+    const bytes = blob(file); const m = meta(file);
+    return { path: file, bytes: bytes.length, sha256: sha(bytes), mode: m.mode, git_oid: m.git_oid };
+  });
+  put(DELTA, { schema: "tamar.final-delta-index-manifest.v708-v3.v1", byte_domain: "staged_git_index_blob_raw_bytes", x2_parent: X2, entry_count: deltaEntries.length, entries: deltaEntries, exclusions: EXCLUSIONS, valid: true, canonical_invocation: false, boundary: BOUNDARY });
+  const ownerNames = git(["ls-files", "--", PREFIX]).split(/\r?\n/).filter(Boolean).sort();
+  const ownerEntries = ownerNames.filter(file => !EXCLUSIONS.includes(file)).map(file => {
+    const bytes = blob(file); const m = meta(file);
+    return { path: file, bytes: bytes.length, sha256: sha(bytes), mode: m.mode, git_oid: m.git_oid };
+  });
+  put(OWNER, { schema: "tamar.final-owner-index-manifest.v708-v3.v1", byte_domain: "staged_git_index_blob_raw_bytes", owner_prefix: PREFIX, entry_count: ownerEntries.length, entries: ownerEntries, exclusions: EXCLUSIONS, valid: true, canonical_invocation: false, boundary: BOUNDARY });
+  process.stdout.write(JSON.stringify({ status: "PASS", delta_entries: deltaEntries.length, owner_entries: ownerEntries.length, exclusions: EXCLUSIONS.length }) + "\n");
+}
+
+function staged() {
+  if (fs.existsSync(path.join(ROOT, ...REVIEW.split("/")))) fail("staged review exists");
+  const delta = load(DELTA);
+  const owner = load(OWNER);
+  const names = stagedRows();
+  const expected = [...delta.entries.map(row => row.path), DELTA, OWNER].sort();
+  const failures = [];
+  if (JSON.stringify(names) !== JSON.stringify(expected)) failures.push({ type: "names", expected, observed: names });
+  if (stagedDeleted().length) failures.push({ type: "deletions", paths: stagedDeleted() });
+  for (const row of delta.entries) {
+    const bytes = blob(row.path); const m = meta(row.path);
+    if (bytes.length !== row.bytes || sha(bytes) !== row.sha256 || m.mode !== row.mode || m.git_oid !== row.git_oid) failures.push({ type: "delta_blob", path: row.path });
+  }
+  for (const row of owner.entries) {
+    const bytes = blob(row.path); const m = meta(row.path);
+    if (bytes.length !== row.bytes || sha(bytes) !== row.sha256 || m.mode !== row.mode || m.git_oid !== row.git_oid) failures.push({ type: "owner_blob", path: row.path });
+  }
+  put(REVIEW, { schema: "tamar.final-staged-review.v708-v3.v1", valid: failures.length === 0, staged_entry_count_before_self_exclusion: names.length, delta_manifest_entries: delta.entry_count, owner_manifest_entries: owner.entry_count, exclusions: EXCLUSIONS, deletions: 0, outside_owner_scope: 0, failures, canonical_invocation: false, boundary: BOUNDARY });
+  process.stdout.write(JSON.stringify({ status: failures.length ? "FAIL" : "PASS", staged: names.length, delta_entries: delta.entry_count, owner_entries: owner.entry_count, failures: failures.length }) + "\n");
+  if (failures.length) process.exitCode = 1;
+}
+
+function verify() {
+  const delta = load(DELTA);
+  const review = load(REVIEW);
+  const names = stagedRows();
+  const expected = [...delta.entries.map(row => row.path), DELTA, OWNER, REVIEW].sort();
+  const failures = [];
+  if (JSON.stringify(names) !== JSON.stringify(expected)) failures.push({ type: "names", expected, observed: names });
+  if (!review.valid || review.failures.length) failures.push({ type: "stored_review" });
+  if (stagedDeleted().length) failures.push({ type: "deletions" });
+  for (const row of delta.entries) {
+    const bytes = blob(row.path); const m = meta(row.path);
+    if (bytes.length !== row.bytes || sha(bytes) !== row.sha256 || m.mode !== row.mode || m.git_oid !== row.git_oid) failures.push({ type: "delta_blob", path: row.path });
+  }
+  process.stdout.write(JSON.stringify({ status: failures.length ? "FAIL" : "PASS", staged: names.length, delta_entries: delta.entry_count, owner_entries: load(OWNER).entry_count, exclusions: EXCLUSIONS.length, failures }) + "\n");
+  if (failures.length) process.exitCode = 1;
+}
+
+if (!ROOT || !fs.existsSync(FINAL)) fail("final root unavailable");
+if (MODE === "syntax") {
+  const targets = [
+    `${FINAL_PREFIX}/tools/build-final.txt`,
+    `${FINAL_PREFIX}/tools/validate-final.txt`,
+    `${FINAL_PREFIX}/tools/canonical.txt`
+  ];
+  for (const target of targets) new vm.Script(fs.readFileSync(path.join(ROOT, ...target.split("/")), "utf8"), { filename: target });
+  process.stdout.write(JSON.stringify({ status: "PASS", mode: "nonexecuting_vm_script", files: targets.length }) + "\n");
+} else if (MODE === "tests") runTests();
+else if (MODE === "preflight") preflight();
+else if (MODE === "manifest") manifest();
+else if (MODE === "staged") staged();
+else if (MODE === "verify") verify();
+else fail(`unsupported mode ${MODE}`);

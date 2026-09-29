@@ -1,0 +1,81 @@
+{
+  "schema": "ghc.family.method-flow-overlay.v1",
+  "owner": "Tamar Vey",
+  "phase": "v708-v3",
+  "stage": "final_prevalidation_tool_compatibility",
+  "base_repository_counts": {
+    "methods": 7018,
+    "witnesses": 317725,
+    "passing": 244555,
+    "failed": 73170,
+    "negatives": 82003,
+    "open_gaps": 2515,
+    "exact_obligations": 2873
+  },
+  "methods": [
+    {
+      "method_id": "TV7083-F-M007",
+      "key": "txt-commonjs-syntax-compatibility",
+      "failure_signature": "Node 26 node --check rejected the .txt extension before parsing each of the three exact CommonJS closeout tools.",
+      "recovery": "Load the exact UTF-8 bytes of all three tools through non-executing vm.Script syntax checks, preserving TXT as the authorized artifact type.",
+      "validation_witness_ids": [
+        "TV7083-F-PRE-N001-FAILED",
+        "TV7083-F-PRE-N002-FAILED",
+        "TV7083-F-PRE-N003-FAILED",
+        "TV7083-F-PRE-N001-RECOVERY"
+      ],
+      "retained_negative_ids": [
+        "TV7083-F-PRE-N001",
+        "TV7083-F-PRE-N002",
+        "TV7083-F-PRE-N003"
+      ]
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "TV7083-F-PRE-N001-FAILED",
+      "method_id": "TV7083-F-M007",
+      "result": "fail",
+      "subject": "build-final.txt",
+      "zero_credit": true
+    },
+    {
+      "witness_id": "TV7083-F-PRE-N002-FAILED",
+      "method_id": "TV7083-F-M007",
+      "result": "fail",
+      "subject": "validate-final.txt",
+      "zero_credit": true
+    },
+    {
+      "witness_id": "TV7083-F-PRE-N003-FAILED",
+      "method_id": "TV7083-F-M007",
+      "result": "fail",
+      "subject": "canonical.txt",
+      "zero_credit": true
+    },
+    {
+      "witness_id": "TV7083-F-PRE-N001-RECOVERY",
+      "method_id": "TV7083-F-M007",
+      "result": "pass",
+      "procedure": "one bounded non-executing vm.Script check over all three exact files",
+      "same_owner_only": true
+    }
+  ],
+  "overlay_counts": {
+    "methods": 1,
+    "witnesses": 4,
+    "passing": 1,
+    "failed": 3,
+    "negatives": 3
+  },
+  "effective_repository_counts": {
+    "methods": 7019,
+    "witnesses": 317729,
+    "passing": 244556,
+    "failed": 73173,
+    "negatives": 82006,
+    "open_gaps": 2515,
+    "exact_obligations": 2873
+  },
+  "boundary": "The extension-level failures remain visible and receive zero credit. The recovery checks syntax only; it does not execute the tools or establish broader correctness."
+}
