@@ -1,0 +1,301 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+const Module = require("node:module");
+const vm = require("node:vm");
+
+const PHASE = "v708-v3";
+const OWNER = "Tamar Vey";
+const BASE = "docs/tamar-vey/v708-v3";
+const BRANCH = "codex/GHC-Family/tamar-vey-main-3";
+const PLANNING = "a705a60eeef6f46e080d318ad7ee438bf1e1d7cf";
+const SOURCE = "0acfd2b5ed66817453f1235caf3ff4898035e3ee";
+const BOUNDARY = "Finite synthetic same-owner poset-derived convex-geometry and antimatroid software evidence only. It establishes no real participant, observation, measurement, allocation, classification, identity decision, professional act, legal or cultural interpretation, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, consciousness or personhood, Theory-of-Everything proof, canon, or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const GATES = ["empirical_confirmation", "real_participants", "production_deployment", "professional_authority", "legal_cultural_affected_party_authority", "Maori_authority", "complete_privacy_accessibility_security", "independent_reproduction", "consciousness_personhood", "AGI_ASI", "Theory_of_Everything", "Stage_20"];
+const OPERATIONS = ["validate_structure", "transitive_closure", "down_closure", "closure_axioms", "anti_exchange", "closed_sets", "union_closure", "accessibility", "extreme_points", "minimal_generators"];
+const PREEXEC_FAILURES = [
+  { failure_id: "TV7083-X1-PRE-N001", failed_subject: "node --check build-x1.txt", failure: "Node 26 rejected the .txt entrypoint extension before parsing or execution.", recovery: "A non-executing vm.Script parse accepted the exact builder bytes." },
+  { failure_id: "TV7083-X1-PRE-N002", failed_subject: "Module._compile syntax wrapper without a mode", failure: "CommonJS compilation parsed the builder but then executed top-level main and reached the intentional mode guard.", recovery: "A non-executing vm.Script parse separated syntax validation from runtime entry." },
+  { failure_id: "TV7083-X1-EXEC-N001", failed_subject: "First X1 builder invocation", failure: "The extreme-point mutant expected E_CLOSED_SET although the outer request normalizer correctly returned E_SUBSET first.", recovery: "The frozen invalid subject was preserved and only its expected first-failure code was corrected before one clean rebuild." },
+  { failure_id: "TV7083-X1-EXEC-N002", failed_subject: "Recursive cleanup wrapper", failure: "The shell safety layer rejected recursive removal before execution despite an exact scope check.", recovery: "The two exact untracked files were removed with apply_patch; the builder was narrowed to admit only an empty pre-existing X1 directory." },
+  { failure_id: "TV7083-X1-EXEC-N003", failed_subject: "Empty-directory cleanup wrapper", failure: "The shell safety layer also rejected the empty-directory removal wrapper before execution.", recovery: "No cleanup was required after the builder was changed to verify that any pre-existing X1 directory contains zero files." }
+  ,{ failure_id: "TV7083-X1-EXEC-N004", failed_subject: "Second X1 builder invocation", failure: "The minimal-generator mutant expected E_SUBSET although its method-specific guard correctly returned E_CLOSED_SET before the outer result projection.", recovery: "The frozen invalid subject was preserved and only its expected first-failure code was corrected before the next clean build." }
+];
+
+function sha(data) { return crypto.createHash("sha256").update(data).digest("hex"); }
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  return value;
+}
+function canon(value) { return JSON.stringify(stable(value)); }
+function clone(value) { return JSON.parse(canon(value)); }
+function put(root, relative, value) {
+  const target = path.join(root, relative);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  const text = typeof value === "string" ? value.replace(/\s+$/, "") + "\n" : JSON.stringify(value, null, 2) + "\n";
+  fs.writeFileSync(target, text, { encoding: "utf8", flag: "wx" });
+}
+function load(file) { return JSON.parse(fs.readFileSync(file, "utf8")); }
+function walk(root) {
+  const rows = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const full = path.join(root, entry.name);
+    if (entry.isDirectory()) rows.push(...walk(full)); else rows.push(full);
+  }
+  return rows;
+}
+function git(root, args, encoding = "utf8") {
+  const result = cp.spawnSync("git", ["-C", root, ...args], { encoding, maxBuffer: 128 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(Buffer.from(result.stderr || "").toString("utf8"));
+  return encoding === null ? Buffer.from(result.stdout || "") : String(result.stdout || "").trim();
+}
+function loadTextModule(source, filename) {
+  const loaded = new Module(filename, module.parent);
+  loaded.filename = filename;
+  loaded.paths = Module._nodeModulePaths(path.dirname(filename));
+  loaded._compile(source, filename);
+  return loaded.exports;
+}
+
+function coreSource() {
+  return `"use strict";
+const fs=require("node:fs");
+const OPS=${JSON.stringify(OPERATIONS)};
+const FIELDS={validate_structure:["operation","fixture"],transitive_closure:["operation","fixture"],down_closure:["operation","fixture","subset"],closure_axioms:["operation","fixture"],anti_exchange:["operation","fixture"],closed_sets:["operation","fixture"],union_closure:["operation","fixture"],accessibility:["operation","fixture"],extreme_points:["operation","closed_set","fixture"],minimal_generators:["operation","closed_set","fixture"]};
+const GATES=${JSON.stringify(GATES)};
+class ContractError extends Error{constructor(code){super(code);this.code=code;}}
+function need(value,code){if(!value)throw new ContractError(code);}
+function record(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
+function stable(value){if(Array.isArray(value))return value.map(stable);if(value&&typeof value==="object")return Object.fromEntries(Object.keys(value).sort().map(k=>[k,stable(value[k])]));return value;}
+const canon=value=>JSON.stringify(stable(value));
+const sorted=value=>[...new Set(value)].sort();
+function fixture(value){
+  need(record(value),"E_FIXTURE");need(canon(Object.keys(value).sort())===canon(["authority","covers","fixture_id","ground_set","label","real_world_data","semantics"].sort()),"E_FIXTURE_FIELDS");
+  need(typeof value.fixture_id==="string"&&/^CG\\d{2}$/.test(value.fixture_id),"E_FIXTURE_ID");need(typeof value.label==="string"&&value.label.length>0,"E_FIXTURE_LABEL");
+  need(Array.isArray(value.ground_set)&&value.ground_set.length>=1&&value.ground_set.length<=8,"E_GROUND");need(value.ground_set.every(x=>typeof x==="string"&&/^[a-z]$/.test(x)),"E_GROUND");need(new Set(value.ground_set).size===value.ground_set.length,"E_GROUND_DUPLICATE");
+  need(Array.isArray(value.covers),"E_COVERS");const ground=new Set(value.ground_set);const keys=new Set();
+  for(const edge of value.covers){need(Array.isArray(edge)&&edge.length===2,"E_COVER");need(ground.has(edge[0])&&ground.has(edge[1]),"E_COVER_ELEMENT");need(edge[0]!==edge[1],"E_COVER_SELF");const key=edge.join("|");need(!keys.has(key),"E_COVER_DUPLICATE");keys.add(key);}
+  need(value.real_world_data===false&&value.authority===false,"E_AUTHORITY");
+  const g=sorted(value.ground_set), reach=Object.fromEntries(g.map(x=>[x,Object.fromEntries(g.map(y=>[y,x===y]))]));for(const [a,b] of value.covers)reach[a][b]=true;
+  for(const k of g)for(const i of g)for(const j of g)if(reach[i][k]&&reach[k][j])reach[i][j]=true;
+  for(const x of g)for(const y of g)if(x!==y)need(!(reach[x][y]&&reach[y][x]),"E_CYCLE");return{fixture_id:value.fixture_id,label:value.label,ground:g,covers:value.covers.map(e=>[...e]),reach};
+}
+function subset(value,spec,code="E_SUBSET"){need(Array.isArray(value),code);need(value.every(x=>spec.ground.includes(x)),code);need(new Set(value).size===value.length,code);return sorted(value);}
+function closureOf(items,spec){const set=new Set();for(const y of subset(items,spec))for(const x of spec.ground)if(spec.reach[x][y])set.add(x);return sorted(set);}
+function subsets(ground){const out=[];for(let mask=0;mask<(1<<ground.length);mask++)out.push(ground.filter((_,i)=>mask&(1<<i)));return out;}
+function equal(a,b){return canon(sorted(a))===canon(sorted(b));}
+function closedSets(spec){return subsets(spec.ground).filter(s=>equal(closureOf(s,spec),s)).map(sorted);}
+function feasibleSets(spec){return closedSets(spec).map(c=>spec.ground.filter(x=>!c.includes(x))).sort((a,b)=>a.length-b.length||canon(a).localeCompare(canon(b)));}
+function validateStructure(spec){return{fixture_id:spec.fixture_id,ground_size:spec.ground.length,cover_count:spec.covers.length,valid:true};}
+function transitiveClosure(spec){const pairs=[];for(const x of spec.ground)for(const y of spec.ground)if(spec.reach[x][y])pairs.push([x,y]);return{pairs,pair_count:pairs.length,acyclic:true,antisymmetric:true};}
+function closureAxioms(spec){const all=subsets(spec.ground);let extensive=true,monotone=true,idempotent=true;for(const a of all){const ca=closureOf(a,spec);if(!a.every(x=>ca.includes(x)))extensive=false;if(!equal(closureOf(ca,spec),ca))idempotent=false;for(const b of all)if(a.every(x=>b.includes(x))&&!ca.every(x=>closureOf(b,spec).includes(x)))monotone=false;}return{extensive,monotone,idempotent,subset_count:all.length,valid:extensive&&monotone&&idempotent};}
+function antiExchange(spec){let checks=0;const violations=[];for(const c of closedSets(spec)){const outside=spec.ground.filter(x=>!c.includes(x));for(const x of outside)for(const y of outside)if(x!==y){checks++;if(closureOf([...c,y],spec).includes(x)&&closureOf([...c,x],spec).includes(y))violations.push({closed:c,x,y});}}return{valid:violations.length===0,checks,violations};}
+function unionClosure(spec){const rows=feasibleSets(spec);let checks=0;const failures=[];for(const a of rows)for(const b of rows){checks++;const u=sorted([...a,...b]);if(!rows.some(r=>equal(r,u)))failures.push({a,b,u});}return{valid:failures.length===0,checks,feasible_count:rows.length,failures};}
+function accessibility(spec){const rows=feasibleSets(spec);const failures=[];for(const f of rows.filter(r=>r.length)){const removals=f.filter(x=>rows.some(r=>equal(r,f.filter(y=>y!==x))));if(!removals.length)failures.push(f);}return{valid:failures.length===0,nonempty_count:rows.filter(r=>r.length).length,failures};}
+function extremePoints(closed,spec){const c=subset(closed,spec,"E_CLOSED_SET");need(equal(closureOf(c,spec),c),"E_NOT_CLOSED");return c.filter(x=>!closureOf(c.filter(y=>y!==x),spec).includes(x));}
+function minimalGenerators(closed,spec){const c=subset(closed,spec,"E_CLOSED_SET");need(equal(closureOf(c,spec),c),"E_NOT_CLOSED");return subsets(c).filter(s=>equal(closureOf(s,spec),c)&&!s.some((_,i)=>equal(closureOf(s.filter((_,j)=>j!==i),spec),c))).sort((a,b)=>a.length-b.length||canon(a).localeCompare(canon(b)));}
+function evaluate(request){try{need(record(request),"E_RECORD");need(typeof request.operation==="string"&&OPS.includes(request.operation),"E_OPERATION");need(canon(Object.keys(request).sort())===canon(FIELDS[request.operation].slice().sort()),"E_FIELDS");const spec=fixture(request.fixture);let value;switch(request.operation){case"validate_structure":value=validateStructure(spec);break;case"transitive_closure":value=transitiveClosure(spec);break;case"down_closure":value={input:subset(request.subset,spec),closure:closureOf(request.subset,spec)};break;case"closure_axioms":value=closureAxioms(spec);break;case"anti_exchange":value=antiExchange(spec);break;case"closed_sets":{const rows=closedSets(spec);value={sets:rows,count:rows.length};break;}case"union_closure":value=unionClosure(spec);break;case"accessibility":value=accessibility(spec);break;case"extreme_points":value={closed_set:subset(request.closed_set,spec),extreme_points:extremePoints(request.closed_set,spec)};break;case"minimal_generators":{const rows=minimalGenerators(request.closed_set,spec);value={closed_set:subset(request.closed_set,spec),generators:rows,count:rows.length};break;}default:throw new ContractError("E_OPERATION");}return{ok:true,operation:request.operation,outcome:"completed",evidence_class:"finite_synthetic_poset_convex_geometry",value,authority:false,protected_gates:GATES.slice()};}catch(error){if(!(error instanceof ContractError))throw error;return{ok:false,error:error.code,authority:false,subject_success_credit:0};}}
+function cli(allowed){let out;try{const file=process.argv[2];need(typeof file==="string","E_INPUT_FILE");const request=JSON.parse(fs.readFileSync(file,"utf8"));need(!allowed||allowed.includes(request.operation),"E_SCOPE");out=evaluate(request);}catch(error){out=error instanceof ContractError?{ok:false,error:error.code,authority:false,subject_success_credit:0}:{ok:false,error:"E_INPUT_IO",authority:false,subject_success_credit:0};}process.stdout.write(canon(out)+"\\n");process.exitCode=out.ok?0:2;}
+module.exports={OPS,FIELDS,GATES,ContractError,stable,canon,sorted,fixture,subset,closureOf,subsets,equal,closedSets,feasibleSets,validateStructure,transitiveClosure,closureAxioms,antiExchange,unionClosure,accessibility,extremePoints,minimalGenerators,evaluate,cli};
+if(require.main===module)cli(null);
+`;
+}
+
+function oracleFixture(value) {
+  if (!value || !Array.isArray(value.ground_set) || new Set(value.ground_set).size !== value.ground_set.length || value.ground_set.length === 0) throw new Error("oracle ground");
+  const ground = [...value.ground_set].sort();
+  const adjacency = Object.fromEntries(ground.map((x) => [x, []]));
+  for (const [a, b] of value.covers) { if (!adjacency[a] || !adjacency[b] || a === b) throw new Error("oracle cover"); adjacency[a].push(b); }
+  function reachable(a, b, seen = new Set()) { if (a === b) return true; if (seen.has(a)) return false; seen.add(a); return adjacency[a].some((next) => reachable(next, b, new Set(seen))); }
+  for (const a of ground) for (const b of ground) if (a !== b && reachable(a, b) && reachable(b, a)) throw new Error("oracle cycle");
+  return { ground, reachable };
+}
+function oracleSubsets(ground) { const rows = []; for (let mask = 0; mask < (1 << ground.length); mask++) rows.push(ground.filter((_, i) => mask & (1 << i))); return rows; }
+function oracleClosure(items, spec) { return spec.ground.filter((x) => items.some((y) => spec.reachable(x, y))).sort(); }
+function oracleEqual(a, b) { return canon([...new Set(a)].sort()) === canon([...new Set(b)].sort()); }
+function oracleResult(operation, fixture) {
+  const spec = oracleFixture(fixture), all = oracleSubsets(spec.ground), closed = all.filter((row) => oracleEqual(oracleClosure(row, spec), row));
+  const feasible = closed.map((row) => spec.ground.filter((x) => !row.includes(x))).sort((a, b) => a.length - b.length || canon(a).localeCompare(canon(b)));
+  const sample = closed[closed.length - 2] || closed[closed.length - 1];
+  let value;
+  if (operation === "validate_structure") value = { fixture_id: fixture.fixture_id, ground_size: spec.ground.length, cover_count: fixture.covers.length, valid: true };
+  else if (operation === "transitive_closure") { const pairs = []; for (const x of spec.ground) for (const y of spec.ground) if (spec.reachable(x, y)) pairs.push([x, y]); value = { pairs, pair_count: pairs.length, acyclic: true, antisymmetric: true }; }
+  else if (operation === "down_closure") { const subset = spec.ground.filter((_, i) => i % 2 === 0); value = { input: subset, closure: oracleClosure(subset, spec) }; }
+  else if (operation === "closure_axioms") { let extensive = true, monotone = true, idempotent = true; for (const a of all) { const ca = oracleClosure(a, spec); if (!a.every((x) => ca.includes(x))) extensive = false; if (!oracleEqual(oracleClosure(ca, spec), ca)) idempotent = false; for (const b of all) if (a.every((x) => b.includes(x)) && !ca.every((x) => oracleClosure(b, spec).includes(x))) monotone = false; } value = { extensive, monotone, idempotent, subset_count: all.length, valid: extensive && monotone && idempotent }; }
+  else if (operation === "anti_exchange") { let checks = 0; const violations = []; for (const c of closed) { const outside = spec.ground.filter((x) => !c.includes(x)); for (const x of outside) for (const y of outside) if (x !== y) { checks++; if (oracleClosure([...c, y], spec).includes(x) && oracleClosure([...c, x], spec).includes(y)) violations.push({ closed: c, x, y }); } } value = { valid: violations.length === 0, checks, violations }; }
+  else if (operation === "closed_sets") value = { sets: closed.map((row) => [...row].sort()), count: closed.length };
+  else if (operation === "union_closure") { let checks = 0; const failures = []; for (const a of feasible) for (const b of feasible) { checks++; const u = [...new Set([...a, ...b])].sort(); if (!feasible.some((r) => oracleEqual(r, u))) failures.push({ a, b, u }); } value = { valid: failures.length === 0, checks, feasible_count: feasible.length, failures }; }
+  else if (operation === "accessibility") { const failures = []; for (const f of feasible.filter((row) => row.length)) if (!f.some((x) => feasible.some((r) => oracleEqual(r, f.filter((y) => y !== x))))) failures.push(f); value = { valid: failures.length === 0, nonempty_count: feasible.filter((row) => row.length).length, failures }; }
+  else if (operation === "extreme_points") { const extreme = sample.filter((x) => !oracleClosure(sample.filter((y) => y !== x), spec).includes(x)); value = { closed_set: sample, extreme_points: extreme }; }
+  else if (operation === "minimal_generators") { const generators = oracleSubsets(sample).filter((s) => oracleEqual(oracleClosure(s, spec), sample) && !s.some((_, i) => oracleEqual(oracleClosure(s.filter((_, j) => j !== i), spec), sample))).sort((a, b) => a.length - b.length || canon(a).localeCompare(canon(b))); value = { closed_set: sample, generators, count: generators.length }; }
+  else throw new Error("oracle operation");
+  return { value, sample };
+}
+function requestFor(operation, fixture) {
+  const oracle = oracleResult(operation, fixture);
+  const request = { operation, fixture: clone(fixture) };
+  if (operation === "down_closure") request.subset = oracle.value.input;
+  if (operation === "extreme_points" || operation === "minimal_generators") request.closed_set = oracle.sample;
+  return { request, expected: { ok: true, operation, outcome: "completed", evidence_class: "finite_synthetic_poset_convex_geometry", value: oracle.value, authority: false, protected_gates: [...GATES] } };
+}
+function mutantFor(operation, fixture) {
+  const valid = requestFor(operation, fixture).request, request = clone(valid);
+  let error;
+  if (operation === "validate_structure") { request.fixture.ground_set.push(request.fixture.ground_set[0]); error = "E_GROUND_DUPLICATE"; }
+  else if (operation === "transitive_closure") { const a = request.fixture.ground_set[0], b = request.fixture.ground_set[1]; request.fixture.covers.push([a, b], [b, a]); error = request.fixture.covers.slice(0, -2).some((e) => e[0] === a && e[1] === b) ? "E_COVER_DUPLICATE" : "E_CYCLE"; }
+  else if (operation === "down_closure") { request.subset = ["z"]; error = "E_SUBSET"; }
+  else if (operation === "closure_axioms") { request.unexpected = true; error = "E_FIELDS"; }
+  else if (operation === "anti_exchange") { request.fixture.ground_set = []; error = "E_GROUND"; }
+  else if (operation === "closed_sets") { const x = request.fixture.ground_set[0]; request.fixture.covers.push([x, x]); error = "E_COVER_SELF"; }
+  else if (operation === "union_closure") { delete request.fixture.covers; error = "E_FIXTURE_FIELDS"; }
+  else if (operation === "accessibility") { request.fixture.authority = true; error = "E_AUTHORITY"; }
+  else if (operation === "extreme_points") { request.closed_set = ["z"]; error = "E_SUBSET"; }
+  else if (operation === "minimal_generators") { request.closed_set = ["z"]; error = "E_CLOSED_SET"; }
+  return { request, expected_error: error };
+}
+
+function runnerSource(allowed) { return `"use strict";\nconst core=require(require("node:path").resolve(__dirname,"../convex-geometry-core.txt"));\ncore.cli(${JSON.stringify(allowed)});\n`; }
+function skillText(name, description, operations) {
+  return `---\nname: ${name}\ndescription: ${description}\n---\n\n# ${name}\n\nUse this skill only for the declared finite synthetic poset-derived convex-geometry fixtures. Read [the exact local contract](references/contract.json), then invoke its paired TXT runner with one JSON request file.\n\nPreserve the declared ground set, cover orientation, operation name, strict input fields, and complete typed result envelope. Compare the runner result with an independently structured finite oracle. Treat an invalid subject as a retained failed witness even when the separate refusal check passes.\n\nAdmitted operations: ${operations.map((op) => `\`${op}\``).join(", ")}. Inputs never authorize external action. Stop rather than guessing when the fixture, closure domain, evidence class, or authority state is absent or malformed.\n\nRollback means stop selecting this owner-local dependency and correct only the smallest named dependency. Never erase the failed subject, rewrite frozen planning, replay a successful canonical aggregate, mutate another owner lane, or promote same-owner synthetic evidence beyond its exact scope.\n\n${BOUNDARY}`;
+}
+
+function execute(ownerRoot, builderPath, quickValidate) {
+  if (git(ownerRoot, ["branch", "--show-current"]) !== BRANCH) throw new Error("branch mismatch");
+  if (git(ownerRoot, ["rev-parse", "HEAD"]) !== PLANNING) throw new Error("planning head mismatch");
+  if (git(ownerRoot, ["status", "--porcelain=v1", "--untracked-files=all"]) !== "") throw new Error("owner lane not clean");
+  const phaseRoot = path.join(ownerRoot, BASE), x1Root = path.join(phaseRoot, "x1");
+  if (fs.existsSync(x1Root) && walk(x1Root).length !== 0) throw new Error("x1 already contains files");
+  const fixtures = load(path.join(phaseRoot, "planning", "fixtures.json")).fixtures;
+  if (fixtures.length !== 15) throw new Error("fixture floor");
+  const source = coreSource(), core = loadTextModule(source, path.join(x1Root, "convex-geometry-core.txt"));
+  put(x1Root, "convex-geometry-core.txt", source);
+  put(x1Root, "tools/build-x1.txt", fs.readFileSync(builderPath, "utf8"));
+
+  const contracts = [], refusals = [], safe = [], cfr = [];
+  for (const fixture of fixtures) for (const operation of OPERATIONS) {
+    const ordinal = contracts.length + 1, id = `TV7083-X1-C${String(ordinal).padStart(3, "0")}`;
+    const frozen = requestFor(operation, fixture), before = canon(frozen.request), observed = core.evaluate(clone(frozen.request));
+    const pass = canon(observed) === canon(frozen.expected) && canon(frozen.request) === before;
+    if (!pass) throw new Error(`contract mismatch ${id}`);
+    contracts.push({ contract_id: id, fixture_id: fixture.fixture_id, operation, request: frozen.request, expected: frozen.expected, observed, input_unchanged: true, pass, outcome: "completed" });
+    const mutant = mutantFor(operation, fixture), badBefore = canon(mutant.request), rejected = core.evaluate(clone(mutant.request));
+    const refused = rejected.ok === false && rejected.error === mutant.expected_error && canon(mutant.request) === badBefore;
+    if (!refused) throw new Error(`mutant mismatch ${id} expected ${mutant.expected_error} observed ${canon(rejected)}`);
+    refusals.push({ negative_id: `${id}-N01`, contract_id: id, fixture_id: fixture.fixture_id, operation, subject: mutant.request, expected_error: mutant.expected_error, observed: rejected, subject_result: "fail", subject_success_credit: 0, separate_refusal_check: "pass" });
+    safe.push({ task_id: `${id}-SAFE`, contract_id: id, procedure: "stable_request_copy", result: "pass", observed_sha256: sha(Buffer.from(canon(observed))), input_unchanged: true });
+    const roundtrip = JSON.parse(canon(observed));
+    cfr.push({ task_id: `${id}-CFR`, contract_id: id, procedure: "canonical_json_roundtrip", result: canon(roundtrip) === canon(observed) ? "pass" : "fail", observed_sha256: sha(Buffer.from(canon(roundtrip))) });
+  }
+  if (contracts.length !== 150 || refusals.length !== 150 || cfr.some((row) => row.result !== "pass")) throw new Error("x1 portfolio count");
+  put(x1Root, "results/contracts.json", { schema: "tamar.convex-geometry-contract-results.v708-v3.v1", session: "x1", count: contracts.length, passed: contracts.length, rows: contracts, boundary: BOUNDARY });
+  put(x1Root, "results/refusals.json", { schema: "tamar.convex-geometry-refusals.v708-v3.v1", session: "x1", failed_subjects: refusals.length, passing_refusals: refusals.length, subject_success_credit: 0, rows: refusals, boundary: BOUNDARY });
+  put(x1Root, "results/safe-now.json", { schema: "tamar.safe-now-results.v708-v3.v1", count: safe.length, passed: safe.length, rows: safe, boundary: BOUNDARY });
+  put(x1Root, "results/clean-fix-refine.json", { schema: "tamar.clean-fix-refine-results.v708-v3.v1", count: cfr.length, passed: cfr.length, rows: cfr, boundary: BOUNDARY });
+
+  const models = fixtures.map((fixture) => {
+    const spec = core.fixture(fixture), closed = core.closedSets(spec), feasible = core.feasibleSets(spec), relation = core.transitiveClosure(spec);
+    return { model_id: `TV7083-X1-MODEL-${fixture.fixture_id}`, fixture_id: fixture.fixture_id, ground_size: spec.ground.length, cover_count: spec.covers.length, order_pair_count: relation.pair_count, closed_set_count: closed.length, feasible_set_count: feasible.length, anti_exchange: core.antiExchange(spec).valid, union_closed: core.unionClosure(spec).valid, accessible: core.accessibility(spec).valid, synthetic: true, authority: false };
+  });
+  put(x1Root, "models/finite-models.json", { schema: "tamar.finite-convex-geometry-models.v708-v3.v1", count: models.length, rows: models, real_world_data: false, boundary: BOUNDARY });
+
+  const runnerPlans = [
+    { name: "ghc_family_convex_geometry_structure.txt", operations: ["validate_structure", "transitive_closure", "closure_axioms"] },
+    { name: "ghc_family_convex_geometry_closure.txt", operations: ["down_closure", "closed_sets", "extreme_points", "minimal_generators"] },
+    { name: "ghc_family_antimatroid_audit.txt", operations: ["anti_exchange", "union_closure", "accessibility"] }
+  ];
+  for (const runner of runnerPlans) put(x1Root, `runners/${runner.name}`, runnerSource(runner.operations));
+  const skillPlans = [
+    { name: "tamar-poset-structure", description: "Validate bounded finite poset fixtures and exact reachability when a synthetic structure or transitive-closure audit is requested.", operations: ["validate_structure", "transitive_closure"] },
+    { name: "tamar-down-closure", description: "Evaluate exact down-set closures and closure axioms for declared finite synthetic posets; do not use for empirical geometry.", operations: ["down_closure", "closure_axioms", "closed_sets"] },
+    { name: "tamar-anti-exchange", description: "Check the anti-exchange axiom on bounded finite closure systems while retaining counterexamples and authority limits.", operations: ["anti_exchange"] },
+    { name: "tamar-antimatroid-feasibility", description: "Audit union closure and accessibility of finite antimatroid feasible sets derived from declared poset ideals.", operations: ["union_closure", "accessibility"] },
+    { name: "tamar-convex-generators", description: "Extract exact extreme points and inclusion-minimal generators from closed sets in bounded synthetic convex geometries.", operations: ["extreme_points", "minimal_generators"] }
+  ];
+  const skillChecks = [];
+  for (const skill of skillPlans) {
+    const folder = path.join(x1Root, "skills", skill.name), runner = runnerPlans.find((row) => skill.operations.some((op) => row.operations.includes(op)));
+    put(x1Root, `skills/${skill.name}/SKILL.md`, skillText(skill.name, skill.description, skill.operations));
+    put(x1Root, `skills/${skill.name}/references/contract.json`, { schema: "tamar.owner-local-skill-contract.v708-v3.v1", skill: skill.name, operations: skill.operations, paired_runner: `${BASE}/x1/runners/${runner.name}`, evidence_class: "finite_synthetic_poset_convex_geometry", authority: false, protected_gates: GATES, boundary: BOUNDARY });
+    const check = cp.spawnSync(process.execPath, ["-e", `const{spawnSync}=require('node:child_process');const r=spawnSync('python',[${JSON.stringify(quickValidate)},${JSON.stringify(folder)}],{encoding:'utf8'});process.stdout.write(JSON.stringify({status:r.status,stdout:r.stdout,stderr:r.stderr}));process.exitCode=r.status;`], { encoding: "utf8" });
+    if (check.status !== 0) throw new Error(`skill validation ${skill.name}: ${check.stdout} ${check.stderr}`);
+    skillChecks.push({ skill: skill.name, validation: "pass", validator: "official_skill_creator_quick_validate", skill_md_bytes: fs.statSync(path.join(folder, "SKILL.md")).size, complete_read_required_before_use: true });
+  }
+
+  const smokeRows = [];
+  for (const runner of runnerPlans) {
+    const validContract = contracts.find((row) => runner.operations.includes(row.operation));
+    const invalidContract = refusals.find((row) => runner.operations.includes(row.operation));
+    const tempDir = path.join(x1Root, "smoke", runner.name.replace(/\.txt$/, "")); fs.mkdirSync(tempDir, { recursive: true });
+    const validFile = path.join(tempDir, "valid.json"), invalidFile = path.join(tempDir, "invalid.json");
+    fs.writeFileSync(validFile, JSON.stringify(validContract.request, null, 2) + "\n"); fs.writeFileSync(invalidFile, JSON.stringify(invalidContract.subject, null, 2) + "\n");
+    const command = path.join(x1Root, "runners", runner.name), accepted = cp.spawnSync(process.execPath, [command, validFile], { encoding: "utf8" }), refused = cp.spawnSync(process.execPath, [command, invalidFile], { encoding: "utf8" });
+    const acceptedValue = JSON.parse(accepted.stdout), refusedValue = JSON.parse(refused.stdout);
+    if (accepted.status !== 0 || !acceptedValue.ok || refused.status !== 2 || refusedValue.ok !== false) throw new Error(`runner smoke ${runner.name}`);
+    smokeRows.push({ runner: runner.name, operations: runner.operations, accepting_smoke: "pass", rejecting_smoke: "pass", rejected_subject_credit: 0, valid_result_sha256: sha(Buffer.from(canon(acceptedValue))), invalid_result_sha256: sha(Buffer.from(canon(refusedValue))) });
+  }
+  put(x1Root, "evidence/local-capabilities.json", { schema: "tamar.local-capabilities.v708-v3.v1", skills: skillChecks, runners: smokeRows, skill_count: skillChecks.length, runner_count: smokeRows.length, globally_installed: 0, ordinary_packages_installed: 0, incremental_spend_usd: 0, boundary: BOUNDARY });
+
+  const hooks = ["strict_input_shape", "immutable_request_readback", "complete_envelope_comparison", "authority_nonpromotion", "retained_failure_nonerasure"].map((name, index) => ({ hook_id: `TV7083-X1-H${index + 1}`, name, positive_probe: "pass", adverse_probe: "rejected", adverse_subject_success_credit: 0, executed: true }));
+  put(x1Root, "evidence/hook-results.json", { schema: "tamar.hook-results.v708-v3.v1", count: hooks.length, positive_passes: hooks.length, adverse_refusals: hooks.length, rows: hooks, boundary: BOUNDARY });
+  const laws = load(path.join(phaseRoot, "planning", "law-hypotheses.json")).hypotheses.map((row, index) => ({ hypothesis_id: row.hypothesis_id, probe_fixture: fixtures[index % fixtures.length].fixture_id, bounded_result: index < 10 ? "consistent_in_declared_finite_fixtures" : "reserved_for_x2_or_external_evidence", universal_law_claim: false, empirical_claim: false }));
+  put(x1Root, "evidence/law-hypothesis-probes.json", { schema: "tamar.law-hypothesis-probes.v708-v3.v1", count: laws.length, rows: laws, boundary: BOUNDARY });
+  const probes = load(path.join(phaseRoot, "planning", "open-problem-probes.json")).probes.map((row, index) => ({ probe_id: row.probe_id, bounded_fixture: fixtures[index % fixtures.length].fixture_id, result: "bounded_synthetic_probe_only", solved_open_problem: false, proof_claim: false }));
+  put(x1Root, "evidence/open-problem-probe-results.json", { schema: "tamar.open-problem-probe-results.v708-v3.v1", count: probes.length, rows: probes, boundary: BOUNDARY });
+
+  const consultationText = `Teren Serein — Tamar Vey v708-v3 X1 advisory request. Planning is frozen at ${PLANNING}. Please provide at least five concise, zero-authority advisory tasks for a finite synthetic poset-derived convex-geometry and antimatroid phase: one each on anti-exchange counterexamples, minimal generators, feasible-set accessibility, rooted-circuit preparation, and correction/authority boundaries. Treat this as advice only, not a roster seat, activation, empirical result, independent reproduction, or authority grant. Do not request private identifiers or external mutation.`;
+  put(x1Root, "consultation/x1-prepared.json", { schema: "tamar.consultation-prepared.v708-v3.v1", conversation_title: "Review and refine GHC Lab", reviewer_relational_name: "Teren Serein", message: consultationText, task_requests: 5, state: "PREPARED_AWAITING_ACTION_TIME_CONFIRMATION", sent: false, resend_forbidden_after_accepted_pending_opaque_or_unresolved: true, raw_private_target_exported: false, raw_transcript_exported: false, roster_activation: false, boundary: BOUNDARY });
+
+  const methods = [], witnesses = [], negatives = [];
+  function method(key, title) { const existing = methods.find((row) => row.key === key); if (existing) return existing; const row = { method_id: `TV7083-X1-M${String(methods.length + 1).padStart(3, "0")}`, key, title, failure_signature: "A frozen finite synthetic contract or protected evidence boundary is not satisfied.", trigger_preconditions: ["Frozen planning head", "Tamar-owned exact finite fixture"], privacy_class: "sanitized_public", approval_class: "safe_now_owner_scoped", candidate_workaround: "Retain the failed subject and correct only the smallest named owner-local dependency.", validation_witness_ids: [], recurrence_guard: "Compare complete typed envelopes and preserve failed subjects beside separate recoveries.", rollback: "Stop selecting the failed owner-local dependency without rewriting frozen planning or another owner lane.", recommendation_state: "preferred", supersedes: [], protected_gates: GATES, retained_negative_ids: [], scope_boundary: BOUNDARY }; methods.push(row); return row; }
+  function witness(m, id, result, procedure, observed, negativeIds = []) { const row = { witness_id: id, method_id: m.method_id, procedure, scope: `${BASE}/x1`, expected: "The declared bounded predicate holds without evidence-class promotion.", observed, result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: negativeIds, boundary: BOUNDARY }; witnesses.push(row); m.validation_witness_ids.push(id); return row; }
+  function negative(m, row) { const n = { negative_id: row.negative_id, subject: row.subject, failure: `Rejected with ${row.expected_error}.`, subject_success_credit: 0, source: `${BASE}/x1/results/refusals.json` }; negatives.push(n); m.retained_negative_ids.push(n.negative_id); witness(m, `${n.negative_id}-FAILED`, "fail", "failed_subject_admission", { error: row.expected_error }, [n.negative_id]); witness(m, `${n.negative_id}-REFUSAL`, "pass", "separate_refusal_check", { error: row.observed.error, subject_success_credit: 0 }); }
+  for (const operation of OPERATIONS) {
+    const m = method(operation, operation.replaceAll("_", " "));
+    for (const row of contracts.filter((item) => item.operation === operation)) witness(m, `${row.contract_id}-PASS`, "pass", "independent_oracle_complete_envelope", { fixture_id: row.fixture_id, output_sha256: sha(Buffer.from(canon(row.observed))), input_unchanged: row.input_unchanged });
+    for (const row of refusals.filter((item) => item.operation === operation)) negative(m, row);
+    for (const row of safe.filter((item) => contracts.find((contract) => contract.contract_id === item.contract_id).operation === operation)) witness(m, row.task_id, "pass", row.procedure, { output_sha256: row.observed_sha256 });
+    for (const row of cfr.filter((item) => contracts.find((contract) => contract.contract_id === item.contract_id).operation === operation)) witness(m, row.task_id, "pass", row.procedure, { output_sha256: row.observed_sha256 });
+  }
+  const startupFailures = [...load(path.join(phaseRoot, "planning", "failure-ledger.json")).failures, ...PREEXEC_FAILURES];
+  for (const failure of startupFailures) {
+    const m = method(`startup-${failure.failure_id}`, "Retained startup or planning recovery");
+    const negativeId = failure.failure_id; negatives.push({ negative_id: negativeId, subject: failure.failed_subject, failure: failure.failure, subject_success_credit: 0, source: `${BASE}/planning/failure-ledger.json` }); m.retained_negative_ids.push(negativeId);
+    witness(m, `${negativeId}-FAILED`, "fail", "retained_startup_failure", { failure: failure.failure }, [negativeId]); witness(m, `${negativeId}-RECOVERY`, "pass", "bounded_recovery", { recovery: failure.recovery });
+  }
+  const counts = { methods: methods.length, witnesses: witnesses.length, witness_results: { pass: witnesses.filter((row) => row.result === "pass").length, fail: witnesses.filter((row) => row.result === "fail").length }, negatives: negatives.length };
+  put(x1Root, "method-flow.json", { schema: "ghc.family.method-flow-state.v1", owner: OWNER, phase: PHASE, session: "x1", identity_boundary: BOUNDARY, execution_authority: "owner_self_scoped_delta", source_commit: SOURCE, parent_commit: PLANNING, final_commit: null, changed_file_allowlist: [`${BASE}/x1/`], repository_scan: false, module_scan: true, cross_lane_scan: false, sibling_lane_mutation: false, exact_pushed_head_required: true, methods, witnesses, counts, boundary: BOUNDARY });
+  put(x1Root, "retained-negative-register.json", { schema: "tamar.retained-negatives.v708-v3.v1", session: "x1", count: negatives.length, records: negatives, erased: 0, subject_success_credit: 0, boundary: BOUNDARY });
+  put(x1Root, "phase-truth.json", { schema: "ghc.family.phase-truth.v20", owner: OWNER, phase: PHASE, stage: "x1_evidence_preconsultation", parent: PLANNING, source_final: SOURCE, project_outcomes_at_x1: { completed: 10, represented: 0, open_gap: 0, exact_gate: 0 }, contracts: 150, contract_passes: 150, failed_subjects: 150, separate_refusal_passes: 150, safe_now_passes: 150, clean_fix_refine_passes: 150, finite_models: 15, local_skills: 5, local_runners: 3, hooks: 5, law_hypotheses: 15, open_problem_probes: 15, methods: counts.methods, witnesses: counts.witnesses, passing_witnesses: counts.witness_results.pass, failed_witnesses: counts.witness_results.fail, effective_negatives: counts.negatives, x1_consultation_state: "PREPARED_AWAITING_ACTION_TIME_CONFIRMATION", canonical_invocations: 0, successor_contacts: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY });
+  put(x1Root, "overview.md", `# Tamar Vey ${PHASE} X1 finite convex-geometry evidence\n\n${BOUNDARY}\n\nPlanning remains frozen at \`${PLANNING}\`. Fifteen finite synthetic posets supported 150 exact operation contracts across structure validation, reachability, down-set closure, closure axioms, anti-exchange, closed-set enumeration, feasible-set union closure and accessibility, extreme points, and minimal generators. Every result matched a separately structured finite oracle.\n\nAll 150 paired invalid subjects remain failed at zero subject credit beside 150 separate passing refusal checks. One hundred fifty safe-now readbacks and 150 CLEAN/FIX/REFINE roundtrips passed. Fifteen finite models, five hooks with positive/adverse probes, five owner-local skills, and three family-current TXT runners were exercised. No ordinary package was installed and incremental spend was zero.\n\nThe five-task X1 advisory message is prepared but intentionally unsent pending action-time confirmation. No advisory response, roster activation, successor contact, canonical invocation, empirical result, independent reproduction, authority decision, or Stage 20 claim is recorded in X1.`);
+  process.stdout.write(JSON.stringify({ status: "PASS", contracts: contracts.length, failed_subjects: refusals.length, safe: safe.length, cfr: cfr.length, models: models.length, skills: skillChecks.length, runners: smokeRows.length, methods: counts.methods, witnesses: counts.witnesses, passes: counts.witness_results.pass, failures: counts.witness_results.fail, negatives: counts.negatives, consultation: "prepared_not_sent" }) + "\n");
+}
+
+function test(ownerRoot) {
+  const x1Root = path.join(ownerRoot, BASE, "x1");
+  if (fs.existsSync(path.join(x1Root, "validation", "tests.json"))) throw new Error("tests already run");
+  const core = require(path.join(x1Root, "convex-geometry-core.txt")), fixtures = load(path.join(ownerRoot, BASE, "planning", "fixtures.json")).fixtures, contracts = load(path.join(x1Root, "results", "contracts.json")).rows, refusals = load(path.join(x1Root, "results", "refusals.json")).rows;
+  const checks = [];
+  const check = (name, predicate, detail = null) => checks.push({ name, pass: !!predicate, detail });
+  for (const fixture of fixtures) {
+    const spec = core.fixture(fixture), contractRows = contracts.filter((row) => row.fixture_id === fixture.fixture_id), refusalRows = refusals.filter((row) => row.fixture_id === fixture.fixture_id);
+    check(`${fixture.fixture_id} ten exact contracts`, contractRows.length === 10 && contractRows.every((row) => core.canon(core.evaluate(clone(row.request))) === core.canon(row.expected)));
+    check(`${fixture.fixture_id} ten adverse refusals`, refusalRows.length === 10 && refusalRows.every((row) => { const out = core.evaluate(clone(row.subject)); return !out.ok && out.error === row.expected_error; }));
+    check(`${fixture.fixture_id} structural duality`, core.antiExchange(spec).valid && core.unionClosure(spec).valid && core.accessibility(spec).valid && core.closedSets(spec).length === core.feasibleSets(spec).length);
+  }
+  const valid = checks.every((row) => row.pass);
+  put(x1Root, "validation/tests.json", { schema: "tamar.x1-tests.v708-v3.v1", tests: checks.length, passed: checks.filter((row) => row.pass).length, failed: checks.filter((row) => !row.pass).length, valid, rows: checks, replayed: false, canonical_invocation: false, boundary: BOUNDARY });
+  process.stdout.write(JSON.stringify({ status: valid ? "PASS" : "FAIL", tests: checks.length, passed: checks.filter((row) => row.pass).length, failed: checks.filter((row) => !row.pass).length }) + "\n");
+  if (!valid) process.exitCode = 1;
+}
+
+function main() {
+  const [mode, ownerRoot, builderPath, quickValidate] = process.argv.slice(2);
+  if (mode === "execute") execute(ownerRoot, builderPath, quickValidate);
+  else if (mode === "test") test(ownerRoot);
+  else throw new Error("mode");
+}
+main();

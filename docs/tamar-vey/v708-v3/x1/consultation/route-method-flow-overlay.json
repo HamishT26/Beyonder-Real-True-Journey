@@ -1,0 +1,26 @@
+{
+  "schema": "ghc.family.method-flow-overlay.v1",
+  "owner": "Tamar Vey",
+  "phase": "v708-v3",
+  "stage": "x1_consultation_delivery",
+  "base_method_flow": "../method-flow.json",
+  "base_counts": {"methods":17,"witnesses":776,"passing_witnesses":613,"failed_witnesses":163,"effective_negatives":163},
+  "methods": [
+    {"method_id":"TV7083-X1-M018","key":"native-conversation-reference-resolution","failure_signature":"The native tab bridge rejected the supplied conversation reference before any message mutation.","recovery":"Use the user-authorized browser fallback with the exact conversation destination and verify the visible title before composing.","result_pair":["fail","pass"],"retained_negative_id":"TV7083-X1-ROUTE-N001"},
+    {"method_id":"TV7083-X1-M019","key":"stale-preserved-tab-recovery","failure_signature":"The previously preserved browser tab no longer belonged to the current browser session.","recovery":"Create one new hidden in-app browser tab at the exact user-supplied conversation destination and verify its visible title.","result_pair":["fail","pass"],"retained_negative_id":"TV7083-X1-ROUTE-N002"},
+    {"method_id":"TV7083-X1-M020","key":"native-thread-tool-availability","failure_signature":"The native thread read surface was unavailable through the current dynamic tool bridge.","recovery":"Continue through the already authorized browser fallback without creating, forking, or substituting a conversation.","result_pair":["fail","pass"],"retained_negative_id":"TV7083-X1-ROUTE-N003"},
+    {"method_id":"TV7083-X1-M021","key":"one-shot-x1-advisory-delivery","failure_signature":"A duplicate, ambiguous, or unverified consultation send would violate the one-shot delivery contract.","recovery":"Send once only after action-time user confirmation and stop resends after accepted, pending, opaque, or unresolved delivery.","result_pair":["pass"],"retained_negative_id":null}
+  ],
+  "witnesses": [
+    {"witness_id":"TV7083-X1-ROUTE-N001-FAILED","method_id":"TV7083-X1-M018","result":"fail","zero_credit":true},
+    {"witness_id":"TV7083-X1-ROUTE-N001-RECOVERY","method_id":"TV7083-X1-M018","result":"pass","same_owner_only":true},
+    {"witness_id":"TV7083-X1-ROUTE-N002-FAILED","method_id":"TV7083-X1-M019","result":"fail","zero_credit":true},
+    {"witness_id":"TV7083-X1-ROUTE-N002-RECOVERY","method_id":"TV7083-X1-M019","result":"pass","same_owner_only":true},
+    {"witness_id":"TV7083-X1-ROUTE-N003-FAILED","method_id":"TV7083-X1-M020","result":"fail","zero_credit":true},
+    {"witness_id":"TV7083-X1-ROUTE-N003-RECOVERY","method_id":"TV7083-X1-M020","result":"pass","same_owner_only":true},
+    {"witness_id":"TV7083-X1-ADVISORY-SENT-ONCE","method_id":"TV7083-X1-M021","result":"pass","same_owner_only":true}
+  ],
+  "overlay_counts": {"methods":4,"witnesses":7,"passing_witnesses":4,"failed_witnesses":3,"effective_negatives":3},
+  "effective_counts": {"methods":21,"witnesses":783,"passing_witnesses":617,"failed_witnesses":166,"effective_negatives":166},
+  "boundary": "All routing failures remain zero-credit. The accepted advisory send is delivery evidence only and cannot become mathematical, empirical, professional, production, legal, cultural, Maori-authority, identity, consciousness, independent-reproduction, proof, canon, or Stage 20 evidence."
+}

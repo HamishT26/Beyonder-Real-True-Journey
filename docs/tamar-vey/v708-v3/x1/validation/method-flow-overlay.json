@@ -1,0 +1,24 @@
+{
+  "schema": "ghc.family.method-flow-overlay.v1",
+  "owner": "Tamar Vey",
+  "phase": "v708-v3",
+  "stage": "x1_preflight_validation",
+  "base_effective_counts": {"methods":21,"witnesses":783,"passing_witnesses":617,"failed_witnesses":166,"effective_negatives":166},
+  "methods": [
+    {
+      "method_id": "TV7083-X1-M022",
+      "key": "privacy-scanner-definition-adjudication",
+      "failure_signature": "A validator's own scanner-definition token was counted as a payload candidate.",
+      "recovery": "Retain the failed predicate, expose definition candidates separately, and require zero confirmed candidates outside the validator definition file.",
+      "validation_witness_ids": ["TV7083-X1-VAL-N001-FAILED","TV7083-X1-VAL-N001-RECOVERY"],
+      "retained_negative_ids": ["TV7083-X1-VAL-N001"]
+    }
+  ],
+  "witnesses": [
+    {"witness_id":"TV7083-X1-VAL-N001-FAILED","method_id":"TV7083-X1-M022","result":"fail","zero_credit":true,"observed":"Three scanner-definition tokens were counted as payload candidates."},
+    {"witness_id":"TV7083-X1-VAL-N001-RECOVERY","method_id":"TV7083-X1-M022","result":"pass","same_owner_only":true,"observed":"Definition candidates remain visible while confirmed payload candidates are required to remain zero."}
+  ],
+  "overlay_counts": {"methods":1,"witnesses":2,"passing_witnesses":1,"failed_witnesses":1,"effective_negatives":1},
+  "effective_counts": {"methods":22,"witnesses":785,"passing_witnesses":618,"failed_witnesses":167,"effective_negatives":167},
+  "boundary": "The bounded recovery does not erase or promote the failed first preflight and does not replay the owner test selection."
+}

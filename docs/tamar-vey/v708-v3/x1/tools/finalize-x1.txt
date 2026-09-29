@@ -1,0 +1,221 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+const vm = require("node:vm");
+
+const ROOT = process.argv[3];
+const MODE = process.argv[2];
+const PREFIX = "docs/tamar-vey/v708-v3/x1";
+const X1 = path.join(ROOT, ...PREFIX.split("/"));
+const MANIFEST = `${PREFIX}/validation/manifest.json`;
+const STAGED_REVIEW = `${PREFIX}/validation/staged-review.json`;
+const EXCLUSIONS = [MANIFEST, STAGED_REVIEW];
+const BOUNDARY = "Finite synthetic same-owner poset-derived convex-geometry and antimatroid software evidence only. No empirical, participant, professional, production, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof, canon, or Stage 20 claim follows. NOT_READY_FOR_STAGE_20.";
+
+function fail(message) { throw new Error(message); }
+function git(args, encoding = "utf8") {
+  const result = cp.spawnSync("git", ["-C", ROOT, ...args], { encoding, maxBuffer: 128 * 1024 * 1024 });
+  if (result.status !== 0) fail(String(result.stderr || result.stdout || `git ${args.join(" ")}`));
+  return encoding === null ? Buffer.from(result.stdout || "") : String(result.stdout || "").trim();
+}
+function load(relative) { return JSON.parse(fs.readFileSync(path.join(ROOT, ...relative.split("/")), "utf8")); }
+function put(relative, value) {
+  const target = path.join(ROOT, ...relative.split("/"));
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8");
+}
+function walk(folder) {
+  const rows = [];
+  for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
+    const full = path.join(folder, entry.name);
+    if (entry.isDirectory()) rows.push(...walk(full)); else rows.push(full);
+  }
+  return rows;
+}
+function rel(file) { return path.relative(ROOT, file).replaceAll("\\", "/"); }
+function sha256(buffer) { return crypto.createHash("sha256").update(buffer).digest("hex"); }
+function words(text) { return (text.match(/\S+/g) || []).length; }
+function statusRows() { return git(["status", "--porcelain=v1", "--untracked-files=all"]).split(/\r?\n/).filter(Boolean); }
+function stagedRows() { return git(["diff", "--cached", "--name-only", "--diff-filter=ACMRTUXB"]).split(/\r?\n/).filter(Boolean).sort(); }
+function stagedDeleted() { return git(["diff", "--cached", "--name-only", "--diff-filter=D"]).split(/\r?\n/).filter(Boolean); }
+function indexBlob(file) { return git(["show", `:${file}`], null); }
+function indexModeAndOid(file) {
+  const line = git(["ls-files", "-s", "--", file]);
+  const match = line.match(/^(\d+)\s+([0-9a-f]+)\s+\d+\t/);
+  if (!match) fail(`missing index entry ${file}`);
+  return { mode: match[1], git_oid: match[2] };
+}
+
+function preflight() {
+  const files = walk(X1).map(rel).sort();
+  const allowed = new Set([".json", ".md", ".txt"]);
+  const badExtension = files.filter((file) => !allowed.has(path.extname(file).toLowerCase()));
+  const jsonFailures = [];
+  let maxWords = 0;
+  let maxWordFile = null;
+  const privacyCandidates = [];
+  const patterns = [
+    ["raw_uuid", /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+    ["absolute_drive_path", /\b[A-Za-z]:[\\/][^\s\"']+/g],
+    ["secret_token", /\b(?:sk-[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9._-]{12,})\b/g],
+    ["raw_thread_label", /\b(?:thread_id|conversation_id|session_id)\b/gi],
+    ["private_route_scheme", /(?:chatgpt-conversation|plugin):\/\//gi]
+  ];
+  for (const file of files) {
+    const text = fs.readFileSync(path.join(ROOT, ...file.split("/")), "utf8");
+    const count = words(text);
+    if (count > maxWords) { maxWords = count; maxWordFile = file; }
+    if (path.extname(file).toLowerCase() === ".json") {
+      try { JSON.parse(text); } catch (error) { jsonFailures.push({ file, error: error.message }); }
+    }
+    for (const [klass, regex] of patterns) {
+      regex.lastIndex = 0;
+      const found = text.match(regex) || [];
+      if (found.length) privacyCandidates.push({ file, class: klass, count: found.length });
+    }
+  }
+  const truth = load(`${PREFIX}/phase-truth.json`);
+  const contracts = load(`${PREFIX}/results/contracts.json`);
+  const refusals = load(`${PREFIX}/results/refusals.json`);
+  const safe = load(`${PREFIX}/results/safe-now.json`);
+  const cfr = load(`${PREFIX}/results/clean-fix-refine.json`);
+  const models = load(`${PREFIX}/models/finite-models.json`);
+  const hooks = load(`${PREFIX}/evidence/hook-results.json`);
+  const laws = load(`${PREFIX}/evidence/law-hypothesis-probes.json`);
+  const probes = load(`${PREFIX}/evidence/open-problem-probe-results.json`);
+  const capabilities = load(`${PREFIX}/evidence/local-capabilities.json`);
+  const tests = load(`${PREFIX}/validation/tests.json`);
+  const delivery = load(`${PREFIX}/consultation/x1-delivery.json`);
+  const overlay = load(`${PREFIX}/consultation/route-method-flow-overlay.json`);
+  const methodFlow = load(`${PREFIX}/method-flow.json`);
+  const scannerDefinitionCandidates = privacyCandidates.filter((row) => row.file === `${PREFIX}/tools/finalize-x1.txt`);
+  const confirmedPrivacyCandidates = privacyCandidates.filter((row) => row.file !== `${PREFIX}/tools/finalize-x1.txt`);
+  const checks = [
+    ["allowed_extensions", badExtension.length === 0, badExtension],
+    ["strict_json_parse", jsonFailures.length === 0, jsonFailures],
+    ["document_word_ceiling", maxWords <= 100000, { max_words: maxWords, file: maxWordFile }],
+    ["file_ceiling", files.length < 2000, files.length],
+    ["planning_is_head", git(["rev-parse", "HEAD"]) === "a705a60eeef6f46e080d318ad7ee438bf1e1d7cf", git(["rev-parse", "HEAD"])],
+    ["planning_tree_unchanged", git(["diff", "--name-only", "HEAD", "--", "docs/tamar-vey/v708-v3/planning"]) === "", null],
+    ["x1_only_dirty_scope", statusRows().every((row) => row.slice(3).replaceAll("\\", "/").startsWith(`${PREFIX}/`)), statusRows()],
+    ["contracts_150", contracts.rows.length === 150 && truth.contracts === 150 && truth.contract_passes === 150, contracts.rows.length],
+    ["failed_subjects_150", refusals.rows.length === 150 && truth.failed_subjects === 150 && truth.separate_refusal_passes === 150, refusals.rows.length],
+    ["safe_now_150", safe.rows.length === 150 && truth.safe_now_passes === 150, safe.rows.length],
+    ["cfr_150", cfr.rows.length === 150 && truth.clean_fix_refine_passes === 150, cfr.rows.length],
+    ["finite_models_15", models.rows.length === 15 && models.count === 15 && truth.finite_models === 15, models.rows.length],
+    ["hooks_5", hooks.rows.length === 5 && hooks.positive_passes === 5 && hooks.adverse_refusals === 5, hooks.rows.length],
+    ["law_hypotheses_15", laws.rows.length === 15, laws.rows.length],
+    ["open_problem_probes_15", probes.rows.length === 15, probes.rows.length],
+    ["skills_5", capabilities.skills.length === 5 && capabilities.skills.every((row) => row.validation === "pass" && row.complete_read_required_before_use === true), capabilities.skills.length],
+    ["runners_3_paired_smoke", capabilities.runners.length === 3 && capabilities.runners.every((row) => row.accepting_smoke === "pass" && row.rejecting_smoke === "pass"), capabilities.runners.length],
+    ["tests_45_once", tests.tests === 45 && tests.passed === 45 && tests.failed === 0 && tests.valid === true && tests.replayed === false, { tests: tests.tests, passed: tests.passed, failed: tests.failed }],
+    ["consultation_sent_once", delivery.delivery_state === "SENT_ONCE_ACCEPTED_RESPONSE_PENDING" && delivery.delivery_attempts === 1 && delivery.resends === 0 && delivery.raw_private_target_exported === false && delivery.raw_transcript_exported === false, delivery.delivery_state],
+    ["base_method_flow", methodFlow.counts.methods === 17 && methodFlow.counts.witnesses === 776 && methodFlow.counts.witness_results.pass === 613 && methodFlow.counts.witness_results.fail === 163 && methodFlow.counts.negatives === 163, methodFlow.counts],
+    ["effective_consultation_overlay", overlay.effective_counts.methods === 21 && overlay.effective_counts.witnesses === 783 && overlay.effective_counts.passing_witnesses === 617 && overlay.effective_counts.failed_witnesses === 166 && overlay.effective_counts.effective_negatives === 166, overlay.effective_counts],
+    ["effective_validation_overlay", load(`${PREFIX}/validation/method-flow-overlay.json`).effective_counts.methods === 22 && load(`${PREFIX}/validation/method-flow-overlay.json`).effective_counts.witnesses === 785 && load(`${PREFIX}/validation/method-flow-overlay.json`).effective_counts.passing_witnesses === 618 && load(`${PREFIX}/validation/method-flow-overlay.json`).effective_counts.failed_witnesses === 167 && load(`${PREFIX}/validation/method-flow-overlay.json`).effective_counts.effective_negatives === 167, load(`${PREFIX}/validation/method-flow-overlay.json`).effective_counts],
+    ["truth_overlay_alignment", truth.methods === 22 && truth.witnesses === 785 && truth.passing_witnesses === 618 && truth.failed_witnesses === 167 && truth.effective_negatives === 167, { methods: truth.methods, witnesses: truth.witnesses, pass: truth.passing_witnesses, fail: truth.failed_witnesses, negatives: truth.effective_negatives }],
+    ["privacy_scanner_definition_candidates_visible", scannerDefinitionCandidates.length > 0, scannerDefinitionCandidates],
+    ["privacy_scan_zero_confirmed_payload_candidates", confirmedPrivacyCandidates.length === 0, confirmedPrivacyCandidates],
+    ["no_x2_material", files.every((file) => !file.includes("/x2/")), null],
+    ["terminal_boundary", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20" && truth.canonical_invocations === 0 && truth.successor_contacts === 0, { terminal: truth.terminal_verdict, canonical: truth.canonical_invocations, successor_contacts: truth.successor_contacts }]
+  ].map(([name, pass, detail]) => ({ name, pass, detail }));
+  const valid = checks.every((row) => row.pass);
+  put(`${PREFIX}/validation/preflight.json`, {
+    schema: "tamar.x1-preflight.v708-v3.v1",
+    valid,
+    check_count: checks.length,
+    passed: checks.filter((row) => row.pass).length,
+    failed: checks.filter((row) => !row.pass).length,
+    owner_file_count_before_manifest: files.length,
+    checks,
+    tests_replayed: false,
+    canonical_invocation: false,
+    boundary: BOUNDARY
+  });
+  process.stdout.write(JSON.stringify({ status: valid ? "PASS" : "FAIL", checks: checks.length, passed: checks.filter((row) => row.pass).length, failed: checks.filter((row) => !row.pass).length, files: files.length, max_words: maxWords }) + "\n");
+  if (!valid) process.exitCode = 1;
+}
+
+function manifest() {
+  if (fs.existsSync(path.join(ROOT, ...MANIFEST.split("/")))) fail("manifest already exists");
+  const staged = stagedRows();
+  if (!staged.length || staged.some((file) => !file.startsWith(`${PREFIX}/`))) fail("staged scope");
+  if (stagedDeleted().length) fail("staged deletion");
+  const entries = staged.filter((file) => !EXCLUSIONS.includes(file)).map((file) => {
+    const bytes = indexBlob(file);
+    const meta = indexModeAndOid(file);
+    return { path: file, bytes: bytes.length, sha256: sha256(bytes), mode: meta.mode, git_oid: meta.git_oid };
+  });
+  put(MANIFEST, {
+    schema: "tamar.x1-index-manifest.v708-v3.v1",
+    byte_domain: "staged_git_index_blob_raw_bytes",
+    planning_parent: "a705a60eeef6f46e080d318ad7ee438bf1e1d7cf",
+    entry_count: entries.length,
+    entries,
+    exclusions: EXCLUSIONS,
+    valid: true,
+    canonical_invocation: false,
+    boundary: BOUNDARY
+  });
+  process.stdout.write(JSON.stringify({ status: "PASS", entries: entries.length, exclusions: EXCLUSIONS.length }) + "\n");
+}
+
+function stagedReview() {
+  if (fs.existsSync(path.join(ROOT, ...STAGED_REVIEW.split("/")))) fail("staged review already exists");
+  const manifest = load(MANIFEST);
+  const staged = stagedRows();
+  const expectedNow = [...manifest.entries.map((row) => row.path), MANIFEST].sort();
+  const failures = [];
+  if (JSON.stringify(staged) !== JSON.stringify(expectedNow)) failures.push({ type: "staged_names", expected: expectedNow, observed: staged });
+  if (stagedDeleted().length) failures.push({ type: "deletions", paths: stagedDeleted() });
+  for (const row of manifest.entries) {
+    const bytes = indexBlob(row.path), meta = indexModeAndOid(row.path);
+    if (bytes.length !== row.bytes || sha256(bytes) !== row.sha256 || meta.mode !== row.mode || meta.git_oid !== row.git_oid) failures.push({ type: "blob_mismatch", path: row.path });
+  }
+  put(STAGED_REVIEW, {
+    schema: "tamar.x1-staged-review.v708-v3.v1",
+    valid: failures.length === 0,
+    staged_entry_count_before_self_exclusion: staged.length,
+    manifest_entry_count: manifest.entry_count,
+    manifest_path: MANIFEST,
+    self_exclusion: STAGED_REVIEW,
+    deletions: 0,
+    outside_owner_scope: 0,
+    failures,
+    canonical_invocation: false,
+    boundary: BOUNDARY
+  });
+  process.stdout.write(JSON.stringify({ status: failures.length ? "FAIL" : "PASS", staged: staged.length, manifest_entries: manifest.entry_count, failures: failures.length }) + "\n");
+  if (failures.length) process.exitCode = 1;
+}
+
+function verify() {
+  const manifest = load(MANIFEST), review = load(STAGED_REVIEW), staged = stagedRows();
+  const expected = [...manifest.entries.map((row) => row.path), MANIFEST, STAGED_REVIEW].sort();
+  const failures = [];
+  if (JSON.stringify(staged) !== JSON.stringify(expected)) failures.push({ type: "staged_names", expected, observed: staged });
+  if (stagedDeleted().length) failures.push({ type: "deletions", paths: stagedDeleted() });
+  if (!review.valid || review.failures.length) failures.push({ type: "stored_review_invalid" });
+  for (const row of manifest.entries) {
+    const bytes = indexBlob(row.path), meta = indexModeAndOid(row.path);
+    if (bytes.length !== row.bytes || sha256(bytes) !== row.sha256 || meta.mode !== row.mode || meta.git_oid !== row.git_oid) failures.push({ type: "blob_mismatch", path: row.path });
+  }
+  for (const file of [MANIFEST, STAGED_REVIEW]) {
+    JSON.parse(indexBlob(file).toString("utf8"));
+  }
+  process.stdout.write(JSON.stringify({ status: failures.length ? "FAIL" : "PASS", staged: staged.length, manifest_entries: manifest.entry_count, exclusions: 2, failures }) + "\n");
+  if (failures.length) process.exitCode = 1;
+}
+
+if (!ROOT || !fs.existsSync(X1)) fail("root");
+if (MODE === "syntax") {
+  new vm.Script(fs.readFileSync(__filename, "utf8"), { filename: __filename });
+  process.stdout.write(JSON.stringify({ status: "PASS", mode: "nonexecuting_vm_script" }) + "\n");
+} else if (MODE === "preflight") preflight();
+else if (MODE === "manifest") manifest();
+else if (MODE === "staged") stagedReview();
+else if (MODE === "verify") verify();
+else fail("mode");
