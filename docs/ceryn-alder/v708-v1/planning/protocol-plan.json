@@ -1,0 +1,156 @@
+{
+  "state": "wholly synthetic single-process event model",
+  "scenarios": [
+    {
+      "id": "CA7081-S01",
+      "name": "fresh",
+      "events": [
+        "prepare",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S02",
+      "name": "expiry",
+      "events": [
+        "prepare",
+        "expire",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S03",
+      "name": "revocation",
+      "events": [
+        "prepare",
+        "revoke",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S04",
+      "name": "ABA",
+      "events": [
+        "prepare",
+        "revoke",
+        "grant",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S05",
+      "name": "evidence",
+      "events": [
+        "prepare",
+        "replace",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S06",
+      "name": "scope",
+      "events": [
+        "prepare",
+        "change_scope",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S07",
+      "name": "duplicate",
+      "events": [
+        "prepare",
+        "commit",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S08",
+      "name": "changed_retry",
+      "events": [
+        "prepare",
+        "commit",
+        "alter_payload",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S09",
+      "name": "historical_after_revoke",
+      "events": [
+        "prepare",
+        "commit",
+        "revoke",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S10",
+      "name": "unprepared",
+      "events": [
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S11",
+      "name": "invalid_ticket",
+      "events": [
+        "prepare",
+        "corrupt_ticket",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S12",
+      "name": "refresh_after_regrant",
+      "events": [
+        "prepare",
+        "revoke",
+        "grant",
+        "prepare_new",
+        "commit_new"
+      ]
+    },
+    {
+      "id": "CA7081-S13",
+      "name": "expiry_minus_one",
+      "events": [
+        "prepare",
+        "near_expiry",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S14",
+      "name": "wrong_context",
+      "events": [
+        "prepare",
+        "change_context",
+        "commit"
+      ]
+    },
+    {
+      "id": "CA7081-S15",
+      "name": "correction",
+      "events": [
+        "prepare",
+        "revoke",
+        "commit",
+        "record_correction"
+      ]
+    }
+  ],
+  "ticket_bindings": [
+    "request_digest",
+    "evidence_digest",
+    "scope",
+    "context",
+    "epoch",
+    "expires",
+    "nonce"
+  ],
+  "x1_tests": "Fifteen independently specified scenario outcomes, closed schema and mutant controls.",
+  "x2_tests": "All six two-caller check/apply interleavings, equal-output/different-request cases, bounded replay and correction invariants.",
+  "adaptive_rule": "Freeze each advisory-derived case before executing it; retain earlier definitions unchanged.",
+  "authority": "synthetic_compute_only"
+}

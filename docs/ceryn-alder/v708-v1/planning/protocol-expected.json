@@ -1,0 +1,24 @@
+{
+  "schema": "ceryn.frozen-event-expectations.v1",
+  "scope": "Manual declarative expected decisions, frozen before implementation",
+  "cases": [
+    {"id":"CA7081-S01","last_decision":"COMMITTED","effects":1},
+    {"id":"CA7081-S02","last_decision":"EXPIRED","effects":0},
+    {"id":"CA7081-S03","last_decision":"STALE_EPOCH","effects":0},
+    {"id":"CA7081-S04","last_decision":"STALE_EPOCH","effects":0},
+    {"id":"CA7081-S05","last_decision":"STALE_EPOCH","effects":0},
+    {"id":"CA7081-S06","last_decision":"STALE_EPOCH","effects":0},
+    {"id":"CA7081-S07","last_decision":"DUPLICATE_HISTORY","effects":1},
+    {"id":"CA7081-S08","last_decision":"NONCE_CONFLICT","effects":1},
+    {"id":"CA7081-S09","last_decision":"DUPLICATE_HISTORY","effects":1},
+    {"id":"CA7081-S10","last_decision":"NO_TICKET","effects":0},
+    {"id":"CA7081-S11","last_decision":"TICKET_MISMATCH","effects":0},
+    {"id":"CA7081-S12","last_decision":"COMMITTED","effects":1},
+    {"id":"CA7081-S13","last_decision":"COMMITTED","effects":1},
+    {"id":"CA7081-S14","last_decision":"REQUEST_BINDING_MISMATCH","effects":0},
+    {"id":"CA7081-S15","last_decision":"STALE_EPOCH","effects":0,"corrections":1}
+  ],
+  "retry_semantics": "DUPLICATE_HISTORY returns only a synthetic historical receipt and never performs another effect or grants current permission.",
+  "initial_state": {"epoch":0,"now":0,"granted":true,"expires":5,"scope":"synthetic_compute","context":"context-A"},
+  "malformed_semantics": "Malformed metadata is unassessable evidence, not an invented mathematical counterexample."
+}

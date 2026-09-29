@@ -1,0 +1,377 @@
+[
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "heat",
+    "quantities": {
+      "x": "lattice x",
+      "y": "lattice y",
+      "value": "temperature"
+    },
+    "units": {
+      "x": "grid index",
+      "y": "grid index",
+      "value": "dimensionless"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Periodic 9 by 9 lattice, explicit nearest-neighbour update; coefficient 0..0.25.",
+    "expected_baseline": "Mass stays at initial mass; values stay between initial extrema.",
+    "tolerance": "1e-9 mass; 1e-12 extrema",
+    "falsifier": "A boundary leak or unstable coefficient defeats this invariant.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#heat",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "wave",
+    "quantities": {
+      "x": "site",
+      "y": "zero plane",
+      "value": "displacement"
+    },
+    "units": {
+      "x": "grid index",
+      "y": "dimensionless",
+      "value": "dimensionless"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Periodic 16-site wave; zero initial velocity; Courant 0.5 or 0.6.",
+    "expected_baseline": "Mean displacement stays zero and declared finite trace remains bounded.",
+    "tolerance": "1e-9 mean; finite amplitude <1.2",
+    "falsifier": "A high Courant number can make an explicit wave scheme unstable.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#wave",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "oscillator",
+    "quantities": {
+      "x": "position",
+      "y": "momentum",
+      "value": "energy"
+    },
+    "units": {
+      "x": "dimensionless",
+      "y": "dimensionless",
+      "value": "dimensionless"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Unit spring and mass, dt 0.05, positive damping.",
+    "expected_baseline": "Energy stays below 0.53 for the declared trace.",
+    "tolerance": "Energy bound includes discretization drift.",
+    "falsifier": "Removing the step-size or damping restriction invalidates this bound.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#oscillator",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "reaction",
+    "quantities": {
+      "x": "site",
+      "y": "growth rate",
+      "value": "concentration"
+    },
+    "units": {
+      "x": "grid index",
+      "y": "per step",
+      "value": "dimensionless"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Logistic reaction with periodic diffusion and nonnegative initial concentration.",
+    "expected_baseline": "Concentration remains in [0,1] for declared coefficients.",
+    "tolerance": "1e-12 boundary",
+    "falsifier": "Unbounded growth or an unstable discretization may overshoot.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#reaction",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "entropy",
+    "quantities": {
+      "x": "state index",
+      "y": "Shannon entropy",
+      "value": "probability"
+    },
+    "units": {
+      "x": "index",
+      "y": "bits",
+      "value": "dimensionless"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Three-state doubly stochastic mixing, no empirical observations.",
+    "expected_baseline": "Mass 1; entropy does not decrease.",
+    "tolerance": "1e-9 mass; 1e-12 entropy",
+    "falsifier": "A reset channel can lower entropy and is outside the stated condition.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#entropy",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "queue",
+    "quantities": {
+      "x": "arrivals",
+      "y": "served",
+      "value": "backlog"
+    },
+    "units": {
+      "x": "items per step",
+      "y": "items per step",
+      "value": "items"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Deterministic arrival pattern and fixed service capacity.",
+    "expected_baseline": "Cumulative arrivals minus service equals backlog.",
+    "tolerance": "Exact integer arithmetic",
+    "falsifier": "Dropping a queued item without an explicit loss term breaks conservation.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#queue",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "replication",
+    "quantities": {
+      "x": "version A",
+      "y": "version B",
+      "value": "concurrency flag"
+    },
+    "units": {
+      "x": "counter",
+      "y": "counter",
+      "value": "Boolean 0 or 1"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Two synthetic version vectors with periodic componentwise-max merge.",
+    "expected_baseline": "Counters never decrease; incomparable histories remain detectable.",
+    "tolerance": "Exact integer arithmetic",
+    "falsifier": "Last-write-wins alone hides a concurrent history.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#replication",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "retry",
+    "quantities": {
+      "x": "attempt count",
+      "y": "expected attempts",
+      "value": "remaining failure probability"
+    },
+    "units": {
+      "x": "count",
+      "y": "expected count",
+      "value": "dimensionless"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Independent constant success probability and a fixed cap.",
+    "expected_baseline": "Capped geometric closed form; no retry after acknowledgement.",
+    "tolerance": "1e-9 expectation",
+    "falsifier": "Correlated failures invalidate the geometric assumption.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#retry",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "graph",
+    "quantities": {
+      "x": "ring x",
+      "y": "ring y",
+      "value": "node mass"
+    },
+    "units": {
+      "x": "layout coordinate",
+      "y": "layout coordinate",
+      "value": "dimensionless"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Undirected ring and a conservative mixing kernel.",
+    "expected_baseline": "Total mass remains 1.",
+    "tolerance": "1e-9",
+    "falsifier": "A directed or leaking operator needs a different conservation contract.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#graph",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "coding",
+    "quantities": {
+      "x": "word",
+      "y": "error mask",
+      "value": "detection flag"
+    },
+    "units": {
+      "x": "binary integer",
+      "y": "binary integer",
+      "value": "Boolean 0 or 1"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Parity on 4 or 5 data bits; exact enumerated masks.",
+    "expected_baseline": "Odd-weight errors detected; even-weight errors can be missed.",
+    "tolerance": "Exact integer arithmetic",
+    "falsifier": "Mask 3 is a retained two-bit-error counterexample.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#coding",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "consent",
+    "quantities": {
+      "x": "expiry",
+      "y": "withdrawal step",
+      "value": "access allowed"
+    },
+    "units": {
+      "x": "step index",
+      "y": "step index",
+      "value": "Boolean 0 or 1"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "One synthetic subject, read scope, strict expiry boundary.",
+    "expected_baseline": "No access at or after expiry or withdrawal.",
+    "tolerance": "Exact integer arithmetic",
+    "falsifier": "A cached grant without expiry or withdrawal checking fails.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#consent",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "allocation",
+    "quantities": {
+      "x": "claimant index",
+      "y": "declared demand",
+      "value": "allocation"
+    },
+    "units": {
+      "x": "index",
+      "y": "synthetic units",
+      "value": "synthetic units"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Equal-weight max-min allocation with public synthetic demands.",
+    "expected_baseline": "No demand exceeded; capacity conserved up to total demand.",
+    "tolerance": "1e-9",
+    "falsifier": "Changing weights or deservingness cannot be inferred from this model.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#allocation",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "voting",
+    "quantities": {
+      "x": "candidate i",
+      "y": "candidate j",
+      "value": "pairwise margin"
+    },
+    "units": {
+      "x": "index",
+      "y": "index",
+      "value": "votes"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Three declared preference orders; no real electorate.",
+    "expected_baseline": "First profile cycles; second has candidate 0 as Condorcet winner.",
+    "tolerance": "Exact integer arithmetic",
+    "falsifier": "Pairwise majority need not produce a transitive ranking.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#voting",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "bayes",
+    "quantities": {
+      "x": "posterior alpha",
+      "y": "posterior beta",
+      "value": "posterior mean"
+    },
+    "units": {
+      "x": "pseudo-count",
+      "y": "pseudo-count",
+      "value": "probability"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Synthetic Bernoulli sequence with declared beta prior.",
+    "expected_baseline": "Closed-form conjugate update matches counts.",
+    "tolerance": "1e-9",
+    "falsifier": "Dependent or selected observations require a different likelihood.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#bayes",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  },
+  {
+    "schema": "ghc.model.contract.v2",
+    "model": "remedy",
+    "quantities": {
+      "x": "record count",
+      "y": "original failure count",
+      "value": "correction count"
+    },
+    "units": {
+      "x": "count",
+      "y": "count",
+      "value": "count"
+    },
+    "time": {
+      "quantity": "simulation step",
+      "unit": "step index",
+      "physical_seconds_claim": false
+    },
+    "assumptions": "Append-only correction chain with a preserved failed original.",
+    "expected_baseline": "Original failure survives every correction with zero original success credit.",
+    "tolerance": "Exact integer arithmetic",
+    "falsifier": "Overwriting the original destroys this property.",
+    "supersedes": "docs/avelin-reed/v707-v6-r2/model-definitions.json#remedy",
+    "evidence": "synthetic; no independent reproduction or empirical confirmation"
+  }
+]
