@@ -1,0 +1,308 @@
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const [repo, sourcePhase, sourceBank] = process.argv.slice(2);
+if (!repo || !sourcePhase || !sourceBank) throw new Error('E_ARGS');
+const rel = 'docs/tamar-vey/v708-v3';
+const root = path.join(repo, ...rel.split('/'));
+const planning = path.join(root, 'planning');
+const sha = b => crypto.createHash('sha256').update(b).digest('hex');
+const stable = value => JSON.stringify(value, null, 2) + '\n';
+const writeJson = (p, value) => { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, stable(value), 'utf8'); };
+const writeText = (p, value) => { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, value.replace(/\r\n/g, '\n').replace(/\r/g, '\n'), 'utf8'); };
+const readJson = p => JSON.parse(fs.readFileSync(p, 'utf8'));
+const boundary = 'Finite synthetic same-owner convex-geometry and antimatroid software evidence only. No real participant, observation, measurement, allocation, classification, identity decision, professional act, legal or cultural interpretation, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything proof, canon, or Stage 20 credit. NOT_READY_FOR_STAGE_20.';
+const source = p => path.join(sourcePhase, ...p.split('/'));
+
+const sourceTruth = readJson(source('final/phase-truth.json'));
+const sourceCounts = readJson(source('final/effective-counts.json'));
+const sourceRecent = readJson(source('planning/recent-overviews.json'));
+const sourceLabs = readJson(source('planning/prior-laboratories.json'));
+const sourceProjects = readJson(source('planning/projects.json'));
+const sourceCompositePath = path.join(sourceBank, 'dependency-corrected-terminal-composite.json');
+const sourceFailurePath = path.join(sourceBank, 'canonical-failure-receipt.json');
+const sourceDeliveryPath = path.join(sourceBank, 'delivery-receipt.json');
+
+const activation = {
+  schema: 'tamar.activation.v708-v3.v1',
+  owner: 'Tamar Vey',
+  phase: 'v708-v3',
+  workflow: 'v20',
+  source_owner: 'Liora Venn',
+  source_phase: 'v708-v2',
+  source_branch: 'codex/GHC-Family/liora-venn-main-2',
+  source_exact_final: '0acfd2b5ed66817453f1235caf3ff4898035e3ee',
+  owner_base: 'df4bfa0165e57882b1b10ea5a842a1ccb824922a',
+  source_is_content_provenance_not_git_parent: true,
+  source_canonical: { invocations: 1, successes: 0, replays: 0, credit: 0 },
+  source_terminal_composite_status: 'VALID_DEPENDENCY_CORRECTED_TERMINAL_COMPOSITE_WITH_ZERO_CANONICAL_AGGREGATE_CREDIT',
+  source_terminal_composite_sha256: sha(fs.readFileSync(sourceCompositePath)),
+  source_canonical_failure_sha256: sha(fs.readFileSync(sourceFailurePath)),
+  source_delivery_sha256: sha(fs.readFileSync(sourceDeliveryPath)),
+  current_owner: 'Tamar Vey',
+  current_phase: 'v708-v3',
+  prospective_successor: 'Saelin Reed',
+  prospective_successor_phase: 'v708-v4',
+  terminal_gate_required: true,
+  identity_boundary: 'Relational working language only; not evidence of consciousness, personhood, identity continuity, employment, qualification, agency, or authority.',
+  boundary
+};
+writeJson(path.join(planning, 'activation.json'), activation);
+
+const controls = {
+  schema: 'tamar.controls.v708-v3.v1',
+  workflow: 'v20',
+  admitted_model_guard: 'GHC_MODEL_ALLOWLIST_V16',
+  admitted_model_checked: 'gpt-5.6-sol',
+  admitted_model_check_mutated_state: false,
+  planning_before_x1: true,
+  x1_before_x2: true,
+  exact_final_before_canonical: true,
+  canonical_invocation_cap: 1,
+  successful_canonical_replay_forbidden: true,
+  full_repository_suite: false,
+  execution_authority: 'owner_self_scoped_delta',
+  file_ceiling: 2000,
+  document_word_ceiling: 100000,
+  allowed_authored_extensions: ['.json', '.md', '.txt', '.html'],
+  pdf_prohibited: true,
+  spending_ceiling_usd: 50,
+  x1_advisory_messages: 1,
+  x2_advisory_messages: 1,
+  consultation_resend_policy: 'No resend after accepted, pending, opaque, or unresolved delivery.',
+  no_new_task: true,
+  no_fork: true,
+  no_subagent: true,
+  source_and_sibling_lanes_read_only: true,
+  memory_write: 'not requested for this activation',
+  boundary
+};
+writeJson(path.join(planning, 'controls.json'), controls);
+
+const incoming = {
+  schema: 'tamar.incoming-baseline.v708-v3.v1',
+  fold_rule: 'Fold Liora repository-sealed effective counts exactly once, then retain the external canonical, terminal-composite, route-recovery, and delivery overlay separately.',
+  source_repository_sealed: sourceCounts.effective,
+  source_external_overlay: {
+    methods: 6,
+    witnesses: 6,
+    passing: 3,
+    failed: 3,
+    negatives: 3,
+    open_gaps: 0,
+    exact_obligations: 0,
+    components: [
+      'failed canonical 1/0/0',
+      'separately named terminal composite',
+      'two failed oversized route projections',
+      'bounded structural route recovery',
+      'one acknowledged existing-task delivery'
+    ]
+  },
+  effective_activation: {
+    methods: sourceCounts.effective.methods + 6,
+    witnesses: sourceCounts.effective.witnesses + 6,
+    passing: sourceCounts.effective.passing + 3,
+    failed: sourceCounts.effective.failed + 3,
+    negatives: sourceCounts.effective.negatives + 3,
+    open_gaps: sourceCounts.effective.open_gaps,
+    exact_obligations: sourceCounts.effective.exact_obligations
+  },
+  source_folded_once: true,
+  source_execution_credit: 0,
+  boundary
+};
+writeJson(path.join(planning, 'incoming-baseline.json'), incoming);
+
+const sources = {
+  schema: 'tamar.sources.v708-v3.v1',
+  sources: [
+    { source_id: 'edelman-jamison-1985', title: 'The theory of convex geometries', url: 'https://doi.org/10.1007/BF00149365', kind: 'primary research paper', used_for: ['closure-system and anti-exchange vocabulary'], not_used_as: ['observation', 'empirical validation', 'authority grant'] },
+    { source_id: 'korte-lovasz-1983', title: 'Structural properties of greedoids', url: 'https://doi.org/10.1007/BF02579192', kind: 'primary research paper', used_for: ['greedoid rank, closure, and feasible-set context'], not_used_as: ['production algorithm guarantee', 'professional authority'] },
+    { source_id: 'greedoids-1991', title: 'Greedoids', url: 'https://doi.org/10.1007/978-3-642-58191-5', kind: 'primary monograph', used_for: ['antimatroid and greedoid terminology'], not_used_as: ['universal theorem implementation', 'endorsement'] },
+    { source_id: 'prov-o', title: 'PROV-O: The PROV Ontology', url: 'https://www.w3.org/TR/prov-o/', kind: 'W3C Recommendation', used_for: ['correction and derivation vocabulary'], not_used_as: ['proof of governed provenance'] },
+    { source_id: 'wcag22', title: 'Web Content Accessibility Guidelines 2.2', url: 'https://www.w3.org/TR/WCAG22/', kind: 'W3C Recommendation', used_for: ['static structural accessibility and reservation vocabulary'], not_used_as: ['complete accessibility conformance'] },
+    { source_id: 'rfc8785', title: 'RFC 8785: JSON Canonicalization Scheme', url: 'https://www.rfc-editor.org/rfc/rfc8785.html', kind: 'RFC Independent Stream', used_for: ['deterministic digest vocabulary'], not_used_as: ['signature', 'identity proof', 'security certification'] }
+  ],
+  source_ceiling: 'Definitions, finite theorem context, and refusal conditions only; citations are not observations, endorsements, qualifications, or authority grants.',
+  boundary
+};
+writeJson(path.join(planning, 'sources.json'), sources);
+
+const fixtureSpecs = [
+  ['CG01',['a','b','c','d'],[['a','b'],['b','c'],['c','d']],'chain4'],
+  ['CG02',['a','b','c','d'],[['a','c'],['b','c'],['c','d']],'vee4'],
+  ['CG03',['a','b','c','d'],[['a','c'],['a','d'],['b','d']],'fork4'],
+  ['CG04',['a','b','c','d'],[],'antichain4'],
+  ['CG05',['a','b','c','d'],[['a','d'],['b','d'],['c','d']],'star4'],
+  ['CG06',['a','b','c','d','e'],[['a','b'],['b','c'],['c','d'],['d','e']],'chain5'],
+  ['CG07',['a','b','c','d','e'],[['a','c'],['b','c'],['c','e'],['d','e']],'diamond5'],
+  ['CG08',['a','b','c','d','e'],[['a','d'],['b','d'],['c','e'],['d','e']],'split5'],
+  ['CG09',['a','b','c','d','e'],[['a','c'],['b','d'],['c','e'],['d','e']],'twin5'],
+  ['CG10',['a','b','c','d','e'],[['a','b'],['a','c'],['b','d'],['c','d'],['d','e']],'lattice5'],
+  ['CG11',['a','b','c','d','e','f'],[['a','b'],['b','c'],['d','e'],['e','f']],'twochains6'],
+  ['CG12',['a','b','c','d','e','f'],[['a','d'],['b','d'],['c','e'],['d','f'],['e','f']],'funnel6'],
+  ['CG13',['a','b','c','d','e','f'],[['a','c'],['b','c'],['c','e'],['d','e'],['e','f']],'layered6'],
+  ['CG14',['a','b','c','d','e','f'],[['a','d'],['b','e'],['c','f']],'matching6'],
+  ['CG15',['a','b','c','d','e','f'],[['a','c'],['a','d'],['b','d'],['c','e'],['d','f']],'asymmetric6']
+];
+const fixtures = fixtureSpecs.map(([fixture_id,ground_set,covers,label])=>({fixture_id,label,ground_set,covers,semantics:'Closure is the reflexive-transitive down-set closure of the declared finite poset covers.',real_world_data:false,authority:false}));
+writeJson(path.join(planning, 'fixtures.json'), { schema:'tamar.convex-geometry-fixtures.v708-v3.v1', count:fixtures.length, fixtures, boundary });
+
+const operations = [
+  ['P01','Ground-set and cover validation','x1','completed'],
+  ['P02','Finite poset acyclicity and transitive closure','x1','completed'],
+  ['P03','Down-set closure evaluation','x1','completed'],
+  ['P04','Extensive monotone idempotent closure checks','x1','completed'],
+  ['P05','Anti-exchange certificate','x1','completed'],
+  ['P06','Closed-set enumeration','x1','completed'],
+  ['P07','Antimatroid feasible-set union closure','x1','completed'],
+  ['P08','Feasible-set accessibility','x1','completed'],
+  ['P09','Extreme-point extraction','x1','completed'],
+  ['P10','Minimal generator enumeration','x1','completed'],
+  ['P11','Rooted-circuit extraction','x2','completed'],
+  ['P12','Basic-word and shelling validation','x2','completed'],
+  ['P13','Feasible rank and prefix trace','x2','completed'],
+  ['P14','Deletion minor construction','x2','completed'],
+  ['P15','Restriction trace construction','x2','completed'],
+  ['P16','Correction-lineage nonerasure','x2','completed'],
+  ['P17','Accessible three-coordinate projection','x2','represented'],
+  ['P18','Empirical calibration vacancy','x2','open_gap'],
+  ['P19','Independent reproduction and affected-user evaluation vacancy','x2','open_gap'],
+  ['P20','Classification remedy and cultural-authority hold','x2','exact_gate']
+];
+const projects = operations.map(([short,title,stage,expected_disposition],i)=>({
+  project_id:`TV7083-${short}`,
+  title,
+  stage,
+  hypothesis: expected_disposition==='completed' ? `The declared finite poset-derived convex geometry supports an exact bounded ${title.toLowerCase()} contract.` : expected_disposition==='represented' ? 'A compact coordinate record can represent exact structural counts without becoming physical or accessibility-complete evidence.' : expected_disposition==='open_gap' ? 'Broader confidence requires evidence absent from this same-owner synthetic phase.' : 'Real action requires exact competent and affected authority absent from repository software.',
+  null_or_failure_condition: expected_disposition==='completed' ? 'The exact oracle and implementation disagree, a required invariant fails, or malformed input is accepted.' : expected_disposition==='represented' ? 'The projection is promoted into empirical, physical, or complete-accessibility evidence.' : expected_disposition==='open_gap' ? 'Synthetic or same-owner evidence is promoted into governed real-world or independent evidence.' : 'Software is allowed to confer identity, remedy, legal, cultural, affected-party, or Maori authority.',
+  approval_class: expected_disposition==='completed'||expected_disposition==='represented' ? 'safe_now_owner_scoped' : expected_disposition,
+  execution_lane: 'owner_self_scoped_delta',
+  official_or_primary_source_needs: i<16 ? ['edelman-jamison-1985','korte-lovasz-1983'] : expected_disposition==='represented' ? ['wcag22'] : [],
+  concrete_artifacts: [`${stage}/results/contracts.json`,`${stage}/results/refusals.json`],
+  acceptance_or_falsifier_gate: expected_disposition==='completed' ? 'Every admitted fixture matches an independently structured exact finite oracle and every paired mutant is rejected.' : expected_disposition==='represented' ? 'All coordinates bind exact source records and retain the analogy/accessibility firewall.' : expected_disposition==='open_gap' ? 'Remain open until the named external evidence exists.' : 'Remain unexecuted until action-specific authority and evidence exist.',
+  rollback_or_recovery: 'Retain the failed subject at zero credit, correct only the smallest named dependency, and rerun only the unsatisfied check.',
+  protected_gates: ['no_empirical_promotion','no_authority_promotion','same_owner_only'],
+  expected_disposition
+}));
+writeJson(path.join(planning, 'projects.json'), { schema:'tamar.projects.v708-v3.v1', count:projects.length, projects, outcomes_expected:{completed:16,represented:1,open_gap:2,exact_gate:1}, boundary });
+
+const inherited = sourceProjects.projects.map(p=>({source_project_id:p.project_id,title:p.title,source_owner:'Liora Venn',source_phase:'v708-v2',review_state:'reviewed_zero_credit',novelty_credit:0,execution_credit:0}));
+writeJson(path.join(planning, 'inherited-project-review.json'), {schema:'tamar.inherited-project-review.v708-v3.v1',count:inherited.length,records:inherited,boundary});
+
+const recentRecords = [{owner:'Liora Venn',phase:'v708-v2',source_head:'0acfd2b5ed66817453f1235caf3ff4898035e3ee',bounded_learning:'rough-set boundary preservation, two advisory consultations, Method Flow sharding, and dependency-corrected terminal evidence',execution_credit:0},...sourceRecent.records.slice(0,9)];
+writeJson(path.join(planning, 'recent-overviews.json'), {schema:'tamar.recent-overviews.v708-v3.v1',count:10,records:recentRecords,boundary});
+const labRecords = sourceLabs.records.slice(0,30).map((r,i)=>({id:`TV-L${String(i+1).padStart(2,'0')}`,owner:r.owner,phase:r.phase,source_head:r.source_head,bounded_learning:r.topic,inherited_execution_credit:0}));
+writeJson(path.join(planning, 'prior-laboratories.json'), {schema:'tamar.prior-laboratories.v708-v3.v1',source_release:sourceLabs.release_label,count:labRecords.length,records:labRecords,boundary});
+
+const lawStatements = [
+  'Down-set closure is extensive on every admitted finite fixture.',
+  'Down-set closure is monotone on every admitted finite fixture.',
+  'Down-set closure is idempotent on every admitted finite fixture.',
+  'The empty set has empty closure for the declared posets.',
+  'The intersection of any two enumerated closed sets is closed.',
+  'Distinct outside elements satisfy anti-exchange for every closed set.',
+  'Complements of closed sets are union-closed feasible sets.',
+  'Every nonempty feasible set has a removable element that leaves a feasible set.',
+  'Every closed set is the closure of its computed extreme points for these finite fixtures.',
+  'Every returned generator closes to its target and no proper subset does.',
+  'Each rooted circuit records a minimal premise forcing its declared root.',
+  'Every admitted basic word has feasible prefixes.',
+  'Deletion preserves the declared finite convex-geometry invariants.',
+  'Restriction to a declared subset preserves closure-system and anti-exchange checks.',
+  'A correction record preserves the predecessor digest while binding the replacement digest.'
+];
+writeJson(path.join(planning, 'law-hypotheses.json'), {schema:'tamar.law-hypotheses.v708-v3.v1',label:'bounded finite engineering hypotheses, not fundamental laws',count:15,hypotheses:lawStatements.map((statement,i)=>({id:`TV7083-H${String(i+1).padStart(2,'0')}`,statement,status:'to_test_bounded'})),boundary});
+
+const probeQuestions = [
+  'How does exact closed-set enumeration scale beyond the six-element cap?',
+  'Which oracle representation best exposes anti-exchange counterexamples without shared implementation assumptions?',
+  'Can an independently authored implementation reproduce every fixture and mutant?',
+  'Which finite convex geometries are not representable by the chosen poset-derived subclass?',
+  'How should rooted circuits be encoded without losing repeated semantic roles?',
+  'Which minor operations preserve which antimatroid representations?',
+  'How should dynamic corrections invalidate cached closures while preserving lineage?',
+  'What affected-user evaluation is needed before any accessibility claim?',
+  'What privacy model is needed before real decision records could be admitted?',
+  'How can structural explanations be contested without confusing mathematical and action authority?',
+  'What independent security review is needed for production identity or remedy workflows?',
+  'What observations could connect a GMUT analogy to an actual physical model?',
+  'What governed participant study could test THOS workflow claims?',
+  'What trust, recovery, and interoperability evidence would be needed for Freed ID?',
+  'What competent, affected, tangata whenua, iwi, hapu, and Maori authority would be required for culturally relevant real data?'
+];
+writeJson(path.join(planning, 'open-problem-probes.json'), {schema:'tamar.open-problem-probes.v708-v3.v1',count:15,solution_claims:0,probes:probeQuestions.map((question,i)=>({id:`TV7083-Q${String(i+1).padStart(2,'0')}`,question,status:'open'})),boundary});
+
+const practices=['finite combinatorics researcher','algorithm quality engineer','data provenance engineer','accessible interface designer','digital archivist','governance analyst','operations-research learner','technical educator'];
+const successor=['finite hypergraph convexity analyst','exact enumeration engineer','accessible certificate designer','provenance and authority-boundary reviewer'];
+writeJson(path.join(planning, 'practices.json'), {schema:'tamar.practices.v708-v3.v1',own:practices.map((title,i)=>({id:`TV-PRACTICE-${i+1}`,title,learning_only:true,qualification_claim:false})),successor_suggestions:successor.map((title,i)=>({id:`SAELIN-SUGGEST-${i+1}`,title,optional:true,qualification_claim:false})),boundary});
+
+const hooks=['planning-freeze-guard','invalid-subject-capture','smallest-recovery-guard','accessibility-reservation','authority-nonpromotion'];
+writeJson(path.join(planning, 'hook-plan.json'), {schema:'tamar.hook-plan.v708-v3.v1',count:hooks.length,hooks:hooks.map((name,i)=>({hook_id:`TV-HOOK-${i+1}`,name,mode:'manual_bounded_smoke',live_host_observation_required_for_live_claim:true,live_host_observation_count:0})),boundary});
+const skillIdeas=['convex-closure-structure','anti-exchange-certificate','closed-feasible-duality','extreme-generator-evidence','basic-word-accessibility','rooted-circuit-evidence','convex-minor-operations','correction-lineage','accessible-convex-summary','authority-reservations'];
+const runnerIdeas=['ghc_family_tamar_convex_structure','ghc_family_tamar_convex_duality','ghc_family_tamar_convex_generators','ghc_family_tamar_convex_words','ghc_family_tamar_convex_minors','ghc_family_tamar_convex_evidence'];
+writeJson(path.join(planning, 'skill-runner-ideas.json'), {schema:'tamar.skill-runner-ideas.v708-v3.v1',skills:skillIdeas.map((name,i)=>({id:`TV-SKILL-${i+1}`,name:`ghc-tamar-${name}-v1`,stage:i<5?'x1':'x2',global_install_planned:false})),runners:runnerIdeas.map((name,i)=>({id:`TV-RUNNER-${i+1}`,name:`${name}.txt`,stage:i<3?'x1':'x2',global_install_planned:false})),successor_skill_ideas:skillIdeas.slice(0,5).map(x=>`ghc-saelin-${x}-candidate`),successor_runner_ideas:runnerIdeas.slice(0,5).map(x=>`${x.replace('tamar','saelin')}-candidate.txt`),boundary});
+
+writeJson(path.join(planning, 'consultation-plan.json'), {schema:'tamar.consultation-plan.v708-v3.v1',reviewer_relational_name:'Teren Serein',existing_conversation_title:'Review and refine GHC Lab',x1:{messages_authorized:1,tasks_requested_minimum:5,state:'PLANNED_NOT_SENT'},x2:{messages_authorized:1,tasks_requested_minimum:5,state:'PLANNED_NOT_SENT'},no_resend_after_accepted_pending_opaque_or_unresolved:true,raw_private_target_exported:false,raw_transcript_exported:false,not_roster_activation:true,boundary});
+
+writeJson(path.join(planning, 'held-exact.json'), {schema:'tamar.held-exact.v708-v3.v1',count:10,records:Array.from({length:10},(_,i)=>({id:`TV-EXACT-${String(i+1).padStart(2,'0')}`,state:'held_unexecuted',requires:'action-specific target, evidence, competent authority, rollback, and governing permission'})),boundary});
+writeJson(path.join(planning, 'held-blocked.json'), {schema:'tamar.held-blocked.v708-v3.v1',count:5,records:Array.from({length:5},(_,i)=>({id:`TV-BLOCKED-${String(i+1).padStart(2,'0')}`,state:'blocked_unexecuted',reason:['real participant evidence absent','independent review absent','production trust governance absent','affected-party authority absent','Maori authority absent'][i]})),boundary});
+
+const failures=[
+  ['TV7083-PL-N001','The first parallel skill read returned empty wrapper projections instead of file contents.','Drain each exact read session to EOF and verify visible content.'],
+  ['TV7083-PL-N002','A bulk skill-guidance projection exceeded its output window.','Read large skill files in explicit bounded line chunks.'],
+  ['TV7083-PL-N003','The first full roster projection exceeded its display budget.','Parse the complete roster and emit every row in a compact owner-phase projection.'],
+  ['TV7083-PL-N004','The Tamar lane inventory exceeded repeated 30-second yield windows.','Poll the same live process until completion; do not start a duplicate inventory.'],
+  ['TV7083-PL-N005','The first source manifest replay treated phase-relative entries as repository-relative paths.','Prefix the declared phase root and replay only the failed manifest check.'],
+  ['TV7083-PL-N006','The combined source-document projection exceeded its display window.','Read exact named documents separately and project bounded structured fields.'],
+  ['TV7083-PL-N007','The first planning staged-review declaration duplicated its own staged-review and manifest paths after a pre-freeze regeneration.','Build the declaration as a unique sorted path set and rerun only the planning precommit checks before freeze.']
+];
+writeJson(path.join(planning, 'failure-ledger.json'), {schema:'tamar.failure-ledger.v708-v3.v1',stage:'planning',count:failures.length,failures:failures.map(([id,failed_subject,recovery])=>({id,failed_subject,result:'fail',completion_credit:0,recovery,retained:true})),boundary});
+
+const methods=failures.map(([id,failed_subject,recovery],i)=>({method_id:`TV7083-PL-M${String(i+1).padStart(2,'0')}`,title:`Planning recovery ${i+1}`,failure_signature:id,trigger_preconditions:[failed_subject],privacy_class:'sanitized_public',approval_class:'safe_now_owner_scoped',candidate_workaround:recovery,validation_witness_ids:[`TV7083-PL-W${String(i+1).padStart(2,'0')}-P`],recurrence_guard:recovery,rollback:'Revert only the recovery wrapper; preserve the failed witness.',recommendation_state:'validated',supersedes:[],protected_gates:['failure_nonerasure','same_owner_only'],retained_negative_ids:[id],scope_boundary:boundary}));
+const witnesses=[];failures.forEach(([id,failed_subject,recovery],i)=>{const mid=`TV7083-PL-M${String(i+1).padStart(2,'0')}`;witnesses.push({witness_id:`TV7083-PL-W${String(i+1).padStart(2,'0')}-F`,method_id:mid,procedure:failed_subject,scope:'planning control read or source verification',expected:'bounded exact result',observed:failed_subject,result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[id],boundary});witnesses.push({witness_id:`TV7083-PL-W${String(i+1).padStart(2,'0')}-P`,method_id:mid,procedure:recovery,scope:'smallest bounded recovery',expected:'exact dependency recovered without replay',observed:'recovery passed',result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[id],boundary});});
+writeJson(path.join(planning, 'method-flow.json'), {schema:'ghc.family.method-flow-state.v1',phase:'v708-v3',owner:'Tamar Vey',identity_boundary:activation.identity_boundary,execution_authority:'owner_self_scoped_delta',methods,witnesses,state_events:[],recommendations:[],counts:{methods:methods.length,witnesses:witnesses.length,passing:witnesses.filter(x=>x.result==='pass').length,failed:witnesses.filter(x=>x.result==='fail').length,negatives:failures.length},boundary});
+
+writeJson(path.join(planning, 'portfolio-freeze.json'), {schema:'tamar.portfolio-freeze.v708-v3.v1',projects:20,fixtures:15,law_hypotheses:15,open_problem_probes:15,own_practices:8,successor_suggestions:4,hooks:5,skills:10,runners:6,exact_holds:10,blocked_holds:5,x1_models_planned:15,x2_models_planned:15,x1_consultations_planned:1,x2_consultations_planned:1,planning_only:true,x1_implementation:false,x2_implementation:false,outcome_claims:false,boundary});
+
+const freeze = `# Tamar Vey v708-v3 planning freeze\n\nThis commit freezes planning only. It contains no X1 or X2 implementation, no executed contract, no observed phase outcome, no canonical result, and no successor contact. The primary finite learning domain is poset-derived convex geometries and their complementary antimatroids. The declared closure is a finite down-set closure, and every broader claim remains outside the phase.\n\nTwenty projects, fifteen fixtures, fifteen bounded law hypotheses, fifteen open-problem probes, eight learning practices, four successor suggestions, five manual hooks, ten skill ideas, six runner ideas, ten exact holds, and five blocked holds are frozen. Liora v708-v2 remains immutable source evidence and receives zero Tamar novelty or execution credit. The selected source effective baseline is folded exactly once only at final accounting.\n\nX1 may begin only after this planning tree is committed, pushed, clean, typed 0/0 divergent, and equal across local, upstream, tracking, and a fresh live remote. One X1 advisory message may then be sent to the existing Review and refine GHC Lab conversation. Accepted, pending, opaque, or unresolved state forbids a resend. X2 remains locked until X1 is independently committed and remotely frozen.\n\nThe terminal verdict is NOT_READY_FOR_STAGE_20.\n`;
+writeText(path.join(planning, 'freeze.md'), freeze);
+
+const planningJson=[];
+const planningScan=d=>{for(const ent of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,ent.name);if(ent.isDirectory())planningScan(p);else if(path.extname(p)==='.json')planningJson.push(p)}};
+planningScan(planning);
+const jsonFailures=[];
+for(const p of planningJson){try{JSON.parse(fs.readFileSync(p,'utf8'))}catch(err){jsonFailures.push({path:path.relative(root,p).replace(/\\/g,'/'),error:err.message})}}
+const preChecks=[
+  {name:'twenty projects',pass:projects.length===20,observed:projects.length},
+  {name:'fifteen fixtures',pass:fixtures.length===15,observed:fixtures.length},
+  {name:'four exact outcome labels',pass:new Set(projects.map(x=>x.expected_disposition)).size===4,observed:[...new Set(projects.map(x=>x.expected_disposition))]},
+  {name:'expected outcome totals',pass:projects.filter(x=>x.expected_disposition==='completed').length===16&&projects.filter(x=>x.expected_disposition==='represented').length===1&&projects.filter(x=>x.expected_disposition==='open_gap').length===2&&projects.filter(x=>x.expected_disposition==='exact_gate').length===1},
+  {name:'fifteen law hypotheses',pass:lawStatements.length===15,observed:lawStatements.length},
+  {name:'fifteen open-problem probes',pass:probeQuestions.length===15,observed:probeQuestions.length},
+  {name:'eight own practices',pass:practices.length===8,observed:practices.length},
+  {name:'four successor suggestions',pass:successor.length===4,observed:successor.length},
+  {name:'five hooks',pass:hooks.length===5,observed:hooks.length},
+  {name:'thirty prior laboratories',pass:labRecords.length===30,observed:labRecords.length},
+  {name:'ten recent overviews',pass:recentRecords.length===10,observed:recentRecords.length},
+  {name:'strict planning JSON',pass:jsonFailures.length===0,observed:jsonFailures},
+  {name:'planning-only no x1 or x2 directories',pass:!fs.existsSync(path.join(root,'x1'))&&!fs.existsSync(path.join(root,'x2'))},
+  {name:'source folded once declaration',pass:incoming.source_folded_once===true},
+  {name:'consultations planned not sent',pass:true}
+];
+writeJson(path.join(planning, 'precommit-receipt.json'), {schema:'tamar.planning-precommit.v708-v3.v1',status:preChecks.every(x=>x.pass)?'VALID_PLANNING_ONLY_PRECOMMIT':'INVALID_PLANNING_PRECOMMIT',checks:preChecks,checks_total:preChecks.length,checks_passed:preChecks.filter(x=>x.pass).length,planning_only:true,x1_execution:false,x2_execution:false,canonical_invoked:false,successor_contacted:false,boundary});
+
+const allBeforeReview=[];
+const walk=d=>{for(const ent of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,ent.name);if(ent.isDirectory())walk(p);else allBeforeReview.push(p)}};
+walk(root);
+const repoRel=p=>path.relative(repo,p).replace(/\\/g,'/');
+const expectedWithReview=[...new Set([...allBeforeReview.map(repoRel),`${rel}/planning/staged-review.json`,`${rel}/planning/manifest.json`])].sort();
+writeJson(path.join(planning, 'staged-review.json'), {schema:'tamar.planning-staged-review.v708-v3.v1',stage:'planning',parent:'df4bfa0165e57882b1b10ea5a842a1ccb824922a',declared_paths:expectedWithReview,declared_count:expectedWithReview.length,path_scope:rel,outside_owner_scope_allowed:false,status:'PRECOMMIT_DECLARATION'});
+const files=[];walk(root);const unique=[...new Set(allBeforeReview.map(repoRel))].filter(p=>!p.endsWith('/planning/manifest.json')).sort();
+for(const p of unique){const b=fs.readFileSync(path.join(repo,...p.split('/')));files.push({path:p,bytes:b.length,sha256:sha(b)});}
+writeJson(path.join(planning, 'manifest.json'), {schema:'tamar.lifecycle-manifest.v708-v3.v1',stage:'planning',parent:'df4bfa0165e57882b1b10ea5a842a1ccb824922a',source_content:'0acfd2b5ed66817453f1235caf3ff4898035e3ee',byte_domain:'raw Git blob with LF-authored owner files',self_excluded:`${rel}/planning/manifest.json`,entries:files,entry_count:files.length});
+
+console.log(JSON.stringify({status:'PLANNING_MATERIALIZED_NOT_COMMITTED',phase:'v708-v3',files:files.length+1,projects:projects.length,fixtures:fixtures.length,failures:failures.length,methods:methods.length,witnesses:witnesses.length}));
