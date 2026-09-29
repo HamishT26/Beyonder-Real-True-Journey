@@ -6,12 +6,27 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 
 def write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+
+def git_paths(repo: Path, *args: str) -> list[str]:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=repo,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        check=False,
+    )
+    if result.returncode:
+        raise SystemExit(result.stderr.strip() or f"git {' '.join(args)} failed")
+    return [line.strip().replace("\\", "/") for line in result.stdout.splitlines() if line.strip()]
 
 
 def main() -> None:
@@ -29,12 +44,15 @@ def main() -> None:
     phase_root = repo / args.phase_root
     manifest_path = repo / args.manifest
     review_path = repo / args.staged_review
+    excluded = {args.manifest.replace("\\", "/"), args.staged_review.replace("\\", "/")}
+    tracked_delta = git_paths(repo, "diff", "--name-only", args.parent, "--", args.phase_root)
+    untracked_delta = git_paths(repo, "ls-files", "--others", "--exclude-standard", "--", args.phase_root)
     planned = sorted(
-        path.relative_to(repo).as_posix()
-        for path in phase_root.rglob("*")
-        if path.is_file() and path not in {manifest_path, review_path}
+        path
+        for path in set(tracked_delta + untracked_delta)
+        if path not in excluded and (repo / path).is_file()
     )
-    declared = sorted(planned + [args.manifest, args.staged_review])
+    declared = sorted(planned + sorted(excluded))
     write_json(review_path, {
         "schema": "liora.staged-review.v708-v2.v1",
         "stage": args.stage,
@@ -45,12 +63,14 @@ def main() -> None:
         "outside_owner_scope_allowed": False,
         "status": "PRECOMMIT_DECLARATION",
     })
-    files = sorted(path for path in phase_root.rglob("*") if path.is_file() and path != manifest_path)
     entries = []
-    for path in files:
+    for relative in declared:
+        if relative == args.manifest.replace("\\", "/"):
+            continue
+        path = repo / relative
         raw = path.read_bytes()
         entries.append({
-            "path": path.relative_to(repo).as_posix(),
+            "path": relative,
             "bytes": len(raw),
             "sha256": hashlib.sha256(raw).hexdigest(),
         })
