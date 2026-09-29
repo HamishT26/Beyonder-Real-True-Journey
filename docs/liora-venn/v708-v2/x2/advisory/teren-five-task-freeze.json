@@ -1,0 +1,353 @@
+{
+  "schema": "liora.x2.teren-five-task-freeze.v1",
+  "conversation_title": "Teren Serein",
+  "raw_private_target_exported": false,
+  "raw_transcript_exported": false,
+  "five_tasks_received": true,
+  "frozen_before_execution": true,
+  "tasks": [
+    {
+      "task_id": "TEREN-X2-T01",
+      "label": "MISSING_MEANS_TWO_COMPLETIONS",
+      "table": [
+        [
+          "m1",
+          0,
+          0
+        ],
+        [
+          "m2",
+          1,
+          1
+        ],
+        [
+          "m3",
+          "?",
+          0
+        ]
+      ],
+      "target": [
+        "m1",
+        "m3"
+      ],
+      "semantics": {
+        "mode": "FINITE_COMPLETIONS_V1",
+        "possible_values": [
+          0,
+          1
+        ],
+        "row_deletion": false
+      },
+      "oracle": {
+        "guaranteed_lower": [
+          "m1"
+        ],
+        "possible_upper": [
+          "m1",
+          "m2",
+          "m3"
+        ],
+        "dependency_values": [
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "positive_control": "both exact completions retained",
+      "mutant": "silently impute missing value as zero and report one completion as guaranteed",
+      "malformed_classification": "UNDECLARED_MISSING_SEMANTICS"
+    },
+    {
+      "task_id": "TEREN-X2-T02",
+      "label": "CORRECTION_CREATES_A_NEW_SNAPSHOT",
+      "snapshots": {
+        "V0": [
+          [
+            "s1",
+            0,
+            0
+          ],
+          [
+            "s2",
+            1,
+            1
+          ]
+        ],
+        "V1": [
+          [
+            "s1",
+            0,
+            0
+          ],
+          [
+            "s2",
+            1,
+            1
+          ],
+          [
+            "s3",
+            0,
+            1
+          ]
+        ],
+        "V2": [
+          [
+            "s1",
+            0,
+            0
+          ],
+          [
+            "s2",
+            1,
+            1
+          ],
+          [
+            "s3",
+            0,
+            0
+          ]
+        ]
+      },
+      "lineage": [
+        [
+          "V1",
+          "V0"
+        ],
+        [
+          "V2",
+          "V1"
+        ]
+      ],
+      "oracle": {
+        "V0": {
+          "lower": [
+            "s1"
+          ],
+          "upper": [
+            "s1"
+          ],
+          "dependency": [
+            1,
+            1
+          ]
+        },
+        "V1": {
+          "lower": [],
+          "upper": [
+            "s1",
+            "s3"
+          ],
+          "dependency": [
+            1,
+            3
+          ]
+        },
+        "V2": {
+          "lower": [
+            "s1",
+            "s3"
+          ],
+          "upper": [
+            "s1",
+            "s3"
+          ],
+          "dependency": [
+            1,
+            1
+          ]
+        }
+      },
+      "mutant": "resolve every historical request through the mutable latest snapshot",
+      "malformed_classification": "MISSING_PREDECESSOR_EVIDENCE"
+    },
+    {
+      "task_id": "TEREN-X2-T03",
+      "label": "ONE_VALID_REDUCT_IS_NOT_THE_FAMILY",
+      "table": [
+        [
+          "r1",
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          "r2",
+          1,
+          1,
+          0,
+          1
+        ]
+      ],
+      "attributes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "oracle": {
+        "reducts": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "core": [],
+        "nonpreserving_subsets": [
+          [],
+          [
+            "c"
+          ]
+        ]
+      },
+      "mutant": "deduplicate equal-valued columns and report only a as the complete reduct family and core",
+      "malformed_classification": "AMBIGUOUS_ATTRIBUTE_IDENTITY"
+    },
+    {
+      "task_id": "TEREN-X2-T04",
+      "label": "SAME_ROUGH_RESULT_DIFFERENT_PERMISSION",
+      "table": [
+        [
+          "p1",
+          0,
+          0
+        ],
+        [
+          "p2",
+          1,
+          1
+        ]
+      ],
+      "cases": [
+        [
+          "E0",
+          "P",
+          "ACTIVE",
+          "APPEND_DEMO",
+          "DEMO_WRITER"
+        ],
+        [
+          "E1",
+          "Q",
+          "ACTIVE",
+          "APPEND_DEMO",
+          "DEMO_WRITER"
+        ],
+        [
+          "E2",
+          "P",
+          "WITHDRAWN",
+          "APPEND_DEMO",
+          "DEMO_WRITER"
+        ],
+        [
+          "E3",
+          "P",
+          "ACTIVE",
+          "READ_DEMO",
+          "DEMO_WRITER"
+        ],
+        [
+          "E4",
+          "P",
+          "ACTIVE",
+          "APPEND_DEMO",
+          "REVIEW_ONLY"
+        ]
+      ],
+      "oracle": {
+        "mathematical_match": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "effect_vector": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "mutant": "permit the modeled demo append whenever dependency degree equals one",
+      "malformed_classification": "INCOMPLETE_POLICY_EVIDENCE"
+    },
+    {
+      "task_id": "TEREN-X2-T05",
+      "label": "CHECK_THE_SUBMISSION_NOT_ITS_REPAIR",
+      "table": [
+        [
+          "k1",
+          0,
+          0
+        ],
+        [
+          "k2",
+          0,
+          1
+        ],
+        [
+          "k3",
+          1,
+          0
+        ]
+      ],
+      "target": [
+        "k1",
+        "k3"
+      ],
+      "submissions": {
+        "G": {
+          "status": "OK",
+          "lower": [
+            "k3"
+          ],
+          "upper": [
+            "k1",
+            "k2",
+            "k3"
+          ]
+        },
+        "B": {
+          "status": "OK",
+          "lower": [
+            "k1",
+            "k3"
+          ],
+          "upper": [
+            "k1",
+            "k2",
+            "k3"
+          ]
+        },
+        "R": {
+          "status": "REFUSED"
+        }
+      },
+      "oracle": {
+        "verdicts": [
+          "ACCEPT",
+          "REJECT_MATHEMATICAL_MISMATCH",
+          "VALID_INPUT_REFUSED_NOT_PASS"
+        ]
+      },
+      "mutant": "repair the submitted result with oracle values before judging it",
+      "malformed_classification": "AMBIGUOUS_RESULT_ENCODING"
+    }
+  ],
+  "separation_rules": [
+    "Tasks 1 and 2 remain separate: completions preserve one universe while corrections create named snapshots.",
+    "Tasks 3 and 5 remain separate: incomplete subject output differs from a checker that accepts a known-false submission.",
+    "Task 4 remains separate from mathematical pass/fail because permission is not numerical conformance."
+  ],
+  "disposition": "ADOPTED_FOR_SEPARATELY_SCORED_LATE_X2_EXECUTION",
+  "boundary": "Relational working language and private advisory source material only. The reply is not independent reproduction, empirical validation, professional or authority evidence, consciousness or personhood evidence, or Stage 20 credit. NOT_READY_FOR_STAGE_20."
+}
