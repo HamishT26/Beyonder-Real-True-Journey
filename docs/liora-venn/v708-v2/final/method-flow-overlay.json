@@ -1,0 +1,50 @@
+{
+  "schema": "liora.v708-v2.final-method-flow-overlay.v1",
+  "methods": [
+    {
+      "method_id": "LI7082-FINAL-M033",
+      "title": "Literal set-notation f-string recovery",
+      "failure_signature": "A Markdown literal inside the final builder is parsed as an f-string expression.",
+      "validation_witness_ids": [
+        "LI7082-FINAL-M033-W001",
+        "LI7082-FINAL-M033-W002"
+      ],
+      "recommendation_state": "validated",
+      "retained_negative_ids": [
+        "LI7082-FINAL-N001"
+      ],
+      "recurrence_guard": "Escape literal braces in generated f-string Markdown before executing the builder.",
+      "rollback": "Overwrite only the uncommitted partial closeout from the unchanged committed X2 head."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "LI7082-FINAL-M033-W001",
+      "method_id": "LI7082-FINAL-M033",
+      "procedure": "first final builder pass",
+      "observed": "NameError on the literal set notation {a}; no final commit, push, or canonical invocation occurred.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "LI7082-FINAL-N001"
+      ]
+    },
+    {
+      "witness_id": "LI7082-FINAL-M033-W002",
+      "method_id": "LI7082-FINAL-M033",
+      "procedure": "literal-brace recovery",
+      "observed": "Pending regenerated closeout word-count and final precommit validation.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "LI7082-FINAL-N001"
+      ]
+    }
+  ],
+  "counts": {
+    "methods": 1,
+    "witnesses": 2,
+    "passing": 1,
+    "failed": 1,
+    "negatives": 1
+  },
+  "boundary": "Finite synthetic same-owner rough-set mathematical, software, and documentary evidence only. No real participant, dataset, measurement, classification, identity decision, professional act, legal or cultural interpretation, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, or Stage 20 credit. NOT_READY_FOR_STAGE_20."
+}
