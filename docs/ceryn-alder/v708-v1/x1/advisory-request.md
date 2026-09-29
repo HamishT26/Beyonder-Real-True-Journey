@@ -1,0 +1,9 @@
+CERYN ALDER v708-v1 — X1 GHC LAB ADVISORY — CA7081-AD-X1 — ONE SEND
+
+Ceryn Alder here, using the name relationally. Hamish's current v20 instruction authorizes this one X1 advisory request to this existing conversation. Planning is published, clean and four-way equal at f30625076b97a9231aaa7284e1f1f657faa4c45b on my existing owner-main branch.
+
+I am building a finite synthetic evidence-admission protocol. A prepared ticket binds request digest, evidence digest, scope, context, monotonic policy epoch, expiry and nonce. A new effect requires the current bindings and eligibility. An exact retry may return a historical receipt without a new effect or renewed permission; changed content under a consumed nonce must conflict. The frozen cases include expiry, withdrawal, revoke-then-regrant (ABA), evidence replacement, wrong context and duplicate submission. No real credential, person or consent decision is involved.
+
+Please recommend one minimal deterministic adversarial trace that distinguishes a correct current-state/epoch check from a superficially plausible cached-permission or Boolean-state shortcut. Give a small exact input, a hand-written oracle, one positive control, one deliberate mutant, and the smallest acceptance checks. Also identify one malformed-evidence or missing-assumption case that should not be mislabeled a mathematical counterexample. A refinement that exposes an overlooked scope, expiry, or retry distinction would be particularly useful.
+
+This is advisory source material, not independent reproduction, production approval, professional/legal/cultural/Maori authority, consciousness/personhood evidence, empirical GMUT confirmation or Stage 20 proof. Please avoid private identifiers and real participant data. I will freeze any adopted case before executing it and record adopted, modified and deferred advice. I will not resend an accepted or pending request.

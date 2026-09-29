@@ -1,0 +1,24 @@
+{
+  "schema":"ceryn.advisory-adaptive-plan.v1",
+  "recommendation_id":"UNUSED_ABA_EXPIRED_RETRY",
+  "source":"One acknowledged X1 reply from Review and refine GHC Lab",
+  "disposition":"modified_adopted",
+  "frozen_before_execution":true,
+  "initial":{"epoch":10,"granted":true,"expires":5,"scope":"admit:A","context":"ctx:A","body":"R","evidence_bytes":"E"},
+  "trace":[
+    {"time":0,"event":"prepare O with nonce n0 at epoch 10"},
+    {"time":1,"event":"revoke and increment epoch to 11"},
+    {"time":2,"event":"regrant at epoch 12; prepare F/n1 and U/n2"},
+    {"time":3,"event":"submit unused O","expected":"STALE_EPOCH","effect_delta":0},
+    {"time":4,"event":"submit F","expected":"COMMITTED","effect_delta":1},
+    {"time":5,"event":"submit unused U","expected":"EXPIRED","effect_delta":0},
+    {"time":5,"event":"exact retry F","expected":"DUPLICATE_HISTORY","effect_delta":0},
+    {"time":5,"event":"reuse n1 with changed scope","expected":"NONCE_CONFLICT","effect_delta":0}
+  ],
+  "modifications":["Use the already-declared canonical request-object digest, including body R and its context, instead of a raw-body-only digest.","Map advisory NEW_EFFECT to COMMITTED and HISTORICAL to DUPLICATE_HISTORY."],
+  "assumptions":["One synthetic namespace; no real identity or consent.","Nonce lookup, effect append and receipt storage are one atomic modeled transition.","Historical receipt readback is explicitly permitted to this fixed synthetic harness; it does not authorize general disclosure after expiry.","Nonce records persist after expiry and use a fixed namespace independent of changed scope or epoch."],
+  "tests":["Five exact outcomes and effect deltas","Only n1 consumed","Original receipt time 4 epoch 12 expiry 5 retained on retry","Positive control emits one effect","Epoch-only mutant emits the forbidden old-ticket effect","Missing current epoch classified as malformed evidence","Changed scope under consumed nonce remains a conflict"],
+  "prior_subject":"protocol.txt remains immutable in meaning; new protocol-v2.txt adds explicit full-binding nonce receipts and current-state validation.",
+  "independent_reproduction":false,
+  "boundary":"Finite synthetic conformance on the stated trace only. NOT_READY_FOR_STAGE_20."
+}

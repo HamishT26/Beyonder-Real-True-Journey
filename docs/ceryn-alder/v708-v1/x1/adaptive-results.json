@@ -1,0 +1,215 @@
+{
+  "recommendation": "UNUSED_ABA_EXPIRED_RETRY",
+  "disposition": "modified_adopted",
+  "subject_sha256": "36030fac0166406fcb7bcafb3d42bcff891db30067c15c61edf9689cb5e519ad",
+  "checker_sha256": "97d62f6ca07b5bd5035d0855661e66253a0e30d5415e184da6383fd683f3c276",
+  "observed": [
+    {
+      "time": 3,
+      "result": {
+        "decision": "STALE_EPOCH",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effect_delta": 0
+    },
+    {
+      "time": 4,
+      "result": {
+        "decision": "COMMITTED",
+        "receipt": {
+          "receipt_id": "synthetic-receipt-1",
+          "sequence": 1,
+          "nonce": "n1",
+          "request_digest": "78b22755041e3c5d31308868f24b3a42ae185bdc86ce7ef5299ae3257c1c9f21",
+          "ticket_binding_sha256": "146e018ddf72671773cd48e49a685ec6ff349d0423843081ebec8a7a9f638815",
+          "created_at": 4,
+          "epoch": 12,
+          "expires": 5,
+          "kind": "synthetic_compute_only"
+        },
+        "effects": 1,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effect_delta": 1
+    },
+    {
+      "time": 5,
+      "result": {
+        "decision": "EXPIRED",
+        "receipt": null,
+        "effects": 1,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effect_delta": 0
+    },
+    {
+      "time": 5,
+      "result": {
+        "decision": "DUPLICATE_HISTORY",
+        "receipt": {
+          "receipt_id": "synthetic-receipt-1",
+          "sequence": 1,
+          "nonce": "n1",
+          "request_digest": "78b22755041e3c5d31308868f24b3a42ae185bdc86ce7ef5299ae3257c1c9f21",
+          "ticket_binding_sha256": "146e018ddf72671773cd48e49a685ec6ff349d0423843081ebec8a7a9f638815",
+          "created_at": 4,
+          "epoch": 12,
+          "expires": 5,
+          "kind": "synthetic_compute_only"
+        },
+        "effects": 1,
+        "historical_only": true,
+        "new_permission_granted": false
+      },
+      "effect_delta": 0
+    },
+    {
+      "time": 5,
+      "result": {
+        "decision": "NONCE_CONFLICT",
+        "receipt": null,
+        "effects": 1,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effect_delta": 0
+    }
+  ],
+  "expected": [
+    {
+      "time": 3,
+      "event": "submit unused O",
+      "expected": "STALE_EPOCH",
+      "effect_delta": 0
+    },
+    {
+      "time": 4,
+      "event": "submit F",
+      "expected": "COMMITTED",
+      "effect_delta": 1
+    },
+    {
+      "time": 5,
+      "event": "submit unused U",
+      "expected": "EXPIRED",
+      "effect_delta": 0
+    },
+    {
+      "time": 5,
+      "event": "exact retry F",
+      "expected": "DUPLICATE_HISTORY",
+      "effect_delta": 0
+    },
+    {
+      "time": 5,
+      "event": "reuse n1 with changed scope",
+      "expected": "NONCE_CONFLICT",
+      "effect_delta": 0
+    }
+  ],
+  "effects": [
+    {
+      "receipt_id": "synthetic-receipt-1",
+      "sequence": 1,
+      "nonce": "n1",
+      "request_digest": "78b22755041e3c5d31308868f24b3a42ae185bdc86ce7ef5299ae3257c1c9f21",
+      "ticket_binding_sha256": "146e018ddf72671773cd48e49a685ec6ff349d0423843081ebec8a7a9f638815",
+      "created_at": 4,
+      "epoch": 12,
+      "expires": 5,
+      "kind": "synthetic_compute_only"
+    }
+  ],
+  "consumed_nonces": [
+    "n1"
+  ],
+  "mutant": {
+    "original_success_credit": 0,
+    "observed": {
+      "decision": "COMMITTED",
+      "receipt": {
+        "receipt_id": "synthetic-receipt-1",
+        "sequence": 1,
+        "nonce": "n0",
+        "request_digest": "78b22755041e3c5d31308868f24b3a42ae185bdc86ce7ef5299ae3257c1c9f21",
+        "ticket_binding_sha256": "16a7a5168b017f8280eb1f979858a6069d814f395d6a2b799edb5dbe1afccfed",
+        "created_at": 3,
+        "epoch": 12,
+        "expires": 5,
+        "kind": "synthetic_compute_only"
+      },
+      "effects": 1,
+      "historical_only": false,
+      "new_permission_granted": false
+    },
+    "effects": [
+      {
+        "receipt_id": "synthetic-receipt-1",
+        "sequence": 1,
+        "nonce": "n0",
+        "request_digest": "78b22755041e3c5d31308868f24b3a42ae185bdc86ce7ef5299ae3257c1c9f21",
+        "ticket_binding_sha256": "16a7a5168b017f8280eb1f979858a6069d814f395d6a2b799edb5dbe1afccfed",
+        "created_at": 3,
+        "epoch": 12,
+        "expires": 5,
+        "kind": "synthetic_compute_only"
+      }
+    ]
+  },
+  "malformed": {
+    "classification": "MALFORMED_EVIDENCE",
+    "mathematical_counterexample": false,
+    "original_success_credit": 0,
+    "observed": {
+      "decision": "MALFORMED_EVIDENCE",
+      "reason": "MISSING_OR_INVALID_CURRENT_STATE",
+      "effects": 0,
+      "new_permission_granted": false
+    }
+  },
+  "checks": [
+    {
+      "id": "CA7081-AD-X1-OUT-0",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-OUT-1",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-OUT-2",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-OUT-3",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-OUT-4",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-CONSUMPTION",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-HISTORY",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-MUTANT-DETECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-AD-X1-MALFORMED",
+      "passed": true
+    }
+  ],
+  "passed": 9,
+  "independent_reproduction": false
+}

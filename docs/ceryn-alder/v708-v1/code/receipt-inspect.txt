@@ -1,0 +1,2 @@
+'use strict';
+const C=require('./common.txt');C.admitted();const legacy=C.read('x1/protocol-results.json'),adaptive=C.read('x1/adaptive-results.json');if(legacy.passed!==16||adaptive.passed!==9||adaptive.effects.length!==1)throw Error('STORED_EVIDENCE_INCONSISTENT');console.log(JSON.stringify({schema:'ceryn.receipt-inspection.v1',legacy_tests:legacy.passed,adaptive_tests:adaptive.passed,committed_nonces:adaptive.consumed_nonces,historical_receipt_preserved:adaptive.checks.find(x=>x.id==='CA7081-AD-X1-HISTORY').passed,domain_execution:false,external_actions:0}));

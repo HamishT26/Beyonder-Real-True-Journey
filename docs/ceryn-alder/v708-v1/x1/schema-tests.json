@@ -1,0 +1,187 @@
+{
+  "records": [
+    {
+      "id": "CA7081-SCHEMA-positive",
+      "request": {
+        "id": "request-A",
+        "body": "finite-compute",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656"
+      },
+      "ticket": {
+        "nonce": "nonce-schema",
+        "epoch": 0,
+        "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "expires": 5
+      },
+      "expected": "COMMITTED",
+      "actual": {
+        "decision": "COMMITTED",
+        "receipt": {
+          "receipt_id": "synthetic-receipt-1",
+          "sequence": 1,
+          "nonce": "nonce-schema",
+          "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+          "ticket_binding_sha256": "09975871ff351806135771b34c0e6a89954b41343160b2429b90f63bd8086b65",
+          "created_at": 0,
+          "epoch": 0,
+          "expires": 5,
+          "kind": "synthetic_compute_only"
+        },
+        "effects": 1,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "passed": true
+    },
+    {
+      "id": "CA7081-SCHEMA-extra-request-field",
+      "request": {
+        "id": "request-A",
+        "body": "finite-compute",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656",
+        "extra": true
+      },
+      "ticket": {
+        "nonce": "nonce-schema",
+        "epoch": 0,
+        "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "expires": 5
+      },
+      "expected": "MALFORMED_REQUEST",
+      "actual": {
+        "decision": "MALFORMED_REQUEST",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "passed": true
+    },
+    {
+      "id": "CA7081-SCHEMA-extra-ticket-field",
+      "request": {
+        "id": "request-A",
+        "body": "finite-compute",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656"
+      },
+      "ticket": {
+        "nonce": "nonce-schema",
+        "epoch": 0,
+        "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "expires": 5,
+        "extra": true
+      },
+      "expected": "MALFORMED_EVIDENCE",
+      "actual": {
+        "decision": "MALFORMED_EVIDENCE",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "passed": true
+    },
+    {
+      "id": "CA7081-SCHEMA-boolean-epoch",
+      "request": {
+        "id": "request-A",
+        "body": "finite-compute",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656"
+      },
+      "ticket": {
+        "nonce": "nonce-schema",
+        "epoch": true,
+        "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "expires": 5
+      },
+      "expected": "MALFORMED_EVIDENCE",
+      "actual": {
+        "decision": "MALFORMED_EVIDENCE",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "passed": true
+    },
+    {
+      "id": "CA7081-SCHEMA-65-character-digest",
+      "request": {
+        "id": "request-A",
+        "body": "finite-compute",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656"
+      },
+      "ticket": {
+        "nonce": "nonce-schema",
+        "epoch": 0,
+        "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf6560",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "expires": 5
+      },
+      "expected": "MALFORMED_EVIDENCE",
+      "actual": {
+        "decision": "MALFORMED_EVIDENCE",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "passed": true
+    },
+    {
+      "id": "CA7081-SCHEMA-invalid-nonce",
+      "request": {
+        "id": "request-A",
+        "body": "finite-compute",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656"
+      },
+      "ticket": {
+        "nonce": "../outside",
+        "epoch": 0,
+        "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+        "evidence_digest": "8bacbf725d9960fb970bdbb35858bb41db969173b2ed6ddff4aab014096cf656",
+        "scope": "synthetic_compute",
+        "context": "context-A",
+        "expires": 5
+      },
+      "expected": "MALFORMED_EVIDENCE",
+      "actual": {
+        "decision": "MALFORMED_EVIDENCE",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "passed": true
+    }
+  ],
+  "count": 6,
+  "passed": 6,
+  "malformed_subjects": 5
+}

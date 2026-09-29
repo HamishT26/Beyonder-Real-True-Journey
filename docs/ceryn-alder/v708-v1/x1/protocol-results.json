@@ -1,0 +1,1041 @@
+{
+  "records": [
+    {
+      "definition": {
+        "id": "CA7081-S01",
+        "name": "fresh",
+        "events": [
+          "prepare",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S01",
+        "last_decision": "COMMITTED",
+        "effects": 1
+      },
+      "actual": {
+        "id": "CA7081-S01",
+        "name": "fresh",
+        "events": [
+          "prepare",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": "COMMITTED"
+          }
+        ],
+        "last_decision": "COMMITTED",
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "epoch": 0,
+            "kind": "synthetic_compute_only"
+          }
+        ],
+        "retained_failures": [],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S02",
+        "name": "expiry",
+        "events": [
+          "prepare",
+          "expire",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S02",
+        "last_decision": "EXPIRED",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S02",
+        "name": "expiry",
+        "events": [
+          "prepare",
+          "expire",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "expire",
+            "epoch": 0,
+            "now": 5,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 5,
+            "granted": true,
+            "effects": 0,
+            "decision": "EXPIRED"
+          }
+        ],
+        "last_decision": "EXPIRED",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "EXPIRED",
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S03",
+        "name": "revocation",
+        "events": [
+          "prepare",
+          "revoke",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S03",
+        "last_decision": "STALE_EPOCH",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S03",
+        "name": "revocation",
+        "events": [
+          "prepare",
+          "revoke",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "revoke",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 0,
+            "decision": "STALE_EPOCH"
+          }
+        ],
+        "last_decision": "STALE_EPOCH",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "STALE_EPOCH",
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S04",
+        "name": "ABA",
+        "events": [
+          "prepare",
+          "revoke",
+          "grant",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S04",
+        "last_decision": "STALE_EPOCH",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S04",
+        "name": "ABA",
+        "events": [
+          "prepare",
+          "revoke",
+          "grant",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "revoke",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "grant",
+            "epoch": 2,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 2,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "STALE_EPOCH"
+          }
+        ],
+        "last_decision": "STALE_EPOCH",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "STALE_EPOCH",
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S05",
+        "name": "evidence",
+        "events": [
+          "prepare",
+          "replace",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S05",
+        "last_decision": "STALE_EPOCH",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S05",
+        "name": "evidence",
+        "events": [
+          "prepare",
+          "replace",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "replace",
+            "epoch": 1,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 1,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "STALE_EPOCH"
+          }
+        ],
+        "last_decision": "STALE_EPOCH",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "STALE_EPOCH",
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S06",
+        "name": "scope",
+        "events": [
+          "prepare",
+          "change_scope",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S06",
+        "last_decision": "STALE_EPOCH",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S06",
+        "name": "scope",
+        "events": [
+          "prepare",
+          "change_scope",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "change_scope",
+            "epoch": 1,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 1,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "STALE_EPOCH"
+          }
+        ],
+        "last_decision": "STALE_EPOCH",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "STALE_EPOCH",
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S07",
+        "name": "duplicate",
+        "events": [
+          "prepare",
+          "commit",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S07",
+        "last_decision": "DUPLICATE_HISTORY",
+        "effects": 1
+      },
+      "actual": {
+        "id": "CA7081-S07",
+        "name": "duplicate",
+        "events": [
+          "prepare",
+          "commit",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": "COMMITTED"
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": "DUPLICATE_HISTORY"
+          }
+        ],
+        "last_decision": "DUPLICATE_HISTORY",
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "epoch": 0,
+            "kind": "synthetic_compute_only"
+          }
+        ],
+        "retained_failures": [],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S08",
+        "name": "changed_retry",
+        "events": [
+          "prepare",
+          "commit",
+          "alter_payload",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S08",
+        "last_decision": "NONCE_CONFLICT",
+        "effects": 1
+      },
+      "actual": {
+        "id": "CA7081-S08",
+        "name": "changed_retry",
+        "events": [
+          "prepare",
+          "commit",
+          "alter_payload",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": "COMMITTED"
+          },
+          {
+            "event": "alter_payload",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": "NONCE_CONFLICT"
+          }
+        ],
+        "last_decision": "NONCE_CONFLICT",
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "epoch": 0,
+            "kind": "synthetic_compute_only"
+          }
+        ],
+        "retained_failures": [
+          {
+            "decision": "NONCE_CONFLICT",
+            "nonce": "nonce-original",
+            "request_digest": "b6cb2050a06d5d4aae518d9830099c12cdc2eb8d74c45903d43e711fc76325d6",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S09",
+        "name": "historical_after_revoke",
+        "events": [
+          "prepare",
+          "commit",
+          "revoke",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S09",
+        "last_decision": "DUPLICATE_HISTORY",
+        "effects": 1
+      },
+      "actual": {
+        "id": "CA7081-S09",
+        "name": "historical_after_revoke",
+        "events": [
+          "prepare",
+          "commit",
+          "revoke",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": "COMMITTED"
+          },
+          {
+            "event": "revoke",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 1,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 1,
+            "decision": "DUPLICATE_HISTORY"
+          }
+        ],
+        "last_decision": "DUPLICATE_HISTORY",
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "epoch": 0,
+            "kind": "synthetic_compute_only"
+          }
+        ],
+        "retained_failures": [],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S10",
+        "name": "unprepared",
+        "events": [
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S10",
+        "last_decision": "NO_TICKET",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S10",
+        "name": "unprepared",
+        "events": [
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "NO_TICKET"
+          }
+        ],
+        "last_decision": "NO_TICKET",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "NO_TICKET",
+            "nonce": null,
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S11",
+        "name": "invalid_ticket",
+        "events": [
+          "prepare",
+          "corrupt_ticket",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S11",
+        "last_decision": "TICKET_MISMATCH",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S11",
+        "name": "invalid_ticket",
+        "events": [
+          "prepare",
+          "corrupt_ticket",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "corrupt_ticket",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "TICKET_MISMATCH"
+          }
+        ],
+        "last_decision": "TICKET_MISMATCH",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "TICKET_MISMATCH",
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S12",
+        "name": "refresh_after_regrant",
+        "events": [
+          "prepare",
+          "revoke",
+          "grant",
+          "prepare_new",
+          "commit_new"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S12",
+        "last_decision": "COMMITTED",
+        "effects": 1
+      },
+      "actual": {
+        "id": "CA7081-S12",
+        "name": "refresh_after_regrant",
+        "events": [
+          "prepare",
+          "revoke",
+          "grant",
+          "prepare_new",
+          "commit_new"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "revoke",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "grant",
+            "epoch": 2,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "prepare_new",
+            "epoch": 2,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "commit_new",
+            "epoch": 2,
+            "now": 0,
+            "granted": true,
+            "effects": 1,
+            "decision": "COMMITTED"
+          }
+        ],
+        "last_decision": "COMMITTED",
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "nonce-refreshed",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "epoch": 2,
+            "kind": "synthetic_compute_only"
+          }
+        ],
+        "retained_failures": [],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S13",
+        "name": "expiry_minus_one",
+        "events": [
+          "prepare",
+          "near_expiry",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S13",
+        "last_decision": "COMMITTED",
+        "effects": 1
+      },
+      "actual": {
+        "id": "CA7081-S13",
+        "name": "expiry_minus_one",
+        "events": [
+          "prepare",
+          "near_expiry",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "near_expiry",
+            "epoch": 0,
+            "now": 4,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 4,
+            "granted": true,
+            "effects": 1,
+            "decision": "COMMITTED"
+          }
+        ],
+        "last_decision": "COMMITTED",
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "epoch": 0,
+            "kind": "synthetic_compute_only"
+          }
+        ],
+        "retained_failures": [],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S14",
+        "name": "wrong_context",
+        "events": [
+          "prepare",
+          "change_context",
+          "commit"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S14",
+        "last_decision": "REQUEST_BINDING_MISMATCH",
+        "effects": 0
+      },
+      "actual": {
+        "id": "CA7081-S14",
+        "name": "wrong_context",
+        "events": [
+          "prepare",
+          "change_context",
+          "commit"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "change_context",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "REQUEST_BINDING_MISMATCH"
+          }
+        ],
+        "last_decision": "REQUEST_BINDING_MISMATCH",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "REQUEST_BINDING_MISMATCH",
+            "nonce": "nonce-original",
+            "request_digest": "ac3b1f3898f3c40c089fe12acfa5045abb65e3c7fcf55768fd39dfb781f57db5",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    },
+    {
+      "definition": {
+        "id": "CA7081-S15",
+        "name": "correction",
+        "events": [
+          "prepare",
+          "revoke",
+          "commit",
+          "record_correction"
+        ]
+      },
+      "expected": {
+        "id": "CA7081-S15",
+        "last_decision": "STALE_EPOCH",
+        "effects": 0,
+        "corrections": 1
+      },
+      "actual": {
+        "id": "CA7081-S15",
+        "name": "correction",
+        "events": [
+          "prepare",
+          "revoke",
+          "commit",
+          "record_correction"
+        ],
+        "trace": [
+          {
+            "event": "prepare",
+            "epoch": 0,
+            "now": 0,
+            "granted": true,
+            "effects": 0,
+            "decision": "PREPARED"
+          },
+          {
+            "event": "revoke",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 0,
+            "decision": null
+          },
+          {
+            "event": "commit",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 0,
+            "decision": "STALE_EPOCH"
+          },
+          {
+            "event": "record_correction",
+            "epoch": 1,
+            "now": 0,
+            "granted": false,
+            "effects": 0,
+            "decision": null
+          }
+        ],
+        "last_decision": "STALE_EPOCH",
+        "effects": [],
+        "retained_failures": [
+          {
+            "decision": "STALE_EPOCH",
+            "nonce": "nonce-original",
+            "request_digest": "b03053e4f3293f5fcd11ddaf3f91e6ad084514d39ef43a8caa46d8fd0eef355c",
+            "original_success_credit": 0
+          }
+        ],
+        "corrections": [
+          {
+            "failed_index": 0,
+            "original_success_credit": 0,
+            "proposed_next_step": "Separate eligibility refresh before any new ticket."
+          }
+        ],
+        "external_actions": 0,
+        "real_permission_grants": 0
+      },
+      "passed": true
+    }
+  ],
+  "mutant": {
+    "accepted": true,
+    "epoch_prepared": 0,
+    "epoch_current": 2,
+    "claimed_effects": 1,
+    "bug": "Ignores the policy epoch after revoke/regrant.",
+    "original_success_credit": 0
+  },
+  "mutant_detected": true,
+  "tests": 16,
+  "passed": 16,
+  "independent_reproduction": false
+}
