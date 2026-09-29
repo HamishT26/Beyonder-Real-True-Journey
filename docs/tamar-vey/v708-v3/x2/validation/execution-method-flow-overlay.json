@@ -1,0 +1,34 @@
+{
+  "schema": "ghc.family.method-flow-overlay.v1",
+  "owner": "Tamar Vey",
+  "phase": "v708-v3",
+  "stage": "x2_execution_recovery",
+  "base_counts": {"methods":14,"witnesses":766,"passing_witnesses":608,"failed_witnesses":158,"effective_negatives":158},
+  "methods": [
+    {
+      "method_id": "TV7083-X2-M015",
+      "key": "opaque-build-cleanup-adjudication",
+      "failure_signature": "A conservative cleanup removed the generated core after an opaque execution had materialized the wider X2 tree.",
+      "recovery": "Restore only the exact deterministic core from the current builder source and withhold full-execution credit until current-core checks pass.",
+      "validation_witness_ids": ["TV7083-X2-EXEC-N004-FAILED","TV7083-X2-EXEC-N004-RECOVERY"],
+      "retained_negative_ids": ["TV7083-X2-EXEC-N004"]
+    },
+    {
+      "method_id": "TV7083-X2-M016",
+      "key": "nonempty-tree-rerun-guard",
+      "failure_signature": "A full builder rerun was attempted against a nonempty X2 tree.",
+      "recovery": "Honor the guard, do not overwrite evidence, and use the separately named narrow core-restoration path.",
+      "validation_witness_ids": ["TV7083-X2-EXEC-N005-FAILED","TV7083-X2-EXEC-N005-RECOVERY"],
+      "retained_negative_ids": ["TV7083-X2-EXEC-N005"]
+    }
+  ],
+  "witnesses": [
+    {"witness_id":"TV7083-X2-EXEC-N004-FAILED","method_id":"TV7083-X2-M015","result":"fail","zero_credit":true},
+    {"witness_id":"TV7083-X2-EXEC-N004-RECOVERY","method_id":"TV7083-X2-M015","result":"pass","same_owner_only":true},
+    {"witness_id":"TV7083-X2-EXEC-N005-FAILED","method_id":"TV7083-X2-M016","result":"fail","zero_credit":true},
+    {"witness_id":"TV7083-X2-EXEC-N005-RECOVERY","method_id":"TV7083-X2-M016","result":"pass","same_owner_only":true}
+  ],
+  "overlay_counts": {"methods":2,"witnesses":4,"passing_witnesses":2,"failed_witnesses":2,"effective_negatives":2},
+  "effective_counts": {"methods":16,"witnesses":770,"passing_witnesses":610,"failed_witnesses":160,"effective_negatives":160},
+  "boundary": "Neither recovery erases its failed witness or establishes full-builder success, independent reproduction, or authority."
+}

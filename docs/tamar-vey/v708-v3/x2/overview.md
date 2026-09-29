@@ -1,0 +1,9 @@
+# Tamar Vey v708-v3 X2 finite convex-geometry evidence
+
+Finite synthetic same-owner poset-derived convex-geometry and antimatroid software evidence only. It establishes no real participant, observation, measurement, allocation, classification, identity decision, professional act, legal or cultural interpretation, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, consciousness or personhood, Theory-of-Everything proof, canon, or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
+
+X1 is immutable at `525fd4eaaa73dc74a66b19a63925438391ea9dd3`. This X2 adds exact rooted-circuit catalogues, implication bases, basic words, shelling checks, feasible ranks and prefix traces, deletion minors, restriction traces, correction lineage, and an accessible dimensionless coordinate projection across fifteen finite synthetic posets.
+
+The 150 valid operation contracts match a separately structured finite oracle. All 150 paired invalid subjects remain failed at zero subject credit beside 150 passing refusal checks, 150 safe-now readbacks, and 150 CLEAN/FIX/REFINE roundtrips. Five sanitized Teren Serein X1 advisory seeds were adopted as bounded X2 counterexample tests with zero X1 completion, independent-reproduction, or authority credit.
+
+The expanded X2 advisory request remained unsent. One direct native conversation-route attempt was rejected because the dynamic thread tool was unavailable on this host. The newest user control prohibited browser fallback, so X2 closed independently without a resend and without advisory credit. This route failure remains a zero-credit negative beside its non-delivery receipt. No canonical invocation or successor contact has occurred.
