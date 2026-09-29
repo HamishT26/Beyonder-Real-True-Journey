@@ -1,0 +1,8 @@
+'use strict';
+const C=require('./common.txt');C.admitted();if(C.fs.existsSync(C.BANK+'/final-receipt.json'))throw Error('FINAL_ALREADY_SEALED');const files=C.walk(C.ROOT+'/code').filter(p=>p.endsWith('.txt')),retained=['code/x2-fixtures.txt'];
+const syntax=files.map(p=>{const r=C.cp.spawnSync(process.execPath,['--check'],{input:C.fs.readFileSync(p),encoding:'utf8'});if(r.status!==0)throw Error('SYNTAX '+r.stderr);return{path:C.path.relative(C.ROOT,p).replaceAll('\\','/'),sha256:C.hash(C.fs.readFileSync(p)),exit:0};});
+const replace=(p,x)=>C.fs.writeFileSync(C.ROOT+'/'+p,JSON.stringify(x,null,2)+'\n');
+replace('final/executable-allowlist.json',{syntax_only_paths:syntax.map(x=>x.path).filter(p=>!retained.includes(p)),retained_failed_helpers:retained,human_text_and_retained_source_helpers_not_executed:true,domain_execution_during_canonical:false});
+replace('final/static-validation.json',{syntax,all_exit_zero:true,domain_execution:false,prepublication_revision:'The metadata validator reads each session advisory schema explicitly and batches committed blob reads.'});
+const seal=C.read('final/content-seal.json');seal.targets=seal.targets.map(t=>({path:t.path,bytes:C.fs.statSync(C.ROOT+'/'+t.path).size,sha256:C.hash(C.fs.readFileSync(C.ROOT+'/'+t.path))}));replace('final/content-seal.json',seal);
+console.log(JSON.stringify({syntax_checks:syntax.length,content_seals:seal.targets.length,domain_execution:false}));
