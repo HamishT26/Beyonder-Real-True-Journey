@@ -1,0 +1,2 @@
+'use strict';
+const C=require('./common.txt');C.admitted();const s=C.read('x2/refinement-results.json'),a=C.read('x2/adaptive-results.json');if(s.schedules.length!==6||a.checks.length!==8)throw Error('SAVED_INVENTORY');console.log(JSON.stringify({schedules:s.schedules.length,correct_effect_counts:s.schedules.map(x=>x.correct.effects.length),mutant_duplicate_orders:s.schedules.filter(x=>x.mutant_detected).length,cold_replay_totals:a.totals,domain_execution:false,domain_replays:0}));

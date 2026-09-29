@@ -1,0 +1,10 @@
+'use strict';
+const C=require('./common.txt'),P=require('./protocol-v2.txt');
+function recover(checkpoint,tail,head,issuance){
+ const invalid=()=>({ok:false,decision:'INCOMPLETE_RECOVERY_EVIDENCE',new_admissions_blocked:true,state:null});
+ if(!checkpoint||checkpoint.namespace!=='fixture:A'||checkpoint.sequence!==0||!head||head.namespace!==checkpoint.namespace||head.sequence!==1||!Array.isArray(tail)||tail.length!==1||!Array.isArray(issuance)||issuance.length!==2)return invalid();
+ const c=tail[0];if(!c||c.namespace!==checkpoint.namespace||c.sequence!==1||C.hash(c)!==head.digest||!P.validRequest(c.request)||!P.validTicket(c.ticket)||c.receipt?.sequence!==1||c.receipt.nonce!==c.ticket.nonce||c.receipt.request_digest!==C.hash(c.request)||c.receipt.ticket_binding_sha256!==C.hash(c.ticket)||c.ticket.request_digest!==C.hash(c.request)||!issuance.every(P.validTicket)||new Set(issuance.map(t=>t.nonce)).size!==2||!issuance.some(t=>C.canonical(t)===C.canonical(c.ticket)))return invalid();
+ const state=P.initial();Object.assign(state,{epoch:7,now:3,expires:10,scope:c.ticket.scope,context:c.ticket.context,evidence_digest:c.ticket.evidence_digest});state.tickets=new Map(issuance.map(t=>[t.nonce,structuredClone(t)]));state.receipts=new Map([[c.ticket.nonce,structuredClone(c.receipt)]]);state.effects=[structuredClone(c.receipt)];
+ return{ok:true,decision:'RECOVERED_PROJECTION_ONLY',new_effects:0,state};
+}
+module.exports={recover};

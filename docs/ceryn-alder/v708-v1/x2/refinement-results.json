@@ -1,0 +1,730 @@
+{
+  "plan_sha256": "326d11aa005dd872be562854337c2429f013c7ad585745d2962d476f53146582",
+  "protocol_sha256": "36030fac0166406fcb7bcafb3d42bcff891db30067c15c61edf9689cb5e519ad",
+  "schedules": [
+    {
+      "correct": {
+        "order": [
+          "Ac",
+          "Aa",
+          "Bc",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Bc",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Ac",
+          "Aa",
+          "Bc",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Bc",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "NONCE_CONFLICT",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": false
+    },
+    {
+      "correct": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    },
+    {
+      "correct": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    },
+    {
+      "correct": {
+        "order": [
+          "Bc",
+          "Ba",
+          "Ac",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Ac",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Bc",
+          "Ba",
+          "Ac",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Ac",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "NONCE_CONFLICT",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": false
+    },
+    {
+      "correct": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    },
+    {
+      "correct": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    }
+  ],
+  "changes": [
+    {
+      "name": "revoke-after-check",
+      "result": {
+        "decision": "STALE_EPOCH",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effects": [],
+      "mutantEffects": [
+        {
+          "nonce": "state-change",
+          "kind": "faulty_cached_revoked_effect"
+        }
+      ]
+    },
+    {
+      "name": "evidence-replaced",
+      "result": {
+        "decision": "CURRENT_BINDING_MISMATCH",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effects": [],
+      "mutantEffects": []
+    },
+    {
+      "name": "context-replaced",
+      "result": {
+        "decision": "CURRENT_BINDING_MISMATCH",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effects": [],
+      "mutantEffects": []
+    }
+  ],
+  "correction": {
+    "first": {
+      "decision": "NO_TICKET",
+      "receipt": null,
+      "effects": 0,
+      "historical_only": false,
+      "new_permission_granted": false
+    },
+    "second": {
+      "decision": "COMMITTED",
+      "receipt": {
+        "receipt_id": "synthetic-receipt-1",
+        "sequence": 1,
+        "nonce": "correction-new",
+        "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+        "ticket_binding_sha256": "e75c7eade0db1200903c10c087acd624e34d167b224095ba38a5f0b0cb14c57b",
+        "created_at": 0,
+        "epoch": 2,
+        "expires": 5,
+        "kind": "synthetic_compute_only"
+      },
+      "effects": 1,
+      "historical_only": false,
+      "new_permission_granted": false
+    },
+    "original": [
+      {
+        "decision": "NO_TICKET",
+        "nonce": null,
+        "original_success_credit": 0
+      }
+    ],
+    "failures": [
+      {
+        "decision": "NO_TICKET",
+        "nonce": null,
+        "original_success_credit": 0
+      }
+    ],
+    "corrections": [
+      {
+        "original_failure_digest": "6e3cf593053e59c9453d5573e2132afc445cba8b9ac4160e3e4719c635ade509",
+        "original_success_credit": 0,
+        "description": "Prepare a separately valid current ticket."
+      }
+    ],
+    "effects": [
+      {
+        "receipt_id": "synthetic-receipt-1",
+        "sequence": 1,
+        "nonce": "correction-new",
+        "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+        "ticket_binding_sha256": "e75c7eade0db1200903c10c087acd624e34d167b224095ba38a5f0b0cb14c57b",
+        "created_at": 0,
+        "epoch": 2,
+        "expires": 5,
+        "kind": "synthetic_compute_only"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "id": "CA7081-X2-R1-ALL-SIX-ORDERS",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-0-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-0-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-1-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-1-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-2-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-2-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-3-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-3-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-4-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-4-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-5-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-5-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-revoke-after-check",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-REVOKE-MUTANT-DETECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-evidence-replaced",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-context-replaced",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-CORRECTION-NONERASURE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-EQUAL-NUMERIC-ROWS",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-DISTINCT-REQUESTS",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-EQUAL-OUTPUT-REFUSAL",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-EQUAL-OUTPUT-POSITIVE",
+      "passed": true
+    }
+  ],
+  "passed": 22,
+  "concurrency_scope": "Six deterministic serial orders; no real concurrent runtime or durable storage claim.",
+  "external_actions": 0
+}

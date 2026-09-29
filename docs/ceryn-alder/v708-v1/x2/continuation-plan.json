@@ -1,0 +1,114 @@
+{
+  "schema": "ceryn.x2.refinement-plan.v1",
+  "frozen_before_execution": true,
+  "predecessor": "f75284db363bbe987a5aa245760453a63cb00631",
+  "concurrency": {
+    "actors": [
+      "A",
+      "B"
+    ],
+    "shared_nonce": "continuation-one",
+    "check_use_orders": [
+      [
+        "Ac",
+        "Aa",
+        "Bc",
+        "Ba"
+      ],
+      [
+        "Ac",
+        "Bc",
+        "Aa",
+        "Ba"
+      ],
+      [
+        "Ac",
+        "Bc",
+        "Ba",
+        "Aa"
+      ],
+      [
+        "Bc",
+        "Ba",
+        "Ac",
+        "Aa"
+      ],
+      [
+        "Bc",
+        "Ac",
+        "Ba",
+        "Aa"
+      ],
+      [
+        "Bc",
+        "Ac",
+        "Aa",
+        "Ba"
+      ]
+    ],
+    "correct_effects": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "cached_mutant_effects": [
+      1,
+      2,
+      2,
+      1,
+      2,
+      2
+    ],
+    "check_has_no_effect": true,
+    "apply_is_one_synchronous_modeled_transition": true
+  },
+  "equal_output": {
+    "model": "wave",
+    "variant": 0,
+    "steps": 11,
+    "parameters": [
+      0.21,
+      0.22
+    ],
+    "numeric_rows_equal": true,
+    "request_digests_equal": false,
+    "wrong_request_decision": "REQUEST_BINDING_MISMATCH",
+    "new_model_fixtures": 2
+  },
+  "state_change_cases": [
+    {
+      "id": "revoke-after-check",
+      "expected": "STALE_EPOCH",
+      "effects": 0
+    },
+    {
+      "id": "evidence-replaced",
+      "expected": "CURRENT_BINDING_MISMATCH",
+      "effects": 0
+    },
+    {
+      "id": "context-replaced",
+      "expected": "CURRENT_BINDING_MISMATCH",
+      "effects": 0
+    },
+    {
+      "id": "append-correction",
+      "expected": "ORIGINAL_RETAINED",
+      "effects": 1
+    }
+  ],
+  "preflight_fixture": "planning/compatibility-preflight-plan.json",
+  "extra_guides": 2,
+  "extra_metadata_callers": 1,
+  "boundaries": "Finite serial interleavings only; no multithreaded runtime, durable transaction, trusted issuer, cryptographic signature, real permission or independent reproduction claim.",
+  "continuation_id": "CA7081-X2-R1",
+  "correction_of": "x2/refinement-plan.json",
+  "failed_subject": "CA7081-X2-N10",
+  "original_success_credit": 0,
+  "initial_epoch": 2,
+  "initial_context": "context-R1",
+  "recovery_boundary": "No replay of either completed session; original helper remains unchanged. Unstored earlier observations receive no passing credit."
+}

@@ -1,0 +1,353 @@
+{
+  "changes": [
+    {
+      "name": "revoke-after-check",
+      "result": {
+        "decision": "STALE_EPOCH",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effects": [],
+      "mutantEffects": [
+        {
+          "nonce": "state-change",
+          "kind": "faulty_cached_revoked_effect"
+        }
+      ]
+    },
+    {
+      "name": "evidence-replaced",
+      "result": {
+        "decision": "CURRENT_BINDING_MISMATCH",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effects": [],
+      "mutantEffects": []
+    },
+    {
+      "name": "context-replaced",
+      "result": {
+        "decision": "CURRENT_BINDING_MISMATCH",
+        "receipt": null,
+        "effects": 0,
+        "historical_only": false,
+        "new_permission_granted": false
+      },
+      "effects": [],
+      "mutantEffects": []
+    }
+  ],
+  "correction": {
+    "first": {
+      "decision": "NO_TICKET",
+      "receipt": null,
+      "effects": 0,
+      "historical_only": false,
+      "new_permission_granted": false
+    },
+    "second": {
+      "decision": "COMMITTED",
+      "receipt": {
+        "receipt_id": "synthetic-receipt-1",
+        "sequence": 1,
+        "nonce": "correction-new",
+        "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+        "ticket_binding_sha256": "e75c7eade0db1200903c10c087acd624e34d167b224095ba38a5f0b0cb14c57b",
+        "created_at": 0,
+        "epoch": 2,
+        "expires": 5,
+        "kind": "synthetic_compute_only"
+      },
+      "effects": 1,
+      "historical_only": false,
+      "new_permission_granted": false
+    },
+    "original": [
+      {
+        "decision": "NO_TICKET",
+        "nonce": null,
+        "original_success_credit": 0
+      }
+    ],
+    "failures": [
+      {
+        "decision": "NO_TICKET",
+        "nonce": null,
+        "original_success_credit": 0
+      }
+    ],
+    "corrections": [
+      {
+        "original_failure_digest": "6e3cf593053e59c9453d5573e2132afc445cba8b9ac4160e3e4719c635ade509",
+        "original_success_credit": 0,
+        "description": "Prepare a separately valid current ticket."
+      }
+    ],
+    "effects": [
+      {
+        "receipt_id": "synthetic-receipt-1",
+        "sequence": 1,
+        "nonce": "correction-new",
+        "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+        "ticket_binding_sha256": "e75c7eade0db1200903c10c087acd624e34d167b224095ba38a5f0b0cb14c57b",
+        "created_at": 0,
+        "epoch": 2,
+        "expires": 5,
+        "kind": "synthetic_compute_only"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "id": "CA7081-X2-R1-ALL-SIX-ORDERS",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-0-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-0-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-1-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-1-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-2-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-2-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-3-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-3-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-4-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-4-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-5-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-5-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-revoke-after-check",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-REVOKE-MUTANT-DETECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-evidence-replaced",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-context-replaced",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-CORRECTION-NONERASURE",
+      "passed": true
+    }
+  ],
+  "rows": [
+    {
+      "procedure": "CA7081-X2-R1-ALL-SIX-ORDERS",
+      "expected": "All six linear extensions",
+      "observed": "[[\"Ac\",\"Aa\",\"Bc\",\"Ba\"],[\"Ac\",\"Bc\",\"Aa\",\"Ba\"],[\"Ac\",\"Bc\",\"Ba\",\"Aa\"],[\"Bc\",\"Ac\",\"Aa\",\"Ba\"],[\"Bc\",\"Ac\",\"Ba\",\"Aa\"],[\"Bc\",\"Ba\",\"Ac\",\"Aa\"]]",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-0-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-0-MUTANT-ORACLE",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-1-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-1-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-1-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-1-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-2-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-2-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-2-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-2-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-3-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-3-MUTANT-ORACLE",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-4-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-4-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-4-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-4-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-5-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-5-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-5-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-5-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-revoke-after-check-SUBJECT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "STALE_EPOCH",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-revoke-after-check-SUBJECT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-revoke-after-check",
+      "expected": "{\"decision\":\"STALE_EPOCH\",\"effects\":0}",
+      "observed": "{\"decision\":\"STALE_EPOCH\",\"receipt\":null,\"effects\":0,\"historical_only\":false,\"new_permission_granted\":false}",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-REVOKE-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Cached permission emitted an effect after revoke",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-REVOKE-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-REVOKE-MUTANT-DETECT",
+      "expected": "Zero correct effects; one mutant effect",
+      "observed": "{\"correct\":0,\"mutant\":1}",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-evidence-replaced-SUBJECT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "CURRENT_BINDING_MISMATCH",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-evidence-replaced-SUBJECT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-evidence-replaced",
+      "expected": "{\"decision\":\"CURRENT_BINDING_MISMATCH\",\"effects\":0}",
+      "observed": "{\"decision\":\"CURRENT_BINDING_MISMATCH\",\"receipt\":null,\"effects\":0,\"historical_only\":false,\"new_permission_granted\":false}",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-context-replaced-SUBJECT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "CURRENT_BINDING_MISMATCH",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-context-replaced-SUBJECT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-context-replaced",
+      "expected": "{\"decision\":\"CURRENT_BINDING_MISMATCH\",\"effects\":0}",
+      "observed": "{\"decision\":\"CURRENT_BINDING_MISMATCH\",\"receipt\":null,\"effects\":0,\"historical_only\":false,\"new_permission_granted\":false}",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-CORRECTION-ORIGINAL",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "NO_TICKET",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-CORRECTION-ORIGINAL"
+    },
+    {
+      "procedure": "CA7081-X2-R1-CORRECTION-NONERASURE",
+      "expected": "Original refusal retained and one separately valid effect",
+      "observed": "{\"preserved\":true,\"first\":\"NO_TICKET\",\"second\":\"COMMITTED\",\"effects\":1}",
+      "result": "pass"
+    }
+  ],
+  "continuation": "CA7081-X2-R1"
+}

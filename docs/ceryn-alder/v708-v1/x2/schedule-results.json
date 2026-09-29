@@ -1,0 +1,695 @@
+{
+  "schedules": [
+    {
+      "correct": {
+        "order": [
+          "Ac",
+          "Aa",
+          "Bc",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Bc",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Ac",
+          "Aa",
+          "Bc",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Bc",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "NONCE_CONFLICT",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": false
+    },
+    {
+      "correct": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    },
+    {
+      "correct": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Ac",
+          "Bc",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    },
+    {
+      "correct": {
+        "order": [
+          "Bc",
+          "Ba",
+          "Ac",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Ac",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Bc",
+          "Ba",
+          "Ac",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Ac",
+            "decision": "ALREADY_CONSUMED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "NONCE_CONFLICT",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": false
+    },
+    {
+      "correct": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Ba",
+          "Aa"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    },
+    {
+      "correct": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "COMMITTED",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "DUPLICATE_HISTORY",
+            "effects": 1
+          }
+        ],
+        "effects": [
+          {
+            "receipt_id": "synthetic-receipt-1",
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "ticket_binding_sha256": "1c2e49d2b9afd754c3e3681e4d9b1003983deb7cc2a8ec5d1481396058bf0609",
+            "created_at": 0,
+            "epoch": 2,
+            "expires": 5,
+            "kind": "synthetic_compute_only"
+          }
+        ]
+      },
+      "mutant": {
+        "order": [
+          "Bc",
+          "Ac",
+          "Aa",
+          "Ba"
+        ],
+        "trace": [
+          {
+            "event": "Bc",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Ac",
+            "decision": "CHECKED",
+            "effects": 0
+          },
+          {
+            "event": "Aa",
+            "decision": "MUTANT_EFFECT",
+            "effects": 1
+          },
+          {
+            "event": "Ba",
+            "decision": "MUTANT_EFFECT",
+            "effects": 2
+          }
+        ],
+        "effects": [
+          {
+            "sequence": 1,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          },
+          {
+            "sequence": 2,
+            "nonce": "continuation-one",
+            "request_digest": "f423d52d5c00d8cd7921b782f864fbd70664a63de0a46b0a822ba2a31412a722",
+            "kind": "deliberately_faulty_cached_effect"
+          }
+        ]
+      },
+      "mutant_detected": true
+    }
+  ],
+  "tests": [
+    {
+      "id": "CA7081-X2-R1-ALL-SIX-ORDERS",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-0-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-0-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-1-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-1-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-2-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-2-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-3-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-3-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-4-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-4-MUTANT-ORACLE",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-5-CORRECT",
+      "passed": true
+    },
+    {
+      "id": "CA7081-X2-R1-SCHEDULE-5-MUTANT-ORACLE",
+      "passed": true
+    }
+  ],
+  "rows": [
+    {
+      "procedure": "CA7081-X2-R1-ALL-SIX-ORDERS",
+      "expected": "All six linear extensions",
+      "observed": "[[\"Ac\",\"Aa\",\"Bc\",\"Ba\"],[\"Ac\",\"Bc\",\"Aa\",\"Ba\"],[\"Ac\",\"Bc\",\"Ba\",\"Aa\"],[\"Bc\",\"Ac\",\"Aa\",\"Ba\"],[\"Bc\",\"Ac\",\"Ba\",\"Aa\"],[\"Bc\",\"Ba\",\"Ac\",\"Aa\"]]",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-0-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-0-MUTANT-ORACLE",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-1-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-1-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-1-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-1-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-2-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-2-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-2-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-2-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-3-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-3-MUTANT-ORACLE",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-4-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-4-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-4-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-4-MUTANT"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-5-CORRECT",
+      "expected": "1",
+      "observed": "1",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-5-MUTANT-ORACLE",
+      "expected": "2",
+      "observed": "2",
+      "result": "pass"
+    },
+    {
+      "procedure": "CA7081-X2-R1-SCHEDULE-5-MUTANT",
+      "expected": "Admissible current fixture and at most one effect",
+      "observed": "Two actual synthetic appends for one nonce",
+      "result": "fail",
+      "negative": "CA7081-X2-R1-SCHEDULE-5-MUTANT"
+    }
+  ],
+  "continuation": "CA7081-X2-R1"
+}
