@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghc.nexus.capsule.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "capsule_id",
+    "source_commit",
+    "source_manifest_sha256",
+    "classification",
+    "created_at",
+    "expires_at",
+    "max_cost_usd",
+    "operations",
+    "files",
+    "authority_claims"
+  ],
+  "properties": {
+    "schema_version": { "const": "ghc.nexus.capsule.v1" },
+    "capsule_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+    "source_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "source_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "classification": { "enum": ["public", "internal_sanitized"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "max_cost_usd": { "type": "number", "minimum": 0, "maximum": 50 },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["validate", "simulate", "summarize", "render_static"]
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": { "const": false },
+      "minProperties": 1
+    }
+  }
+}

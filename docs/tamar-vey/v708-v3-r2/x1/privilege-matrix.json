@@ -1,0 +1,36 @@
+{
+  "schema": "ghc.privilege.non-equivalence.v1",
+  "dimensions": [
+    {
+      "id": "app_mode",
+      "observed": "full_access",
+      "grants": ["tool_capability"],
+      "does_not_grant": ["windows_admin", "cloud_root"]
+    },
+    {
+      "id": "sandbox_mode",
+      "observed": "danger-full-access",
+      "grants": ["filesystem_capability"],
+      "does_not_grant": ["windows_admin", "external_authority"]
+    },
+    {
+      "id": "windows_sandbox",
+      "observed": "elevated",
+      "grants": ["configured_elevated_sandbox"],
+      "does_not_grant": ["proof_of_child_process_token"]
+    },
+    {
+      "id": "windows_process_token",
+      "observed": "not_probed",
+      "grants": [],
+      "does_not_grant": ["inferred_admin"]
+    },
+    {
+      "id": "managed_cloud",
+      "observed": "separate_linux_runtime",
+      "grants": ["configured_cloud_runtime"],
+      "does_not_grant": ["local_d_drive_access", "windows_admin"]
+    }
+  ],
+  "all_equivalent": false
+}

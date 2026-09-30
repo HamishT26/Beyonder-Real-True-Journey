@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghc.environment.drift.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "desired_digest",
+    "observed_digest",
+    "observations_current",
+    "drift",
+    "disposition"
+  ],
+  "properties": {
+    "schema": { "const": "ghc.environment.drift.v1" },
+    "desired_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "observed_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "observations_current": { "type": "boolean" },
+    "drift": { "type": "boolean" },
+    "disposition": {
+      "enum": ["completed", "represented", "open_gap", "exact_gate"]
+    }
+  }
+}
