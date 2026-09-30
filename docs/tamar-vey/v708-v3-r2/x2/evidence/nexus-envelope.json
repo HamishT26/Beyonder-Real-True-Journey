@@ -1,0 +1,102 @@
+{
+  "schema": "ghc.local-cloud.nexus-envelope.v1",
+  "source": {
+    "ok": true,
+    "errors": [],
+    "observed": {
+      "source_commit": "83408624ca62960d0ead3a6868afba0d0c274e73",
+      "source_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "payload_sha256": "1aba591ad58b48e1075176ded32dcea9c1fb168ddc2b54fffc9ea73d4d3c8280"
+    }
+  },
+  "payload": {
+    "kind": "sanitized_fixture",
+    "rows": [1, 2, 3]
+  },
+  "environment": {
+    "schema": "ghc.environment.drift-report.v1",
+    "fields": [
+      {
+        "key": "network_policy",
+        "requested": "managed",
+        "observed": "unknown",
+        "status": "drift"
+      },
+      {
+        "key": "node_major",
+        "requested": 26,
+        "observed": 26,
+        "status": "matched"
+      },
+      {
+        "key": "python_minor",
+        "requested": "3.12",
+        "observed": "3.12",
+        "status": "matched"
+      },
+      {
+        "key": "workspace_mode",
+        "requested": "review_only",
+        "observed": null,
+        "status": "unknown"
+      }
+    ],
+    "counts": {
+      "matched": 2,
+      "drift": 1,
+      "unknown": 1,
+      "unexpected_observation": 0
+    },
+    "exact_match": false
+  },
+  "route": {
+    "prepared": true,
+    "sent": true,
+    "acknowledged": true,
+    "recipient_completed": false,
+    "duplicate_count": 0,
+    "errors": [],
+    "ok": true
+  },
+  "reconciliation": {
+    "schema": "ghc.setup.reconciliation.v1",
+    "completed": [
+      "bounded-health-check",
+      "dependencies-installed",
+      "environment-created"
+    ],
+    "failures": [
+      {
+        "id": "default-sandbox-loopback",
+        "status": "retained_failure",
+        "credit": 0
+      }
+    ],
+    "actions": [
+      {
+        "id": "environment-created",
+        "action": "retain",
+        "reason": "already_completed"
+      },
+      {
+        "id": "dependencies-installed",
+        "action": "retain",
+        "reason": "already_completed"
+      },
+      {
+        "id": "bounded-health-check",
+        "action": "execute_once",
+        "reason": "missing_current_step"
+      },
+      {
+        "id": "publish-review-draft",
+        "action": "hold",
+        "reason": "dependency_missing"
+      }
+    ],
+    "restart_all": false
+  },
+  "deployment_claim": false,
+  "authority_claim": false,
+  "envelope_sha256": "2a8bb8275a2271bcb376885837558fbaeeb14b87978fcfa214bfeb4faf1cbbad"
+}

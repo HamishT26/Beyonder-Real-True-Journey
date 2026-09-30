@@ -1,0 +1,38 @@
+{
+  "schema": "ghc.setup.reconciliation.v1",
+  "completed": [
+    "bounded-health-check",
+    "dependencies-installed",
+    "environment-created"
+  ],
+  "failures": [
+    {
+      "id": "default-sandbox-loopback",
+      "status": "retained_failure",
+      "credit": 0
+    }
+  ],
+  "actions": [
+    {
+      "id": "environment-created",
+      "action": "retain",
+      "reason": "already_completed"
+    },
+    {
+      "id": "dependencies-installed",
+      "action": "retain",
+      "reason": "already_completed"
+    },
+    {
+      "id": "bounded-health-check",
+      "action": "execute_once",
+      "reason": "missing_current_step"
+    },
+    {
+      "id": "publish-review-draft",
+      "action": "hold",
+      "reason": "dependency_missing"
+    }
+  ],
+  "restart_all": false
+}

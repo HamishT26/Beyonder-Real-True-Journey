@@ -1,0 +1,30 @@
+{
+  "inspect_repository": {
+    "allowed": true,
+    "reason": "all_observed_grants_present",
+    "required": ["workspace_read"],
+    "missing": [],
+    "requested_labels_are_not_observed_grants": true
+  },
+  "write_owner_repository": {
+    "allowed": true,
+    "reason": "all_observed_grants_present",
+    "required": ["workspace_write", "owner_scope"],
+    "missing": [],
+    "requested_labels_are_not_observed_grants": true
+  },
+  "publish_cloud_environment": {
+    "allowed": false,
+    "reason": "missing_observed_grant",
+    "required": ["cloud_publish", "human_authorization"],
+    "missing": ["human_authorization"],
+    "requested_labels_are_not_observed_grants": true
+  },
+  "mutate_host_security": {
+    "allowed": false,
+    "reason": "missing_observed_grant",
+    "required": ["host_admin_token", "human_authorization"],
+    "missing": ["host_admin_token", "human_authorization"],
+    "requested_labels_are_not_observed_grants": true
+  }
+}

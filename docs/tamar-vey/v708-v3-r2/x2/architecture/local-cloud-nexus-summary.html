@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tamar v708-v3-r2 Local/Cloud Nexus summary</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        max-width: 76rem;
+        margin: auto;
+        padding: 2rem;
+        line-height: 1.55;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid currentColor;
+        padding: 0.55rem;
+        text-align: left;
+        vertical-align: top;
+      }
+      code {
+        overflow-wrap: anywhere;
+      }
+      .gate {
+        border-inline-start: 0.35rem solid #b45309;
+        padding-inline-start: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Local/Cloud Nexus — bounded architecture summary</h1>
+      <p>
+        This is a static, same-owner design report. It is not a deployed
+        operating system, an autonomous agent router, independent reproduction,
+        or authority.
+      </p>
+      <h2>Data path</h2>
+      <ol>
+        <li>
+          Local owner lane freezes a source commit and normalized manifest.
+        </li>
+        <li>
+          A sanitized capsule binds expected source, manifest, and payload
+          digests.
+        </li>
+        <li>The cloud runtime performs bounded checks on the capsule only.</li>
+        <li>
+          Returned artifacts enter local quarantine and require explicit review.
+        </li>
+        <li>
+          No cloud result automatically merges, publishes, routes, or grants
+          authority.
+        </li>
+      </ol>
+      <h2>Truth separation</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>What can be established</th>
+            <th>What does not follow</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Source</td>
+            <td>Expected commit and manifest</td>
+            <td>Correctness of source claims</td>
+          </tr>
+          <tr>
+            <td>Environment</td>
+            <td>Requested and observed fields</td>
+            <td>Unobserved network or privilege state</td>
+          </tr>
+          <tr>
+            <td>Delivery</td>
+            <td>A send was accepted and acknowledged</td>
+            <td>Recipient completion</td>
+          </tr>
+          <tr>
+            <td>Repository</td>
+            <td>Bounded owner artifacts and tests</td>
+            <td>Production or independent validation</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Current exact gates</h2>
+      <p class="gate">
+        The 48-position roster projection reaches Ceryn Alder at v725-v8, not
+        the historically stated Eiren Kestrel endpoint. Future Dot labels remain
+        uninstantiated placeholders. Cloud network-policy metadata is not
+        observed.
+      </p>
+      <h2>Terminal boundary</h2>
+      <p><strong>NOT_READY_FOR_STAGE_20.</strong></p>
+    </main>
+  </body>
+</html>

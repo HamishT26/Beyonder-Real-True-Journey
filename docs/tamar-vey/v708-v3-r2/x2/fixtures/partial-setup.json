@@ -1,0 +1,34 @@
+{
+  "schema": "ghc.setup.fixture.v1",
+  "prior": {
+    "completed": ["environment-created", "dependencies-installed"],
+    "failures": [
+      {
+        "id": "default-sandbox-loopback",
+        "status": "retained_failure",
+        "credit": 0
+      }
+    ]
+  },
+  "plan": [
+    {
+      "id": "environment-created",
+      "synthetic_result": "success"
+    },
+    {
+      "id": "dependencies-installed",
+      "dependencies": ["environment-created"],
+      "synthetic_result": "success"
+    },
+    {
+      "id": "bounded-health-check",
+      "dependencies": ["dependencies-installed"],
+      "synthetic_result": "success"
+    },
+    {
+      "id": "publish-review-draft",
+      "dependencies": ["human-publication-approval"],
+      "synthetic_result": "success"
+    }
+  ]
+}

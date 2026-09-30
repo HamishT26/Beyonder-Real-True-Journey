@@ -1,0 +1,87 @@
+{
+  "schema": "ghc.tamar.v708-v3-r2.method-flow.v1",
+  "stage": "x2",
+  "inherited_method_flow": "../x1/method-flow.json",
+  "methods": [
+    {
+      "id": "TV7083R2-X2-M001",
+      "trigger": "bounded Teren X2 response read",
+      "failed_subject": "four-turn native response projection",
+      "failure": "display output exceeded the result window",
+      "original_credit": 0,
+      "recovery": "use the current-thread preview already included in the same read result; no second reread",
+      "recovery_credit": "bounded_read_only",
+      "recurrence_guard": "request one newest completed turn when only the newest response is needed",
+      "rollback": "no task, message, or repository state changed"
+    },
+    {
+      "id": "TV7083R2-X2-M002",
+      "trigger": "environment comparison",
+      "failed_subject": "requested network and workspace fields",
+      "failure": "observed cloud metadata was unknown or absent rather than equal to the requested profile",
+      "original_credit": 0,
+      "recovery": "retain field-level drift and unknown classifications without changing the published environment",
+      "recovery_credit": "diagnostic_only",
+      "recurrence_guard": "bind requested, configured, and effective views independently",
+      "rollback": "none; read-only comparison"
+    }
+  ],
+  "passing_methods": [
+    {
+      "id": "TV7083R2-X2-P001",
+      "method": "source expectation and payload digest bound independently",
+      "witness": "source-binding-result.json"
+    },
+    {
+      "id": "TV7083R2-X2-P002",
+      "method": "requested and observed environment fields compared without repair",
+      "witness": "environment-drift-report.json"
+    },
+    {
+      "id": "TV7083R2-X2-P003",
+      "method": "operation-specific observed privilege requirements evaluated",
+      "witness": "privilege-action-report.json"
+    },
+    {
+      "id": "TV7083R2-X2-P004",
+      "method": "delivery acknowledgement kept separate from recipient completion",
+      "witness": "route-state-report.json"
+    },
+    {
+      "id": "TV7083R2-X2-P005",
+      "method": "partial setup retained prior success and failure",
+      "witness": "setup-reconciliation-report.json"
+    },
+    {
+      "id": "TV7083R2-X2-P006",
+      "method": "advisory source mismatch counterexample adopted",
+      "witness": "advisory-adoption.test.mjs"
+    },
+    {
+      "id": "TV7083R2-X2-P007",
+      "method": "advisory requested-configured-effective counterexample adopted",
+      "witness": "advisory-adoption.test.mjs"
+    },
+    {
+      "id": "TV7083R2-X2-P008",
+      "method": "advisory four-gate privilege table exhaustively enumerated",
+      "witness": "advisory-adoption.test.mjs"
+    },
+    {
+      "id": "TV7083R2-X2-P009",
+      "method": "advisory acknowledgement/completion trace adopted",
+      "witness": "advisory-adoption.test.mjs"
+    },
+    {
+      "id": "TV7083R2-X2-P010",
+      "method": "advisory durable-receipt recovery retained failed attempt",
+      "witness": "advisory-adoption.test.mjs"
+    }
+  ],
+  "summary": {
+    "new_failed_witnesses": 2,
+    "new_bounded_recoveries": 2,
+    "new_passing_methods": 10,
+    "erased_failures": 0
+  }
+}
