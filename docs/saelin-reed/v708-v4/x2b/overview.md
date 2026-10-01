@@ -1,0 +1,9 @@
+# Additional x2 pass
+
+Hamish requested this pass during the first v708-v4 run. It is an additive session, not the later remaster. All three named collaborators received gpt-6.1-sol/max assignments and reported full-access runtime policy with approvals never. No profile setter was exposed, so no UI toggle change or effective backend-model attestation is claimed.
+
+Mira confirmed the exact reviewed scripts are published and fresh scoped checks passed on runtime revision8. Latest-snapshot restoration remains unverified because its lifecycle control is not exposed. Kestrel completed ten new review checks, retaining five counterexamples to broader guarantees. Maren completed ten focused checks and supplied a minimal duplicate-name parser repair. Root verified the transfer and candidate bytes, ran eight parser checks and six actual local integration checks, and installed the repaired adapter as a separate D-first package.
+
+Eighteen additional finite models include fifteen access/recovery models and three explicit Mind illustrations. The combined explorer contains48 models and144 comparisons. Eighteen new selections were browser checked; the earlier thirty selections remain their earlier build evidence. Five HTTP boundary checks passed; the new local release was promoted with a saved previous pointer and launcher. The installed launcher successfully recognized the exact owned running service. The private Space embed was updated and read back as the exact uploaded HTML bytes.
+
+Limits remain explicit: trusted local workspace only, no hostile concurrent ancestor writers, no authenticated human reviewer, no end-to-end encryption or long-term backup guarantee, no latest-snapshot restoration proof, no complete accessibility or production-security certification, and no empirical GMUT confirmation. The current phase stops before Hamish future Dot induction and a separately requested remaster.

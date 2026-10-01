@@ -1,0 +1,200 @@
+{
+  "source_capsule_sha256": "7f57af0068f8fab9031153b9710bbb820f4cf202aab5e3bcffb0c8dc9a5ed40a",
+  "baseline": {
+    "name": "capsule-verifier.mjs",
+    "sha256": "1401bd79a146ef701381aace3277da0a0f765b763913836d640aaaee4ebed73d",
+    "byteLength": 13645,
+    "sourceChanged": false
+  },
+  "permissionObservation": {
+    "requested": {
+      "permissionProfile": "full-access",
+      "model": "gpt-6.1-sol",
+      "reasoningEffort": "max"
+    },
+    "configuredNativePolicy": {
+      "sandboxMode": "danger-full-access",
+      "filesystemSandbox": false,
+      "approvalPolicy": "never",
+      "networkAccess": "enabled",
+      "source": "Current native execution context"
+    },
+    "effectiveObservation": {
+      "runtimeAttached": true,
+      "observationsCurrent": true,
+      "phase": "running",
+      "connectivity": "connected",
+      "networkPolicyState": "unknown",
+      "permissionProfileFieldExposed": false,
+      "modelFieldExposed": false,
+      "uiConfiguredProfile": null,
+      "uiEffectiveProfile": null,
+      "effectiveModel": null
+    },
+    "controls": {
+      "nativePermissionProfileGetter": false,
+      "nativePermissionProfileSetter": false,
+      "currentSessionModelSetter": false,
+      "action": "No setter invoked; no security bypass or configuration write"
+    },
+    "observedAtUtc": "2026-10-01T09:15:17Z",
+    "expiresAtUtc": null,
+    "freshness": "Point-in-time evidence only. The runtime tool does not supply a model/permission observation expiry or an effective profile attestation.",
+    "ownership": "All writes confined to the newly created Kestrel scratch capsule; Mira owns cloud environment changes."
+  },
+  "currentRun": {
+    "node": "v24.19.0",
+    "command": "node --test --test-isolation=none --test-reporter=tap x2b-checks.test.mjs",
+    "tests": 10,
+    "pass": 10,
+    "fail": 0,
+    "rejectedCases": 5,
+    "counterexampleCases": 5,
+    "interpretation": "Passing counterexample checks confirm observed contract limits; they do not add the missing guarantees."
+  },
+  "retainedResults": {
+    "name": "x2b-results.json",
+    "sha256": "4e62a75abcc48f4a680e676b4031f42055c6af8097a1e6421adf4545ad84599d",
+    "byteLength": 5275,
+    "data": {
+      "scope": "Ten new cloud-side checks/counterexamples only; earlier suites were not replayed.",
+      "baselineSha256": "1401bd79a146ef701381aace3277da0a0f765b763913836d640aaaee4ebed73d",
+      "baselineBytes": 13645,
+      "fixture": {
+        "payloadUtf8": "{\n  \"schema\": \"nexus.evidence/v1\",\n  \"purpose\": \"nexus.x2b-review\",\n  \"issuedAt\": \"2026-10-01T02:00:00.000Z\",\n  \"expiresAt\": \"2026-10-01T03:00:00.000Z\",\n  \"observations\": [\n    {\n      \"id\": \"x2b-baseline\",\n      \"status\": \"info\",\n      \"summary\": \"Synthetic x2b evidence: λ 🌿.\"\n    }\n  ]\n}\n",
+        "expectation": {
+          "sourceRepository": "https://example.org/nexus/x2b.git",
+          "sourceCommit": "cccccccccccccccccccccccccccccccccccccccc",
+          "artifactPath": "evidence/x2b.json",
+          "sha256": "ab802c4c2dff082672458dbff58938b6f4168bd9036ac0e27ebb7fdd0419ab5f",
+          "byteLength": 295,
+          "purpose": "nexus.x2b-review",
+          "schema": "nexus.evidence/v1",
+          "policyVersion": "nexus.sanitized-json/v1"
+        },
+        "nowUtc": "2026-10-01T02:15:00.000Z"
+      },
+      "results": [
+        {
+          "number": 1,
+          "label": "Nested duplicate decoded JSON name",
+          "kind": "rejection",
+          "errorCode": "DUPLICATE_KEY",
+          "errorStage": "hash-verified",
+          "state": "hash-verified",
+          "history": [
+            "received",
+            "hash-verified"
+          ],
+          "humanAccepted": false,
+          "executedIncoming": false
+        },
+        {
+          "number": 2,
+          "label": "Whitespace-bearing Base64 alias",
+          "kind": "rejection",
+          "errorCode": "INVALID_JSON",
+          "errorStage": "received",
+          "state": null,
+          "history": [],
+          "humanAccepted": false,
+          "executedIncoming": false,
+          "implication": "This API has no Base64 transport. An external decoder must enforce its own canonical encoding."
+        },
+        {
+          "number": 3,
+          "label": "Caller can record acceptance without authenticated identity",
+          "kind": "counterexample",
+          "state": "human-accepted",
+          "acceptance": {
+            "decision": "accept",
+            "note": "Automated x2b caller; no authenticated identity supplied.",
+            "acceptedAt": "2026-10-01T02:15:00.000Z"
+          },
+          "authenticationEvidence": null,
+          "implication": "human-accepted is a local caller assertion; it is not sender or reviewer authentication."
+        },
+        {
+          "number": 4,
+          "label": "Expired acceptance receipt is still readable",
+          "kind": "counterexample",
+          "state": "human-accepted",
+          "acceptance": {
+            "decision": "accept",
+            "note": "Synthetic historical receipt.",
+            "acceptedAt": "2026-10-01T02:15:00.000Z"
+          },
+          "evidenceReadError": "EXPIRED",
+          "implication": "Acceptance and state are historical. Expiry blocks evidence retrieval, not historical receipt inspection."
+        },
+        {
+          "number": 5,
+          "label": "Incomplete multibyte chunk",
+          "kind": "rejection",
+          "errorCode": "INVALID_UTF8",
+          "errorStage": "received",
+          "state": null,
+          "history": [],
+          "humanAccepted": false,
+          "executedIncoming": false
+        },
+        {
+          "number": 6,
+          "label": "Duplicate outer-whitespace chunk is accepted",
+          "kind": "counterexample",
+          "state": "schema-validated",
+          "deliveryPieces": 3,
+          "intendedPieces": 2,
+          "payloadSha256": "ab802c4c2dff082672458dbff58938b6f4168bd9036ac0e27ebb7fdd0419ab5f",
+          "implication": "No chunk protocol exists. Payload bytes remain identical; the delivery layer must enforce chunk identities/counts/order."
+        },
+        {
+          "number": 7,
+          "label": "Expired model observation inside a summary",
+          "kind": "counterexample",
+          "state": "schema-validated",
+          "summary": "Synthetic model observation gpt-6.1-sol/max; observedAt=2026-09-01T00:00:00.000Z; expiresAt=2026-09-01T00:05:00.000Z.",
+          "implication": "Fresh envelope timestamps do not establish freshness or truth of model claims in free text."
+        },
+        {
+          "number": 8,
+          "label": "Expired permission observation inside a summary",
+          "kind": "counterexample",
+          "state": "schema-validated",
+          "summary": "Synthetic permission observation full-access; observedAt=2026-09-01T00:00:00.000Z; expiresAt=2026-09-01T00:05:00.000Z.",
+          "implication": "Permission claims require a separately trusted, typed observation with expiry; summaries cannot change execution permissions."
+        },
+        {
+          "number": 9,
+          "label": "JavaScript source supplied as payload",
+          "kind": "rejection",
+          "errorCode": "INVALID_JSON",
+          "errorStage": "hash-verified",
+          "state": "hash-verified",
+          "history": [
+            "received",
+            "hash-verified"
+          ],
+          "humanAccepted": false,
+          "executedIncoming": false
+        },
+        {
+          "number": 10,
+          "label": "Getter-bearing object is not byte/text transport",
+          "kind": "rejection",
+          "errorCode": "INVALID_TRANSPORT",
+          "errorStage": "received",
+          "state": null,
+          "history": [],
+          "humanAccepted": false,
+          "executedIncoming": false,
+          "getterCalls": 0
+        }
+      ],
+      "boundary": "JSON byte/string data is not evaluated. The hash-pinned local module and consumer clock are trusted code; arbitrary caller JavaScript is not sandboxed."
+    }
+  },
+  "dataBoundaryReview": "Received JSON values pass only through decoding, strict parsing, binding checks, hashing, structural validation and freezing. Schema names and paths do not trigger imports, evaluation, subprocesses, filesystem reads or network requests. The local module and clock are trusted code; arbitrary caller JavaScript is not sandboxed.",
+  "root_replayed_cloud_suite": false,
+  "source": "Kestrel cloud-side bounded review"
+}
