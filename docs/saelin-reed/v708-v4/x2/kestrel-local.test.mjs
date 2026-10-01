@@ -1,0 +1,13 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { receiveCapsule } from './adopted-kestrel/capsule-verifier.mjs';
+const sha=s=>createHash('sha256').update(s).digest('hex');
+const evidence={schema:'nexus.evidence/v1',purpose:'local.review',issuedAt:'2026-10-01T00:00:00.000Z',expiresAt:'2026-10-02T00:00:00.000Z',observations:[{id:'synthetic-local',status:'info',summary:'Positive local compatibility fixture; no live authority.'}]};
+const text=JSON.stringify(evidence),expectation={sourceRepository:'https://example.org/local/fixture.git',sourceCommit:'b'.repeat(40),artifactPath:'local/evidence.json',sha256:sha(text),byteLength:Buffer.byteLength(text),purpose:evidence.purpose,schema:evidence.schema,policyVersion:'nexus.sanitized-json/v1'};
+const raw=JSON.stringify({manifest:{...expectation,issuedAt:evidence.issuedAt,expiresAt:evidence.expiresAt},payloadUtf8:text}),clock=()=>Date.parse('2026-10-01T12:00:00.000Z');
+test('local positive reaches schema validation without acceptance',()=>{const s=receiveCapsule(raw,expectation,{clock});s.verifyHash().validateSchema();assert.equal(s.state,'schema-validated');assert.equal(s.acceptance,null);assert.equal(s.evidence.observations.length,1);});
+test('local explicit synthetic acceptance is a separate transition',()=>{const s=receiveCapsule(raw,expectation,{clock});s.verifyHash().validateSchema().acceptHuman({decision:'accept',note:'Synthetic fixture assertion only'});assert.deepEqual(s.history,['received','hash-verified','schema-validated','human-accepted']);});
+test('local state-order misuse is refused',()=>assert.throws(()=>receiveCapsule(raw,expectation,{clock}).validateSchema(),e=>e.code==='WRONG_STATE'));
+test('local expectation copy cannot be changed after receiving',()=>{const mutable={...expectation},s=receiveCapsule(raw,mutable,{clock});mutable.sourceCommit='c'.repeat(40);s.verifyHash().validateSchema();assert.equal(s.manifest.sourceCommit,'b'.repeat(40));});
+test('local receipt data cannot be mutated',()=>{const s=receiveCapsule(raw,expectation,{clock}).verifyHash().validateSchema();assert.throws(()=>{s.evidence.observations[0].status='pass';},TypeError);});
