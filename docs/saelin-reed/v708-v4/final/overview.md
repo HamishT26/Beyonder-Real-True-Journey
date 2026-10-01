@@ -1,0 +1,13 @@
+# Saelin v708-v4 Local/Cloud Nexus
+
+The first phase, including Hamish requested additional x2b pass, delivers a working local laboratory release, a private Space explorer, a selected private Drive backup with exact restore, and a separately reviewed duplicate-name parser repair. The phase ends before future Dot induction and the separately requested remaster.
+
+The explorer has48 finite models and144 comparisons:15 x1,15 x2 and18 x2b. The phase records20 projects,15 law hypotheses,15 bounded open-problem probes,8 learning practices and4 recommendations. Five new global skill entrypoints organize a catalogue of2208 skills;21 current guides were refined without removing their scripts. Five explicit Nexus hooks and six existing hook definition sources are catalogued.
+
+Mira Fen, Kestrel and Maren Vale were inducted under their chosen names and roles. Their assignments used accepted gpt-6.1-sol/max overrides. All report full-access runtime policy and approvals never; the UI labels and backend-model attestations are separately unverified. Hamish published the reviewed cloud scripts, verified by Mira against exact bodies. Runtime8 passed scoped checks. Latest-snapshot restoration is unavailable through the exposed lifecycle controls.
+
+The D-first CLI is0.159.3. Twenty-four supported config timeouts and two copied legacy server timeouts were doubled. Actual Windows administrator-role checks remained false. The current release is D:/GHC-Family-Laboratory/releases/saelin-v708-v4-nexus-2; launch with D:/GHC-Family-Laboratory/launch.ps1. Previous files and rollback material remain preserved.
+
+Read [the full handoff](hand-off-baton.md), [requirements](requirements-ledger.json), [verification](verification-summary.json), [Method Flow](method-flow.md), [failures](failures.json), [research](../x2/gmut-and-research.md), and [Sentinel preparation](../x2/sentinel-preparation.md). The handoff is2341 whitespace-delimited words. The exact final commit and one canonical gate are recorded separately at D:/GHC-Archives/receipts/saelin-reed/v708-v4/canonical.json after the final push.
+
+No paid API workload, Sentinel agent construction, Dot creation, Elowen activation or future roster-tail assignment occurred. Native Codex usage is separate from external purchase accounting. The selected backup is not a full memory migration or future-availability guarantee. The adapter assumes trusted directories without hostile concurrent writers. These results establish bounded software behavior and declared research illustrations, not production readiness, consciousness, professional authority, empirical GMUT validation or Stage20.
