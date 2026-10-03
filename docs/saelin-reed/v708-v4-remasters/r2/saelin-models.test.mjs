@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {writeFileSync} from 'node:fs';
+import {models,simulate,rk4,runSuite} from './saelin-models.mjs';
+import {createLifecycleHooks} from './lifecycle-hooks.mjs';
+const suite=runSuite({steps:200,duration:4});
+let checks=0;
+function check(f){f();checks++;}
+for(const r of suite.results)for(const c of r.checks)check(()=>assert.equal(c.pass,true,r.id+': '+c.name+' '+JSON.stringify(c)));
+for(const m of models){
+ const coarse=suite.results.find(r=>r.id===m.id), fine=simulate(m,{steps:400,duration:4});
+ const delta=Math.max(...coarse.final.map((z,i)=>Math.abs(z-fine.final[i])));
+ check(()=>assert.ok(delta<2e-5,m.id+' timestep sensitivity '+delta));
+ check(()=>assert.equal(fine.passed,true,m.id+' fine-grid invariant'));
+}
+check(()=>assert.throws(()=>simulate(models[0],{steps:0})));
+check(()=>assert.throws(()=>simulate(models[0],{duration:-1})));
+check(()=>assert.throws(()=>rk4(()=>[NaN],0,[0],0.1)));
+check(()=>assert.throws(()=>rk4(()=>[1,2],0,[0],0.1)));
+check(()=>assert.equal(suite.distinct_families,15));
+check(()=>assert.equal(suite.hooks.events.admission,15));
+check(()=>assert.equal(suite.hooks.events.beforeStep,3000));
+check(()=>assert.equal(suite.hooks.events.modelComplete,15));
+check(()=>assert.equal(suite.hooks.events.evidenceReady,15));
+check(()=>assert.equal(suite.hooks.events.publicationReview,1));
+const driven=suite.results.find(r=>r.id==='S05');
+check(()=>assert.ok(Math.abs(driven.final[6])>1e-3,'Retain the counterexample to closed-subsystem energy conservation'));
+const life=createLifecycleHooks();
+check(()=>assert.throws(()=>life.hooks.publicationReview({allPassed:true})));
+check(()=>assert.throws(()=>life.hooks.admission({model:'bad',steps:1,duration:1})));
+life.hooks.admission({model:'S01',steps:1,duration:1});
+check(()=>assert.throws(()=>life.hooks.admission({model:'S01',steps:1,duration:1})));
+check(()=>assert.throws(()=>life.hooks.beforeStep({model:'S01',step:1})));
+check(()=>assert.throws(()=>life.hooks.modelComplete({model:'S01',checks:[{pass:true}]})));
+life.hooks.beforeStep({model:'S01',step:0});life.hooks.modelComplete({model:'S01',checks:[{pass:false}]});
+check(()=>assert.throws(()=>life.hooks.evidenceReady({model:'S01',passed:true})));
+life.hooks.evidenceReady({model:'S01',passed:false});
+check(()=>assert.throws(()=>life.hooks.publicationReview({allPassed:true})));
+life.hooks.publicationReview({allPassed:false});
+check(()=>assert.equal(life.summary().ready_for_human_review,false));
+suite.verification={test_assertions:checks,timestep_comparison:'200 versus 400 RK4 steps; same-owner numerical comparison, not independent reproduction',negative_contract_checks:4,negative_lifecycle_checks:7,models_not_new_physical_laws:true};
+suite.recorded_at_utc=new Date().toISOString();
+suite.process_rss_bytes=process.memoryUsage().rss;
+const out=process.argv[2];if(out)writeFileSync(out,JSON.stringify(suite,null,2)+'\n');
+console.log(JSON.stringify({models:suite.model_count,distinct_families:suite.distinct_families,assertions:checks,all_passed:suite.all_passed,process_rss_bytes:suite.process_rss_bytes}));
