@@ -25,7 +25,7 @@ The app and Administrator PowerShell actions call the existing `Start-GhcAdmin.p
 
 Use `sh start-ghc-hub.sh` or `node hub.mjs`. The same source runs inside an existing cloud worker. Linux administration uses existing root identity or normal sudo; the hub cannot grant a provider role, remove a sandbox or mount the laptop's D drive. PowerShell is offered only if installed. A supported worker/source transfer and its receipt are separate from successful execution.
 
-The `cloud-list` action delegates to the experimental official `codex cloud list` command. Its availability and environment population must be checked. It does not automatically connect to every managed app worker or submit new tasks. Existing collaborator coordination remains in the supported app tools. Permanent remote terminals are a later option under answer60.
+The menu's C option opens the official `codex cloud` task picker; `cloud-list` delegates to `codex cloud list`. These are experimental routes whose availability and environment population must be checked. They do not establish an SSH shell or automatically connect to every managed app worker. The same hub installed inside an existing cloud worker provides that worker's Linux shell. Existing collaborator coordination remains in the supported app tools. Permanent remote terminals are a later option under answer60.
 
 ## Credentials
 
@@ -35,7 +35,7 @@ Use `auth-status`, `auth-login` or `auth-device`. Status returns only the observ
 
 Optional environment variables: `GHC_HUB_WORKSPACE` (existing working directory), `GHC_HUB_HOME` (private event directory), `GHC_HUB_CODEX` and `GHC_HUB_PWSH` (absolute executables). Windows accepts .exe overrides, not .cmd/.ps1 shims. These are trusted local operator settings, never loaded from transferred documents. Windows defaults use the existing D-drive toolchain. Linux defaults use executable PATH entries.
 
-The CLI launch requests Astra/Max/Fast, 872k context and 600k compaction with Full access, `--no-daemon` and a limited MCP selection for that invocation. Requested settings are not backend attestation. Shared global config is not overwritten. App-managed binaries are not silently replaced.
+The CLI launch requests Astra/Max/Fast through the observed priority tier identifier, with Full access, `--no-daemon` and a limited MCP selection for that invocation. Under answer63, context and compaction settings are inherited from each executor rather than forcing 872k/600k everywhere. Requested settings are not backend attestation. Shared global config is not overwritten. App-managed binaries are not silently replaced.
 
 Event files contain action, outcome, elapsed time and version only. They exclude command output, credentials and prompt content. A telemetry failure is reported separately from the action. Bounded probes stop only their owned immediate child; descendant containment is not claimed. Interactive children end when the user exits them.
 

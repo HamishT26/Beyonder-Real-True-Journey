@@ -6,7 +6,8 @@ import { spawn } from 'node:child_process';
 
 export const VERSION = '1.0.0';
 export const MIN_NODE = 20;
-export const clean = value => String(value).replace(/[\x00-\x1f\x7f-\x9f\u202a-\u202e\u2066-\u2069]/g, ' ').slice(0, 2048);
+export const clean = value => String(value).replace(/[\x00-\x1f\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u206f]/g, ' ').slice(0, 2048);
+export const safeJson = (value,space) => JSON.stringify(value,null,space).replace(/[\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u206f]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
 export const sha256 = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 export const uuid = value => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value || '');
 const winRoot = 'D:/GHC-Archives/global-tools';
@@ -46,15 +47,17 @@ export function context(env = process.env) {
 }
 export function bounded(command, args, { cwd, timeoutMs = 15000, maxBytes = 65536, spawnFn = spawn } = {}) {
   if (!Number.isInteger(timeoutMs) || timeoutMs < 100 || timeoutMs > 60000) throw new Error('Timeout must be 100–60000 milliseconds');
+  if (!Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > 4194304) throw new Error('Output limit must be a finite integer from 1 to 4194304 bytes');
   return new Promise(resolve => {
-    const started = performance.now(); let output = [], bytes = 0, reason = null, settled = false;
-    let child, hardStop, reapDeadline;
-    const finish = result => { if (settled) return; settled = true; clearTimeout(timer); clearTimeout(hardStop); clearTimeout(reapDeadline); resolve({ ...result, elapsedMs: performance.now() - started, output: Buffer.concat(output).toString('utf8') }); };
+    const started = performance.now(); let output = [], errors = [], bytes = 0, reason = null, settled = false, stopping = false, spawnObserved = false;
+    let child, hardStop, reapDeadline, signalErrors=0;
+    const finish = result => { if (settled) return; settled = true; clearTimeout(timer); clearTimeout(hardStop); clearTimeout(reapDeadline); const stdout=Buffer.concat(output).toString('utf8');resolve({ ...result, elapsedMs: performance.now() - started, stdout,stderr:Buffer.concat(errors).toString('utf8'),output:stdout,spawnObserved,signalErrors }); };
     let timer;
     const stopOwnedChild = () => {
-      if (settled || hardStop) return;
-      child.kill();
-      hardStop = setTimeout(() => { if (!settled && child.exitCode === null && !child.signalCode) child.kill('SIGKILL'); }, 250);
+      if (settled || stopping) return;
+      stopping=true;
+      try{child.kill();}catch{signalErrors++;}
+      hardStop = setTimeout(() => { if (!settled && child.exitCode === null && !child.signalCode) {try{child.kill('SIGKILL');}catch{signalErrors++;}} }, 250);
       reapDeadline = setTimeout(() => {
         if (settled) return;
         child.stdout.destroy(); child.stderr.destroy(); child.unref();
@@ -63,25 +66,31 @@ export function bounded(command, args, { cwd, timeoutMs = 15000, maxBytes = 6553
     };
     try { child = spawnFn(command, args, { cwd, shell: false, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] }); }
     catch { finish({ status: 'spawn_error', exitCode: null }); return; }
-    const collect = chunk => {
+    const collect = (chunk,target) => {
       bytes += chunk.length;
       if (bytes > maxBytes) { reason = 'output_limit'; stopOwnedChild(); return; }
-      output.push(chunk);
+      target.push(chunk);
     };
-    child.stdout.on('data', collect);
-    child.stderr.on('data', collect);
-    child.once('error', () => finish({ status: 'spawn_error', exitCode: null }));
+    child.stdout.on('data', chunk=>collect(chunk,output));
+    child.stderr.on('data', chunk=>collect(chunk,errors));
+    child.once('spawn',()=>{spawnObserved=true;});
+    child.on('error', () => {
+      if(settled)return;
+      if(!spawnObserved&&!child.pid){finish({status:'spawn_error',exitCode:null,childCloseObserved:false,cleanup:'no_spawn_observed'});return;}
+      reason ||= 'process_error';stopOwnedChild();
+    });
+    for(const stream of [child.stdout,child.stderr])stream.on('error',()=>{if(!settled){reason ||= 'pipe_error';stopOwnedChild();}});
     child.once('close', (code, signal) => finish({ status: reason || (code === 0 ? 'ok' : 'failed'), exitCode: code, signal: signal || null, childCloseObserved:true }));
     timer = setTimeout(() => { reason ||= 'timeout'; stopOwnedChild(); }, timeoutMs);
   });
 }
 const disabledMcp = ['circleci','e2b','oci','notion','neon','openai','github','docker','render','expo','kimicode','node_repl'];
 export function codexOptions(c) {
-  const args = ['--no-daemon', '--no-alt-screen', '--ask-for-approval', 'never', '--sandbox', 'danger-full-access', '--model', 'gpt-6-astra', '-c', 'model_reasoning_effort="max"', '-c', 'service_tier="fast"', '-c', 'model_context_window=872000', '-c', 'model_auto_compact_token_limit=600000', '-c', 'features.apps=false', '-c', 'features.multi_agent=false', '--cd', c.cwd];
+  const args = ['--no-daemon', '--no-alt-screen', '--ask-for-approval', 'never', '--sandbox', 'danger-full-access', '--model', 'gpt-6-astra', '-c', 'model_reasoning_effort="max"', '-c', 'service_tier="priority"', '-c', 'features.apps=false', '-c', 'features.multi_agent=false', '--cd', c.cwd];
   for (const name of disabledMcp) args.push('-c', `mcp_servers.${name}.enabled=false`);
   return args;
 }
-export const ACTIONS = ['powershell','powershell-admin','linux','linux-admin','codex','codex-resume','app','app-check','cloud-list','auth-status','auth-login','auth-device','google-account','chatgpt-account'];
+export const ACTIONS = ['powershell','powershell-admin','linux','linux-admin','cloud','codex','codex-resume','app','app-check','cloud-list','auth-status','auth-login','auth-device','google-account','chatgpt-account'];
 export function plan(action, opts, c) {
   if (!ACTIONS.includes(action)) throw new Error('Unknown action');
   let command, args = [], interactive = false, note = '';
@@ -103,6 +112,7 @@ export function plan(action, opts, c) {
       command = c.codex; args = codexOptions(c); interactive = true;
       if (action === 'codex-resume') { if (!uuid(opts.session)) throw new Error('An exact existing session UUID is required'); args.push('resume',opts.session); }
       note = 'Requests Astra/Max/Fast and Full access for this invocation; OS privilege and provider limits are separate. Unrelated MCP services disabled only here.'; break;
+    case 'cloud': command=c.codex; args=['cloud']; interactive=true; note='Cloud Linux tasks through the official Codex Cloud picker. This is not SSH and may list different tasks from managed app workers. A hub copy inside a cloud worker can run its Linux shell directly.'; break;
     case 'cloud-list': command = c.codex; args = ['cloud','list','--json','--limit','5']; if (opts.env) { if (!/^[A-Za-z0-9_-]{1,160}$/.test(opts.env)) throw new Error('Invalid environment ID'); args.push('--env',opts.env); } note = 'Experimental Codex Cloud CLI route; it may differ from existing managed app workers.'; break;
     case 'auth-status': command = c.codex; args = ['login','status']; break;
     case 'auth-login': case 'auth-device': command = c.codex; args = ['login', ...(action === 'auth-device' ? ['--device-auth'] : [])]; interactive = true; note = 'Official sign-in; credentials and one-time codes are never captured by the hub.'; break;
@@ -120,7 +130,7 @@ export function journal(c, record) {
   try {
     fs.mkdirSync(path.join(c.state,'events'), {recursive:true,mode:0o700});
     const id = crypto.randomUUID();
-    const safe = {schema:'ghc.hub.event.v1',id,utc:new Date().toISOString(),version:VERSION,action:record.action,status:record.status,exitCode:record.exitCode ?? null,elapsedMs:record.elapsedMs ?? null};
+    const safe = {schema:'ghc.hub.event.v1',id,utc:new Date().toISOString(),version:VERSION,action:record.action,status:record.status,exitCode:record.exitCode ?? null,signal:typeof record.signal==='string'&&/^SIG[A-Z0-9]+$/.test(record.signal)?record.signal:null,elapsedMs:record.elapsedMs ?? null};
     fs.writeFileSync(path.join(c.state,'events',id+'.json'),JSON.stringify(safe)+'\n',{flag:'wx',mode:0o600});
     return {saved:true,id};
   } catch { return {saved:false,warning:'Timing record unavailable; execution outcome is separate'}; }
@@ -152,10 +162,15 @@ export async function runPlan(p,c,{interactive=Boolean(process.stdin.isTTY&&proc
     result.elapsedMs=performance.now()-started;result.journal=journal(c,{action:p.action,...result});return result;
   }
   const r=await bounded(p.command,p.args,{cwd:p.cwd,timeoutMs:p.action==='app-check'?60000:30000,spawnFn});
-  const result={status:r.status,exitCode:r.exitCode,elapsedMs:r.elapsedMs};
-  if(p.action==='auth-status') {result.signedIn=r.status==='ok'?true:null;result.method=r.status==='ok' ? (/ChatGPT/i.test(r.output)?'ChatGPT':/API key/i.test(r.output)?'API key':'provider-reported') : 'unknown';}
+  const result={status:r.status,exitCode:r.exitCode,signal:r.signal??null,spawnObserved:r.spawnObserved??false,elapsedMs:r.elapsedMs,childCloseObserved:r.childCloseObserved??false,cleanup:r.cleanup||(r.childCloseObserved?'immediate_child_closed':'unconfirmed'),signalErrors:r.signalErrors};
+  if(['app','powershell-admin','google-account','chatgpt-account'].includes(p.action)) {
+    result.effect=r.status==='ok'?'start_requested':'unknown';
+    if(['timeout','output_limit'].includes(r.status))result.status='unknown_effect';
+    result.readyObserved=false;
+  }
+  if(p.action==='auth-status') {const authObservation=r.stdout+'\n'+r.stderr;result.signedIn=r.status==='ok'?true:null;result.method=r.status==='ok' ? (/ChatGPT/i.test(authObservation)?'ChatGPT':/API key/i.test(authObservation)?'API key':'provider-reported') : 'unknown';}
   if(p.action==='cloud-list'&&r.status==='ok') {
-    try {const data=JSON.parse(r.output);if(!Array.isArray(data.tasks))throw new Error();result.tasks=data.tasks.slice(0,5).map(t=>({id:clean(t.id),title:clean(t.title),status:typeof t.status==='string'?clean(t.status):'structured',environment_id:typeof t.environment_id==='string'?clean(t.environment_id):null}));}
+    try {const data=JSON.parse(r.stdout);if(!Array.isArray(data.tasks))throw new Error();result.tasks=data.tasks.slice(0,5).map(t=>({id:typeof t.id==='string'&&/^task_[A-Za-z0-9_-]{1,160}$/.test(t.id)?t.id:'unrecognized_id',status:['ready','running','completed','failed','pending','queued','cancelled','in_progress'].includes(t.status)?t.status:'unrecognized',environment_id:typeof t.environment_id==='string'&&/^env_[A-Za-z0-9_-]{1,160}$/.test(t.environment_id)?t.environment_id:null}));result.omittedFields=['title','summary','provider prose'];}
     catch {result.status='invalid_provider_json';}
   }
   if(p.action==='app-check'&&r.status==='ok') {try{result.observation=JSON.parse(r.output);}catch{result.status='invalid_provider_json';}}

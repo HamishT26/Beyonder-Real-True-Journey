@@ -1,0 +1,18 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {runPlan} from './core.mjs';
+import {EventEmitter} from 'node:events';
+import {PassThrough} from 'node:stream';
+const root=fs.mkdtempSync(path.join(process.env.GHC_HUB_TEST_TMP||os.tmpdir(),'ghc-hub-private-fixture-'));
+const c={cwd:root,state:root};
+const fixture=(code,action='cloud-list')=>({command:process.execPath,args:['-e',code],cwd:root,interactive:false,action});
+test('stderr warning does not corrupt valid stdout JSON',async()=>{const r=await runPlan(fixture('console.error("fixture warning");console.log(JSON.stringify({tasks:[]}))'),c);assert.equal(r.status,'ok');assert.deepEqual(r.tasks,[]);});
+test('cloud task prose is omitted from machine output',async()=>{const r=await runPlan(fixture('console.log(JSON.stringify({tasks:[{id:"task_fixture",status:"ready",title:"DUMMY_CREDENTIAL_MARKER",environment_id:"env_fixture"}]}))'),c);assert.equal(r.status,'ok');assert.ok(!JSON.stringify(r).includes('DUMMY_CREDENTIAL_MARKER'));});
+test('parse errors do not echo arbitrary caller input',()=>{const hub=fileURLToPath(new URL('./hub.mjs',import.meta.url));const r=spawnSync(process.execPath,[hub,'--DUMMY_CREDENTIAL_MARKER','--json'],{encoding:'utf8'});assert.equal(r.status,1);assert.ok(!r.stderr.includes('DUMMY_CREDENTIAL_MARKER'));assert.equal(JSON.parse(r.stderr).status,'error');});
+test('action result retains observed immediate-child cleanup',async()=>{const r=await runPlan(fixture('console.log("Logged in using ChatGPT")','auth-status'),c);assert.equal(r.childCloseObserved,true);assert.equal(r.cleanup,'immediate_child_closed');});
+test('termination signal survives the action and durable event',async()=>{const fake=()=>{const c=new EventEmitter();Object.assign(c,{pid:123,stdout:new PassThrough(),stderr:new PassThrough(),exitCode:null,signalCode:'SIGTERM',kill(){return true},unref(){}});queueMicrotask(()=>{c.emit('spawn');c.emit('close',null,'SIGTERM')});return c;};const r=await runPlan(fixture('','auth-status'),c,{spawnFn:fake});assert.equal(r.signal,'SIGTERM');assert.equal(r.exitCode,null);assert.equal(r.spawnObserved,true);const event=JSON.parse(fs.readFileSync(path.join(c.state,'events',r.journal.id+'.json'),'utf8'));assert.equal(event.signal,'SIGTERM');});

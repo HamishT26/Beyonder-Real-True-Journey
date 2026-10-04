@@ -5,12 +5,14 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {clean,uuid,plan,bounded,runPlan,journal,context} from './core.mjs';
+import {clean,uuid,plan,bounded,runPlan,journal,context,safeJson} from './core.mjs';
+import {EventEmitter} from 'node:events';
+import {PassThrough} from 'node:stream';
 
 const root=fs.mkdtempSync(path.join(process.env.GHC_HUB_TEST_TMP||os.tmpdir(),'ghc-hub-test-'));
 const launcher=path.join(root,'admin.ps1');fs.writeFileSync(launcher,'# inert fixture\n');
 const c={platform:'linux',cwd:root,state:path.join(root,'state'),codex:process.execPath,pwsh:process.execPath,bash:process.execPath,sudo:null,wsl:process.execPath,adminLauncher:launcher,node:process.execPath,uid:1000};
-const valid='01a1053e-7707-7870-b87e-be0bf468e861';
+const valid='11111111-1111-4111-8111-111111111111';
 test('session selector accepts exact UUID only',()=>{assert.ok(uuid(valid));for(const s of ['--last','other; echo X','../auth.json',valid+' extra',''])assert.equal(uuid(s),false);});
 test('resume argv preserves the exact existing session and requests explicit controls',()=>{const p=plan('codex-resume',{session:valid},c);assert.deepEqual(p.args.slice(-2),['resume',valid]);assert.equal(p.shell,false);assert.ok(p.args.includes('danger-full-access'));assert.ok(p.args.includes('--no-daemon'));assert.equal(p.interactive,true);});
 test('unsupported names cannot become executable commands',()=>{for(const s of ['sh -c','app; whoami','__proto__','constructor',''])assert.throws(()=>plan(s,{},c));});
@@ -20,6 +22,8 @@ test('Windows app launch is unavailable on Linux',()=>assert.throws(()=>plan('ap
 test('Windows app and app-check delegate to existing guard',()=>{const w={...c,platform:'win32'};assert.deepEqual(plan('app',{},w).args.slice(-3),[launcher,'-Target','Codex']);assert.equal(plan('app-check',{},w).args.at(-1),'-Check');});
 test('Linux root request retains normal sudo boundary',()=>{assert.throws(()=>plan('linux-admin',{},c),/unavailable/);assert.deepEqual(plan('linux-admin',{}, {...c,sudo:'/usr/bin/sudo'}).args,['-i']);});
 test('local Ubuntu request does not claim a remote cloud executor',()=>{const p=plan('linux',{}, {...c,platform:'win32'});assert.ok(p.note.includes('laptop RAM'));assert.ok(p.args.includes('Ubuntu'));});
+test('cloud route invokes official task picker, not a local Linux substitute',()=>{const p=plan('cloud',{},c);assert.deepEqual(p.args,['cloud']);assert.equal(p.command,c.codex);assert.ok(p.note.includes('not SSH'));});
+test('CLI inherits context and requests the observed Fast tier identifier',()=>{const p=plan('codex',{},c);assert.ok(p.args.includes('service_tier="priority"'));assert.ok(!p.args.some(a=>/model_context_window|model_auto_compact/.test(a)));});
 test('terminal text cannot inject cursor or bidi controls',()=>{const s=clean('\x1b[2Jhello\r\n\u202eabc');assert.ok(!/[\x00-\x1f\u202e]/.test(s));assert.ok(s.includes('hello'));});
 test('noninteractive terminal actions cannot silently open a new CLI session',async()=>{await assert.rejects(runPlan(plan('codex',{},c),c,{interactive:false}),/interactive terminal/);});
 test('bounded child captures normal exit',async()=>{const r=await bounded(process.execPath,['-e','process.stdout.write("done")'],{cwd:root});assert.equal(r.status,'ok');assert.equal(r.exitCode,0);assert.equal(r.output,'done');});
@@ -28,6 +32,16 @@ test('missing executable never reports zero',async()=>{const r=await bounded(pat
 test('excess child output is bounded and not success',async()=>{const r=await bounded(process.execPath,['-e','process.stdout.write("x".repeat(100000));setInterval(()=>{},1000)'],{cwd:root,maxBytes:1000});assert.equal(r.status,'output_limit');assert.ok(Buffer.byteLength(r.output)<=1000);});
 test('timed-out owned child is stopped even if TERM is ignored',async()=>{const r=await bounded(process.execPath,['-e','process.on("SIGTERM",()=>{});setInterval(()=>{},1000)'],{cwd:root,timeoutMs:250});assert.equal(r.status,'timeout');assert.ok(r.elapsedMs<10000);});
 test('invalid timeout rejected before process creation',()=>{for(const t of [0,Infinity,NaN,60001,'1000'])assert.throws(()=>bounded('x',[],{timeoutMs:t}));});
+test('non-finite and excessive output limits are refused',()=>{for(const b of [0,Infinity,NaN,-1,4194305,'1000'])assert.throws(()=>bounded('x',[],{maxBytes:b}));});
+test('JSON rendering escapes bidi while preserving parsed data',()=>{const original={path:'folder\u202eINERT'};const rendered=safeJson(original,2);assert.ok(!rendered.includes('\u202e'));assert.deepEqual(JSON.parse(rendered),original);});
+test('post-spawn errors retain tracking until the owned child closes',async()=>{
+ let calls=0;const factory=()=>{const ch=new EventEmitter();Object.assign(ch,{pid:123,exitCode:null,signalCode:null,stdout:new PassThrough(),stderr:new PassThrough(),unref(){},kill(){calls++;this.exitCode=1;queueMicrotask(()=>this.emit('close',1,null));return true;}});queueMicrotask(()=>{ch.emit('spawn');ch.emit('error',new Error('synthetic post-spawn error'));});return ch;};
+ const r=await bounded('inert',[],{spawnFn:factory});assert.equal(calls,1);assert.equal(r.status,'process_error');assert.equal(r.childCloseObserved,true);
+});
+test('unconfirmed close remains visible through the action result',async()=>{
+ let calls=0;const factory=()=>{const ch=new EventEmitter();Object.assign(ch,{pid:123,exitCode:null,signalCode:null,stdout:new PassThrough(),stderr:new PassThrough(),unref(){},kill(){calls++;return false;}});queueMicrotask(()=>{ch.emit('spawn');ch.emit('error',new Error('synthetic post-spawn error'));});return ch;};
+ const r=await runPlan({action:'auth-status',command:'inert',args:[],cwd:root,interactive:false},c,{spawnFn:factory});assert.equal(calls,2);assert.equal(r.childCloseObserved,false);assert.match(r.cleanup,/unconfirmed/);assert.equal(r.signedIn,null);
+});
 test('auth status and journal exclude provider raw credential-like output',async()=>{const p={action:'auth-status',command:process.execPath,args:['-e','console.log("API key DUMMY_TEST_ONLY_TOKEN_123")'],cwd:root,interactive:false};const r=await runPlan(p,c);assert.equal(r.signedIn,true);assert.equal(r.method,'API key');assert.ok(!JSON.stringify(r).includes('DUMMY_TEST'));const text=fs.readFileSync(path.join(c.state,'events',r.journal.id+'.json'),'utf8');assert.ok(!text.includes('DUMMY_TEST'));});
 test('failed auth observation remains unknown',async()=>{const r=await runPlan({action:'auth-status',command:process.execPath,args:['-e','process.exit(9)'],cwd:root,interactive:false},c);assert.equal(r.signedIn,null);assert.equal(r.method,'unknown');});
 test('invalid cloud provider response is not a successful list',async()=>{const r=await runPlan({action:'cloud-list',command:process.execPath,args:['-e','console.log("not json")'],cwd:root,interactive:false},c);assert.equal(r.status,'invalid_provider_json');});
