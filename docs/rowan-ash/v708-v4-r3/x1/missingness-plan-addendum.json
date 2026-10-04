@@ -1,0 +1,69 @@
+{
+  "change": "Give every unit a nonzero chance of inclusion and exclusion; reject impossible observed masks.",
+  "expected_final_checks": 10,
+  "expected_pattern_probability": "1/16",
+  "model": {
+    "assumptions": "Synthetic finite declared inputs only; no empirical data or population inference.",
+    "environment": "local Windows; Python standard-library exact Fraction/enumeration",
+    "expected": {
+      "HT_expected": "1",
+      "completion_count": 9,
+      "full_mean": "1",
+      "lower_mean": "0",
+      "observed_mean": "0",
+      "upper_mean": "1"
+    },
+    "fresh_change": "New Rowan model in the prospectively activated P03 X1 lane; no run-2 source execution.",
+    "id": "RA-P03-M04",
+    "invalid_input": {
+      "mask": [
+        "false",
+        true,
+        false,
+        false
+      ]
+    },
+    "name": "missing-observations",
+    "negative_control": {
+      "expected": "This deliberately wrong output must disagree with the frozen oracle; original mutant stays failed.",
+      "field": "full_mean",
+      "value": "0"
+    },
+    "params": {
+      "inclusion": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "1/2"
+      ],
+      "mask": [
+        true,
+        true,
+        false,
+        false
+      ],
+      "missing_range": [
+        0,
+        2
+      ],
+      "population": [
+        0,
+        0,
+        2,
+        2
+      ]
+    },
+    "projects": [
+      "P09",
+      "P11",
+      "P13"
+    ],
+    "question": "What can be inferred when the observed subset excludes larger values?",
+    "test_budget": 8
+  },
+  "original_120_case_receipt_remains_original": true,
+  "original_result_sha256": "eb8c016c24e35b2b9eb1f0053675d21d109c78de4d12773a16618b3754750cc4",
+  "original_source_sha256": "cce109f0e0596d6fade489f1c10bfda33498639572976df3d9b3c429ad55e403",
+  "schema": "ghc.rowan.p03.x1.plan-addendum.v1",
+  "source_sha256": "08a67c36ae13ee86b4db07f0e689a053167e0398f3b88f4392c08bcfa54ce961"
+}

@@ -1,0 +1,137 @@
+{
+  "checks": [
+    {
+      "expected": [
+        "1/9",
+        "9"
+      ],
+      "id": "RA-P03-M12-importance_weights",
+      "kind": "literal_expected_field",
+      "observed": [
+        "1/9",
+        "9"
+      ],
+      "passed": true
+    },
+    {
+      "expected": "1",
+      "id": "RA-P03-M12-mean_importance_weight",
+      "kind": "literal_expected_field",
+      "observed": "1",
+      "passed": true
+    },
+    {
+      "expected": "9/10",
+      "id": "RA-P03-M12-reweighted_risk",
+      "kind": "literal_expected_field",
+      "observed": "9/10",
+      "passed": true
+    },
+    {
+      "expected": "4/5",
+      "id": "RA-P03-M12-risk_change",
+      "kind": "literal_expected_field",
+      "observed": "4/5",
+      "passed": true
+    },
+    {
+      "expected": "1/10",
+      "id": "RA-P03-M12-source_risk",
+      "kind": "literal_expected_field",
+      "observed": "1/10",
+      "passed": true
+    },
+    {
+      "expected": "9/10",
+      "id": "RA-P03-M12-target_risk",
+      "kind": "literal_expected_field",
+      "observed": "9/10",
+      "passed": true
+    },
+    {
+      "expected": true,
+      "id": "RA-P03-M12-invalid-input",
+      "kind": "refusal_predicate",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "expected": true,
+      "id": "RA-P03-M12-wrong-rule",
+      "kind": "negative_control_detection",
+      "observed": true,
+      "passed": true
+    }
+  ],
+  "complete": true,
+  "execution_location": "local Windows",
+  "independent_reproduction": false,
+  "input_sha256": "95248c01fe61d1f787731753ca56d9c20d2a6ae669864819e7dd1c610bd554fc",
+  "invalid_subject": {
+    "error_type": "ValueError",
+    "original_credit": 0,
+    "original_result": "fail",
+    "reason": "target mass outside source support",
+    "refused": true,
+    "request": {
+      "p": [
+        "1",
+        "0"
+      ],
+      "q": [
+        "1/10",
+        "9/10"
+      ],
+      "risk": [
+        0,
+        1
+      ]
+    }
+  },
+  "model_family_count": 1,
+  "model_id": "RA-P03-M12",
+  "model_name": "distribution-shift",
+  "model_wall_seconds": 0.000705099999322556,
+  "negative_control": {
+    "correct_value": "9/10",
+    "expected_failure": true,
+    "field": "target_risk",
+    "frozen_wrong_value": "1/10",
+    "observed_wrong_value": "1/10",
+    "original_credit": 0,
+    "original_result": "fail",
+    "rule_index": 12,
+    "source_sha256": "cce109f0e0596d6fade489f1c10bfda33498639572976df3d9b3c429ad55e403"
+  },
+  "parameters": {
+    "p": [
+      "9/10",
+      "1/10"
+    ],
+    "q": [
+      "1/10",
+      "9/10"
+    ],
+    "risk": [
+      0,
+      1
+    ]
+  },
+  "plan_sha256": "8c52685d547eba204cb7d42a0265394a5e0c06dc765161c79c1e3e3eb63b1f75",
+  "result": {
+    "importance_weights": [
+      "1/9",
+      "9"
+    ],
+    "mean_importance_weight": "1",
+    "reweighted_risk": "9/10",
+    "risk_change": "4/5",
+    "source_risk": "1/10",
+    "target_risk": "9/10"
+  },
+  "runner_sha256": "40f6e31185583125f758f882e5badd698daf5367d003cddfbf1993bc5644e17e",
+  "schema": "ghc.rowan.p03.x1.model-result.v1",
+  "source_sha256": "cce109f0e0596d6fade489f1c10bfda33498639572976df3d9b3c429ad55e403",
+  "started_utc": "2026-10-04T04:32:43.809021+00:00",
+  "unexpected_error": null
+}
