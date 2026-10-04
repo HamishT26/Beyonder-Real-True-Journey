@@ -1,0 +1,747 @@
+{
+  "schema": "ghc.synthetic-dynamics.x2.v1",
+  "run": 2,
+  "session": "x2",
+  "author": "Saelin Reed",
+  "base_commit": "23831364ca31e6f8a185c3a30261767c814f172a",
+  "parameters": {
+    "default_duration": 3.25,
+    "default_steps": 640,
+    "method": "RK4"
+  },
+  "model_refinements": 15,
+  "trajectory_executions": 28,
+  "assertions": 61,
+  "failed_assertions": 0,
+  "deliberate_fault_controls": 9,
+  "elapsed_ms": 8894.206299999962,
+  "peak_rss_bytes": null,
+  "process_metrics_scope": "not_exposed_by_host",
+  "recorded_at_utc": "2026-10-04T01:43:48.772Z",
+  "source_bindings": [
+    {
+      "name": "SAELIN-X2-PLAN.md",
+      "bytes": 5273,
+      "sha256": "85eba74fbe05264dca98e3895924bdcaad4079c59c693a3e85a6fe9a64f34b76"
+    },
+    {
+      "name": "saelin-models.mjs",
+      "bytes": 9681,
+      "sha256": "033781977fbb112b965eb7a0e1d9bada8034b32d1377676e04c092af558675e7"
+    },
+    {
+      "name": "lifecycle-hooks.mjs",
+      "bytes": 1777,
+      "sha256": "ab464f4ce14d4afd7329f2e8955e370d53469a16eb66ad006b51755ca68b4ac6"
+    },
+    {
+      "name": "saelin-x2.mjs",
+      "bytes": 13631,
+      "sha256": "dd8199eafb78c7115e41a3332cebcd1ca5a83b0db2f0dafb44cf39882f8bb78a"
+    }
+  ],
+  "claim_boundary": "Synthetic analytic and structural comparisons; no experimental data, independent replication or empirical GMUT confirmation.",
+  "rows": [
+    {
+      "id": "S01",
+      "family": "affine null geodesic",
+      "description": "Lorentz transformation and interval controls",
+      "projects": [
+        "P01",
+        "P02",
+        "P04"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 1,
+      "checks": [
+        {
+          "name": "boosted null interval",
+          "value": 1.438849039914203e-13,
+          "limit": 1e-10,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "arbitrary-event interval preserved",
+          "value": 4.440892098500626e-16,
+          "limit": 1e-12,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "inverse boost time",
+          "value": 4.440892098500626e-16,
+          "limit": 1e-12,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "omitted gamma violates interval",
+          "value": 0.6083999999998655,
+          "limit": 0.0001,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S02",
+      "family": "linear Hamiltonian flow",
+      "description": "Three independent exact oscillator frequencies",
+      "projects": [
+        "P05",
+        "P06"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 1,
+      "checks": [
+        {
+          "name": "position vector versus exact trigonometric solution",
+          "value": 3.89382970311658e-11,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "velocity vector versus exact trigonometric solution",
+          "value": 1.3236681195571975e-10,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "reference initial condition",
+          "value": 0,
+          "limit": 1e-15,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "wrong common frequency control",
+          "value": 0.6105748909095293,
+          "limit": 0.0001,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S03",
+      "family": "nonlinear Hamiltonian flow",
+      "description": "Central-force vector symmetry and reversal",
+      "projects": [
+        "P05",
+        "P08"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 3,
+      "checks": [
+        {
+          "name": "angular momentum vector",
+          "value": 6.156186671546493e-14,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "time reversal returns initial position",
+          "value": 1.7708057242771247e-13,
+          "limit": 2e-7,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "time reversal returns reversed initial velocity",
+          "value": 9.070522111187529e-14,
+          "limit": 2e-7,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "rotational equivariance",
+          "value": 4.440892098500626e-16,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S04",
+      "family": "dissipative flow",
+      "description": "Damped exact solution and heat balance",
+      "projects": [
+        "P03",
+        "P09"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 2,
+      "checks": [
+        {
+          "name": "damped analytic position",
+          "value": 6.948552844221467e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "damped analytic velocity",
+          "value": 7.635080068180145e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "sampled energy increments nonpositive",
+          "value": -0.0015519569677215073,
+          "limit": 1e-10,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "energy plus accumulated heat",
+          "value": 5.880629316834529e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S05",
+      "family": "nonautonomous driven flow",
+      "description": "Forced analytic trajectory and work",
+      "projects": [
+        "P03",
+        "P07",
+        "P09"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 1,
+      "checks": [
+        {
+          "name": "forced position and velocity",
+          "value": 5.655254042835622e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "integrated work versus analytic energy difference",
+          "value": 1.4673262604958381e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "reference initial derivative compensation",
+          "value": 0,
+          "limit": 1e-15,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "unforced trajectory is a wrong reference",
+          "value": 0.5255246138156187,
+          "limit": 0.0001,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S06",
+      "family": "antisymmetric velocity coupling",
+      "description": "Exact gyromotion and force orientation",
+      "projects": [
+        "P03",
+        "P06"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 1,
+      "checks": [
+        {
+          "name": "integrated position reference",
+          "value": 6.3091754043398396e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "velocity rotation reference",
+          "value": 5.0466297807361116e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "force does no instantaneous work",
+          "value": 0,
+          "limit": 1e-15,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "reversed force sign differs",
+          "value": 1.6,
+          "limit": 0.0001,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S07",
+      "family": "inverse-square central force",
+      "description": "Circular Kepler reference and Runge-Lenz vector",
+      "projects": [
+        "P04",
+        "P12"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 1,
+      "checks": [
+        {
+          "name": "circular orbit analytic state",
+          "value": 5.3206689054619005e-11,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "Runge-Lenz vector",
+          "value": 2.071098847977737e-11,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "initial eccentricity is zero",
+          "value": 0,
+          "limit": 1e-15,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "wrong orbital phase fails",
+          "value": 1.9707173018085697,
+          "limit": 0.0001,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S08",
+      "family": "graph diffusion semigroup",
+      "description": "Spectral diffusion solution and contraction bounds",
+      "projects": [
+        "P06",
+        "P13"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 1,
+      "checks": [
+        {
+          "name": "spectral polynomial exact state",
+          "value": 5.517808432387028e-13,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "upper contraction bound",
+          "value": 0.00853024620611655,
+          "limit": 0.008763898251558067,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "lower contraction bound",
+          "value": 0.00853024620611655,
+          "limit": 0.0002811587292912041,
+          "comparison": ">=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "antidiffusion initial variance increases",
+          "value": 3.4000000000000004,
+          "limit": 0.0001,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S09",
+      "family": "discrete hyperbolic field",
+      "description": "Uniform and zero-mean lattice normal modes",
+      "projects": [
+        "P03",
+        "P05"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 2,
+      "checks": [
+        {
+          "name": "modal position solution",
+          "value": 1.21960774812635e-10,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "modal velocity solution",
+          "value": 5.675664382920331e-10,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "uniform mode is uncoupled",
+          "value": 3.138773962962915e-13,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "zero state is stationary",
+          "value": 0,
+          "limit": 0,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S10",
+      "family": "nonlinear gradient flow",
+      "description": "Gradient potential and uniform nonlinear solution",
+      "projects": [
+        "P06",
+        "P08"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 2,
+      "checks": [
+        {
+          "name": "finite-difference potential gradient",
+          "value": 4.154332433614627e-11,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "sampled potential decreases",
+          "value": -0.0024204432754050265,
+          "limit": 1e-10,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "uniform nonlinear exact solution",
+          "value": 2.7198243657267085e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "positive uniform equilibrium generator",
+          "value": 0,
+          "limit": 0,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S11",
+      "family": "probability transport",
+      "description": "Stationary law and Markov contraction",
+      "projects": [
+        "P07",
+        "P13"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 4,
+      "checks": [
+        {
+          "name": "stationary generator residual",
+          "value": 2.7755575615628914e-17,
+          "limit": 1e-15,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "stationary trajectory fixed",
+          "value": 0,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "L1 distance contracts",
+          "value": 0.22769465529967314,
+          "limit": 2,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "longer trajectory approaches stationary law",
+          "value": 0.000011408491180087132,
+          "limit": 0.00005,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S12",
+      "family": "bounded nonlinear population flow",
+      "description": "Cooperative logistic comparison principle",
+      "projects": [
+        "P08",
+        "P46"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 2,
+      "checks": [
+        {
+          "name": "sample minima respect scalar lower solution",
+          "value": 0,
+          "limit": -2e-8,
+          "comparison": ">=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "sample maxima respect scalar upper solution",
+          "value": 0,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "uniform logistic exact solution",
+          "value": 4.318767565791859e-14,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "carrying-capacity equilibrium generator",
+          "value": 0,
+          "limit": 0,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S13",
+      "family": "frequency-dependent game flow",
+      "description": "Replicator fixed point and tangent-plane motion",
+      "projects": [
+        "P07",
+        "P42"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 3,
+      "checks": [
+        {
+          "name": "uniform generator fixed point",
+          "value": 0,
+          "limit": 0,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "uniform trajectory fixed point",
+          "value": 0,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "linearized tangent-plane approximation",
+          "value": 9.877099138577705e-13,
+          "limit": 1e-10,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "damped wrong linearization",
+          "value": 6.302420371140371e-7,
+          "limit": 1e-8,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S14",
+      "family": "nonlinear stoichiometric kinetics",
+      "description": "Exact reduced Riccati chemistry trajectory",
+      "projects": [
+        "P03",
+        "P13",
+        "P49"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 1,
+      "checks": [
+        {
+          "name": "exact reduced species solution",
+          "value": 1.245115122117113e-13,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "admissible equilibrium flux",
+          "value": 5.551115123125783e-17,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "initial reduced solution recovers concentration",
+          "value": 0,
+          "limit": 1e-15,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "larger root yields negative concentration",
+          "value": -2.1305812643921342,
+          "limit": -0.0001,
+          "comparison": "<=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "S15",
+      "family": "constrained manifold dynamics",
+      "description": "Constrained pendulum rotational symmetry",
+      "projects": [
+        "P05",
+        "P06"
+      ],
+      "kind": "refinement_of_x1_family",
+      "executions": 3,
+      "checks": [
+        {
+          "name": "vertical angular momentum",
+          "value": 1.1801670751765414e-12,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "sampled sphere residual",
+          "value": 5.977116579458652e-10,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "sampled tangent residual",
+          "value": 3.9799617768121465e-10,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "rotation about gravity axis",
+          "value": 9.992007221626409e-16,
+          "limit": 2e-8,
+          "comparison": "<=",
+          "kind": "intended",
+          "pass": true
+        },
+        {
+          "name": "missing constraint reaction leaves sphere",
+          "value": 25.25097656249988,
+          "limit": 0.0001,
+          "comparison": ">=",
+          "kind": "deliberate_fault_detected",
+          "pass": true
+        }
+      ],
+      "passed": true
+    }
+  ]
+}
