@@ -1,0 +1,9 @@
+# Rowan P03 X1 frozen plan
+
+Fifteen distinct mechanisms, thirty substantive work items and 120 planned checks are frozen in plan.json before model execution. Each model has six literal expected fields, one malformed-input refusal and one deliberately wrong-output control. Preserve fifteen mutant originals as expected failures; their detection is a different predicate. Any unexpected implementation or wrapper failure must retain its original source and receipt before isolated correction.
+
+The model families cover experimental design, structural identifiability, measurement error, missing observations, nuisance profiling, exact randomization, interval propagation, finite sensitivity, likelihood ratios, held-out evaluation, multiplicity, distribution shift, calibration, source binding and evidence limitations. Numeric parameters are cases within these families, never extra models. All stochastic quantities are exact finite-model calculations with explicit assumptions.
+
+Run only the new owner contribution. Preserve the prior v706-v5 closeout and the P02 team reports as historical/source-reported evidence. Small exact calculations use the existing Python standard library; no dependency installation or paid cloud job is needed. Requested Full access and Fast configuration are recorded separately from the measured Administrator token, filesystem operations and unknown backend speed attestation.
+
+Save the fifteen results, separate Method Flow/failures, project mapping, eight learning disciplines, four next recommendations, runtime observation, concise review and a source-bound selected capsule. Keep all authored files on D and under the 2000-file cap. No PDF, credential material, raw session history, new agent, paused-seat contact or unrelated application control is part of this plan. Stop at the X1 review boundary, before X2 and run4. A final message to the lead is a review return, not a wider-roster activation.
