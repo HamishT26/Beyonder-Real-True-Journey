@@ -23,7 +23,7 @@ Counts represent distinct scopes and source stages; do not add them into a singl
 
 The first installation preflight refused the OneDrive Desktop ancestor as a reparse point before writes. The correction admits only Microsoft cloud-placeholder tags for known Desktop shortcut destinations. A signed hexadecimal-to-UInt32 conversion then failed before writes; positive exact constants corrected it, followed by the passing tag checks and live preflight.
 
-The first Git stage refused paths outside the sparse definition. The intended correction is an explicit source-only sparse stage; no sparse checkout reset or file deletion is required. Local App Server metadata had earlier timed out; this remains an open live-resume limitation. The official local resume picker offers a separate user-selected route without fabricating history.
+The first Git stage refused paths outside the sparse definition. The explicit source-only sparse stage succeeded without resetting the sparse checkout or deleting files. A separate whitespace check flagged the intentionally CRLF Windows batch wrapper. The initial source commit is retained; a path-specific .gitattributes rule now declares CR-at-EOL for that wrapper, and the exact release diff is checked again. Local App Server metadata had earlier timed out; this remains an open live-resume limitation. The official local resume picker offers a separate user-selected route without fabricating history.
 
 ## Recovery limits
 
