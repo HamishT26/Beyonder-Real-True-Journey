@@ -2,9 +2,13 @@
 param(
     [ValidateSet('Codex','PowerShell','Probe')][string]$Target = 'Codex',
     [switch]$Check,
-    [string]$TracePath
+    [string]$TracePath,
+    [ValidateSet('DirectAdministrator','Registered','RegisteredAdministrator')][string]$AppActivation = 'DirectAdministrator'
 )
 $ErrorActionPreference = 'Stop'
+if ($Target -ne 'Codex' -and $AppActivation -ne 'DirectAdministrator') {
+    throw 'Registered app activation is available only for the Codex target.'
+}
 $ghcTraceWriter = $null
 $ghcTraceStream = $null
 $ghcTraceClock = [Diagnostics.Stopwatch]::StartNew()
@@ -95,8 +99,40 @@ function Open-GhcTraceStream {
     $destination = Get-GhcTraceDestination $Path
     return [IO.File]::Open($destination, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read)
 }
+function Get-GhcRegisteredAppUserModelId {
+    param([string]$PackageFamilyName, [string]$ApplicationId)
+    if ($PackageFamilyName -cnotmatch '^OpenAI\.Codex_[a-z0-9]{13}\z' -or $ApplicationId -cne 'App') {
+        throw 'Unexpected package family or application identifier; activation held.'
+    }
+    $appUserModelId = $PackageFamilyName + '!' + $ApplicationId
+    return $appUserModelId
+}
+function Get-GhcRegisteredAppItem {
+    param([ValidatePattern('^OpenAI\.Codex_[a-z0-9]{13}!App\z')][string]$AppUserModelId)
+    $ghcShell = New-Object -ComObject Shell.Application
+    $ghcFolder = $ghcShell.NameSpace('shell:AppsFolder')
+    if ($null -eq $ghcFolder) { throw 'Windows registered-app folder is unavailable.' }
+    $ghcItem = $ghcFolder.ParseName($AppUserModelId)
+    if ($null -eq $ghcItem) { throw 'Windows registered Codex entry is unavailable.' }
+    return $ghcItem
+}
+function Get-GhcRegisteredElevationVerb {
+    param([object]$AppItem)
+    # Use only the elevation action actually exposed by this registered entry.
+    # The inspected host uses English shell labels. Other locales fail closed.
+    $ghcVerbs = @($AppItem.Verbs() | Where-Object { ($_.Name -replace '&','').Trim() -ceq 'Run as administrator' })
+    if ($ghcVerbs.Count -ne 1) { throw 'The registered app does not expose one recognized Administrator action; use the normal registered launcher.' }
+    return $ghcVerbs[0]
+}
 function Invoke-GhcGuardedAppStart {
-    param([string]$ExpectedPath, [hashtable]$LaunchParameters)
+    [CmdletBinding(DefaultParameterSetName='Direct')]
+    param(
+        [Parameter(Mandatory)][string]$ExpectedPath,
+        [Parameter(Mandatory,ParameterSetName='Direct')][hashtable]$LaunchParameters,
+        [Parameter(Mandatory,ParameterSetName='Registered')]
+        [ValidatePattern('^OpenAI\.Codex_[a-z0-9]{13}!App\z')][string]$RegisteredAppUserModelId,
+        [Parameter(ParameterSetName='Registered')][switch]$RegisteredAdministrator
+    )
     Write-GhcTraceStage 'existing-process-check' 'begin'
     $ghcProcessErrors = @()
     $candidates = @(Get-Process -Name ChatGPT -ErrorAction SilentlyContinue -ErrorVariable ghcProcessErrors)
@@ -107,7 +143,26 @@ function Invoke-GhcGuardedAppStart {
     if ($duplicateState -eq 'present') { throw 'Close the existing ChatGPT/Codex app after saving work, then use this launcher. An already-running app can retain its original non-admin token.' }
     Write-GhcTraceStage 'existing-process-check' 'end'
     Write-GhcTraceStage 'app-start-request' 'begin'
-    Start-Process @LaunchParameters | Select-Object Id,ProcessName
+    if ($PSCmdlet.ParameterSetName -eq 'Registered') {
+        # Use the registered Windows application rather than the package's raw EXE.
+        # No RunAs, caller working-directory promise, PassThru PID, or fallback:
+        # Shell acceptance establishes neither app readiness nor its effective token.
+        if ($RegisteredAdministrator) {
+            $ghcAppItem = Get-GhcRegisteredAppItem -AppUserModelId $RegisteredAppUserModelId
+            $ghcElevationVerb = Get-GhcRegisteredElevationVerb -AppItem $ghcAppItem
+            $ghcElevationVerb.DoIt()
+        } else {
+            Start-Process -FilePath ('shell:AppsFolder\' + $RegisteredAppUserModelId) -ErrorAction Stop | Out-Null
+        }
+        [pscustomobject]@{
+            target='Codex';activation=$(if($RegisteredAdministrator){'RegisteredAdministrator'}else{'Registered'});status='activation-requested'
+            appUserModelId=$RegisteredAppUserModelId;launchRequested=$true
+            elevationRequested=[bool]$RegisteredAdministrator;effectiveAdministrator=$null
+            packageIdentityVerified=$false;appReady=$false;processId=$null
+        }
+    } else {
+        Start-Process @LaunchParameters | Select-Object Id,ProcessName
+    }
     Write-GhcTraceStage 'app-start-request' 'end'
 }
 if (-not $TracePath) {
@@ -146,6 +201,7 @@ try {
     }
     Write-GhcTraceStage 'powershell-signature' 'end'
     $appPath = $null
+    $appUserModelId = $null
     if ($Target -eq 'Codex') {
         Write-GhcTraceStage 'app-package-discovery' 'begin'
         $packages = @(Get-AppxPackage -Name 'OpenAI.Codex')
@@ -164,11 +220,25 @@ try {
         $signature = Get-AuthenticodeSignature -LiteralPath $appPath
         if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'OpenAI') { throw 'App signature validation failed.' }
         Write-GhcTraceStage 'app-signature' 'end'
+        if ($AppActivation -in @('Registered','RegisteredAdministrator')) {
+            Write-GhcTraceStage 'app-registration' 'begin'
+            # Get-AppxPackage above selects this user's registered package. Resolve
+            # its manifest application directly; do not enumerate the Start menu.
+            $appUserModelId = Get-GhcRegisteredAppUserModelId -PackageFamilyName $packages[0].PackageFamilyName -ApplicationId $apps[0].Id
+            if ($AppActivation -eq 'RegisteredAdministrator') {
+                $ghcCheckedEntry = Get-GhcRegisteredAppItem -AppUserModelId $appUserModelId
+                $null = Get-GhcRegisteredElevationVerb -AppItem $ghcCheckedEntry
+            }
+            Write-GhcTraceStage 'app-registration' 'end'
+        }
     }
     if ($Check) {
         Write-GhcTraceStage 'terminal-check-no-launch' 'begin'
         Write-GhcTraceStage 'terminal-check-no-launch' 'end'
-        [pscustomobject]@{target=$Target;currentProcessAdministrator=$elevated;powerShell=$pwsh;app=$appPath;workingDirectory=$working;uacPromptExpected=(-not $elevated);launchPerformed=$false} | ConvertTo-Json
+        $checkWorkingDirectory = $working
+        $checkUacPromptExpected = -not $elevated
+        if ($AppActivation -in @('Registered','RegisteredAdministrator')) { $checkWorkingDirectory = $null; $checkUacPromptExpected = $null }
+        [pscustomobject]@{target=$Target;currentProcessAdministrator=$elevated;powerShell=$pwsh;app=$appPath;workingDirectory=$checkWorkingDirectory;uacPromptExpected=$checkUacPromptExpected;launchPerformed=$false;appActivation=$AppActivation;appUserModelId=$appUserModelId;elevationRequested=($AppActivation -ne 'Registered');registeredElevationVerbVerified=($AppActivation -eq 'RegisteredAdministrator');packageIdentityVerified=$false} | ConvertTo-Json
         return
     }
     if ($Target -eq 'Probe') {
@@ -195,9 +265,13 @@ try {
         Write-GhcTraceStage 'terminal-powershell-start-requested' 'end'
         return
     }
-    $parameters = @{FilePath=$appPath;WorkingDirectory=$working;WindowStyle='Normal';PassThru=$true}
-    if (-not $elevated) { $parameters.Verb = 'RunAs' }
-    Invoke-GhcGuardedAppStart -ExpectedPath $appPath -LaunchParameters $parameters
+    if ($AppActivation -in @('Registered','RegisteredAdministrator')) {
+        Invoke-GhcGuardedAppStart -ExpectedPath $appPath -RegisteredAppUserModelId $appUserModelId -RegisteredAdministrator:($AppActivation -eq 'RegisteredAdministrator')
+    } else {
+        $parameters = @{FilePath=$appPath;WorkingDirectory=$working;WindowStyle='Normal';PassThru=$true}
+        if (-not $elevated) { $parameters.Verb = 'RunAs' }
+        Invoke-GhcGuardedAppStart -ExpectedPath $appPath -LaunchParameters $parameters
+    }
     Write-GhcTraceStage 'terminal-app-start-requested' 'begin'
     Write-GhcTraceStage 'terminal-app-start-requested' 'end'
 } catch {

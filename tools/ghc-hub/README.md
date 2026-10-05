@@ -1,46 +1,42 @@
-# GHC Nexus Hub
+# GHC Nexus Hub 2
 
-A portable terminal menu and machine interface for the current Windows or Linux executor. Node 20+ and its standard library are sufficient. No npm dependencies or background server are installed.
+Keyboard terminal menu, ordinary commands and JSON for the current Windows or Linux executor. The core uses Node 20+ and its standard library. The optional read-only MCP bridge has pinned official SDK dependencies.
 
-Run `node hub.mjs` in a terminal. For agent tools, use:
+Menu 7 combines local Codex App/CLI records, managed-cloud routes, legacy cloud tasks and ChatGPT links. Menu 10 opens the Laboratory; later entries open Freed ID profiles, selected memory, Sentinel specifications and remote plans. Existing chats keep their selected provider and settings.
 
 ```text
-node hub.mjs doctor --json
-node hub.mjs actions --json
-node hub.mjs plan codex --json
-node hub.mjs run auth-status --execute --json
-node hub.mjs run cloud-list --execute --json
-node hub.mjs plan codex-resume --session EXISTING-UUID --json
+ghc-nexus --help
+ghc-nexus doctor --json
+ghc-nexus chats list --json
+ghc-nexus chats list --refresh --json
+ghc-nexus chats plan --id EXACT-ID --json
+ghc-nexus chats open --id EXACT-ID --execute
+ghc-nexus lab run --id diffusion --size 1000 --execute --json
+ghc-nexus identity verify --id merrin-tide --json
+ghc-nexus sentinel plan --id sentinel-1 --json
+ghc-nexus remote plan --json
 ```
 
-`plan` never launches a process. `run` requires `--execute`. Interactive shells, sign-in and Codex require a real terminal; command/JSON actions work from App and CLI shell tools. The menu is keyboard operated, preserves scrollback and starts no probes until selected. No terminal mouse motion is required by this program.
+The installed Windows command is a small wrapper in the D-drive tool directory; a new terminal may be needed to pick up its PATH entry. Before installation, use `node hub.mjs` followed by the same arguments. On Linux use `sh start-ghc-hub.sh` from this directory, or an explicitly installed wrapper. The Windows Administrator hub shortcut requests normal UAC. The ordinary App action uses registered package activation; a separate registered Administrator App action remains.
 
-## Windows
+A saved chat listing is not live admission to a session. Local resume requires a fresh provider summary and refuses held, busy, conflicting or unverified states. Managed-cloud and ChatGPT entries retain their original provider route. A failed metadata read never turns into a duplicate conversation.
 
-Use `Start-GhcHub.ps1` for the new Administrator hub, accepting normal Windows UAC when required. `-CurrentUser` runs with the current token. `-Check` reports the proposed launch without elevating or opening a terminal. The hub's child CLI inherits that terminal token; Full access does not create Administrator membership.
+Private profiles, memory and signing keys are stored separately from source. Human contact details stay in the private D-only file. MCP exposes fixed read-only aliases and summaries; it has no arbitrary shell, credential, raw-history or personal-contact tool.
 
-The app and Administrator PowerShell actions call the existing `Start-GhcAdmin.ps1` so its signature and duplicate-app protections remain. The app is not restarted to install this hub. PowerShell remains the default. A local Ubuntu action explicitly starts WSL and consumes laptop resources; it is not a cloud shell, and the historical normal-startup issue remains unverified.
+PowerShell remains the local foundation. Existing managed cloud Linux handles larger work; WSL is optional and is not started by opening the menu. A phone connection controls its connected computer. The VPN supports authorized outbound private-service access and does not create an incoming cloud SSH endpoint or a permanent VM.
 
-## Linux and cloud
+See [NEXUS-V2-GUIDE.md](NEXUS-V2-GUIDE.md) for the complete operator guide and evidence boundaries, [OPERATOR-GUIDE.md](OPERATOR-GUIDE.md) for the retained first-release history, and the release receipt for exact verification results.
 
-Use `sh start-ghc-hub.sh` or `node hub.mjs`. The same source runs inside an existing cloud worker. Linux administration uses existing root identity or normal sudo; the hub cannot grant a provider role, remove a sandbox or mount the laptop's D drive. PowerShell is offered only if installed. A supported worker/source transfer and its receipt are separate from successful execution.
+## Configuration
 
-The menu's C option opens the official `codex cloud` task picker; `cloud-list` delegates to `codex cloud list`. These are experimental routes whose availability and environment population must be checked. They do not establish an SSH shell or automatically connect to every managed app worker. The same hub installed inside an existing cloud worker provides that worker's Linux shell. Existing collaborator coordination remains in the supported app tools. Permanent remote terminals are a later option under answer60.
+`GHC_HUB_WORKSPACE` chooses an existing working directory; `GHC_HUB_HOME` is the event-state directory; `GHC_NEXUS_HOME` chooses the private Nexus state root; `GHC_NEXUS_HOST_ID` labels the current executor. `GHC_HUB_CODEX` and `GHC_HUB_PWSH` may name verified absolute executables. Local operator values are never imported from web documents. Windows overrides must be .exe files.
 
-## Credentials
-
-Use `auth-status`, `auth-login` or `auth-device`. Status returns only the observed outcome and method; failed observations remain unknown. Sign-in uses inherited terminal I/O, so codes, tokens and passwords are not captured by this hub. Google and ChatGPT account actions open official account pages; Google sign-in does not grant every service scope. Existing supported private credential stores are retained. A permanent cross-cloud login is not promised; revocation, MFA and worker retention still apply. Never put auth.json, cookies, API keys or private cloud histories in this package.
-
-## Configuration and observations
-
-Optional environment variables: `GHC_HUB_WORKSPACE` (existing working directory), `GHC_HUB_HOME` (private event directory), `GHC_HUB_CODEX` and `GHC_HUB_PWSH` (absolute executables). Windows accepts .exe overrides, not .cmd/.ps1 shims. These are trusted local operator settings, never loaded from transferred documents. Windows defaults use the existing D-drive toolchain. Linux defaults use executable PATH entries.
-
-The CLI launch requests Astra/Max/Fast through the observed priority tier identifier, with Full access, `--no-daemon` and a limited MCP selection for that invocation. Under answer63, context and compaction settings are inherited from each executor rather than forcing 872k/600k everywhere. Requested settings are not backend attestation. Shared global config is not overwritten. App-managed binaries are not silently replaced.
-
-Event files contain action, outcome, elapsed time and version only. They exclude command output, credentials and prompt content. A telemetry failure is reported separately from the action. Bounded probes stop only their owned immediate child; descendant containment is not claimed. Interactive children end when the user exits them.
+Read and plan commands return JSON without starting a model or shell. Writes and launches require `--execute`; interactive actions require a real terminal. Exit zero means that command's reported result, not global system certification. Missing dependencies, rejected arguments, invalid signatures and held execution use nonzero exits.
 
 ## Verification
 
-Run `node --test hub.test.mjs`. Set `GHC_HUB_TEST_TMP` to an owned D-drive directory on Windows. Tests exercise actual child failures, timeout, output limits, JSON errors, missing tools, injected selectors, credential-output exclusion and inactive menu behavior. The test scratch directory is retained for review. Linux and real-terminal smoke results are recorded separately from unit tests.
+```text
+node --test --test-isolation=none --test-concurrency=1 hub.test.mjs privacy-regression.test.mjs nexus.test.mjs mcp-bindings.test.mjs
+```
 
-Research x2 remains paused while this separate launcher stage is reviewed. Sentinel-1 remains preparation, and the seven Millennium problems remain a separately sourced research plan.
+Set `GHC_HUB_TEST_TMP` to an owned D-drive directory on Windows. Test receipts distinguish Windows/Linux, supplied checks, independent review, live observations, retained first failures and isolated corrections. Historical suite counts do not become a new aggregate. Research run (3) x2 remains a separate, unstarted stage.

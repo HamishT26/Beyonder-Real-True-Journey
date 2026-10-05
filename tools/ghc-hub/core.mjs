@@ -4,7 +4,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 
-export const VERSION = '1.0.0';
+export const VERSION = '2.0.0';
 export const MIN_NODE = 20;
 export const clean = value => String(value).replace(/[\x00-\x1f\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u206f]/g, ' ').slice(0, 2048);
 export const safeJson = (value,space) => JSON.stringify(value,null,space).replace(/[\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u206f]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));
@@ -34,6 +34,7 @@ export function context(env = process.env) {
   if (!fs.statSync(cwd).isDirectory()) throw new Error('Workspace must be an existing directory');
   return {
     platform: process.platform, cwd,
+    hostId: env.GHC_NEXUS_HOST_ID || (windows?'local':'current-linux'),
     state: path.resolve(env.GHC_HUB_HOME || (windows ? 'D:/GHC-Archives/phase-banks/ghc-hub' : path.join(os.homedir(), '.local/state/ghc-hub'))),
     codex: choose(env.GHC_HUB_CODEX, defaultCodex),
     pwsh: choose(env.GHC_HUB_PWSH, windows ? winRoot + '/powershell/7.6.6/pwsh.exe' : findExecutable('pwsh')),
@@ -90,18 +91,21 @@ export function codexOptions(c) {
   for (const name of disabledMcp) args.push('-c', `mcp_servers.${name}.enabled=false`);
   return args;
 }
-export const ACTIONS = ['powershell','powershell-admin','linux','linux-admin','cloud','codex','codex-resume','app','app-check','cloud-list','auth-status','auth-login','auth-device','google-account','chatgpt-account'];
+export const ACTIONS = ['powershell','powershell-admin','linux','linux-admin','cloud','codex','codex-resume','app','app-admin','app-admin-check','app-direct','app-check','app-registered','app-registered-check','cloud-list','auth-status','auth-login','auth-device','google-account','chatgpt-account'];
 export function plan(action, opts, c) {
   if (!ACTIONS.includes(action)) throw new Error('Unknown action');
   let command, args = [], interactive = false, note = '';
   switch (action) {
     case 'powershell': command = c.pwsh; args = ['-NoLogo','-NoProfile']; interactive = true; break;
-    case 'powershell-admin': case 'app': case 'app-check':
+    case 'powershell-admin': case 'app': case 'app-admin': case 'app-admin-check': case 'app-direct': case 'app-check': case 'app-registered': case 'app-registered-check':
       if (c.platform !== 'win32') throw new Error('This action requires the Windows host');
       if (!fs.existsSync(c.adminLauncher)) throw new Error('Reviewed Windows launcher is unavailable');
       command = c.pwsh; args = ['-NoLogo','-NoProfile','-File',c.adminLauncher,'-Target', action === 'powershell-admin' ? 'PowerShell' : 'Codex'];
-      if (action === 'app-check') args.push('-Check');
-      note = 'Uses the existing signed-app/UAC launcher. Existing app instances are not replaced.'; break;
+      if (action==='app'||action==='app-check'||action.startsWith('app-registered')) args.push('-AppActivation','Registered');
+      if(action==='app-admin'||action==='app-admin-check')args.push('-AppActivation','RegisteredAdministrator');
+      if(action==='app-direct')args.push('-AppActivation','DirectAdministrator');
+      if (action === 'app-check'||action==='app-registered-check'||action==='app-admin-check') args.push('-Check');
+      note = action==='app-admin'||action==='app-admin-check'?'Requests the registered Windows Run as administrator action; verify package identity and token after launch. No direct-executable fallback.':action==='app'||action==='app-check'||action.startsWith('app-registered')?'Requests registered Windows package activation; no Administrator or working-directory guarantee. Existing App must be closed.':'Uses the explicit Administrator launcher. Direct executable activation can lack package identity needed by the App updater.'; break;
     case 'linux': case 'linux-admin':
       interactive = true;
       if (c.platform === 'win32') { command = c.wsl; args = ['--distribution','Ubuntu','--cd','/mnt/d/GHC-Family-Laboratory']; if (action === 'linux-admin') args.push('--user','root'); note = 'Explicit local WSL start; normal Ubuntu startup is historically unresolved. This uses laptop RAM.'; }
@@ -109,9 +113,10 @@ export function plan(action, opts, c) {
       else { command = c.bash; args = ['--noprofile','--norc']; }
       break;
     case 'codex': case 'codex-resume':
-      command = c.codex; args = codexOptions(c); interactive = true;
+      if(action==='codex-resume'&&opts.override)throw new Error('Existing chat settings must be inherited');
+      command = c.codex; args = action==='codex-resume'?['--no-daemon','--no-alt-screen']:codexOptions(c); interactive = true;
       if (action === 'codex-resume') { if (!uuid(opts.session)) throw new Error('An exact existing session UUID is required'); args.push('resume',opts.session); }
-      note = 'Requests Astra/Max/Fast and Full access for this invocation; OS privilege and provider limits are separate. Unrelated MCP services disabled only here.'; break;
+      note = action==='codex-resume'&&!opts.override?'Resumes with the existing model and settings. Official CLI session locks remain authoritative.':'Requests Astra/Max/Fast and Full access for this invocation; OS privilege and provider limits are separate. Unrelated MCP services disabled only here.'; break;
     case 'cloud': command=c.codex; args=['cloud']; interactive=true; note='Cloud Linux tasks through the official Codex Cloud picker. This is not SSH and may list different tasks from managed app workers. A hub copy inside a cloud worker can run its Linux shell directly.'; break;
     case 'cloud-list': command = c.codex; args = ['cloud','list','--json','--limit','5']; if (opts.env) { if (!/^[A-Za-z0-9_-]{1,160}$/.test(opts.env)) throw new Error('Invalid environment ID'); args.push('--env',opts.env); } note = 'Experimental Codex Cloud CLI route; it may differ from existing managed app workers.'; break;
     case 'auth-status': command = c.codex; args = ['login','status']; break;
@@ -161,18 +166,18 @@ export async function runPlan(p,c,{interactive=Boolean(process.stdin.isTTY&&proc
     });
     result.elapsedMs=performance.now()-started;result.journal=journal(c,{action:p.action,...result});return result;
   }
-  const r=await bounded(p.command,p.args,{cwd:p.cwd,timeoutMs:p.action==='app-check'?60000:30000,spawnFn});
+  const r=await bounded(p.command,p.args,{cwd:p.cwd,timeoutMs:['app-check','app-registered-check','app-admin-check'].includes(p.action)?60000:30000,spawnFn});
   const result={status:r.status,exitCode:r.exitCode,signal:r.signal??null,spawnObserved:r.spawnObserved??false,elapsedMs:r.elapsedMs,childCloseObserved:r.childCloseObserved??false,cleanup:r.cleanup||(r.childCloseObserved?'immediate_child_closed':'unconfirmed'),signalErrors:r.signalErrors};
-  if(['app','powershell-admin','google-account','chatgpt-account'].includes(p.action)) {
+  if(['app','app-admin','app-direct','app-registered','chat-browser','powershell-admin','google-account','chatgpt-account'].includes(p.action)) {
     result.effect=r.status==='ok'?'start_requested':'unknown';
     if(['timeout','output_limit'].includes(r.status))result.status='unknown_effect';
     result.readyObserved=false;
   }
-  if(p.action==='auth-status') {const authObservation=r.stdout+'\n'+r.stderr;result.signedIn=r.status==='ok'?true:null;result.method=r.status==='ok' ? (/ChatGPT/i.test(authObservation)?'ChatGPT':/API key/i.test(authObservation)?'API key':'provider-reported') : 'unknown';}
+  if(p.action==='auth-status') {const authObservation=r.stdout+'\n'+r.stderr;const observed=r.status==='ok'&&authObservation.trim().length>0;result.signedIn=observed?true:null;result.method=observed ? (/ChatGPT/i.test(authObservation)?'ChatGPT':/API key/i.test(authObservation)?'API key':'provider-reported') : 'unknown';if(r.status==='ok'&&!observed){result.status='unavailable';result.reason='empty_provider_output';}}
   if(p.action==='cloud-list'&&r.status==='ok') {
     try {const data=JSON.parse(r.stdout);if(!Array.isArray(data.tasks))throw new Error();result.tasks=data.tasks.slice(0,5).map(t=>({id:typeof t.id==='string'&&/^task_[A-Za-z0-9_-]{1,160}$/.test(t.id)?t.id:'unrecognized_id',status:['ready','running','completed','failed','pending','queued','cancelled','in_progress'].includes(t.status)?t.status:'unrecognized',environment_id:typeof t.environment_id==='string'&&/^env_[A-Za-z0-9_-]{1,160}$/.test(t.environment_id)?t.environment_id:null}));result.omittedFields=['title','summary','provider prose'];}
     catch {result.status='invalid_provider_json';}
   }
-  if(p.action==='app-check'&&r.status==='ok') {try{result.observation=JSON.parse(r.output);}catch{result.status='invalid_provider_json';}}
+  if(['app-check','app-registered-check','app-admin-check'].includes(p.action)&&r.status==='ok') {try{result.observation=JSON.parse(r.output);}catch{result.status='invalid_provider_json';}}
   result.journal=journal(c,{action:p.action,...result});return result;
 }

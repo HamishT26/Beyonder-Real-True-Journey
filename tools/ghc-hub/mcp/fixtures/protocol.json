@@ -1,0 +1,25 @@
+{
+  "source": "Independent expectations from MCP 2025-11-25 and the user contract, not generated from adapter definitions",
+  "initialize": {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"independent-fixture","version":"1"}}},
+  "initialized": {"jsonrpc":"2.0","method":"notifications/initialized"},
+  "expectedTools": ["nexus.chats.list","nexus.chats.resolve","nexus.chats.plan","nexus.lab.catalogue","nexus.lab.plan","nexus.identity.summary","nexus.sentinel.validate","nexus.sentinel.plan","nexus.remote.plan"],
+  "calls": [
+    {"tool":"nexus.chats.list","arguments":{},"expected":{"items":[{"alias":"quay","available":true}]}},
+    {"tool":"nexus.chats.resolve","arguments":{"alias":"quay"},"expected":{"alias":"quay","available":true,"route":"cloud"}},
+    {"tool":"nexus.chats.plan","arguments":{"alias":"quay"},"expected":{"alias":"quay","available":true,"route":"cloud","steps":["select","review","handoff"],"requiresReview":true,"executed":false}},
+    {"tool":"nexus.lab.catalogue","arguments":{},"expected":{"items":[{"alias":"lab-01","available":true}]}},
+    {"tool":"nexus.lab.plan","arguments":{"alias":"lab-01"},"expected":{"alias":"lab-01","available":true,"route":"cloud","steps":["select","review","handoff"],"requiresReview":true,"executed":false}},
+    {"tool":"nexus.identity.summary","arguments":{},"expected":{"component":"nexus-hub","platform":"linux","capabilities":{"chats":true,"lab":true,"sentinel":true,"remote":true}}},
+    {"tool":"nexus.sentinel.validate","arguments":{"alias":"sentinel-1"},"expected":{"alias":"sentinel-1","valid":null,"issues":["unverified_source"],"executed":false}},
+    {"tool":"nexus.sentinel.plan","arguments":{"alias":"sentinel-1"},"expected":{"alias":"sentinel-1","available":true,"route":"cloud","steps":["select","review","handoff"],"requiresReview":true,"executed":false}},
+    {"tool":"nexus.remote.plan","arguments":{"alias":"cloud-worker"},"expected":{"alias":"cloud-worker","available":true,"route":"cloud","steps":["select","review","handoff"],"requiresReview":true,"executed":false}}
+  ],
+  "badAliases": ["__proto__","constructor","prototype","../quay","/etc/passwd","quay;echo X","$(id)","quay\nnext","quay\u202e","https://example.invalid/","unknown","QUAY",""],
+  "unknownRequests": [
+    {"method":"server/discover","expectedCode":-32601},
+    {"method":"exec","expectedCode":-32601},
+    {"method":"chat/send","expectedCode":-32601},
+    {"method":"resources/list","expectedCode":-32601},
+    {"method":"tools/call","params":{"name":"constructor","arguments":{}},"expectedCode":-32602}
+  ]
+}

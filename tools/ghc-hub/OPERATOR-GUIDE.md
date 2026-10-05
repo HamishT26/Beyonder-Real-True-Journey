@@ -1,3 +1,5 @@
+> Historical v1 operator and release record. For the current v2 interface and limits, read [NEXUS-V2-GUIDE.md](NEXUS-V2-GUIDE.md). Counts and observations below belong to the first release.
+
 # GHC Nexus Hub operator guide
 
 This hub joins the supported Windows, Linux, Codex App and Codex CLI entrypoints in one keyboard menu and one command interface. PowerShell is the local foundation, existing cloud Linux workers are the preferred place for larger Linux jobs, and local WSL is optional. The hub does not create a new cloud computer, a permanent remote terminal, a model, or a replacement operating-system kernel.

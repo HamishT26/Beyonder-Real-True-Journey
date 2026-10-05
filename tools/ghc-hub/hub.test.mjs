@@ -9,17 +9,20 @@ import {clean,uuid,plan,bounded,runPlan,journal,context,safeJson} from './core.m
 import {EventEmitter} from 'node:events';
 import {PassThrough} from 'node:stream';
 
-const root=fs.mkdtempSync(path.join(process.env.GHC_HUB_TEST_TMP||os.tmpdir(),'ghc-hub-test-'));
+const testBase=path.resolve(process.env.GHC_HUB_TEST_TMP||(process.platform==='win32'?'D:/GHC-Archives/phase-banks/ghc-nexus-tests':os.tmpdir()));fs.mkdirSync(testBase,{recursive:true});
+const root=fs.mkdtempSync(path.join(testBase,'ghc-hub-test-'));
 const launcher=path.join(root,'admin.ps1');fs.writeFileSync(launcher,'# inert fixture\n');
 const c={platform:'linux',cwd:root,state:path.join(root,'state'),codex:process.execPath,pwsh:process.execPath,bash:process.execPath,sudo:null,wsl:process.execPath,adminLauncher:launcher,node:process.execPath,uid:1000};
 const valid='11111111-1111-4111-8111-111111111111';
 test('session selector accepts exact UUID only',()=>{assert.ok(uuid(valid));for(const s of ['--last','other; echo X','../auth.json',valid+' extra',''])assert.equal(uuid(s),false);});
-test('resume argv preserves the exact existing session and requests explicit controls',()=>{const p=plan('codex-resume',{session:valid},c);assert.deepEqual(p.args.slice(-2),['resume',valid]);assert.equal(p.shell,false);assert.ok(p.args.includes('danger-full-access'));assert.ok(p.args.includes('--no-daemon'));assert.equal(p.interactive,true);});
+test('resume argv preserves the existing session without model or permission overrides',()=>{const p=plan('codex-resume',{session:valid},c);assert.deepEqual(p.args,['--no-daemon','--no-alt-screen','resume',valid]);assert.equal(p.shell,false);assert.equal(p.interactive,true);});
+test('existing-chat overrides are refused by the hub',()=>assert.throws(()=>plan('codex-resume',{session:valid,override:true},c),/inherited/));
 test('unsupported names cannot become executable commands',()=>{for(const s of ['sh -c','app; whoami','__proto__','constructor',''])assert.throws(()=>plan(s,{},c));});
 test('missing or injected session refuses before launch',()=>{for(const s of [null,'--all','x && y'])assert.throws(()=>plan('codex-resume',{session:s},c));});
 test('cloud environment validation keeps argv separate',()=>{assert.deepEqual(plan('cloud-list',{env:'env_123-a'},c).args.slice(-2),['--env','env_123-a']);for(const env of ['--env bad','a;b','$(bad)','a\nb'])assert.throws(()=>plan('cloud-list',{env},c));});
 test('Windows app launch is unavailable on Linux',()=>assert.throws(()=>plan('app',{},c),/Windows/));
-test('Windows app and app-check delegate to existing guard',()=>{const w={...c,platform:'win32'};assert.deepEqual(plan('app',{},w).args.slice(-3),[launcher,'-Target','Codex']);assert.equal(plan('app-check',{},w).args.at(-1),'-Check');});
+test('Windows normal app action requests registered activation through the guard',()=>{const w={...c,platform:'win32'};assert.deepEqual(plan('app',{},w).args.slice(-5),[launcher,'-Target','Codex','-AppActivation','Registered']);assert.equal(plan('app-check',{},w).args.at(-1),'-Check');assert.ok(plan('app-check',{},w).args.includes('Registered'));});
+test('Administrator App requests the registered elevation route without a direct fallback',()=>{const w={...c,platform:'win32'};assert.deepEqual(plan('app-admin',{},w).args.slice(-5),[launcher,'-Target','Codex','-AppActivation','RegisteredAdministrator']);assert.ok(plan('app-admin-check',{},w).args.includes('-Check'));assert.ok(plan('app-direct',{},w).args.includes('DirectAdministrator'));});
 test('Linux root request retains normal sudo boundary',()=>{assert.throws(()=>plan('linux-admin',{},c),/unavailable/);assert.deepEqual(plan('linux-admin',{}, {...c,sudo:'/usr/bin/sudo'}).args,['-i']);});
 test('local Ubuntu request does not claim a remote cloud executor',()=>{const p=plan('linux',{}, {...c,platform:'win32'});assert.ok(p.note.includes('laptop RAM'));assert.ok(p.args.includes('Ubuntu'));});
 test('cloud route invokes official task picker, not a local Linux substitute',()=>{const p=plan('cloud',{},c);assert.deepEqual(p.args,['cloud']);assert.equal(p.command,c.codex);assert.ok(p.note.includes('not SSH'));});
