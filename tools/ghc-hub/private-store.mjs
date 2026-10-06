@@ -23,8 +23,8 @@ export function checkPath(root, relative, {createParents=false}={}) {
   }
   return target;
 }
-export function readPrivate(root,relative,{maxBytes=1048576,missing=null}={}) {
-  const p=checkPath(root,relative);if(!fs.existsSync(p))return missing;
+export function readPrivateBytes(root,relative,{maxBytes=1048576}={}) {
+  const p=checkPath(root,relative);if(!fs.existsSync(p))return null;
   const fd=fs.openSync(p,fs.constants.O_RDONLY|(fs.constants.O_NOFOLLOW||0));
   try{
     const opened=fs.fstatSync(fd,{bigint:true});
@@ -34,10 +34,14 @@ export function readPrivate(root,relative,{maxBytes=1048576,missing=null}={}) {
     if(!rel||rel.startsWith('..'+path.sep)||rel==='..'||path.isAbsolute(rel))throw new Error('Private file escaped its root');
     const named=fs.statSync(p,{bigint:true});
     if(opened.dev!==named.dev||opened.ino!==named.ino)throw new Error('Private file changed during open');
-    const bytes=fs.readFileSync(fd,'utf8'),after=fs.fstatSync(fd,{bigint:true});
+    const bytes=fs.readFileSync(fd),after=fs.fstatSync(fd,{bigint:true});
     if(opened.size!==after.size||opened.mtimeNs!==after.mtimeNs||opened.ctimeNs!==after.ctimeNs||after.nlink>1n)throw new Error('Private file changed during read');
-    return JSON.parse(bytes);
+    return bytes;
   }finally{fs.closeSync(fd);}
+}
+export function readPrivate(root,relative,{maxBytes=1048576,missing=null}={}) {
+  const bytes=readPrivateBytes(root,relative,{maxBytes});
+  return bytes===null?missing:JSON.parse(bytes.toString('utf8'));
 }
 export function writePrivate(root,relative,value,{replace=false}={}) {
   const p=checkPath(root,relative,{createParents:true}), bytes=Buffer.from(JSON.stringify(value,null,2)+'\n');

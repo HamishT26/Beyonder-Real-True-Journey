@@ -2,7 +2,7 @@
 param([switch]$Check)
 $ErrorActionPreference='Stop'
 $ghcDestination='D:\GHC-Archives\global-tools\ghc-nexus-hub'
-$ghcBank='D:\GHC-Archives\phase-banks\saelin-nexus-v3-20261007'
+$ghcBank='D:\GHC-Archives\phase-banks\saelin-nexus-v4-20261007'
 $ghcBin='D:\GHC-Archives\global-tools\bin'
 $ghcPwsh='D:\GHC-Archives\global-tools\powershell\7.6.6\pwsh.exe'
 $ghcNode='D:\GHC-Archives\global-tools\node\26.10.0\node-v26.10.0-win-x64\node.exe'

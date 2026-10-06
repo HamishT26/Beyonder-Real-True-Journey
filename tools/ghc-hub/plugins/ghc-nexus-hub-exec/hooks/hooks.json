@@ -1,0 +1,19 @@
+{
+  "description": "One canonical handler for five scoped Nexus advisories; no Stop hook, spawning or writes.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^Bash$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/nexus_preflight.cjs\"",
+            "commandWindows": "& 'D:/GHC-Archives/global-tools/node/26.10.0/node-v26.10.0-win-x64/node.exe' \"$env:PLUGIN_ROOT/scripts/nexus_preflight.cjs\"",
+            "timeout": 5,
+            "statusMessage": "Checking selected Nexus action"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -17,9 +17,9 @@ export function validateCommandOptions(cmd,verb,values){
  const matrix={
  chats:{list:['refresh','limit','search'],recovery:['id'],import:['file','execute'],resolve:['id'],plan:['id','override'],open:['id','execute']},
  identity:{list:[],show:['id'],add:['file','execute'],certificate:['id','execute'],verify:['id','fingerprint']},
- memory:{list:[],show:['id'],add:['file','execute'],export:['id','execute']},
+ memory:{list:[],show:['id'],add:['file','execute'],export:['id','execute'],snapshot:['id','execute'],'snapshot-verify':['id','fingerprint'],restore:['id','fingerprint','execute']},
  lab:{catalogue:[],plan:['id','size'],run:['id','size','execute'],serve:['execute']},
- sentinel:{template:['id'],list:[],show:['id'],validate:['id','file'],plan:['id','file'],save:['id','file','execute']},
+ sentinel:{template:['id'],list:[],show:['id'],validate:['id','file'],plan:['id','file'],save:['id','file','execute'],'api-providers':[],'api-validate':['file'],'api-plan':['file','quote']},
  remote:{plan:['file'],connect:['file','execute'],configure:['file','execute']}
  };
  let specific=matrix[cmd]?.[verb]||[];
@@ -30,7 +30,7 @@ export function validateCommandOptions(cmd,verb,values){
 
 export async function main(argv=process.argv.slice(2)) {
   if(Number(process.versions.node.split('.')[0])<MIN_NODE)throw new Error('Node 20 or later is required');
-  const {values,positionals}=parseArgs({args:argv,allowPositionals:true,strict:true,options:{json:{type:'boolean'},execute:{type:'boolean'},session:{type:'string'},env:{type:'string'},help:{type:'boolean'},version:{type:'boolean'},id:{type:'string'},file:{type:'string'},limit:{type:'string'},search:{type:'string'},refresh:{type:'boolean'},size:{type:'string'},override:{type:'boolean'},fingerprint:{type:'string'}}});
+  const {values,positionals}=parseArgs({args:argv,allowPositionals:true,strict:true,options:{json:{type:'boolean'},execute:{type:'boolean'},session:{type:'string'},env:{type:'string'},help:{type:'boolean'},version:{type:'boolean'},id:{type:'string'},file:{type:'string'},limit:{type:'string'},search:{type:'string'},refresh:{type:'boolean'},size:{type:'string'},override:{type:'boolean'},fingerprint:{type:'string'},quote:{type:'string'}}});
   const output=value=>console.log(safeJson(value,values.json?undefined:2));
   if(values.version){output({name:'GHC Nexus Hub',version:VERSION});return;}
   if(values.help||positionals[0]==='help') { const help='GHC Nexus Hub\n\nnode hub.mjs [menu]\nnode hub.mjs doctor --json\nnode hub.mjs actions --json\nnode hub.mjs plan ACTION [--session UUID (codex-resume only)] [--env ID (cloud-list only)] --json\nnode hub.mjs run ACTION --execute [--session UUID (codex-resume only)] [--env ID (cloud-list only)] --json\n\nActions: '+ACTIONS.join(', ')+'\n\nPlans do not execute. Interactive shell/sign-in/Codex actions need a real terminal.\nThe hub never copies tokens or upgrades a managed app-server.'+NEXUS_HELP; if(values.json)output({help,actions:ACTIONS,commands:NEXUS_COMMANDS});else console.log(help);return; }
@@ -61,7 +61,7 @@ export async function main(argv=process.argv.slice(2)) {
   await menu(c);
 }
 async function menu(c) {
-  const entries=[['Inspect this host',null],['PowerShell here','powershell'],['Administrator PowerShell (Windows)','powershell-admin'],[c.platform==='win32'?'Linux primary — cloud task picker':'Linux shell in this executor',c.platform==='win32'?'cloud':'linux'],['Administrator Linux shell','linux-admin'],['New Codex CLI — Astra Max, Fast, Full access','codex'],['GHC-Family chat panel menu','chats'],['Launch ChatGPT/Codex app (Windows)','app'],['Check app launcher without opening app','app-check'],['GHC-Family Laboratory','lab'],['GHC-Family Freed ID certificates','identity'],['GHC-Family Spaces / Filesystem Memory bank','memory'],['GHC-Family Sentinel-1 Agent builder','sentinel'],['GHC-Family persistent remote terminal','remote'],['Check Codex sign-in','auth-status'],['Sign in through official browser flow','auth-login'],['Sign in with official device code','auth-device'],['Google account in browser','google-account'],['ChatGPT account in browser','chatgpt-account']];
+  const entries=[['Inspect this host',null],['PowerShell here','powershell'],['Administrator PowerShell (Windows)','powershell-admin'],[c.platform==='win32'?'Linux primary — cloud task picker':'Linux shell in this executor',c.platform==='win32'?'cloud':'linux'],[c.platform==='win32'?'Local Ubuntu as root (optional WSL)':'Administrator shell in this Linux executor','linux-admin'],['New Codex CLI — Astra Max, Fast, Full access','codex'],['GHC-Family chat panel menu','chats'],['Launch ChatGPT/Codex app (Windows)','app'],['Check app launcher without opening app','app-check'],['GHC-Family Laboratory','lab'],['GHC-Family Freed ID certificates','identity'],['GHC-Family Spaces / Filesystem Memory bank','memory'],['GHC-Family Sentinel-1 Agent builder','sentinel'],['GHC-Family persistent remote terminal','remote'],['Check Codex sign-in','auth-status'],['Sign in through official browser flow','auth-login'],['Sign in with official device code','auth-device'],['Google account in browser','google-account'],['ChatGPT account in browser','chatgpt-account']];
   while(true){
     console.log('\n╭────────────────────────────────────────────────────╮\n│  GHC NEXUS HUB  ·  Local authority / Cloud compute  │\n╰────────────────────────────────────────────────────╯');
     console.log('Host: '+clean(c.platform)+'    Workspace: '+clean(c.cwd));

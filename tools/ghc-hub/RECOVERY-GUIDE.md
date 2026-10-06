@@ -5,9 +5,12 @@ Use menu 7 in the GHC Nexus Hub for the preserved chat catalogue. Choose I for o
 ## Windows entrypoints
 
 - GHC Codex - Registered App: the normal Windows registered app entry.
-- GHC Codex - Administrator: the registered app Run as administrator verb, when Windows exposes it.
+- GHC Codex - Administrator: direct launch of the signed current package executable using normal Windows Administrator consent. The 7 October restart measured an elevated command executor and Codex processes. Direct App processes had no Windows package identity; use the separate registered App entry for updates.
 - GHC Nexus Hub - Administrator: elevated local terminals and the same menu.
 - GHC Nexus Hub - Current User: the same menu using the current Windows token.
+- GHC Nexus Hub CMD - Administrator / Current User: the same Node Hub through Command Prompt, with the corresponding Windows token. Changing the integrated terminal shell does not change the agent environment or grant cloud privileges.
+
+The official local CLI picker is unavailable from the Hub while a saved same-host local record is explicitly held, because the picker cannot filter those Hub holds. Select an exact unheld chat instead. Provider locks remain authoritative at resume time.
 
 The App launcher requires the existing App to be closed after saving work. It never kills the App or changes the signed OpenAI package. An accepted launch is not proof of identity, elevation or server access; verify those in the reopened session.
 

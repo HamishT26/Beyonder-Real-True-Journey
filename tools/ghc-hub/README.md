@@ -1,4 +1,4 @@
-> Current release: see [GHC Nexus Hub 2.1](RELEASE-2.1.md) for the restored direct Administrator route, CMD shortcuts and chat-reader cleanup. Earlier release details below are retained as history.
+> Current release: see [GHC Nexus Hub 2.2](RELEASE-2.2.md) for selected snapshot/restore, Sentinel offline planning, four local plugins, and corrected CMD/chat guidance. Earlier release details below are retained as history.
 
 # GHC Nexus Hub 2
 
@@ -19,7 +19,7 @@ ghc-nexus sentinel plan --id sentinel-1 --json
 ghc-nexus remote plan --json
 ```
 
-The installed Windows command is a small wrapper in the D-drive tool directory; a new terminal may be needed to pick up its PATH entry. Before installation, use `node hub.mjs` followed by the same arguments. On Linux use `sh start-ghc-hub.sh` from this directory, or an explicitly installed wrapper. The Windows Administrator hub shortcut requests normal UAC. The ordinary App action uses registered package activation; a separate registered Administrator App action remains.
+The installed Windows command is a small wrapper in the D-drive tool directory; a new terminal may be needed to pick up its PATH entry. Before installation, use `node hub.mjs` followed by the same arguments. On Linux use `sh start-ghc-hub.sh` from this directory, or an explicitly installed wrapper. The Windows Administrator hub shortcut requests normal UAC. The ordinary App action uses registered package activation; the separate Administrator App action directly starts the signed current executable with normal Windows elevation.
 
 A saved chat listing is not live admission to a session. Local resume requires a fresh provider summary and refuses held, busy, conflicting or unverified states. Managed-cloud and ChatGPT entries retain their original provider route. A failed metadata read never turns into a duplicate conversation.
 

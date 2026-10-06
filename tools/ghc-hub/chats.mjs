@@ -81,8 +81,10 @@ export function recoveryCatalogue(c,selector){
 }
 export function localResumePickerPlan(c){
  if(!c.codex)return {status:'unavailable',reason:'codex_not_found'};
+ const held=readRegistry(c).filter(r=>r.kind==='codex-local'&&r.hostId===(c.hostId||'local')&&r.held);
+ if(held.length)return {status:'held',reason:'local_picker_cannot_filter_preserved_holds',heldCount:held.length,note:'The official all-session picker cannot apply Hub holds. Select an exact unheld ID from this catalogue instead.'};
  return {status:'ready',action:'local-resume-picker',command:c.codex,args:['--no-daemon','--no-alt-screen','resume','--all'],cwd:c.cwd,interactive:true,shell:false,
-   note:'Choose an existing local session in the official CLI. It controls the session lock and retains that session settings. This does not open managed cloud or ChatGPT histories.'};
+   note:'Choose an existing local session in the official CLI. It controls the session lock and retains that session settings. Hub holds were checked before opening; later changes require returning to the Hub. This does not open managed cloud or ChatGPT histories.'};
 }
 export function chatPlan(entry,c,{override=false,now=Date.now()}={}) {
   const r=normalizeEntry(entry,entry.source,entry.observedAt);
@@ -117,7 +119,10 @@ export async function admitChat(c,entry,{read=appServerRead}={}){
  if(observed.status!=='ok'||observed.data?.thread?.id!==selected.id)return {status:'unverified',reason:'live_activity_unavailable'};
  const after=readRegistry(c).filter(r=>key(r)===key(selected));
  if(after.length!==1||after[0].held||after[0].title!==selected.title)return {status:'held',reason:'catalogue_changed_during_admission'};
-  if(after[0].status==='active'||after[0].status==='running'||after[0].reportedActive)return {status:'busy',reason:'newer_catalogue_activity_blocks_admission'};
+  if(after[0].status==='active'||after[0].status==='running'||after[0].reportedActive){
+    const changed=JSON.stringify(after[0])!==JSON.stringify(selected);
+    return {status:'busy',reason:changed?'newer_catalogue_activity_blocks_admission':'cached_catalogue_activity_requires_refresh',nextStep:changed?'A newer catalogue observation reports active work; finish or pause that work, then refresh and select the same exact ID.':'Refresh saved metadata with chats list --refresh, then select the same exact ID. The unchanged cached active observation is conservatively blocking admission.'};
+  }
   if(JSON.stringify(after[0])!==JSON.stringify(selected))return {status:'unverified',reason:'catalogue_revision_changed_during_admission'};
  const live=normalizeEntry({...selected,status:observed.data.thread.status,reportedActive:false},'effect-time provider observation',new Date().toISOString());
  return chatPlan(live,c);

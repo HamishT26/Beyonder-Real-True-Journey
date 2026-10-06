@@ -1,3 +1,5 @@
+> Hub integration note (7 October 2026): this directory is the runtime subset. The candidate-only `tests/run.mjs` is not shipped, so its stale npm test script has been removed. Run the selected Hub tests from the repository root tools/ghc-hub as described in the current release. Historical candidate test counts below remain attributed evidence.
+
 **Nexus SDK v2 stdio candidate — Orenna Vale, 6 October 2026.** This local package uses the official MCP SDK **server 2.3.1** and **client 2.3.1**. It exposes exactly nine fixed read-only `nexus.*` tools through an injected dispatcher and a copied alias registry. The active alias/list limit is **128**, including the reported 45-chat hub registry. The real private registry was not opened.
 
 The installed package types and implementation confirm the public serving API used here:

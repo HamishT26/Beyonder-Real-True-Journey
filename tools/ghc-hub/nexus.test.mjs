@@ -6,7 +6,7 @@ import path from 'node:path';
 import {EventEmitter} from 'node:events';
 import {PassThrough} from 'node:stream';
 import {appServerRead} from './app-server-client.mjs';
-import {normalizeEntry,mergeEntries,chatPlan,admitChat,resolveChat,listChats,saveRegistry} from './chats.mjs';
+import {normalizeEntry,mergeEntries,chatPlan,admitChat,resolveChat,listChats,saveRegistry,localResumePickerPlan} from './chats.mjs';
 import {checkPath,writePrivate,readPrivate} from './private-store.mjs';
 import {profile,saveProfile,issueCertificate,verifyCertificate} from './identity.mjs';
 import {saveMemory,exportMemory,readMemory} from './memory-bank.mjs';
@@ -25,6 +25,8 @@ test('a fresh unloaded local record can ask the official CLI to acquire its lock
 test('stale unloaded, unknown and held records cannot bypass admission',()=>{const c={codex:'C:/codex.exe',cwd:'D:/lab'};const stale={...row({status:'notLoaded'}),observedAt:new Date(Date.now()-360000).toISOString()};assert.equal(chatPlan(stale,c).status,'unverified');assert.equal(chatPlan(row({status:'unknown'}),c).status,'unverified');assert.equal(chatPlan(row({status:'notLoaded',held:true}),c).status,'held');});
 test('hub refuses an existing-chat override; provider model controls remain separate',()=>assert.throws(()=>chatPlan(row(),{codex:'C:/codex.exe',cwd:'D:/lab'},{override:true}),/inherited/));
 test('held original record cannot produce a launch',()=>{assert.equal(chatPlan(row({held:true}),{}).status,'held');});
+test('official all-session picker cannot bypass a saved local hold',t=>{const c=fixture(t);saveRegistry(c,[row({held:true})]);const p=localResumePickerPlan(c);assert.equal(p.status,'held');assert.equal(p.command,undefined);});
+test('held cloud records do not disable an unrelated local picker',t=>{const c=fixture(t);saveRegistry(c,[row({held:true,kind:'codex-managed',hostId:'durable'})]);assert.equal(localResumePickerPlan(c).status,'ready');});
 test('active and conflicting observations cannot resume',()=>{const merged=mergeEntries([[row({status:'active'})],[row({status:'idle'})]]);assert.equal(chatPlan(merged[0],{}).status,'busy');});
 test('same provider and ID deduplicate while different providers remain distinct',()=>{const rows=mergeEntries([[row(),row({kind:'chatgpt'})],[row()]]);assert.equal(rows.length,2);assert.throws(()=>resolveChat(rows,id),/Ambiguous/);});
 test('managed cloud remains a native route rather than a local resume',()=>{const p=chatPlan(row({kind:'codex-managed',hostId:'durable'}),{});assert.equal(p.status,'native-route');assert.equal(p.command,undefined);});
@@ -33,6 +35,7 @@ test('terminal controls are removed from titles',()=>assert.ok(!row({title:'x\u0
 test('saved chat list does not invoke providers',async t=>{const c=fixture(t);saveRegistry(c,[row()]);let calls=0;const r=await listChats(c,{read:async()=>{calls++;}});assert.equal(calls,0);assert.equal(r.total,1);});
 test('failed live adapters preserve saved rows and report the gap',async t=>{const c=fixture(t);saveRegistry(c,[row()]);const r=await listChats(c,{refresh:true,read:async()=>({status:'unavailable',reason:'timeout'}),run:async()=>({status:'failed'})});assert.equal(r.total,1);assert.equal(r.observations[0].reason,'timeout');});
 test('newer catalogue busy state wins over a pending idle provider response',async t=>{const c=fixture(t),selected=row();saveRegistry(c,[selected]);const result=await admitChat(c,selected,{read:async()=>{saveRegistry(c,[row({status:'running',reportedActive:true})]);return {status:'ok',data:{thread:{id,status:{type:'idle'}}}};}});assert.equal(result.status,'busy');});
+test('unchanged cached activity explains the required refresh without claiming a race',async t=>{const c=fixture(t),selected=row({status:'active'});saveRegistry(c,[selected]);const result=await admitChat(c,selected,{read:async()=>({status:'ok',data:{thread:{id,status:{type:'idle'}}}})});assert.equal(result.status,'busy');assert.equal(result.reason,'cached_catalogue_activity_requires_refresh');assert.match(result.nextStep,/chats list --refresh/);});
 test('private path rejects traversal, absolute paths and empty segments',t=>{const c=fixture(t);for(const p of ['../x','a/../b','a//b',path.resolve(c.cwd,'outside')])assert.throws(()=>checkPath(c.cwd,p));});
 test('private write is exclusive unless an explicit replacement is requested',t=>{const c=fixture(t);writePrivate(c.cwd,'x/a.json',{v:1});assert.throws(()=>writePrivate(c.cwd,'x/a.json',{v:2}));assert.equal(readPrivate(c.cwd,'x/a.json').v,1);});
 test('hard-linked private records are rejected',t=>{const c=fixture(t);writePrivate(c.cwd,'x/a.json',{v:1});fs.linkSync(path.join(c.cwd,'x/a.json'),path.join(c.cwd,'alias.json'));assert.throws(()=>readPrivate(c.cwd,'x/a.json'));});

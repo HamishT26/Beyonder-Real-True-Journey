@@ -5,13 +5,16 @@ import {clean,safeJson,runPlan} from './core.mjs';
 import {listChats,readRegistry,resolveChat,chatPlan,admitChat,saveRegistry,normalizeEntry,recoveryCatalogue,localResumePickerPlan} from './chats.mjs';
 import {listProfiles,readProfile,saveProfile,issueCertificate,verifyCertificate} from './identity.mjs';
 import {listMemory,readMemory,saveMemory,exportMemory} from './memory-bank.mjs';
+import {snapshotMemory,verifyMemorySnapshot,restoreMemorySnapshot} from './memory-snapshot.mjs';
 import {sentinelTemplate,validateSentinel,saveSentinel,listSentinel,readSentinel,sentinelPlan} from './sentinel.mjs';
+import {prepareRequest as prepareSentinelRequest,offlinePlan as sentinelApiPlan,providers as sentinelProviders} from './sentinel-runtime/src/contract.mjs';
+import {FileLedger as SentinelLedger} from './sentinel-runtime/src/ledger.mjs';
 import {labCatalogue,labPlan,runLab,existingLabPlan} from './laboratory.mjs';
 import {remotePlan,saveRemote} from './remote.mjs';
 import {nexusHome,readPrivate} from './private-store.mjs';
 
 export const NEXUS_COMMANDS=['chats','identity','memory','lab','sentinel','remote'];
-export const NEXUS_HELP=`\nGHC Family extension commands:\n  chats list [--refresh] [--limit 100] [--search TEXT]\n  chats recovery [--id UUID]\n  chats resolve|plan|open --id UUID [--execute]\n  chats import --file FILE --execute\n  identity list|show|certificate|verify --id NAME [--execute]\n  identity add --file FILE --execute\n  memory list|show --id NAME\n  memory add --file FILE --execute\n  memory export --id NAME[,NAME] --execute\n  lab catalogue|plan|run --id diffusion|queue|consent [--size 1000] [--execute]\n  lab serve --execute\n  sentinel template|list|show|validate|plan|save [--id NAME] [--file FILE] [--execute]\n  remote plan|connect|configure [--file FILE] [--execute]\nEvery command accepts --json. Read/plan commands do not start a chat or model.\nExisting chats inherit their settings; deliberate model changes use their provider UI.\nUse the original provider UI for ChatGPT and managed-cloud chats that do not have a compatible CLI resume route.\n`;
+export const NEXUS_HELP=`\nGHC Family extension commands:\n  chats list [--refresh] [--limit 100] [--search TEXT]\n  chats recovery [--id UUID]\n  chats resolve|plan|open --id UUID [--execute]\n  chats import --file FILE --execute\n  identity list|show|certificate|verify --id NAME [--execute]\n  identity add --file FILE --execute\n  memory list|show --id NAME\n  memory add --file FILE --execute\n  memory export --id NAME[,NAME] --execute\n  memory snapshot --id NAME[,NAME] --execute\n  memory snapshot-verify --id UUID [--fingerprint SHA256]\n  memory restore --id UUID --fingerprint SHA256 --execute\n  lab catalogue|plan|run --id diffusion|queue|consent [--size 1000] [--execute]\n  lab serve --execute\n  sentinel template|list|show|validate|plan|save [--id NAME] [--file FILE] [--execute]\n  sentinel api-providers\n  sentinel api-validate --file REQUEST-JSON\n  sentinel api-plan --file REQUEST-JSON [--quote QUOTE-JSON]\n  remote plan|connect|configure [--file FILE] [--execute]\nEvery command accepts --json. Read/plan commands do not start a chat or model.\nExisting chats inherit their settings; deliberate model changes use their provider UI.\nUse the original provider UI for ChatGPT and managed-cloud chats that do not have a compatible CLI resume route.\n`;
 function inputFile(file){if(typeof file!=='string'||!path.isAbsolute(file))throw new Error('An absolute input file is required');const s=fs.lstatSync(file);if(!s.isFile()||s.isSymbolicLink()||s.nlink>1||s.size>2097152)throw new Error('Invalid input file');return JSON.parse(fs.readFileSync(file,'utf8'));}
 function requireExecute(values){if(!values.execute)throw new Error('Use --execute for this write or launch');}
 export async function nexusCommand(group,verb,values,c){
@@ -37,6 +40,9 @@ export async function nexusCommand(group,verb,values,c){
    if(verb==='show')return readMemory(c,values.id);
    if(verb==='add'){requireExecute(values);return saveMemory(c,inputFile(values.file));}
    if(verb==='export'){requireExecute(values);return exportMemory(c,String(values.id||'').split(','));}
+   if(verb==='snapshot'){requireExecute(values);return snapshotMemory(c,String(values.id||'').split(','));}
+   if(verb==='snapshot-verify')return verifyMemorySnapshot(c,values.id,{expectedDigest:values.fingerprint});
+   if(verb==='restore'){requireExecute(values);return restoreMemorySnapshot(c,values.id,{expectedDigest:values.fingerprint});}
  }
  if(group==='lab'){
    if(verb==='catalogue')return labCatalogue(c);
@@ -45,6 +51,13 @@ export async function nexusCommand(group,verb,values,c){
    if(verb==='serve'){requireExecute(values);if(values.json)throw new Error('Interactive actions require a real terminal');return runPlan(existingLabPlan(c),c);}
  }
  if(group==='sentinel'){
+   if(verb==='api-providers')return {providers:sentinelProviders(),networkCalls:0,liveModelStarted:false};
+   if(verb==='api-validate'||verb==='api-plan'){
+     const request=inputFile(values.file),prepared=prepareSentinelRequest(request);
+     if(verb==='api-validate')return {valid:true,schema:'ghc.sentinel.request-validation.v1',provider:prepared.request.provider,model:prepared.request.model,requestSha256:prepared.requestSha256,networkCalls:0};
+     let budget;try{budget=new SentinelLedger(path.join(nexusHome(c),'sentinel-runtime')).snapshot();}catch{budget={known:false};}
+     return {...sentinelApiPlan(request,{quote:values.quote?inputFile(values.quote):null,budget}),liveModelStarted:false,helperApproval:'A request shown to Hamish and explicit approval are required before a new helper/model session'};
+   }
    if(verb==='template')return sentinelTemplate(values.id||'sentinel-1');
    if(verb==='list')return {agents:listSentinel(c)};
    if(verb==='show')return readSentinel(c,values.id);
