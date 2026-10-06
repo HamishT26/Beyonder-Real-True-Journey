@@ -65,12 +65,12 @@ async function menu(c) {
   while(true){
     console.log('\n╭────────────────────────────────────────────────────╮\n│  GHC NEXUS HUB  ·  Local authority / Cloud compute  │\n╰────────────────────────────────────────────────────╯');
     console.log('Host: '+clean(c.platform)+'    Workspace: '+clean(c.cwd));
-    console.log('PowerShell • Linux • Codex App & CLI\nObserved access belongs to this host. Cloud is a separate executor.\n');
-    entries.forEach(([label],i)=>console.log(String(i+1).padStart(2)+'. '+label));console.log(' C. Cloud Linux tasks — official Codex Cloud picker');if(c.platform==='win32')console.log(' U. Local Ubuntu — optional; normal startup unresolved\n A. Registered Administrator App launch — separate from normal action 8');console.log(' 0. Exit');
+    console.log('PowerShell • CMD • Linux • Codex App & CLI\nObserved access belongs to this host. Cloud is a separate executor.\n');
+    entries.forEach(([label],i)=>console.log(String(i+1).padStart(2)+'. '+label));console.log(' C. Cloud Linux tasks — official Codex Cloud picker');if(c.platform==='win32')console.log(' U. Local Ubuntu — optional; normal startup unresolved\n A. Direct Administrator App launch — use normal action 8 for updates\n D. CMD Hub with this Windows token\n E. Administrator CMD Hub');console.log(' 0. Exit');
     const rl=createInterface({input:process.stdin,output:process.stdout});let answer;
     try{answer=(await rl.question('\nChoose an action: ')).trim();}catch{rl.close();return;}
     if(answer==='0'||answer.toLowerCase()==='q'){rl.close();return;}
-    if(answer.toLowerCase()==='a'&&c.platform==='win32'){try{const p=plan('app-admin',{},c);console.log(p.note);const yes=(await rl.question('Open the registered Administrator App route? [y/N] ')).trim().toLowerCase();rl.close();if(yes==='y')console.log(safeJson(await runPlan(p,c),2));}catch(e){rl.close();console.error('Hub: '+publicError(e).message);}continue;}
+    if(['a','d','e'].includes(answer.toLowerCase())&&c.platform==='win32'){try{const action={a:'app-admin',d:'cmd',e:'cmd-admin'}[answer.toLowerCase()];const p=plan(action,{},c);console.log(p.note);const yes=(await rl.question('Open this selected Windows route? [y/N] ')).trim().toLowerCase();rl.close();if(yes==='y')console.log(safeJson(await runPlan(p,c),2));}catch(e){rl.close();console.error('Hub: '+publicError(e).message);}continue;}
     if(answer.toLowerCase()==='c'||(answer.toLowerCase()==='u'&&c.platform==='win32')){try{const chosen=answer.toLowerCase()==='c'?'cloud':'linux';const p=plan(chosen,{},c);console.log(p.note);const yes=(await rl.question('Open this route? [y/N] ')).trim().toLowerCase();rl.close();if(yes==='y')console.log(safeJson(await runPlan(p,c),2));}catch(e){rl.close();console.error('Hub: '+publicError(e).message);}continue;}
     if(!/^\d+$/.test(answer)||Number(answer)<1||Number(answer)>entries.length){rl.close();console.log('Choose a listed number.');continue;}
     const action=entries[Number(answer)-1][1];

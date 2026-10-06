@@ -2,7 +2,7 @@
 param([switch]$Check)
 $ErrorActionPreference='Stop'
 $ghcDestination='D:\GHC-Archives\global-tools\ghc-nexus-hub'
-$ghcBank='D:\GHC-Archives\phase-banks\saelin-nexus-v2-20261005'
+$ghcBank='D:\GHC-Archives\phase-banks\saelin-nexus-v3-20261007'
 $ghcBin='D:\GHC-Archives\global-tools\bin'
 $ghcPwsh='D:\GHC-Archives\global-tools\powershell\7.6.6\pwsh.exe'
 $ghcNode='D:\GHC-Archives\global-tools\node\26.10.0\node-v26.10.0-win-x64\node.exe'
@@ -58,8 +58,10 @@ $ghcShortcutSpecs=@()
 foreach($ghcFolder in @($ghcDesktop,$ghcPrograms)){
  $ghcShortcutSpecs += [pscustomobject]@{path=(Join-Path $ghcFolder 'GHC Nexus Hub - Administrator.lnk');arguments=('-NoLogo -NoProfile -File "'+(Join-Path $ghcDestination 'Start-GhcHub.ps1')+'"');description='GHC terminal hub with normal Windows Administrator consent'}
  $ghcShortcutSpecs += [pscustomobject]@{path=(Join-Path $ghcFolder 'GHC Nexus Hub - Current User.lnk');arguments=('-NoLogo -NoProfile -File "'+(Join-Path $ghcDestination 'Start-GhcHub.ps1')+'" -CurrentUser');description='GHC terminal hub with the current Windows token'}
+ $ghcShortcutSpecs += [pscustomobject]@{path=(Join-Path $ghcFolder 'GHC Nexus Hub CMD - Administrator.lnk');arguments=('-NoLogo -NoProfile -File "'+(Join-Path $ghcDestination 'Start-GhcCmdHub.ps1')+'"');description='GHC Hub in Command Prompt with normal Windows Administrator consent'}
+ $ghcShortcutSpecs += [pscustomobject]@{path=(Join-Path $ghcFolder 'GHC Nexus Hub CMD - Current User.lnk');arguments=('-NoLogo -NoProfile -File "'+(Join-Path $ghcDestination 'Start-GhcCmdHub.ps1')+'" -CurrentUser');description='GHC Hub in Command Prompt using the current Windows token'}
  $ghcShortcutSpecs += [pscustomobject]@{path=(Join-Path $ghcFolder 'GHC Codex - Registered App.lnk');arguments=('-NoLogo -NoProfile -File "'+$ghcAdminTarget+'" -Target Codex -AppActivation Registered');description='Registered ChatGPT/Codex app activation; preserves Windows package identity when supported'}
- $ghcShortcutSpecs += [pscustomobject]@{path=(Join-Path $ghcFolder 'GHC Codex - Administrator.lnk');arguments=('-NoLogo -NoProfile -File "'+$ghcAdminTarget+'" -Target Codex -AppActivation RegisteredAdministrator');allowedPreviousArguments=('-NoLogo -NoProfile -File "'+$ghcAdminTarget+'" -Target Codex');description='Registered Windows Codex entry: Run as administrator; verify package identity after first use'}
+ $ghcShortcutSpecs += [pscustomobject]@{path=(Join-Path $ghcFolder 'GHC Codex - Administrator.lnk');arguments=('-NoLogo -NoProfile -File "'+$ghcAdminTarget+'" -Target Codex -AppActivation DirectAdministrator');allowedPreviousArguments=('-NoLogo -NoProfile -File "'+$ghcAdminTarget+'" -Target Codex -AppActivation RegisteredAdministrator');description='Direct Administrator launch; use the separate registered App entry for updates'}
 }
 $ghcShell=New-Object -ComObject WScript.Shell
 foreach($ghcShortcut in $ghcShortcutSpecs){
@@ -93,12 +95,12 @@ function Copy-GhcReviewed([string]$Source,[string]$Target,[string]$Relative){
  if((Get-FileHash -LiteralPath $Source).Hash -ne (Get-FileHash -LiteralPath $Target).Hash){throw 'Installed readback mismatch'}
 }
 $ghcUserPathBefore=[Environment]::GetEnvironmentVariable('Path','User')
-$ghcReceipt=[ordered]@{schema='ghc.nexus.install.v2';startedAt=[datetime]::UtcNow.ToString('o');status='in_progress';backup=$ghcBackup;destination=$ghcDestination;files=$ghcFiles;backups=$ghcBackups;userPathBefore=$ghcUserPathBefore;shortcuts=$ghcShortcutSpecs;appRestarted=$false;credentialStoresChanged=$false;privateStateIncluded=$false}
+$ghcReceipt=[ordered]@{schema='ghc.nexus.install.v2';version=$ghcManifest.version;startedAt=[datetime]::UtcNow.ToString('o');status='in_progress';backup=$ghcBackup;destination=$ghcDestination;files=$ghcFiles;backups=$ghcBackups;userPathBefore=$ghcUserPathBefore;shortcuts=$ghcShortcutSpecs;appRestarted=$false;credentialStoresChanged=$false;privateStateIncluded=$false}
 try {
  foreach($ghcFile in $ghcFiles){Copy-GhcReviewed $ghcFile.source $ghcFile.target ('runtime/'+$ghcFile.relative)}
  Copy-GhcReviewed (Join-Path $PSScriptRoot 'installation-files.json') (Join-Path $ghcDestination 'installation-files.json') 'runtime/installation-files.json'
  Push-Location -LiteralPath (Join-Path $ghcDestination 'mcp/sdk')
- try {& $ghcNode $ghcNpm ci --omit=dev --ignore-scripts --no-audit --no-fund --cache 'D:\GHC-Archives\tool-caches\npm-cache';if($LASTEXITCODE -ne 0){throw 'Pinned MCP dependency installation failed'}} finally {Pop-Location}
+ try {& $ghcNode $ghcNpm ci --omit=dev --ignore-scripts --no-audit --no-fund --prefer-offline --fetch-timeout=20000 --fetch-retries=1 --cache 'D:\GHC-Archives\tool-caches\npm-cache';if($LASTEXITCODE -ne 0){throw 'Pinned MCP dependency installation failed'}} finally {Pop-Location}
  Copy-GhcReviewed (Join-Path $PSScriptRoot 'Start-GhcAdmin.ps1') $ghcAdminTarget 'shared-launcher/Start-GhcAdmin.ps1'
  foreach($ghcWrapper in @('ghc-nexus.cmd','ghc-nexus.ps1')){Copy-GhcReviewed (Join-Path $PSScriptRoot $ghcWrapper) (Join-Path $ghcBin $ghcWrapper) ('bin/'+$ghcWrapper)}
  foreach($ghcShortcut in $ghcShortcutSpecs){
@@ -117,5 +119,5 @@ try {
 } finally {
  $ghcReceipt | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $ghcBackup 'receipt.json') -Encoding utf8
 }
-$ghcReceipt | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $ghcBank 'hub-v2-installation.json') -Encoding utf8
-[ordered]@{status=$ghcReceipt.status;destination=$ghcDestination;files=$ghcFiles.Count;backup=$ghcBackup;appRestarted=$false;newTerminalForPath=$true}|ConvertTo-Json
+$ghcReceipt | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $ghcBank 'hub-installation.json') -Encoding utf8
+[ordered]@{status=$ghcReceipt.status;version=$ghcManifest.version;destination=$ghcDestination;files=$ghcFiles.Count;backup=$ghcBackup;appRestarted=$false;newTerminalForPath=$true}|ConvertTo-Json

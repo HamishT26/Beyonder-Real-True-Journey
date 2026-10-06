@@ -1,3 +1,5 @@
+> Current release: see [GHC Nexus Hub 2.1](RELEASE-2.1.md) for the restored direct Administrator route, CMD shortcuts and chat-reader cleanup. Earlier release details below are retained as history.
+
 # GHC Nexus Hub 2 — operator and integration guide
 
 This release extends the keyboard menu and ordinary command interface with a shared chat catalogue, a laboratory, private memory, project identity certificates, a Sentinel specification builder and explicit remote-connection plans. These are tools for the current executor. They do not turn the laptop into a cloud VM, migrate ChatGPT conversations into Codex models, or grant provider permissions.

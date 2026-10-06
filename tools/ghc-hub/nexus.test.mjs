@@ -21,6 +21,8 @@ const row=(extra={})=>normalizeEntry({id,title:'Example',kind:'codex-local',stat
 function fixture(t){const base=path.resolve(process.platform==='win32'?'D:/GHC-Archives/phase-banks/ghc-nexus-tests':os.tmpdir());fs.mkdirSync(base,{recursive:true});const root=fs.mkdtempSync(path.join(base,'ghc-nexus-test-'));t.after(()=>{const relative=path.relative(base,path.resolve(root));if(!relative||relative.startsWith('..')||path.isAbsolute(relative))throw new Error('Test cleanup escaped its root');fs.rmSync(root,{recursive:true,force:true});});return {nexusHome:root,state:root,cwd:root,platform:process.platform,codex:process.execPath,node:process.execPath,pwsh:null};}
 test('chat kinds cannot silently fall back to local execution',()=>assert.throws(()=>normalizeEntry({id,kind:'unknown-provider'},'x',date)));
 test('local resume preserves model and permission flags',()=>{const p=chatPlan(row(),{codex:'C:/codex.exe',cwd:'D:/lab'});assert.deepEqual(p.args,['--no-daemon','--no-alt-screen','resume',id]);assert.equal(p.preservesModelAndSettings,true);});
+test('a fresh unloaded local record can ask the official CLI to acquire its lock',()=>{const p=chatPlan(row({status:'notLoaded'}),{codex:'C:/codex.exe',cwd:'D:/lab'});assert.equal(p.status,'ready');assert.equal(p.providerStatus,'notLoaded');assert.equal(p.executionGate,'official_cli_session_lock');assert.deepEqual(p.args,['--no-daemon','--no-alt-screen','resume',id]);});
+test('stale unloaded, unknown and held records cannot bypass admission',()=>{const c={codex:'C:/codex.exe',cwd:'D:/lab'};const stale={...row({status:'notLoaded'}),observedAt:new Date(Date.now()-360000).toISOString()};assert.equal(chatPlan(stale,c).status,'unverified');assert.equal(chatPlan(row({status:'unknown'}),c).status,'unverified');assert.equal(chatPlan(row({status:'notLoaded',held:true}),c).status,'held');});
 test('hub refuses an existing-chat override; provider model controls remain separate',()=>assert.throws(()=>chatPlan(row(),{codex:'C:/codex.exe',cwd:'D:/lab'},{override:true}),/inherited/));
 test('held original record cannot produce a launch',()=>{assert.equal(chatPlan(row({held:true}),{}).status,'held');});
 test('active and conflicting observations cannot resume',()=>{const merged=mergeEntries([[row({status:'active'})],[row({status:'idle'})]]);assert.equal(chatPlan(merged[0],{}).status,'busy');});
@@ -56,4 +58,11 @@ test('app-server initialization and split UTF-8 response',async()=>{
  child.stdin.on('finish',()=>queueMicrotask(()=>child.emit('close',0,null)));
  const result=appServerRead({codex:'test',cwd:'.'},'thread/list',{limit:10,archived:false,sortKey:'updated_at',sourceKinds:['cli'],useStateDbOnly:true}, {spawnFn:()=>{queueMicrotask(()=>child.emit('spawn'));return child;},timeoutMs:1000});
  const r=await result;assert.equal(r.status,'ok');assert.equal(r.data.data[0].name,'Māori');assert.equal(r.childCloseObserved,true);assert.ok(!requests.includes('turn/start'));
+});
+test('metadata reader waits for asynchronous close after terminating its owned child',async()=>{
+ const child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new PassThrough();child.stderr=new PassThrough();let kills=0;child.unref=()=>{};
+ child.kill=()=>{kills++;setTimeout(()=>child.emit('close',null,'SIGKILL'),25);return true;};
+ child.stdin.on('data',d=>{for(const line of d.toString().trim().split('\n')){const m=JSON.parse(line);if(m.id===1)queueMicrotask(()=>child.stdout.write(JSON.stringify({id:1,result:{}})+'\n'));if(m.id===2)queueMicrotask(()=>child.stdout.write(JSON.stringify({id:2,result:{thread:{id,status:{type:'notLoaded'}}}})+'\n'));}});
+ const result=await appServerRead({codex:'fixture',cwd:'.'},'thread/read',{threadId:id,includeTurns:false},{spawnFn:()=>{queueMicrotask(()=>child.emit('spawn'));return child;},timeoutMs:10000});
+ assert.equal(kills,1);assert.equal(result.status,'ok');assert.equal(result.childCloseObserved,true);assert.equal(result.diagnostics.cleanupErrors,0);
 });

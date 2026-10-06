@@ -37,13 +37,23 @@ export function appServerRead(c, method, params = {}, {spawnFn=spawn, timeoutMs=
   if(unresolvedCleanup&&spawnFn===spawn)return Promise.resolve({status:'unavailable',reason:'prior_child_cleanup_unconfirmed'});
   let lease;try{lease=spawnFn===spawn?reserveReader(c):null;}catch{return Promise.resolve({status:'unavailable',reason:'metadata_reader_busy_or_cleanup_unconfirmed'});}
   return new Promise(resolve=>{
-    let child, buffer='', size=0, done=false, response, stopTimer, deadline, spawnObserved=false, initialized=false, requestSent=false, stopping=false, cleanupErrors=0, stdoutBytes=0,stderrBytes=0,protocolLines=0;
+    let child, buffer='', size=0, done=false, response, stopTimer, hardCloseTimer, deadline, spawnObserved=false, initialized=false, requestSent=false, stopping=false, cleanupErrors=0, stdoutBytes=0,stderrBytes=0,protocolLines=0;
     const decoder=new StringDecoder('utf8');
-    const finish = value => {if(done)return;done=true;clearTimeout(deadline);clearTimeout(stopTimer);if(value.childCloseObserved===true||(!spawnObserved&&!child?.pid)){try{lease?.release();}catch{cleanupErrors++;}}resolve({...value,diagnostics:{spawnObserved,childPid:child?.pid??null,stdoutBytes,stderrBytes,protocolLines,initialized,requestSent,cleanupErrors}});};
+    const finish = value => {if(done)return;done=true;clearTimeout(deadline);clearTimeout(stopTimer);clearTimeout(hardCloseTimer);if(value.childCloseObserved===true||(!spawnObserved&&!child?.pid)){try{lease?.release();}catch{cleanupErrors++;}}resolve({...value,diagnostics:{spawnObserved,childPid:child?.pid??null,stdoutBytes,stderrBytes,protocolLines,initialized,requestSent,cleanupErrors}});};
     const stop = () => {
       if(stopping||done)return;stopping=true;
       try {child.stdin.end();} catch {}
-      stopTimer=setTimeout(()=>{for(const action of [()=>child.kill('SIGKILL'),()=>child.stdout.destroy(),()=>child.stderr.destroy(),()=>child.stdin.destroy(),()=>child.unref()]){try{action();}catch{cleanupErrors++;}}if(spawnFn===spawn)unresolvedCleanup=true;finish({...response,childCloseObserved:false});},1500);
+      stopTimer=setTimeout(()=>{
+        try{child.kill('SIGKILL');}catch{cleanupErrors++;}
+        if(done)return;
+        // Windows reports close asynchronously after termination. Keep ownership
+        // until that event arrives, instead of declaring a leak immediately.
+        hardCloseTimer=setTimeout(()=>{
+          for(const action of [()=>child.stdout.destroy(),()=>child.stderr.destroy(),()=>child.stdin.destroy(),()=>child.unref()]){try{action();}catch{cleanupErrors++;}}
+          if(spawnFn===spawn)unresolvedCleanup=true;
+          finish({...response,childCloseObserved:false});
+        },1500);
+      },1500);
     };
     const fail = reason => {if(response||done)return;response={status:'unavailable',reason,spawnObserved};stop();};
     const send = value => {try{child.stdin.write(JSON.stringify(value)+'\n');return true;}catch{fail('write_failed');return false;}};

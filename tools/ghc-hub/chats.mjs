@@ -93,9 +93,9 @@ export function chatPlan(entry,c,{override=false,now=Date.now()}={}) {
     if(!c.codex)return {status:'unavailable',reason:'codex_not_found'};
     if(r.hostId!==(c.hostId||'local'))return {status:'unavailable',reason:'different_host',id:r.id,title:r.title};
     const age=now-Date.parse(r.observedAt);
-    if(r.status!=='idle'||!Number.isFinite(age)||age<0||age>300000)return {status:'unverified',id:r.id,title:r.title,reason:'Current idle state is not established; refresh the supported provider before resuming',providerStatus:r.status};
+    if(!['idle','notLoaded'].includes(r.status)||!Number.isFinite(age)||age<0||age>300000)return {status:'unverified',id:r.id,title:r.title,reason:'Current local availability is not established; refresh the supported provider or use the official local picker',providerStatus:r.status};
     const args=['--no-daemon','--no-alt-screen','resume',r.id];
-    return {status:'ready',schema:'ghc.nexus.chat-plan.v1',action:'chat-resume',id:r.id,title:r.title,command:c.codex,args,cwd:c.cwd,interactive:true,shell:false,preservesModelAndSettings:true,note:'No model, reasoning, context or permission override is supplied. The official CLI must also acquire its session lock; the hub never removes locks.'};
+    return {status:'ready',schema:'ghc.nexus.chat-plan.v1',action:'chat-resume',id:r.id,title:r.title,command:c.codex,args,cwd:c.cwd,interactive:true,shell:false,preservesModelAndSettings:true,providerStatus:r.status,executionGate:'official_cli_session_lock',note:'No model, reasoning, context or permission override is supplied. notLoaded means this observer has not loaded the session; it is not proof of inactivity elsewhere. The official CLI must acquire the session lock; the hub never removes locks.'};
   }
   if(r.kind==='chatgpt'){
     const url='https://chatgpt.com/c/'+r.id;

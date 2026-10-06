@@ -1,3 +1,5 @@
+> Current release: see [GHC Nexus Hub 2.1](RELEASE-2.1.md) for the restored direct Administrator route, CMD shortcuts and chat-reader cleanup. Earlier release details below are retained as history.
+
 # GHC Nexus Hub 2
 
 Keyboard terminal menu, ordinary commands and JSON for the current Windows or Linux executor. The core uses Node 20+ and its standard library. The optional read-only MCP bridge has pinned official SDK dependencies.

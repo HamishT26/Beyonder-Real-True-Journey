@@ -1,3 +1,5 @@
+> Current release: see [GHC Nexus Hub 2.1](RELEASE-2.1.md) for the restored direct Administrator route, CMD shortcuts and chat-reader cleanup. Earlier release details below are retained as history.
+
 > Historical v1 operator and release record. For the current v2 interface and limits, read [NEXUS-V2-GUIDE.md](NEXUS-V2-GUIDE.md). Counts and observations below belong to the first release.
 
 # GHC Nexus Hub operator guide
