@@ -50,10 +50,15 @@ function evaluate(payload,{sourceCheck=()=>true,actions=[]}={}){
  }
  if(hubIndex<0&&aliasIndex<0)return findings;
  const args=tokens.slice((hubIndex>=0?hubIndex:aliasIndex)+1),[group,verb]=args;
- const mutating=group==='run'||(['chats','lab','memory','identity','remote','sentinel'].includes(group)&&['open','run','serve','export','add','certificate','configure','connect','save','import','snapshot','restore'].includes(verb));
+ const mutating=group==='run'||(['chats','lab','memory','identity','remote','sentinel'].includes(group)&&['open','run','serve','export','add','certificate','configure','connect','save','import','snapshot','restore'].includes(verb))||(group==='messages'&&['draft','queue','claim','receipt'].includes(verb));
  if(mutating){if(hubIndex<0||!sourceCheck())add('source_manifest');if(!args.includes('--execute'))add('selected_route')}
  if(['plan','run'].includes(group)&&!actions.includes(verb))add('selected_route');
  if(group==='chats'&&['resolve','plan','open'].includes(verb)&&!option(args,'--id'))add('selected_route');
+ if(group==='messages'){
+  if(!['list','show','plan','draft','queue','claim','receipt'].includes(verb))add('selected_route');
+  if(['plan','draft','queue','receipt'].includes(verb)&&!option(args,'--file'))add('selected_route');
+  if(['show','claim'].includes(verb)&&!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(option(args,'--id')||''))add('selected_route');
+ }
  if(group==='memory'&&verb==='export'){const ids=option(args,'--id');if(!ids||!ids.split(',').every(x=>/^[a-z0-9][a-z0-9-]{0,79}$/.test(x))||ids.split(',').length>30||new Set(ids.split(',')).size!==ids.split(',').length)add('secret_export')}
  if(group==='lab'&&['run','plan'].includes(verb)){const raw=option(args,'--size');if(args.some(a=>a==='--size'||a.startsWith('--size='))&&(raw===null||!/^\d+$/.test(raw)||Number(raw)<1||Number(raw)>200000))add('budget_admission')}
  return findings;

@@ -5,7 +5,12 @@ import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-export const VERSION = '2.2.0';
+export const VERSION = '2.3.0';
+export function terminalOptions(){
+ return {columns:process.stdout.columns??80,tty:process.stdout.isTTY===true,nowMs:Date.now(),
+  ascii:process.env.GHC_NEXUS_ASCII==='1',plain:process.env.GHC_NEXUS_PLAIN==='1',
+  env:{TERM:process.env.TERM,...(Object.hasOwn(process.env,'NO_COLOR')?{NO_COLOR:process.env.NO_COLOR}:{})}};
+}
 export const MIN_NODE = 20;
 export const clean = value => String(value).replace(/[\x00-\x1f\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u206f]/g, ' ').slice(0, 2048);
 export const safeJson = (value,space) => JSON.stringify(value,null,space).replace(/[\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u206f]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'));

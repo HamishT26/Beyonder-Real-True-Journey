@@ -1,3 +1,7 @@
+## Hub 2.3
+
+The chat menu now has M for a private message draft and O for delivery receipts. An active authorized agent relays drafts through supported native tools; the Hub has no automatic sender. Menus use a lightweight cyan/magenta presentation with plain and ASCII fallbacks. Read [the 2.3 release guide](RELEASE-2.3.md) for exact behavior and evidence limits.
+
 > Current release: see [GHC Nexus Hub 2.1](RELEASE-2.1.md) for the restored direct Administrator route, CMD shortcuts and chat-reader cleanup. Earlier release details below are retained as history.
 
 > Historical v1 operator and release record. For the current v2 interface and limits, read [NEXUS-V2-GUIDE.md](NEXUS-V2-GUIDE.md). Counts and observations below belong to the first release.

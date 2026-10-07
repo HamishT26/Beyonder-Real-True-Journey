@@ -1,4 +1,8 @@
-> Current release: see [GHC Nexus Hub 2.2](RELEASE-2.2.md) for selected snapshot/restore, Sentinel offline planning, four local plugins, and corrected CMD/chat guidance. Earlier release details below are retained as history.
+## Hub 2.3
+
+The chat menu now has M for a private message draft and O for delivery receipts. An active authorized agent relays drafts through supported native tools; the Hub has no automatic sender. Menus use a lightweight cyan/magenta presentation with plain and ASCII fallbacks. Read [the 2.3 release guide](RELEASE-2.3.md) for exact behavior and evidence limits.
+
+> Previous release: [GHC Nexus Hub 2.2](RELEASE-2.2.md) introduced selected snapshot/restore, Sentinel offline planning and four local plugins. Those capabilities remain; 2.3 is the current release.
 
 # GHC Nexus Hub 2
 

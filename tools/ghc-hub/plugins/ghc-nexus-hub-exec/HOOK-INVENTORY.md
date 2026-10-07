@@ -17,3 +17,7 @@ Input is capped at 32768 bytes. An unfinished input stream gets a one-second in-
 Installation does not grant hook trust. Review the current definition through the host's supported hooks control before enabling it. Never synthesize trusted hashes or copy a trust decision from another package. Runtime event dispatch remains unverified until a deliberately selected harmless event is observed in that host.
 
 For the Meta Tool Box, add one row for this canonical handler with: package/version, manifest hash, five check IDs, event/matcher, platform runtime path, input/time bounds, definition hash, trust state, last observed dispatch and rollback version. Link the four plugin skills to that row instead of registering additional copies. Refresh source pins only from the integrator's reviewed release manifest; a newer source worktree is not an installed release.
+
+## Hub 2.3 application checks
+
+The same PreToolUse registration recognizes messages draft, queue, claim and receipt as mutations; it checks --execute and selected file/UUID arguments and pins the two new modules. No second lifecycle handler is registered. Five application-level checks in messages.mjs cover request shape, exact target, fresh observation at claim, single claim and strict receipt binding. They are CLI validation, not five additional Codex lifecycle hooks.

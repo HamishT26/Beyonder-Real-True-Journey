@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {randomUUID} from 'node:crypto';
 import {createInterface} from 'node:readline/promises';
-import {clean,safeJson,runPlan} from './core.mjs';
+import {clean,safeJson,runPlan,terminalOptions} from './core.mjs';
+import {renderChatPanel} from './terminal-presentation.mjs';
 import {listChats,readRegistry,resolveChat,chatPlan,admitChat,saveRegistry,normalizeEntry,recoveryCatalogue,localResumePickerPlan} from './chats.mjs';
 import {listProfiles,readProfile,saveProfile,issueCertificate,verifyCertificate} from './identity.mjs';
 import {listMemory,readMemory,saveMemory,exportMemory} from './memory-bank.mjs';
@@ -12,12 +14,23 @@ import {FileLedger as SentinelLedger} from './sentinel-runtime/src/ledger.mjs';
 import {labCatalogue,labPlan,runLab,existingLabPlan} from './laboratory.mjs';
 import {remotePlan,saveRemote} from './remote.mjs';
 import {nexusHome,readPrivate} from './private-store.mjs';
+import {messagePlan,queueMessage,messageStatus,listMessages,claimMessage,recordMessageReceipt} from './messages.mjs';
 
-export const NEXUS_COMMANDS=['chats','identity','memory','lab','sentinel','remote'];
-export const NEXUS_HELP=`\nGHC Family extension commands:\n  chats list [--refresh] [--limit 100] [--search TEXT]\n  chats recovery [--id UUID]\n  chats resolve|plan|open --id UUID [--execute]\n  chats import --file FILE --execute\n  identity list|show|certificate|verify --id NAME [--execute]\n  identity add --file FILE --execute\n  memory list|show --id NAME\n  memory add --file FILE --execute\n  memory export --id NAME[,NAME] --execute\n  memory snapshot --id NAME[,NAME] --execute\n  memory snapshot-verify --id UUID [--fingerprint SHA256]\n  memory restore --id UUID --fingerprint SHA256 --execute\n  lab catalogue|plan|run --id diffusion|queue|consent [--size 1000] [--execute]\n  lab serve --execute\n  sentinel template|list|show|validate|plan|save [--id NAME] [--file FILE] [--execute]\n  sentinel api-providers\n  sentinel api-validate --file REQUEST-JSON\n  sentinel api-plan --file REQUEST-JSON [--quote QUOTE-JSON]\n  remote plan|connect|configure [--file FILE] [--execute]\nEvery command accepts --json. Read/plan commands do not start a chat or model.\nExisting chats inherit their settings; deliberate model changes use their provider UI.\nUse the original provider UI for ChatGPT and managed-cloud chats that do not have a compatible CLI resume route.\n`;
+export const NEXUS_COMMANDS=['chats','messages','identity','memory','lab','sentinel','remote'];
+export const NEXUS_HELP=`\nGHC Family extension commands:\n  chats list [--refresh] [--limit 100] [--search TEXT]\n  chats recovery [--id UUID]\n  chats resolve|plan|open --id UUID [--execute]\n  chats import --file FILE --execute\n  messages list\n  messages show --id UUID\n  messages plan --file REQUEST-JSON\n  messages draft --file REQUEST-JSON --execute\n  messages queue --file REQUEST-JSON --execute\n  messages claim --id UUID --execute\n  messages receipt --file RECEIPT-JSON --execute\nMessage outbox has no automatic sender. An authorized existing agent claims once, sends through the native tool once, and records the result. Unknown outcomes require reconciliation.\n  identity list|show|certificate|verify --id NAME [--execute]\n  identity add --file FILE --execute\n  memory list|show --id NAME\n  memory add --file FILE --execute\n  memory export --id NAME[,NAME] --execute\n  memory snapshot --id NAME[,NAME] --execute\n  memory snapshot-verify --id UUID [--fingerprint SHA256]\n  memory restore --id UUID --fingerprint SHA256 --execute\n  lab catalogue|plan|run --id diffusion|queue|consent [--size 1000] [--execute]\n  lab serve --execute\n  sentinel template|list|show|validate|plan|save [--id NAME] [--file FILE] [--execute]\n  sentinel api-providers\n  sentinel api-validate --file REQUEST-JSON\n  sentinel api-plan --file REQUEST-JSON [--quote QUOTE-JSON]\n  remote plan|connect|configure [--file FILE] [--execute]\nEvery command accepts --json. Read/plan commands do not start a chat or model.\nExisting chats inherit their settings; deliberate model changes use their provider UI.\nUse the original provider UI for ChatGPT and managed-cloud chats that do not have a compatible CLI resume route.\n`;
 function inputFile(file){if(typeof file!=='string'||!path.isAbsolute(file))throw new Error('An absolute input file is required');const s=fs.lstatSync(file);if(!s.isFile()||s.isSymbolicLink()||s.nlink>1||s.size>2097152)throw new Error('Invalid input file');return JSON.parse(fs.readFileSync(file,'utf8'));}
 function requireExecute(values){if(!values.execute)throw new Error('Use --execute for this write or launch');}
 export async function nexusCommand(group,verb,values,c){
+ if(group==='messages'){
+   if(verb==='list')return listMessages(c);
+   if(verb==='show')return messageStatus(c,values.id,{includeBody:true});
+   if(verb==='plan')return messagePlan(c,inputFile(values.file));
+   requireExecute(values);
+   if(verb==='draft')return queueMessage(c,inputFile(values.file),{draft:true});
+   if(verb==='queue')return queueMessage(c,inputFile(values.file));
+   if(verb==='claim')return claimMessage(c,values.id);
+   if(verb==='receipt')return recordMessageReceipt(c,inputFile(values.file));
+ }
  if(group==='chats'){
    if(verb==='recovery')return recoveryCatalogue(c,values.id);
    if(verb==='list')return listChats(c,{refresh:values.refresh===true,limit:values.limit?Number(values.limit):100,search:values.search||''});
@@ -80,13 +93,25 @@ export async function chatMenu(c){
  let refresh=false,query='';
  while(true){
   const result=await listChats(c,{refresh,search:query});refresh=false;
-  console.log('\nGHC-Family chat panel menu\nTitles are metadata; each route preserves its own provider and history.');
-  result.entries.forEach((e,i)=>console.log(String(i+1).padStart(3)+'. '+clean(e.title).slice(0,65)+'\n     '+e.id+' | '+e.kind+' | '+clean(e.hostId||'provider')+' | '+(e.held?'HELD':e.status)+' | last observed '+clean(e.observedAt||'unknown')));
+  const display=terminalOptions();
+  console.log(renderChatPanel(result,display));
   if(result.truncated)console.log('Showing '+result.entries.length+' of '+result.total+' records; filter or enter an exact ID.');
   if(result.cache?.status==='unavailable')console.log('The refreshed snapshot could not be saved; inspect the local private store before opening a newly found record.');
-  console.log('\nR. Refresh local CLI/App and legacy cloud task metadata\nF. Filter titles or an exact ID\nI. Preserved chat IDs and recovery routes (offline)\nP. Official local CLI resume picker\nC. Official cloud task picker\n0. Back');
+  console.log('\nM. Compose a private message draft (active agent relay required)\nO. Message outbox and delivery receipts\nR. Refresh local CLI/App and legacy cloud task metadata\nF. Filter titles or an exact ID\nI. Preserved chat IDs and recovery routes (offline)\nP. Official local CLI resume picker\nC. Official cloud task picker\n0. Back');
   const rawChoice=await ask('Select chat number, exact ID, or route: '),choice=rawChoice.toLowerCase();if(choice==='0'||choice==='q')return;
+  if(display.columns<24){console.log('Widen the terminal before selecting a chat.');continue;}
   if(choice==='r'){refresh=true;continue;}
+  if(choice==='o'){console.log(safeJson(listMessages(c),2));continue;}
+  if(choice==='m'){
+   const destination=await ask('Destination number or exact UUID: ');
+   const matches=/^\d+$/.test(destination)?[result.entries[Number(destination)-1]].filter(Boolean):readRegistry(c).filter(e=>e.id.toLowerCase()===destination.toLowerCase());
+   if(matches.length!==1){console.log('No unique exact destination.');continue;}
+   const entry=matches[0],body=await ask('Message (one line; Enter cancels): ');if(!body)continue;
+   console.log('To: '+clean(entry.title)+' | '+entry.id+' | '+clean(entry.hostId||'ChatGPT'));
+   console.log('This saves a private draft for an active agent to relay. It does not send automatically.');
+   if((await ask('Save this selected message to the outbox? [y/N] ')).toLowerCase()==='y')console.log(safeJson(queueMessage(c,{requestId:randomUUID(),toId:entry.id,body},{draft:true}),2));
+   continue;
+  }
   if(choice==='i'){console.log(safeJson(recoveryCatalogue(c),2));continue;}
   if(choice==='p'){await confirmPlan(localResumePickerPlan(c),c);continue;}
   if(choice==='f'){query=await ask('Title text or exact ID (empty clears filter): ');continue;}

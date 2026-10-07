@@ -5,6 +5,8 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {ACTIONS,VERSION,MIN_NODE,clean,context,plan,runPlan,doctor,journal,safeJson} from './core.mjs';
 import {NEXUS_COMMANDS,NEXUS_HELP,nexusCommand,chatMenu,workbenchMenu} from './nexus.mjs';
+import {terminalOptions} from './core.mjs';
+import {renderMenu} from './terminal-presentation.mjs';
 
 export function publicError(error){
  const fixed=["An exact chat ID or unique title is required; use --id","Chat not found","Ambiguous chat selection","Chat limit must be 1 to 100","Unknown laboratory model","Laboratory size must be 1 to 200000","Existing chat settings must be inherited","Unsupported option for this command; use --help"].concat(['Unknown action','Unknown command','Unexpected positional argument','Use --execute to run the displayed action, or use plan','An exact existing session UUID is required','Invalid environment ID','This action requires the Windows host','Reviewed Windows launcher is unavailable','Required executable is unavailable on this host','This action requires an interactive terminal; use plan or machine commands in an agent tool','Interactive actions require a terminal without --json; use plan --json to inspect them','Menu requires a terminal without --json. Agents can use doctor, actions, plan and run --json','Node 20 or later is required']);
@@ -16,6 +18,7 @@ export function publicError(error){
 export function validateCommandOptions(cmd,verb,values){
  const matrix={
  chats:{list:['refresh','limit','search'],recovery:['id'],import:['file','execute'],resolve:['id'],plan:['id','override'],open:['id','execute']},
+ messages:{list:[],show:['id'],plan:['file'],draft:['file','execute'],queue:['file','execute'],claim:['id','execute'],receipt:['file','execute']},
  identity:{list:[],show:['id'],add:['file','execute'],certificate:['id','execute'],verify:['id','fingerprint']},
  memory:{list:[],show:['id'],add:['file','execute'],export:['id','execute'],snapshot:['id','execute'],'snapshot-verify':['id','fingerprint'],restore:['id','fingerprint','execute']},
  lab:{catalogue:[],plan:['id','size'],run:['id','size','execute'],serve:['execute']},
@@ -63,13 +66,16 @@ export async function main(argv=process.argv.slice(2)) {
 async function menu(c) {
   const entries=[['Inspect this host',null],['PowerShell here','powershell'],['Administrator PowerShell (Windows)','powershell-admin'],[c.platform==='win32'?'Linux primary — cloud task picker':'Linux shell in this executor',c.platform==='win32'?'cloud':'linux'],[c.platform==='win32'?'Local Ubuntu as root (optional WSL)':'Administrator shell in this Linux executor','linux-admin'],['New Codex CLI — Astra Max, Fast, Full access','codex'],['GHC-Family chat panel menu','chats'],['Launch ChatGPT/Codex app (Windows)','app'],['Check app launcher without opening app','app-check'],['GHC-Family Laboratory','lab'],['GHC-Family Freed ID certificates','identity'],['GHC-Family Spaces / Filesystem Memory bank','memory'],['GHC-Family Sentinel-1 Agent builder','sentinel'],['GHC-Family persistent remote terminal','remote'],['Check Codex sign-in','auth-status'],['Sign in through official browser flow','auth-login'],['Sign in with official device code','auth-device'],['Google account in browser','google-account'],['ChatGPT account in browser','chatgpt-account']];
   while(true){
-    console.log('\n╭────────────────────────────────────────────────────╮\n│  GHC NEXUS HUB  ·  Local authority / Cloud compute  │\n╰────────────────────────────────────────────────────╯');
-    console.log('Host: '+clean(c.platform)+'    Workspace: '+clean(c.cwd));
-    console.log('PowerShell • CMD • Linux • Codex App & CLI\nObserved access belongs to this host. Cloud is a separate executor.\n');
-    entries.forEach(([label],i)=>console.log(String(i+1).padStart(2)+'. '+label));console.log(' C. Cloud Linux tasks — official Codex Cloud picker');if(c.platform==='win32')console.log(' U. Local Ubuntu — optional; normal startup unresolved\n A. Direct Administrator App launch — use normal action 8 for updates\n D. CMD Hub with this Windows token\n E. Administrator CMD Hub');console.log(' 0. Exit');
+    const display=terminalOptions();
+    const menuItems=entries.map(([label],i)=>({key:String(i+1),label:i===5?'New Codex CLI - needs your explicit new-helper approval':label}));
+    menuItems.push({key:'C',label:'Cloud Linux tasks - official Codex Cloud picker'});
+    if(c.platform==='win32')menuItems.push({key:'U',label:'Local Ubuntu - optional; normal startup unresolved'},{key:'A',label:'Direct Administrator App - action 8 is the updater route'},{key:'D',label:'CMD Hub with this Windows token'},{key:'E',label:'Administrator CMD Hub'});
+    menuItems.push({key:'0',label:'Exit'});
+    console.log(renderMenu({title:'GHC NEXUS HUB',subtitle:'Host: '+clean(c.platform)+' | Workspace: '+clean(c.cwd),items:menuItems,footer:['PowerShell / CMD / Node / Linux / App & CLI','Windows token and Cloud permissions belong to their own hosts.']},display));
     const rl=createInterface({input:process.stdin,output:process.stdout});let answer;
     try{answer=(await rl.question('\nChoose an action: ')).trim();}catch{rl.close();return;}
     if(answer==='0'||answer.toLowerCase()==='q'){rl.close();return;}
+    if(display.columns<24){rl.close();console.log('Widen the terminal before selecting an action.');continue;}
     if(['a','d','e'].includes(answer.toLowerCase())&&c.platform==='win32'){try{const action={a:'app-admin',d:'cmd',e:'cmd-admin'}[answer.toLowerCase()];const p=plan(action,{},c);console.log(p.note);const yes=(await rl.question('Open this selected Windows route? [y/N] ')).trim().toLowerCase();rl.close();if(yes==='y')console.log(safeJson(await runPlan(p,c),2));}catch(e){rl.close();console.error('Hub: '+publicError(e).message);}continue;}
     if(answer.toLowerCase()==='c'||(answer.toLowerCase()==='u'&&c.platform==='win32')){try{const chosen=answer.toLowerCase()==='c'?'cloud':'linux';const p=plan(chosen,{},c);console.log(p.note);const yes=(await rl.question('Open this route? [y/N] ')).trim().toLowerCase();rl.close();if(yes==='y')console.log(safeJson(await runPlan(p,c),2));}catch(e){rl.close();console.error('Hub: '+publicError(e).message);}continue;}
     if(!/^\d+$/.test(answer)||Number(answer)<1||Number(answer)>entries.length){rl.close();console.log('Choose a listed number.');continue;}

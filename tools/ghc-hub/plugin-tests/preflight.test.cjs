@@ -42,6 +42,17 @@ test('new snapshot writes retain source and execution advisories',()=>{
  assert.ok(run(hub+'memory snapshot --id alpha --execute',()=>false).includes('source_manifest'));
  assert.ok(run(hub+'memory restore --id 11111111-2222-3333-4444-555555555555').includes('selected_route'));
 });
+test('message writes require execute and the pinned source',()=>{
+ assert.deepEqual(run(hub+'messages draft --file D:/request.json --execute'),[]);
+ assert.ok(run(hub+'messages queue --file D:/request.json --execute',()=>false).includes('source_manifest'));
+ assert.ok(run(hub+'messages receipt --file D:/receipt.json').includes('selected_route'));
+});
+test('message plans and claims require their exact selected inputs',()=>{
+ assert.ok(run(hub+'messages plan').includes('selected_route'));
+ assert.ok(run(hub+'messages claim --id someone --execute').includes('selected_route'));
+ assert.deepEqual(run(hub+'messages claim --id 11111111-2222-3333-4444-555555555555 --execute'),[]);
+ assert.ok(run(hub+'messages send --execute').includes('selected_route'));
+});
 test('unknown routes, missing selection and compound shell expressions stay unclassified',()=>{
  assert.deepEqual(run(hub+'run arbitrary --execute'),['selected_route']);
  assert.deepEqual(run(hub+'run app'),['selected_route']);

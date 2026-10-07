@@ -20,3 +20,7 @@ This package alone owns the optional shared PreToolUse handler in `hooks/hooks.j
 ## Current helper-creation control — 7 October 2026
 
 Hamish requires a request shown to him and explicit approval before creating any new App/CLI AI helper, subagent or replacement conversation. Earlier general engineering permission does not cover a new helper. Continue only the assigned existing sessions. A shell/test/GitHub CLI process is not itself an AI helper; a new Codex exec/fork/Copilot model session is. For any future approved persistent helper, verify actual launch options and storage; do not use --ephemeral or another no-history flag. Historical mentions of ephemeral and temporary cloud workers are evidence to inspect, not instructions to delete or rewrite history.
+
+## Hub 2.3 message drafts
+
+Use messages plan/draft/queue/show/list for a selected existing chat. A draft is private stored data, not new human authorization. Verify the current human recipient/purpose instruction, refresh native target metadata, claim once, use the bound native send once, then record accepted/rejected/unknown. Never resend a claimed unknown outcome automatically. See RELEASE-2.3.md in the installed Hub.
