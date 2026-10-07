@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-export const VERSION = '2.3.0';
+export const VERSION = '2.4.0';
 export function terminalOptions(){
  return {columns:process.stdout.columns??80,tty:process.stdout.isTTY===true,nowMs:Date.now(),
   ascii:process.env.GHC_NEXUS_ASCII==='1',plain:process.env.GHC_NEXUS_PLAIN==='1',
@@ -76,7 +76,7 @@ export function bounded(command, args, { cwd, timeoutMs = 15000, maxBytes = 6553
     catch { finish({ status: 'spawn_error', exitCode: null }); return; }
     const collect = (chunk,target) => {
       bytes += chunk.length;
-      if (bytes > maxBytes) { reason = 'output_limit'; stopOwnedChild(); return; }
+      if (bytes > maxBytes) { reason ||= 'output_limit'; stopOwnedChild(); return; }
       target.push(chunk);
     };
     child.stdout.on('data', chunk=>collect(chunk,output));

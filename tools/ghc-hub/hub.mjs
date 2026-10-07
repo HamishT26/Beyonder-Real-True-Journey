@@ -9,7 +9,7 @@ import {terminalOptions} from './core.mjs';
 import {renderMenu} from './terminal-presentation.mjs';
 
 export function publicError(error){
- const fixed=["An exact chat ID or unique title is required; use --id","Chat not found","Ambiguous chat selection","Chat limit must be 1 to 100","Unknown laboratory model","Laboratory size must be 1 to 200000","Existing chat settings must be inherited","Unsupported option for this command; use --help"].concat(['Unknown action','Unknown command','Unexpected positional argument','Use --execute to run the displayed action, or use plan','An exact existing session UUID is required','Invalid environment ID','This action requires the Windows host','Reviewed Windows launcher is unavailable','Required executable is unavailable on this host','This action requires an interactive terminal; use plan or machine commands in an agent tool','Interactive actions require a terminal without --json; use plan --json to inspect them','Menu requires a terminal without --json. Agents can use doctor, actions, plan and run --json','Node 20 or later is required']);
+ const fixed=['Study catalogue fingerprint mismatch','Invalid study query or limit','Absolute catalogue path and expected SHA256 required','Invalid study catalogue','Invalid study source path','Invalid study file',"An exact chat ID or unique title is required; use --id","Chat not found","Ambiguous chat selection","Chat limit must be 1 to 100","Unknown laboratory model","Laboratory size must be 1 to 200000","Existing chat settings must be inherited","Unsupported option for this command; use --help"].concat(['Unknown action','Unknown command','Unexpected positional argument','Use --execute to run the displayed action, or use plan','An exact existing session UUID is required','Invalid environment ID','This action requires the Windows host','Reviewed Windows launcher is unavailable','Required executable is unavailable on this host','This action requires an interactive terminal; use plan or machine commands in an agent tool','Interactive actions require a terminal without --json; use plan --json to inspect them','Menu requires a terminal without --json. Agents can use doctor, actions, plan and run --json','Node 20 or later is required']);
  if(fixed.includes(error?.message))return {status:'error',code:'invalid_action',message:error.message};
  if(error?.code?.startsWith('ERR_PARSE_ARGS'))return {status:'error',code:'invalid_arguments',message:'Unknown or invalid arguments; use --help for the supported interface'};
  return {status:'error',code:'operation_unavailable',message:'Operation unavailable; check the selected host and required tools. No raw exception or credential data is displayed.'};
@@ -17,6 +17,7 @@ export function publicError(error){
 
 export function validateCommandOptions(cmd,verb,values){
  const matrix={
+ study:{search:['file','fingerprint','search','limit']},
  chats:{list:['refresh','limit','search'],recovery:['id'],import:['file','execute'],resolve:['id'],plan:['id','override'],open:['id','execute']},
  messages:{list:[],show:['id'],plan:['file'],draft:['file','execute'],queue:['file','execute'],claim:['id','execute'],receipt:['file','execute']},
  identity:{list:[],show:['id'],add:['file','execute'],certificate:['id','execute'],verify:['id','fingerprint']},

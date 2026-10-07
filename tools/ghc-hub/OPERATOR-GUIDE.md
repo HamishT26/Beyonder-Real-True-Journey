@@ -109,3 +109,7 @@ The local release evidence bank is `D:/GHC-Archives/phase-banks/saelin-v708-v4-r
 If rollback is needed, inspect the installed file hash and the recorded backup before replacing a file. Preserve any later changes. The Credential Manager rollback concerns the recorded configuration selection; it is not a promise to undo server-side OAuth token rotation. Do not restore old credential caches from a backup.
 
 The hub is a completed engineering component within the broader programme, not completion of its fifty research projects. Run (3) x2 remains unstarted pending Hamish's later continuation and the outstanding x1 review. The original missing CLI histories remain held; the authorized Corin and Ellis continuations remain distinct. Sentinel-1 is preparation only. The research baseline keeps GMUT hypotheses separate from empirical validation and correctly records Navier–Stokes as unsolved and Poincare as solved in the Clay Millennium list.
+
+## Source-pinned mathematics lookup (2.4)
+
+Use study search with an absolute catalogue file, expected fingerprint, search text and result limit. This read-only route returns source claims with their recorded verification status; it does not execute a proof or a model. See RELEASE-2.4.md for the command example and pinned catalogue.

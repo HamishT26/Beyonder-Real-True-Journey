@@ -54,6 +54,9 @@ function evaluate(payload,{sourceCheck=()=>true,actions=[]}={}){
  if(mutating){if(hubIndex<0||!sourceCheck())add('source_manifest');if(!args.includes('--execute'))add('selected_route')}
  if(['plan','run'].includes(group)&&!actions.includes(verb))add('selected_route');
  if(group==='chats'&&['resolve','plan','open'].includes(verb)&&!option(args,'--id'))add('selected_route');
+ if(group==='study'){
+  if(verb!=='search'||!option(args,'--file')||!option(args,'--search')||!/^[0-9a-f]{64}$/.test(option(args,'--fingerprint')||'')||args.includes('--execute'))add('selected_route');
+ }
  if(group==='messages'){
   if(!['list','show','plan','draft','queue','claim','receipt'].includes(verb))add('selected_route');
   if(['plan','draft','queue','receipt'].includes(verb)&&!option(args,'--file'))add('selected_route');

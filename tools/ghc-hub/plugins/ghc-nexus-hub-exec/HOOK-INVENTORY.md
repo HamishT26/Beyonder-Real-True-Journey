@@ -1,10 +1,10 @@
 # Canonical shared Nexus checks
 
-Owner: `ghc-nexus-hub-exec`, version 0.1.1. One `PreToolUse` / `^Bash$` command registration invokes `scripts/nexus_preflight.cjs`. The Admin, Computer Use and Config Menu packages register no hooks. Five logical checks share that one process.
+Owner: `ghc-nexus-hub-exec`, version 0.1.3. One `PreToolUse` / `^Bash$` command registration invokes `scripts/nexus_preflight.cjs`. The Admin, Computer Use and Config Menu packages register no hooks. Five logical checks share that one process.
 
 | Check ID | Concrete scope | Existing coverage reviewed / distinct behavior |
 |---|---|---|
-| `source_manifest` | Before a recognized Hub effect, compare eleven selected installed module hashes with `references/hub-source.json`; aliases remain unverified. | Existing phase source/branch reminders do not compare the selected Hub runtime bytes. |
+| `source_manifest` | Before a recognized Hub effect, compare the selected installed module hashes with `references/hub-source.json`; aliases remain unverified. | Existing phase source/branch reminders do not compare the selected Hub runtime bytes. |
 | `config_schema` | Recognized Config Menu proposals: inspect three permitted display keys and their JSON value types. | Existing model-change reminders do not validate these proposal values. |
 | `secret_export` | Flag sensitive-looking literals and memory exports without 1–30 unique explicit safe record IDs. | Existing output/identifier advice does not perform this selected-memory-export check. It is not a complete secret scanner. |
 | `selected_route` | Recognized Hub action names, required exact chat selection and explicit execution marker; compound/unclassified shell forms get a limited notice. | Existing no-resend hooks remain separate; this check does not resend, activate or unlock a chat. |
@@ -21,3 +21,7 @@ For the Meta Tool Box, add one row for this canonical handler with: package/vers
 ## Hub 2.3 application checks
 
 The same PreToolUse registration recognizes messages draft, queue, claim and receipt as mutations; it checks --execute and selected file/UUID arguments and pins the two new modules. No second lifecycle handler is registered. Five application-level checks in messages.mjs cover request shape, exact target, fresh observation at claim, single claim and strict receipt binding. They are CLI validation, not five additional Codex lifecycle hooks.
+
+## Hub 2.4 study lookup
+
+The existing handler recognizes read-only study search with an explicit catalogue path, expected SHA256 and query. It does not request execution or grant authority. The study module adds five application checks: source fingerprint, record schema/identity, safe source paths, query/result bounds and preserved verification status. No new lifecycle registration is added.
