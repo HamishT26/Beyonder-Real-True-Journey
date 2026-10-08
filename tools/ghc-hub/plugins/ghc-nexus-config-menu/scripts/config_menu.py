@@ -66,6 +66,21 @@ def selected_values(data):
             result[key] = {'valid': valid_value(key, obj), 'value': obj if valid_value(key, obj) else None}
     return result
 
+def deprecated_paths(data):
+    """Only the retired Guardian thread-context flag; values are never emitted."""
+    paths = []
+    def check(owner, prefix):
+        features = owner.get('features') if isinstance(owner, dict) else None
+        guardian = features.get('guardianv2') if isinstance(features, dict) else None
+        if isinstance(guardian, dict) and 'thread_context' in guardian:
+            paths.append([*prefix, 'features', 'guardianv2', 'thread_context'])
+    check(data, [])
+    profiles = data.get('profiles', {})
+    if isinstance(profiles, dict):
+        for name, profile in profiles.items():
+            check(profile, ['profiles', name])
+    return paths
+
 def inspect(spec):
     if not isinstance(spec, dict) or type(spec.get('schemaVersion')) is not int or spec['schemaVersion'] != 1:
         raise Issue('invalid-spec-schema')
@@ -92,7 +107,8 @@ def inspect(spec):
             except (ValueError, UnicodeError):
                 raise Issue('malformed-toml') from None
             values = selected_values(data)
-            row.update(status='observed', path=resolved, sha256=hashlib.sha256(raw).hexdigest(), values=values)
+            row.update(status='observed', path=resolved, sha256=hashlib.sha256(raw).hexdigest(),
+                       values=values, deprecatedKeys=deprecated_paths(data))
             if layer['active']:
                 for key, value in values.items():
                     winners[key] = {'layer': name, **value}

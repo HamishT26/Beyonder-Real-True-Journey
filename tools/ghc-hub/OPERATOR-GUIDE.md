@@ -113,3 +113,11 @@ The hub is a completed engineering component within the broader programme, not c
 ## Source-pinned mathematics lookup (2.4)
 
 Use study search with an absolute catalogue file, expected fingerprint, search text and result limit. This read-only route returns source claims with their recorded verification status; it does not execute a proof or a model. See RELEASE-2.4.md for the command example and pinned catalogue.
+
+## Hub 2.5: delivery display, MCP inheritance, and Guardian cleanup
+
+The interactive chat menu O option shows queued, caller-reported acknowledged, rejected and unknown outcomes. Recipient completion remains separately unobserved. Machine JSON remains unchanged.
+
+New CLI plans inherit configured App and MCP capabilities. Inheritance is not proof that every server package exists, authenticates or supports this host. The old user configuration contains11 npx-based definitions that have not passed a same-host handshake; node_repl did pass initialize and tools/list. Do not describe these as complete desktop/CLI parity.
+
+For the obsolete Guardian flag, run the Config Menu plugin scripts/config_guard.py with audit --file ABSOLUTE-TOML. A repair preview uses repair --file ABSOLUTE-TOML --expected-sha256 SHA256. Applying additionally requires --execute --backup-dir PRIVATE-EXISTING-DIRECTORY. Audit each selected user/project/profile layer; never export its full contents. A clean result makes no write.

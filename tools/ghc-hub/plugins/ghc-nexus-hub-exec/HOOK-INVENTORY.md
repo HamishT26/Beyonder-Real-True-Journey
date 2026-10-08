@@ -1,6 +1,6 @@
 # Canonical shared Nexus checks
 
-Owner: `ghc-nexus-hub-exec`, version 0.1.3. One `PreToolUse` / `^Bash$` command registration invokes `scripts/nexus_preflight.cjs`. The Admin, Computer Use and Config Menu packages register no hooks. Five logical checks share that one process.
+Owner: `ghc-nexus-hub-exec`, version 0.1.4. One `PreToolUse` / `^Bash$` command registration invokes `scripts/nexus_preflight.cjs`. The Admin, Computer Use and Config Menu packages register no hooks. Five logical checks share that one process.
 
 | Check ID | Concrete scope | Existing coverage reviewed / distinct behavior |
 |---|---|---|

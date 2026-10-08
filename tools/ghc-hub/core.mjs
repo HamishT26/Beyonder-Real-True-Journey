@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-export const VERSION = '2.4.0';
+export const VERSION = '2.5.0';
 export function terminalOptions(){
  return {columns:process.stdout.columns??80,tty:process.stdout.isTTY===true,nowMs:Date.now(),
   ascii:process.env.GHC_NEXUS_ASCII==='1',plain:process.env.GHC_NEXUS_PLAIN==='1',
@@ -92,10 +92,8 @@ export function bounded(command, args, { cwd, timeoutMs = 15000, maxBytes = 6553
     timer = setTimeout(() => { reason ||= 'timeout'; stopOwnedChild(); }, timeoutMs);
   });
 }
-const disabledMcp = ['circleci','e2b','oci','notion','neon','openai','github','docker','render','expo','kimicode','node_repl'];
 export function codexOptions(c) {
-  const args = ['--no-daemon', '--no-alt-screen', '--ask-for-approval', 'never', '--sandbox', 'danger-full-access', '--model', 'gpt-6-astra', '-c', 'model_reasoning_effort="max"', '-c', 'service_tier="priority"', '-c', 'features.apps=false', '-c', 'features.multi_agent=false', '--cd', c.cwd];
-  for (const name of disabledMcp) args.push('-c', `mcp_servers.${name}.enabled=false`);
+  const args = ['--no-daemon', '--no-alt-screen', '--ask-for-approval', 'never', '--sandbox', 'danger-full-access', '--model', 'gpt-6-astra', '-c', 'model_reasoning_effort="max"', '-c', 'service_tier="priority"', '-c', 'features.multi_agent=false', '--cd', c.cwd];
   return args;
 }
 export const ACTIONS = ['powershell','powershell-admin','cmd','cmd-admin','cmd-check','cmd-admin-check','linux','linux-admin','cloud','codex','codex-resume','app','app-admin','app-admin-check','app-direct','app-check','app-registered','app-registered-check','cloud-list','auth-status','auth-login','auth-device','google-account','chatgpt-account'];
@@ -130,7 +128,7 @@ export function plan(action, opts, c) {
       if(action==='codex-resume'&&opts.override)throw new Error('Existing chat settings must be inherited');
       command = c.codex; args = action==='codex-resume'?['--no-daemon','--no-alt-screen']:codexOptions(c); interactive = true;
       if (action === 'codex-resume') { if (!uuid(opts.session)) throw new Error('An exact existing session UUID is required'); args.push('resume',opts.session); }
-      note = action==='codex-resume'&&!opts.override?'Resumes with the existing model and settings. Official CLI session locks remain authoritative.':'Requests Astra/Max/Fast and Full access for this invocation; OS privilege and provider limits are separate. Unrelated MCP services disabled only here.'; break;
+      note = action==='codex-resume'&&!opts.override?'Resumes with the existing model and settings. Official CLI session locks remain authoritative.':'Requests Astra/Max/Fast and Full access for this invocation; OS privilege and provider limits are separate. Configured App/MCP capabilities are inherited; authentication and transport belong to this host.'; break;
     case 'cloud': command=c.codex; args=['cloud']; interactive=true; note='Cloud Linux tasks through the official Codex Cloud picker. This is not SSH and may list different tasks from managed app workers. A hub copy inside a cloud worker can run its Linux shell directly.'; break;
     case 'cloud-list': command = c.codex; args = ['cloud','list','--json','--limit','5']; if (opts.env) { if (!/^[A-Za-z0-9_-]{1,160}$/.test(opts.env)) throw new Error('Invalid environment ID'); args.push('--env',opts.env); } note = 'Experimental Codex Cloud CLI route; it may differ from existing managed app workers.'; break;
     case 'auth-status': command = c.codex; args = ['login','status']; break;

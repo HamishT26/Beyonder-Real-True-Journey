@@ -1,3 +1,4 @@
+import {renderDeliveryPanel} from './delivery-state-panel.mjs';
 import {studySearch} from './study.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -103,7 +104,7 @@ export async function chatMenu(c){
   const rawChoice=await ask('Select chat number, exact ID, or route: '),choice=rawChoice.toLowerCase();if(choice==='0'||choice==='q')return;
   if(display.columns<24){console.log('Widen the terminal before selecting a chat.');continue;}
   if(choice==='r'){refresh=true;continue;}
-  if(choice==='o'){console.log(safeJson(listMessages(c),2));continue;}
+  if(choice==='o'){console.log(renderDeliveryPanel(listMessages(c),terminalOptions()));continue;}
   if(choice==='m'){
    const destination=await ask('Destination number or exact UUID: ');
    const matches=/^\d+$/.test(destination)?[result.entries[Number(destination)-1]].filter(Boolean):readRegistry(c).filter(e=>e.id.toLowerCase()===destination.toLowerCase());
