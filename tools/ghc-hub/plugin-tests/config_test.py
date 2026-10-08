@@ -39,6 +39,19 @@ class ConfigTests(unittest.TestCase):
     def test_stale_source_hash(self):
         self.user.write_text('[tui]\nanimations=false\n',encoding='utf-8')
         self.assertEqual(c.propose(self.input,'user',self.sha,['tui.animations=true'])['reason'],'source-hash-conflict')
+    def test_deprecated_root_or_profile_key_holds_an_active_proposal(self):
+        for prefix in ['features.guardianv2', 'profiles.admin.features.guardianv2']:
+            text='[tui]\nanimations=true\n['+prefix+']\nthread_context=true\n'
+            self.user.write_text(text,encoding='utf-8')
+            sha=hashlib.sha256(self.user.read_bytes()).hexdigest()
+            result=c.propose(self.input,'user',sha,['tui.animations=false'])
+            self.assertEqual(result['reason'],'deprecated-guardian-key-requires-cleanup')
+            self.assertEqual(result['status'],'held')
+            self.assertFalse(result['configurationWritten'])
+    def test_inactive_layer_diagnostic_does_not_claim_an_active_override(self):
+        self.project.write_text('[features.guardianv2]\nthread_context=true\n',encoding='utf-8')
+        self.assertTrue(c.inspect(self.input)['layers'][1]['deprecatedKeys'])
+        self.assertEqual(c.propose(self.input,'user',self.sha,['tui.animations=false'])['status'],'ready-for-review')
     def test_protected_keys_and_invalid_types_refused(self):
         for setting in ['model="x"','model_context_window=5','sandbox_mode="x"','tui.animations=1','tui.alternate_screen="other"']:
             with self.subTest(setting=setting),self.assertRaises(c.Issue):c.propose(self.input,'user',self.sha,[setting])

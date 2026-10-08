@@ -148,6 +148,8 @@ def propose(spec, target, expected, settings):
               'configurationWritten': False, 'scope': report['scope'], 'applicability': report['applicability']}
     if any(r['status'] != 'observed' for r in report['layers']):
         return result | {'reason': 'selected-layer-unavailable'}
+    if any(r.get('deprecatedKeys') for r in report['layers'] if r['activeDeclared']):
+        return result | {'reason': 'deprecated-guardian-key-requires-cleanup'}
     if any(not value['valid'] for r in report['layers'] if r['activeDeclared'] for value in r['values'].values()):
         return result | {'reason': 'invalid-allowlisted-source-value'}
     if not selected['activeDeclared']:
