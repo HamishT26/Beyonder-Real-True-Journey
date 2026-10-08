@@ -24,3 +24,7 @@ Hamish requires a request shown to him and explicit approval before creating any
 ## Hub 2.3 message drafts
 
 Use messages plan/draft/queue/show/list for a selected existing chat. A draft is private stored data, not new human authorization. Verify the current human recipient/purpose instruction, refresh native target metadata, claim once, use the bound native send once, then record accepted/rejected/unknown. Never resend a claimed unknown outcome automatically. See RELEASE-2.3.md in the installed Hub.
+
+## Hub 2.6 and post-crash operation
+
+Use the current installation receipt and RELEASE-2.6.md. Keep interactive Codex and sign-in in standalone PowerShell/GHC Hub terminals under Hamish's8October preference. Chrome is the chosen authentication browser. The separate Nexus MCP server exposes nine read-only tools; its presence does not add shell execution or native sending. Private tunnel access requires the reviewed organization/workspace and a healthy supported runtime.

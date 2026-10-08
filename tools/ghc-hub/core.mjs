@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-export const VERSION = '2.5.0';
+export const VERSION = '2.6.0';
 export function terminalOptions(){
  return {columns:process.stdout.columns??80,tty:process.stdout.isTTY===true,nowMs:Date.now(),
   ascii:process.env.GHC_NEXUS_ASCII==='1',plain:process.env.GHC_NEXUS_PLAIN==='1',

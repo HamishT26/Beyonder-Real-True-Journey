@@ -5,8 +5,8 @@ $ghcDestination='D:\GHC-Archives\global-tools\ghc-nexus-hub'
 $ghcBank='D:\GHC-Archives\phase-banks\saelin-cmd-remaster-20261007'
 $ghcBin='D:\GHC-Archives\global-tools\bin'
 $ghcPwsh='D:\GHC-Archives\global-tools\powershell\7.6.6\pwsh.exe'
-$ghcNode='D:\GHC-Archives\global-tools\node\26.10.0\node-v26.10.0-win-x64\node.exe'
-$ghcNpm='D:\GHC-Archives\global-tools\node\26.10.0\node-v26.10.0-win-x64\node_modules\npm\bin\npm-cli.js'
+$ghcNode='D:\GHC-Archives\global-tools\node\26.11.1\node-v26.11.1-win-x64\node.exe'
+$ghcNpm='D:\GHC-Archives\global-tools\node\26.11.1\node-v26.11.1-win-x64\node_modules\npm\bin\npm-cli.js'
 $ghcAdminTarget='D:\GHC-Archives\global-tools\ghc-config-launchers\Start-GhcAdmin.ps1'
 function Test-GhcCloudPlaceholder([string]$Path) {
  if(-not ('GhcInstallerNativeTags' -as [type])){
@@ -75,7 +75,7 @@ foreach($ghcWrapper in @('ghc-nexus.cmd','ghc-nexus.ps1')){
 }
 $ghcOldAdminHash=if(Test-Path -LiteralPath $ghcAdminTarget){(Get-FileHash -LiteralPath $ghcAdminTarget).Hash.ToLowerInvariant()}else{$null}
 $ghcNewAdminHash=($ghcFiles | Where-Object relative -eq 'Start-GhcAdmin.ps1').sha256
-if($ghcOldAdminHash -and $ghcOldAdminHash -notin @('c8688e45833324fbfc44e3fec16ceba7526db78f4dd62160a69b3215d7184844',$ghcNewAdminHash)){throw 'Shared launcher changed since its reviewed baseline'}
+if($ghcOldAdminHash -and $ghcOldAdminHash -notin @('c8688e45833324fbfc44e3fec16ceba7526db78f4dd62160a69b3215d7184844','2566675572c07217972a8407c3537f0db81475e520fbb1d97d1de135b3b1e897',$ghcNewAdminHash)){throw 'Shared launcher changed since its reviewed baseline'}
 $ghcPlan=[ordered]@{schema='ghc.nexus.install-plan.v2';destination=$ghcDestination;files=$ghcFiles.Count;shortcuts=$ghcShortcutSpecs;wrappers=$ghcBin;dependencies='npm ci --omit=dev --ignore-scripts, pinned MCP SDK2 lock';appRestarted=$false;privateStateIncluded=$false;changesPerformed=$false}
 if($Check){$ghcPlan | ConvertTo-Json -Depth 5;return}
 $ghcBackup=Join-Path $ghcBank ('install-backup-'+[datetime]::UtcNow.ToString('yyyyMMddTHHmmssfffZ'))
@@ -101,6 +101,7 @@ try {
  Copy-GhcReviewed (Join-Path $PSScriptRoot 'installation-files.json') (Join-Path $ghcDestination 'installation-files.json') 'runtime/installation-files.json'
  Push-Location -LiteralPath (Join-Path $ghcDestination 'mcp/sdk')
  try {& $ghcNode $ghcNpm ci --omit=dev --ignore-scripts --no-audit --no-fund --prefer-offline --fetch-timeout=20000 --fetch-retries=1 --cache 'D:\GHC-Archives\tool-caches\npm-cache';if($LASTEXITCODE -ne 0){throw 'Pinned MCP dependency installation failed'}} finally {Pop-Location}
+ Copy-GhcReviewed (Join-Path $PSScriptRoot 'GhcAppLaunchSelection.ps1') (Join-Path (Split-Path $ghcAdminTarget -Parent) 'GhcAppLaunchSelection.ps1') 'shared-launcher/GhcAppLaunchSelection.ps1'
  Copy-GhcReviewed (Join-Path $PSScriptRoot 'Start-GhcAdmin.ps1') $ghcAdminTarget 'shared-launcher/Start-GhcAdmin.ps1'
  foreach($ghcWrapper in @('ghc-nexus.cmd','ghc-nexus.ps1')){Copy-GhcReviewed (Join-Path $PSScriptRoot $ghcWrapper) (Join-Path $ghcBin $ghcWrapper) ('bin/'+$ghcWrapper)}
  foreach($ghcShortcut in $ghcShortcutSpecs){

@@ -16,3 +16,5 @@ Use `node <reviewed-hub.mjs> plan <action> --json`. Execution, when already auth
 `app-direct` is a legacy alias of the direct route. Prefer the explicit `app-admin` name. `app-check` checks the normal registered App route. Host startup, user consent, application readiness, package identity and effective token are separate results.
 
 Runtime baseline: commit `25a3f7848fd4c2d2014a0aad8c75531821db51f6`. Reconcile newer reviewed releases before applying these references; the source tree may contain concurrent unpublished work.
+
+Hub2.6 adds fresh numeric package selection and conservative stale-process rejection. Read RELEASE-2.6.md and its current installation receipt for the active version; the earlier baseline above is historical.

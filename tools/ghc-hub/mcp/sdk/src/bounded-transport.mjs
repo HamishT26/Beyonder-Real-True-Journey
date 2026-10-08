@@ -1,7 +1,9 @@
 import {TextDecoder} from 'node:util';
 
 export const DEFAULT_LIMITS = Object.freeze({
-  lineBytes: 32768, outputLineBytes: 16384, queuedOutputBytes: 65536,
+  // The 128-item public catalogue occupies 25,223 bytes with both MCP result representations.
+  // Keep the queue and rolling traffic budgets unchanged while admitting that declared contract.
+  lineBytes: 32768, outputLineBytes: 32768, queuedOutputBytes: 65536,
   sessionInputBytes: 1048576, sessionOutputBytes: 1048576, messages: 512,
   jsonDepth: 24, jsonNodes: 2048, writeTimeoutMs: 2000, sessionTimeoutMs: 120000,
   quotaWindowMs: 60000

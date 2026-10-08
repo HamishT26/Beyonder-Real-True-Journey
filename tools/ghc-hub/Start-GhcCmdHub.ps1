@@ -3,7 +3,7 @@ param([switch]$CurrentUser,[switch]$Check)
 $ErrorActionPreference='Stop'
 $ghcCmd=Join-Path ([Environment]::SystemDirectory) 'cmd.exe'
 $ghcEntry=Join-Path $PSScriptRoot 'Start-GhcCmdHub.cmd'
-$ghcNode='D:\GHC-Archives\global-tools\node\26.10.0\node-v26.10.0-win-x64\node.exe'
+$ghcNode='D:\GHC-Archives\global-tools\node\26.11.1\node-v26.11.1-win-x64\node.exe'
 $ghcHub=Join-Path $PSScriptRoot 'hub.mjs'
 $ghcWork='D:\GHC-Family-Laboratory'
 $ghcAdmin=([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)

@@ -6,6 +6,7 @@ param(
     [ValidateSet('DirectAdministrator','Registered','RegisteredAdministrator')][string]$AppActivation = 'DirectAdministrator'
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'GhcAppLaunchSelection.ps1')
 if ($Target -ne 'Codex' -and $AppActivation -ne 'DirectAdministrator') {
     throw 'Registered app activation is available only for the Codex target.'
 }
@@ -84,14 +85,17 @@ function Write-GhcTraceStage {
 function Get-GhcAppDuplicateState {
     param([object[]]$Processes, [string]$ExpectedPath)
     $unknown = $false
+    $different = $false
     foreach ($candidate in $Processes) {
         try {
             $candidatePath = $candidate.Path
             if ([string]::IsNullOrWhiteSpace($candidatePath)) { $unknown = $true }
             elseif ([string]::Equals($candidatePath, $ExpectedPath, [StringComparison]::OrdinalIgnoreCase)) { return 'present' }
+            else { $different = $true }
         } catch { $unknown = $true }
     }
     if ($unknown) { return 'unknown' }
+    if ($different) { return 'different' }
     return 'absent'
 }
 function Open-GhcTraceStream {
@@ -131,15 +135,24 @@ function Invoke-GhcGuardedAppStart {
         [Parameter(Mandatory,ParameterSetName='Direct')][hashtable]$LaunchParameters,
         [Parameter(Mandatory,ParameterSetName='Registered')]
         [ValidatePattern('^OpenAI\.Codex_[a-z0-9]{13}!App\z')][string]$RegisteredAppUserModelId,
-        [Parameter(ParameterSetName='Registered')][switch]$RegisteredAdministrator
+        [Parameter(ParameterSetName='Registered')][switch]$RegisteredAdministrator,
+        [object]$Selection
     )
     Write-GhcTraceStage 'existing-process-check' 'begin'
     $ghcProcessErrors = @()
-    $candidates = @(Get-Process -Name ChatGPT -ErrorAction SilentlyContinue -ErrorVariable ghcProcessErrors)
+    $processNames = if ($null -ne $Selection -and $Selection.Status -eq 'ready') { $Selection.Selected.ProcessNames } else { @('ChatGPT') }
+    $candidates = @(Get-Process -Name $processNames -ErrorAction SilentlyContinue -ErrorVariable ghcProcessErrors)
     $unexpectedErrors = @($ghcProcessErrors | Where-Object { $_.FullyQualifiedErrorId -notlike 'NoProcessFoundForGivenName*' })
     if ($unexpectedErrors.Count -gt 0) { throw 'App-process discovery failed; launch held without a retry.' }
     $duplicateState = Get-GhcAppDuplicateState -Processes $candidates -ExpectedPath $ExpectedPath
+    if ($null -ne $Selection) {
+        $observation = Get-GhcAppRunningObservation -Selection $Selection -Processes $candidates
+        if (-not $observation.CanLaunch) {
+            throw ('App launch held: ' + $observation.State + '. Save your work and close the existing App before launching the current registered package.')
+        }
+    }
     if ($duplicateState -eq 'unknown') { throw 'An app-process path is unreadable; launch held without assuming absence.' }
+    if ($duplicateState -eq 'different') { throw 'An App candidate is running from a different path; launch held until it is reconciled and closed.' }
     if ($duplicateState -eq 'present') { throw 'Close the existing ChatGPT/Codex app after saving work, then use this launcher. An already-running app can retain its original non-admin token.' }
     Write-GhcTraceStage 'existing-process-check' 'end'
     Write-GhcTraceStage 'app-start-request' 'begin'
@@ -200,31 +213,23 @@ try {
         throw 'PowerShell signature validation failed.'
     }
     Write-GhcTraceStage 'powershell-signature' 'end'
+    $ghcSelection = $null
     $appPath = $null
     $appUserModelId = $null
     if ($Target -eq 'Codex') {
         Write-GhcTraceStage 'app-package-discovery' 'begin'
-        $packages = @(Get-AppxPackage -Name 'OpenAI.Codex')
-        if ($packages.Count -ne 1) { throw 'Expected exactly one installed OpenAI.Codex package.' }
+        $packages = @(Get-AppxPackage -Name 'OpenAI.Codex' -PackageTypeFilter Main -ErrorAction Stop)
         Write-GhcTraceStage 'app-package-discovery' 'end'
-        Write-GhcTraceStage 'manifest-selection' 'begin'
-        [xml]$manifest = Get-Content -LiteralPath (Join-Path $packages[0].InstallLocation 'AppxManifest.xml') -Raw
-        $apps = @($manifest.Package.Applications.Application | Where-Object Id -eq 'App')
-        if ($apps.Count -ne 1) { throw 'Could not resolve the installed app entry point.' }
-        Write-GhcTraceStage 'manifest-selection' 'end'
-        Write-GhcTraceStage 'package-path-containment' 'begin'
-        $appPath = [IO.Path]::GetFullPath((Join-Path $packages[0].InstallLocation $apps[0].Executable))
-        if (-not $appPath.StartsWith($packages[0].InstallLocation + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'App path escaped package.' }
-        Write-GhcTraceStage 'package-path-containment' 'end'
-        Write-GhcTraceStage 'app-signature' 'begin'
-        $signature = Get-AuthenticodeSignature -LiteralPath $appPath
-        if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'OpenAI') { throw 'App signature validation failed.' }
-        Write-GhcTraceStage 'app-signature' 'end'
+        Write-GhcTraceStage 'registered-package-validation' 'begin'
+        $ghcSelection = Resolve-GhcAppLaunchSelection -Packages $packages
+        if ($ghcSelection.Status -ne 'ready') { throw ('Registered App selection held: ' + $ghcSelection.Reason) }
+        $appPath = $ghcSelection.Selected.ExecutablePath
+        Write-GhcTraceStage 'registered-package-validation' 'end'
         if ($AppActivation -in @('Registered','RegisteredAdministrator')) {
             Write-GhcTraceStage 'app-registration' 'begin'
             # Get-AppxPackage above selects this user's registered package. Resolve
             # its manifest application directly; do not enumerate the Start menu.
-            $appUserModelId = Get-GhcRegisteredAppUserModelId -PackageFamilyName $packages[0].PackageFamilyName -ApplicationId $apps[0].Id
+            $appUserModelId = Get-GhcRegisteredAppUserModelId -PackageFamilyName $ghcSelection.Selected.PackageFamilyName -ApplicationId $ghcSelection.Selected.ApplicationId
             if ($AppActivation -eq 'RegisteredAdministrator') {
                 $ghcCheckedEntry = Get-GhcRegisteredAppItem -AppUserModelId $appUserModelId
                 $null = Get-GhcRegisteredElevationVerb -AppItem $ghcCheckedEntry
@@ -238,7 +243,14 @@ try {
         $checkWorkingDirectory = $working
         $checkUacPromptExpected = -not $elevated
         if ($AppActivation -in @('Registered','RegisteredAdministrator')) { $checkWorkingDirectory = $null; $checkUacPromptExpected = $null }
-        [pscustomobject]@{target=$Target;currentProcessAdministrator=$elevated;powerShell=$pwsh;app=$appPath;workingDirectory=$checkWorkingDirectory;uacPromptExpected=$checkUacPromptExpected;launchPerformed=$false;appActivation=$AppActivation;appUserModelId=$appUserModelId;elevationRequested=($AppActivation -ne 'Registered');registeredElevationVerbVerified=($AppActivation -eq 'RegisteredAdministrator');packageIdentityVerified=$false} | ConvertTo-Json
+        $ghcRunningState = $null
+        if ($null -ne $ghcSelection) {
+            $ghcCheckErrors = @()
+            $ghcCheckProcesses = @(Get-Process -Name $ghcSelection.Selected.ProcessNames -ErrorAction SilentlyContinue -ErrorVariable ghcCheckErrors)
+            $ghcBadDiscovery = @($ghcCheckErrors | Where-Object { $_.FullyQualifiedErrorId -notlike 'NoProcessFoundForGivenName*' }).Count -gt 0
+            $ghcRunningState = Get-GhcAppRunningObservation -Selection $ghcSelection -Processes $ghcCheckProcesses -DiscoveryFailed:$ghcBadDiscovery
+        }
+        [pscustomobject]@{target=$Target;currentProcessAdministrator=$elevated;powerShell=$pwsh;app=$appPath;workingDirectory=$checkWorkingDirectory;uacPromptExpected=$checkUacPromptExpected;launchPerformed=$false;appActivation=$AppActivation;appUserModelId=$appUserModelId;elevationRequested=($AppActivation -ne 'Registered');appPackageVersion=$ghcSelection.Selected.Version;appPackageFullName=$ghcSelection.Selected.PackageFullName;runningAppState=$ghcRunningState.State;canLaunchNewApp=$ghcRunningState.CanLaunch;registeredElevationVerbVerified=($AppActivation -eq 'RegisteredAdministrator');packageIdentityVerified=$false} | ConvertTo-Json
         return
     }
     if ($Target -eq 'Probe') {
@@ -266,11 +278,11 @@ try {
         return
     }
     if ($AppActivation -in @('Registered','RegisteredAdministrator')) {
-        Invoke-GhcGuardedAppStart -ExpectedPath $appPath -RegisteredAppUserModelId $appUserModelId -RegisteredAdministrator:($AppActivation -eq 'RegisteredAdministrator')
+        Invoke-GhcGuardedAppStart -ExpectedPath $appPath -Selection $ghcSelection -RegisteredAppUserModelId $appUserModelId -RegisteredAdministrator:($AppActivation -eq 'RegisteredAdministrator')
     } else {
         $parameters = @{FilePath=$appPath;WorkingDirectory=$working;WindowStyle='Normal';PassThru=$true}
         if (-not $elevated) { $parameters.Verb = 'RunAs' }
-        Invoke-GhcGuardedAppStart -ExpectedPath $appPath -LaunchParameters $parameters
+        Invoke-GhcGuardedAppStart -ExpectedPath $appPath -Selection $ghcSelection -LaunchParameters $parameters
     }
     Write-GhcTraceStage 'terminal-app-start-requested' 'begin'
     Write-GhcTraceStage 'terminal-app-start-requested' 'end'

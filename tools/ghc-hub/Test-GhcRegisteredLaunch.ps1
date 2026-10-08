@@ -13,7 +13,7 @@ function Expect([bool]$Value){if(-not $Value){throw 'Expectation failed'}}
 function Reject([scriptblock]$Body){$rejected=$false;try{&$Body|Out-Null}catch{$rejected=$true};Expect $rejected}
 function Write-GhcTraceStage {}
 $script:ghcFixtureMode='absent';$script:ghcShellCalls=0;$script:ghcElevationCalls=0
-function Get-Process {[CmdletBinding()]param([string]$Name) if($script:ghcFixtureMode -eq 'present'){[pscustomobject]@{Path='D:\App\ChatGPT.exe'}}elseif($script:ghcFixtureMode -eq 'unknown'){[pscustomobject]@{Path=$null}}}
+function Get-Process {[CmdletBinding()]param([string]$Name) if($script:ghcFixtureMode -eq 'present'){[pscustomobject]@{Path='D:\App\ChatGPT.exe'}}elseif($script:ghcFixtureMode -eq 'unknown'){[pscustomobject]@{Path=$null}}elseif($script:ghcFixtureMode -eq 'different'){[pscustomobject]@{Path='D:\OlderApp\ChatGPT.exe'}}}
 function Start-Process {[CmdletBinding()]param([string]$FilePath) if($FilePath -ne 'shell:AppsFolder\OpenAI.Codex_2p2nqsd0c76g0!App'){throw 'Unexpected launch target'};$script:ghcShellCalls++}
 function New-GhcFixtureItem([string[]]$Names){
  $item=[pscustomobject]@{SelectedNames=$Names}
@@ -26,7 +26,7 @@ function Get-GhcRegisteredAppItem {param([string]$AppUserModelId) if($AppUserMod
 $script:ghcFixtureVerbs=@('Open','Run as administrator','Uninstall')
 Check 'normal route invokes only registered Open' {$r=Invoke-GhcGuardedAppStart -ExpectedPath 'D:\App\ChatGPT.exe' -RegisteredAppUserModelId 'OpenAI.Codex_2p2nqsd0c76g0!App';Expect ($ghcShellCalls -eq 1 -and $ghcElevationCalls -eq 0 -and -not $r.elevationRequested -and -not $r.packageIdentityVerified)}
 Check 'Administrator route invokes only the registered elevation verb' {$r=Invoke-GhcGuardedAppStart -ExpectedPath 'D:\App\ChatGPT.exe' -RegisteredAppUserModelId 'OpenAI.Codex_2p2nqsd0c76g0!App' -RegisteredAdministrator;Expect ($ghcShellCalls -eq 1 -and $ghcElevationCalls -eq 1 -and $r.elevationRequested -and $null -eq $r.effectiveAdministrator -and -not $r.appReady)}
-foreach($mode in @('present','unknown')){Check ('existing app guard blocks registered elevation: '+$mode){$script:ghcFixtureMode=$mode;Reject {Invoke-GhcGuardedAppStart -ExpectedPath 'D:\App\ChatGPT.exe' -RegisteredAppUserModelId 'OpenAI.Codex_2p2nqsd0c76g0!App' -RegisteredAdministrator};Expect ($ghcElevationCalls -eq 1)}}
+foreach($mode in @('present','unknown','different')){Check ('existing app guard blocks registered elevation: '+$mode){$script:ghcFixtureMode=$mode;Reject {Invoke-GhcGuardedAppStart -ExpectedPath 'D:\App\ChatGPT.exe' -RegisteredAppUserModelId 'OpenAI.Codex_2p2nqsd0c76g0!App' -RegisteredAdministrator};Expect ($ghcElevationCalls -eq 1)}}
 $script:ghcFixtureMode='absent'
 Check 'missing elevation verb has no direct fallback' {$script:ghcFixtureVerbs=@('Open','Uninstall');Reject {Invoke-GhcGuardedAppStart -ExpectedPath 'D:\App\ChatGPT.exe' -RegisteredAppUserModelId 'OpenAI.Codex_2p2nqsd0c76g0!App' -RegisteredAdministrator};Expect ($ghcShellCalls -eq 1 -and $ghcElevationCalls -eq 1)}
 Check 'ambiguous elevation verb fails closed' {Reject {Get-GhcRegisteredElevationVerb (New-GhcFixtureItem @('Run as administrator','Run as administrator'))}}

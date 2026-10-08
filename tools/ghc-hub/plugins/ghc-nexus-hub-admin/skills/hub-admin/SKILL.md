@@ -18,3 +18,7 @@ Before a mutation, retain the source hash, plan, selected host, expected effects
 ## Current helper-creation control — 7 October 2026
 
 Hamish requires a request shown to him and explicit approval before creating any new App/CLI AI helper, subagent or replacement conversation. Earlier general engineering permission does not cover a new helper. Continue only the assigned existing sessions. A shell/test/GitHub CLI process is not itself an AI helper; a new Codex exec/fork/Copilot model session is. For any future approved persistent helper, verify actual launch options and storage; do not use --ephemeral or another no-history flag. Historical mentions of ephemeral and temporary cloud workers are evidence to inspect, not instructions to delete or rewrite history.
+
+## Hub 2.6 launcher selection
+
+The reviewed launcher resolves the newest unambiguous current-user registered main package on every request, validates its manifest and signature, and refuses a silent fallback. A current, older, different or unreadable App process prevents a duplicate start. Check output reports the selected package version and running state separately from token, package identity and readiness. Keep interactive Codex/sign-in in standalone PowerShell or the GHC Hub terminal under Hamish's 8 October post-crash preference. Use Chrome for browser sign-in.

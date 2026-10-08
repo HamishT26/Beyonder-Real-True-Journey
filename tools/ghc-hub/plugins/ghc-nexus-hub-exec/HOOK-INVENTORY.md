@@ -25,3 +25,5 @@ The same PreToolUse registration recognizes messages draft, queue, claim and rec
 ## Hub 2.4 study lookup
 
 The existing handler recognizes read-only study search with an explicit catalogue path, expected SHA256 and query. It does not request execution or grant authority. The study module adds five application checks: source fingerprint, record schema/identity, safe source paths, query/result bounds and preserved verification status. No new lifecycle registration is added.
+
+Hub2.6 refreshes existing runtime source pins. There is still one advisory PreToolUse registration; transport frame/queue checks and launcher checks are application validation, not extra lifecycle registrations.

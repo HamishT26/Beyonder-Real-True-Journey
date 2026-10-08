@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param([switch]$CurrentUser,[switch]$Check)
 $ErrorActionPreference = 'Stop'
-$node = 'D:\GHC-Archives\global-tools\node\26.10.0\node-v26.10.0-win-x64\node.exe'
+$node = 'D:\GHC-Archives\global-tools\node\26.11.1\node-v26.11.1-win-x64\node.exe'
 $pwsh = 'D:\GHC-Archives\global-tools\powershell\7.6.6\pwsh.exe'
 $entry = Join-Path $PSScriptRoot 'hub.mjs'
 $work = 'D:\GHC-Family-Laboratory'
