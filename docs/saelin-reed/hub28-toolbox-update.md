@@ -1,0 +1,10 @@
+
+## 11 October 2026 - Hub 2.8 route integration
+
+Hamish resumed the SAME unfinished renewed (3) x1. Read CURRENT.json and resume-20261011-route-and-hub28 under the current bank; earlier pause paragraphs below are historical. Hub 2.8 is installed with 87 verified runtime files and a real private-tunnel status response. Its 25-tool server adds four measured host/network/workload tools and five native-agent message relay tools. The browser Refresh tools action was approved and executed; current chat tool-catalogue refresh remains to be verified. GUI input is NOT exposed: staged Windows-MCP startup has not completed its handshake.
+
+The real Hub outbox/native fallback test reached Orenna Vale, Set up Linux video streaming (Merrin), Teren Serein, Elian Vale and Avelin Reed. Each returned the exact test ID and performed one successful private MCP status call. Rowan Vale was rejected by the native managed-environment guard; Hamish selected Avelin as the fallback. Rowan is held for this continuation; do not create another Cloud history or alter its environment.
+
+New runtime entries: host-fabric.mjs (four measured/planning tools), message-relay.mjs (routes, prepare, claim, record, receipt), mcp-hub28-server.mjs, and GhcTunnelState.ps1 (truthful pending/ready lifecycle projection). Message tools do not send autonomously: the active agent must check human authorization, claim once, call the returned supported native tool once and record the result. Unknown delivery requires reconciliation. Private receipt evidence and recipient replies are separate.
+
+Exec plugin source/runtime0.1.7 pins the 2.8 code; active-cache refresh is a separate check. No new Codex lifecycle hooks were registered. Existing application checks are not new hooks. Tailscale is inventory only, Windows/Cloud tokens are executor-specific, WSL512MB is on-demand only, and no Cloud purchase/provisioning or new AI helper was performed. Unit routing checks35/35, protocol checks26/26 per final run, installed-server checks7/7, lifecycle fixtures6/6. Test reruns are not credited twice.

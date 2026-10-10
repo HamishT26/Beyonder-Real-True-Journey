@@ -17,12 +17,15 @@ export function createNexusBindings(c){
    const found=saved.filter(r=>r.id===entry.id&&r.kind===entry.kind);if(found.length!==1)throw new Error('MCP selector binding changed');chatMap.set(entry.alias,found[0]);
  }
  const selectors={chats:[...chatMap.keys()],labs:LAB_MODELS.map(m=>m.id),sentinels:['sentinel-1'],remotes:['primary']};
- const route=p=>p.status==='ready'?(p.action==='cloud'?'cloud':'local'):p.status==='native-route'||p.status==='manual'||p.status==='supported_command_prepared'?'manual':'unavailable';
+ const route=p=>p.status==='ready'?(p.action==='chat-browser'?'manual':p.action==='cloud'?'cloud':'local'):p.status==='native-route'||p.status==='manual'||p.status==='supported_command_prepared'?'manual':'unavailable';
  const publicPlan=p=>({available:p.status==='ready',route:route(p),steps:['select','validate','review','handoff']});
+ // Alias identity stays fixed for this process; current status/holds are reread.
+ const liveChat=(alias,rows)=>{const bound=chatMap.get(alias);const found=rows.filter(r=>r.id===bound?.id&&r.kind===bound?.kind&&r.hostId===bound?.hostId);return found.length===1?found[0]:null;};
+ const currentPlan=r=>r?chatPlan(r,c):{status:'unavailable'};
  async function dispatch(name,args,{signal}={}){
   if(signal?.aborted)throw new Error('Cancelled');
-  if(name==='nexus.chats.list')return {items:[...chatMap].map(([alias,r])=>({alias,available:chatPlan(r,c).status==='ready'}))};
-  if(name==='nexus.chats.resolve'||name==='nexus.chats.plan'){const p=chatPlan(chatMap.get(args.alias),c);return name.endsWith('.resolve')?{available:p.status==='ready',route:route(p)}:publicPlan(p);}
+  if(name==='nexus.chats.list'){const rows=readRegistry(c);return {items:[...chatMap.keys()].map(alias=>({alias,available:currentPlan(liveChat(alias,rows)).status==='ready'}))};}
+  if(name==='nexus.chats.resolve'||name==='nexus.chats.plan'){const p=currentPlan(liveChat(args.alias,readRegistry(c)));return name.endsWith('.resolve')?{available:p.status==='ready',route:route(p)}:publicPlan(p);}
   if(name==='nexus.lab.catalogue')return {items:LAB_MODELS.map(m=>({alias:m.id,available:true}))};
   if(name==='nexus.lab.plan')return publicPlan(labPlan(c,args.alias));
   if(name==='nexus.identity.summary')return {platform:c.platform,capabilities:{chats:true,lab:true,sentinel:true,remote:remotePlan(c).status==='ready'}};

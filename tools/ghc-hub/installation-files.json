@@ -1,13 +1,18 @@
 {
   "schema": "ghc.nexus.install-files.v2",
-  "version": "2.6.0",
-  "createdAt": "2026-10-08T10:09:36.320Z",
-  "purpose": "Reviewed Hub2.6 runtime, excluding dependencies, private state and tests",
+  "version": "2.8.0",
+  "createdAt": "2026-10-10T16:00:40.507Z",
+  "purpose": "Reviewed Hub 2.8 runtime with explicit native-agent relay; no GUI backend exposed; excludes dependencies, tests and private state",
   "files": [
     {
       "path": ".agents/plugins/marketplace.json",
-      "bytes": 1217,
-      "sha256": "0901e431a29c880205c68a43f29f2f60289f4b48e6a7a60fa0654c337a1fd5b9"
+      "bytes": 1843,
+      "sha256": "b8e239134bf77714ef45bec632ab7f1c6005124414d63f780f89b1d01a48676a"
+    },
+    {
+      "path": "ADMIN-MCP.md",
+      "bytes": 4551,
+      "sha256": "7832a5c1ab53c710c6445f17d979de79c559542f30408ec0cb5bdf74350eb53e"
     },
     {
       "path": "GhcAppLaunchSelection.ps1",
@@ -15,9 +20,24 @@
       "sha256": "f16988a0eb486a0fca0f3d9121875a53da1d3d5252c44ba98aa2b983683b1de0"
     },
     {
+      "path": "GhcTunnelState.ps1",
+      "bytes": 938,
+      "sha256": "c34a97e53f351966e39208b505e467a600addd1bd2df40239922c21bcbe87c93"
+    },
+    {
+      "path": "HUB-2.8-PLAN.md",
+      "bytes": 4754,
+      "sha256": "8331f70571fc124edff645345ebbfbc988d9eb76557d7a8d70abcce24b6a807b"
+    },
+    {
       "path": "MCP-SETUP.md",
       "bytes": 2503,
       "sha256": "d8a67125caca83016b1e23bbdba0f4e8f9081c6a13cd1482ecb7a8933b1c91fb"
+    },
+    {
+      "path": "MESSAGE-SENDING-DESIGN.md",
+      "bytes": 1961,
+      "sha256": "b880b94f5769cebde83d42c5a95f51ce655546672c211ca447e50cc9e8e556b5"
     },
     {
       "path": "NEXUS-V2-GUIDE.md",
@@ -70,9 +90,24 @@
       "sha256": "94fb0734e2850cdbbb82b84f42a93f51021404b74597140e005fef48d24047e3"
     },
     {
+      "path": "RELEASE-2.7.md",
+      "bytes": 2221,
+      "sha256": "3feac29486c1824ec03c4160008eae7fe0bc4e528ca5d69dce50fa74c1538cb8"
+    },
+    {
+      "path": "RELEASE-2.8.md",
+      "bytes": 3231,
+      "sha256": "e2ec91735f16330f8d29ffd00a1ade7c65340429ee4ea7276c33b5da2c478ea4"
+    },
+    {
       "path": "Start-GhcAdmin.ps1",
       "bytes": 17332,
       "sha256": "96520ef7905ef8d6d7f34a95c5e3dfa03591755e2b7f499ad059fcd9b97097e4"
+    },
+    {
+      "path": "Start-GhcAdminMcp.ps1",
+      "bytes": 2533,
+      "sha256": "c2cb2360ac5c9da85bbae3a4edd7ab87b607abc05f2d9be654299f263365fe55"
     },
     {
       "path": "Start-GhcCmdHub.cmd",
@@ -88,6 +123,16 @@
       "path": "Start-GhcHub.ps1",
       "bytes": 1619,
       "sha256": "7b3c885ece0003e878f14acabd149cfb609c43c63c88ff603a95b3d1ea20e8da"
+    },
+    {
+      "path": "admin-cli.mjs",
+      "bytes": 697,
+      "sha256": "11bbbec296304ca6ee20e5ede43d6c6e14001b3782598b92fed2c96d5ec80d28"
+    },
+    {
+      "path": "admin-commander.mjs",
+      "bytes": 17961,
+      "sha256": "75705a9d7d45a6e056addf930cb8501dc73d952660e1233c097b0ff5d7057590"
     },
     {
       "path": "app-server-client.mjs",
@@ -107,7 +152,7 @@
     {
       "path": "core.mjs",
       "bytes": 17731,
-      "sha256": "b35d91b3ca190a08f78f7178123505a9f5974a20eb90366a68dcc119cf43528c"
+      "sha256": "dda79ed4a4b7604e984e4dbd6bb33822fd2ea898232fd883fc68a308c0c99245"
     },
     {
       "path": "delivery-state-panel.mjs",
@@ -123,6 +168,11 @@
       "path": "ghc-nexus.ps1",
       "bytes": 216,
       "sha256": "f787012bd4dce09210fa4b07cc6cb4debb1deca07a2f593bb80c3a29f70e85f9"
+    },
+    {
+      "path": "host-fabric.mjs",
+      "bytes": 6452,
+      "sha256": "b49f09107fe7f01dbc2ad4dc30258aef503b18f132b340dd5483eeb6661ddd77"
     },
     {
       "path": "hub.mjs",
@@ -145,9 +195,19 @@
       "sha256": "d2c6e775a9ab9bff885b36d5f6b2d5042dc3a6e5218040b982da4d89c283625a"
     },
     {
+      "path": "mcp-admin-server.mjs",
+      "bytes": 837,
+      "sha256": "4dd9d9993a182f13456b1b6032139b6c2a8f590ffa15a3362b0eea7406e428a6"
+    },
+    {
+      "path": "mcp-hub28-server.mjs",
+      "bytes": 1746,
+      "sha256": "30f0a21d2fae3f4b13fb1ac6ace1103ab5d9283415b1d971ac269b86e038014e"
+    },
+    {
       "path": "mcp-server.mjs",
-      "bytes": 3445,
-      "sha256": "32ec8a68ab89776e61fa192b8d8e30aa40426eab202a7808eec067a91f96119e"
+      "bytes": 3884,
+      "sha256": "209e1bbdcf93af2d9bd83395ab83b54cff161be4a5565c399171af2d23e8b776"
     },
     {
       "path": "mcp/sdk/README.md",
@@ -165,6 +225,11 @@
       "sha256": "ad1bf43c5c2a6a22d9e8084b78c293e2e2e5f951871fc3c67b55d5b6b8b3cb94"
     },
     {
+      "path": "mcp/sdk/src/admin-bridge.mjs",
+      "bytes": 4024,
+      "sha256": "4d82dbee61ea93bc7df0d7d89dd1437ddc551969904b3a4f014323c5d65695a5"
+    },
+    {
       "path": "mcp/sdk/src/bounded-transport.mjs",
       "bytes": 10133,
       "sha256": "e2d0fbb72eab1723ced452269f8f2db4ef26622e869528e3454e6deb1346e160"
@@ -172,7 +237,7 @@
     {
       "path": "mcp/sdk/src/bridge.mjs",
       "bytes": 5028,
-      "sha256": "193a8a6ae38d5fc703a6481416b23216bad965165d8422b45538c9d32acdff94"
+      "sha256": "1594200f9a9a1fa9c60fd62a60ce6a186b7b18f906717c27ff0cd3c4ffd4e147"
     },
     {
       "path": "mcp/sdk/src/contract.mjs",
@@ -190,6 +255,11 @@
       "sha256": "0c6129c3a8051c8f0996e9201d8b6c0c962aa1a3a5dd605c70ee68ebc5fb1fa8"
     },
     {
+      "path": "message-relay.mjs",
+      "bytes": 7539,
+      "sha256": "dad77670105abeee80feef1efd521160b7276df121738a90d3df30c43cca02ce"
+    },
+    {
       "path": "messages.mjs",
       "bytes": 9826,
       "sha256": "78e852d19559bf63422ab4e82c0687cef58fcd13a75a95a83b30a1bb6cad3ab7"
@@ -198,6 +268,16 @@
       "path": "nexus.mjs",
       "bytes": 14724,
       "sha256": "65850dacfbb5f0c7a349f7a873be1209b50d1e606c78eb7f179fd207c02030ee"
+    },
+    {
+      "path": "plugins/ghc-admin-computer-desktop-commander/.codex-plugin/plugin.json",
+      "bytes": 519,
+      "sha256": "3985518e000d0147a28be49113a4ba644b6a9baabd458e9018c2ac9fbb52bcb9"
+    },
+    {
+      "path": "plugins/ghc-admin-computer-desktop-commander/skills/admin-computer-commander/SKILL.md",
+      "bytes": 1282,
+      "sha256": "624ddc4d08252b167fd2def68b624f9a00ccca7dace1c75c35c7064bf88fc8e2"
     },
     {
       "path": "plugins/ghc-nexus-computer-use/.codex-plugin/plugin.json",
@@ -252,7 +332,7 @@
     {
       "path": "plugins/ghc-nexus-hub-exec/.codex-plugin/plugin.json",
       "bytes": 476,
-      "sha256": "cae2e1ba85cf86f291dd5c24b2071350a37705501a4005966ec3588376e231ea"
+      "sha256": "5c9198a2fa521ca09d0cd3b29e9aaa453c37f03c0d1dbd05a0ef08b062bfcf4a"
     },
     {
       "path": "plugins/ghc-nexus-hub-exec/HOOK-INVENTORY.md",
@@ -267,7 +347,7 @@
     {
       "path": "plugins/ghc-nexus-hub-exec/references/hub-source.json",
       "bytes": 2578,
-      "sha256": "30dd8184225f5916585b9ddde180e2ddafb17f5a59817e4ed16d53404c18803c"
+      "sha256": "58bf177d64258eecfd2db10bfb26fba71e4da87836c37fe94be04ecb21cd2e04"
     },
     {
       "path": "plugins/ghc-nexus-hub-exec/scripts/nexus_preflight.cjs",
@@ -283,6 +363,16 @@
       "path": "plugins/ghc-nexus-hub-exec/skills/hub-exec/references/actions.md",
       "bytes": 2625,
       "sha256": "7e0994db4f283dac0f52e2f17ecd719ac663e6c9851a27abe5ba4ac05a7c7eb7"
+    },
+    {
+      "path": "plugins/ghc-nexus-private-tunnel/.codex-plugin/plugin.json",
+      "bytes": 483,
+      "sha256": "333caa19c2a8bcb7821f2767d2f0df3b70ac8947b4ad7dd44f74a7799a38a452"
+    },
+    {
+      "path": "plugins/ghc-nexus-private-tunnel/skills/private-tunnel-operations/SKILL.md",
+      "bytes": 1325,
+      "sha256": "50d0f4f35f1b4349632c324f359a9081e5074f2f7b3e5393695b3b4d009968b0"
     },
     {
       "path": "private-store.mjs",

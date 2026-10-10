@@ -3,7 +3,7 @@ import {serveStdio} from '@modelcontextprotocol/server/stdio';
 import {BoundedStdioTransport} from './bounded-transport.mjs';
 import {TOOL_SPECS, copyRegistry, inputSchema, safeArguments, publicProjection, toolFailure, toolSuccess} from './contract.mjs';
 
-export const SERVER_INFO = Object.freeze({name: 'nexus-hub-readonly-sdk', version: '2.6.0'});
+export const SERVER_INFO = Object.freeze({name: 'nexus-hub-readonly-sdk', version: '2.7.0'});
 
 /** A trusted read-only dispatcher is injected; this library never imports private GHC state. */
 export function serveNexusStdio({dispatch, selectors, input = process.stdin, output = process.stdout,
