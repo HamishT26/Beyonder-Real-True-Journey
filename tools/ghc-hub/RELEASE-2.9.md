@@ -25,3 +25,12 @@ Hamish selected native chat tools for current communication. The MCP relay remai
 The compatible mcp-hub28-server.mjs entrypoint and ghc.hub28.config.v1 schema remain in use; runtime metadata reports 2.9.0. Administrator commands still require exact local approval. GUI input remains unexposed. Windows Native/CMD remain selected, and WSL is on-demand only.
 
 The verified 87-file 2.8 rollback is in the owner midday recovery bank. No App cache or conversation history is deleted by this release.
+
+
+## 12 October maintenance: registered Administrator launch
+
+The current App processes were observed running from the newest registered package path but without Windows package identity. The built-in update check separately reported a missing package family. The launcher now defaults Codex to the registered Windows Administrator action, whose availability was checked without launching another App. PowerShell and Probe targets keep DirectAdministrator behavior; explicit activation choices remain supported.
+
+This change applies on the next manual launch after the existing App is closed. It does not change identity on a running process or establish that the next App is ready, elevated or correctly authenticated. Verify package identity and update eligibility after that launch. Existing authentication and history stores are preserved; do not copy credentials or databases between profiles as a workaround. The previous explicit DirectAdministrator route remains available for controlled rollback.
+
+Two live no-launch checks cover the new Codex default and the unchanged PowerShell target. No GUI input or full runtime test suite was replayed for this launcher change.

@@ -3,10 +3,15 @@ param(
     [ValidateSet('Codex','PowerShell','Probe')][string]$Target = 'Codex',
     [switch]$Check,
     [string]$TracePath,
-    [ValidateSet('DirectAdministrator','Registered','RegisteredAdministrator')][string]$AppActivation = 'DirectAdministrator'
+    [ValidateSet('DirectAdministrator','Registered','RegisteredAdministrator')][string]$AppActivation
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'GhcAppLaunchSelection.ps1')
+if (-not $PSBoundParameters.ContainsKey('AppActivation')) {
+    # A raw package EXE can run without Windows package identity. Preserve the
+    # registered activation route for Codex and the old shell/probe behavior.
+    $AppActivation = if ($Target -eq 'Codex') { 'RegisteredAdministrator' } else { 'DirectAdministrator' }
+}
 if ($Target -ne 'Codex' -and $AppActivation -ne 'DirectAdministrator') {
     throw 'Registered app activation is available only for the Codex target.'
 }
