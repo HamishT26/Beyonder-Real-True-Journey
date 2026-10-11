@@ -1,4 +1,4 @@
-> Current release: see [GHC Nexus Hub 2.1](RELEASE-2.1.md) for the restored direct Administrator route, CMD shortcuts and chat-reader cleanup. Earlier release details below are retained as history.
+> Current release: see [GHC Nexus Hub 2.9](RELEASE-2.9.md), CURRENT.json in D:/GHC-Archives/phase-banks/saelin-renewed-r3-x1-20261008, and its linked source/installation receipts. Earlier release descriptions below are retained as history. This pointer does not advance the same unfinished renewed (3) x1 or authorize replay of completed work.
 
 # GHC Nexus Hub 2 — operator and integration guide
 
