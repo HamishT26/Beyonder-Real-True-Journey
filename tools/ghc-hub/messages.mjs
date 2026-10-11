@@ -86,6 +86,8 @@ export function claimMessage(c,id,options){
 }
 export function recordMessageReceipt(c,raw){
  if(!raw||typeof raw!=='object'||Array.isArray(raw)||Object.keys(raw).some(k=>!receiptKeys.includes(k))||!uuid(raw.requestId)||!uuid(raw.threadId)||!['accepted','rejected','unknown'].includes(raw.outcome)||raw.tool!=='mcp__codex_app__send_message_to_thread'||typeof raw.deliveryReference!=='string'||!/^[A-Za-z0-9_.:-]{1,160}$/.test(raw.deliveryReference)||!/^[a-f0-9]{64}$/.test(raw.messageSha256)||containsCredential(raw))throw new Error('Invalid message receipt');
+ // Accepted UUID spelling is case-insensitive; persist one canonical representation.
+ raw={...raw,requestId:raw.requestId.toLowerCase(),threadId:raw.threadId.toLowerCase()};
  const current=messageStatus(c,raw.requestId);
  if(!current.claim)throw new Error('Message was not claimed');
  if(current.messageSha256!==raw.messageSha256||current.target.threadId!==raw.threadId||current.target.hostId!==raw.hostId)throw new Error('Receipt target or content mismatch');

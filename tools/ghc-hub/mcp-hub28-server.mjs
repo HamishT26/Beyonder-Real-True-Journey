@@ -18,7 +18,7 @@ export async function main(configFile=process.argv[2]){
  const dispatch=createFabricDispatcher({tailscaleKeyFile:config.tailscaleKeyFile});
  const relay=createMessageRelay(c);
  const extensions=[...FABRIC_TOOLS.map(spec=>({spec,dispatch})),...MESSAGE_TOOLS.map(spec=>({spec,dispatch:relay}))];
- const server=serveAdminStdio({readOnly:createNexusBindings(c),commander:createAdminCommander(policy),extensions,serverInfo:{name:'ghc-nexus-admin-desktop-commander',version:'2.8.0'}});
+ const server=serveAdminStdio({readOnly:createNexusBindings(c),commander:createAdminCommander(policy),extensions,serverInfo:{name:'ghc-nexus-admin-desktop-commander',version:'2.9.0'}});
  await server.done;
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(()=>{console.error('Nexus 2.8 candidate unavailable; review its explicit private config.');process.exitCode=1;});
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(()=>{console.error('Nexus 2.9 runtime unavailable; review its explicit private config.');process.exitCode=1;});

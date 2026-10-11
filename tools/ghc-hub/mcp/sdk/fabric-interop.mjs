@@ -36,7 +36,7 @@ for(const mode of ['legacy','modern']){
   await step('single claim returns exact provider action',async()=>{const r=await call('nexus.messages.claim',{requestId,messageSha256:message.messageSha256});assert.equal(r.nativeAction.arguments.threadId,targetId);assert.equal(r.nativeAction.arguments.hostId,undefined);assert.equal(r.automaticDelivery,false);});
   await step('unknown native result retained without automatic retry',async()=>{const r=await call('nexus.messages.record',{requestId,messageSha256:message.messageSha256,outcome:'unknown',deliveryReference:'synthetic-timeout'});assert.equal(r.deliveryState,'unknown');assert.equal((await call('nexus.messages.claim',{requestId,messageSha256:message.messageSha256})).status,'held');});
   await step('receipt keeps completion and sender evidence separate',async()=>{const r=await call('nexus.messages.receipt',{requestId});assert.equal(r.recipientCompletion,'not_observed');assert.equal(r.receipt.evidenceType,'caller-reported-native-tool-result');assert.ok(!JSON.stringify(r).includes(targetId));});
-  await step('original admin status preserved',async()=>{assert.equal((await call('nexus.admin.status')).version,'2.8.0');});
+  await step('original admin status preserved',async()=>{assert.equal((await call('nexus.admin.status')).version,'2.9.0');});
  }catch{}finally{await client.close();}
  checks.push({name:mode+' no stderr',passed:stderrBytes===0,bytes:stderrBytes});
 }

@@ -32,15 +32,19 @@ function input(name,args){
 export function createMessageRelay(c){
  const selectors=readPrivate(nexusHome(c),'mcp/selectors.json',{missing:{schema:'ghc.nexus.mcp-selectors.v1',chats:[]}});
  if(selectors.schema!=='ghc.nexus.mcp-selectors.v1'||!Array.isArray(selectors.chats)||selectors.chats.length>128)throw Error('Message selectors refused');
- const rows=readRegistry(c),bindings=new Map();
+ const rows=readRegistry(c),bindings=new Map(),targets=new Set();
  for(const entry of selectors.chats){
   const matching=rows.filter(r=>r.id===entry.id&&r.kind===entry.kind);
   if(!new RegExp(ALIAS).test(entry.alias??'')||bindings.has(entry.alias)||matching.length!==1)throw Error('Message selector binding refused');
-  const row=matching[0];bindings.set(entry.alias,{id:row.id.toLowerCase(),kind:row.kind,hostId:row.hostId});
+  const row=matching[0];
+  const target=JSON.stringify([row.id.toLowerCase(),row.kind,row.hostId]);
+  if(targets.has(target))throw Error('Duplicate message target binding refused');
+  targets.add(target);
+  bindings.set(entry.alias,{id:row.id.toLowerCase(),kind:row.kind,hostId:row.hostId});
  }
- const selected=(alias)=>{
+ const selected=(alias,rows=readRegistry(c))=>{
   const b=bindings.get(alias);if(!b)throw Error('Message alias refused');
-  const matches=readRegistry(c).filter(r=>r.id.toLowerCase()===b.id&&r.kind===b.kind&&r.hostId===b.hostId);
+  const matches=rows.filter(r=>r.id.toLowerCase()===b.id&&r.kind===b.kind&&r.hostId===b.hostId);
   if(matches.length!==1)throw Error('Message binding changed');
   return matches[0];
  };
@@ -54,10 +58,12 @@ export function createMessageRelay(c){
  return async function dispatch(name,args,{signal}={}){
   input(name,args);if(signal?.aborted)throw Error('Cancelled');
   if(name==='nexus.messages.routes'){
+   const snapshot=readRegistry(c),idCounts=new Map();
+   for(const row of snapshot){const key=row.id.toLowerCase();idCounts.set(key,(idCounts.get(key)??0)+1);}
    const offset=args.offset??0,keys=[...bindings.keys()],items=keys.slice(offset,offset+16).map(alias=>{
-    let row;try{row=selected(alias);}catch{return {alias,state:'binding_changed'};}
+    let row;try{row=selected(alias,snapshot);}catch{return {alias,state:'binding_changed'};}
     const age=Date.now()-Date.parse(row.observedAt);
-    return {alias,provider:row.kind,state:row.held?'held':!['codex-local','codex-managed','chatgpt'].includes(row.kind)?'unsupported':!Number.isFinite(age)||age<0||age>300000?'refresh_required':'agent_relay',automaticDelivery:false};
+    return {alias,provider:row.kind,state:row.held?'held':!['codex-local','codex-managed','chatgpt'].includes(row.kind)?'unsupported':idCounts.get(row.id.toLowerCase())!==1?'ambiguous_target':row.kind!=='chatgpt'&&(!row.hostId||!row.hostId.trim())?'host_binding_missing':!['idle','notLoaded','active'].includes(row.status)?'refresh_required':!Number.isFinite(age)||age<0||age>300000?'refresh_required':'agent_relay',automaticDelivery:false};
    });
    return {items,nextOffset:offset+items.length<keys.length?offset+items.length:null,nativeTool,serverSenderAvailable:false};
   }

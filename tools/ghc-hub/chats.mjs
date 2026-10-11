@@ -11,7 +11,7 @@ export function normalizeEntry(raw,source,observedAt) {
   const title=clean(raw.title||raw.name||'Untitled chat').slice(0,180);
   const rawStatus=typeof raw.status==='object'?raw.status?.type:raw.status;
   const status=['active','idle','notLoaded','systemError','running','completed','failed','pending','queued','ready','cancelled'].includes(rawStatus)?rawStatus:'unknown';
-  return {id:raw.id,kind,title,status,hostId:typeof raw.hostId==='string'?clean(raw.hostId).slice(0,80):kind==='codex-local'?'local':null,source:clean(source).slice(0,120),observedAt,held:raw.held===true,reportedActive:raw.reportedActive===true,resumeSettings:'preserve',sessionId:uuid(raw.sessionId)?raw.sessionId:null};
+  return {id:raw.id,kind,title,status,hostId:kind==='chatgpt'?null:typeof raw.hostId==='string'?clean(raw.hostId).slice(0,80):kind==='codex-local'?'local':null,source:clean(source).slice(0,120),observedAt,held:raw.held===true,reportedActive:raw.reportedActive===true,resumeSettings:'preserve',sessionId:uuid(raw.sessionId)?raw.sessionId:null};
 }
 export function mergeEntries(groups) {
   const map=new Map();

@@ -10,15 +10,16 @@ $ghcAlias='ghc-nexus'
 $ghcConfig='D:/GHC-Archives/private/ghc-nexus/admin/hub28.json'
 if(Test-Path -LiteralPath $ghcConfig -PathType Leaf){$ghcServer='D:/GHC-Archives/global-tools/ghc-nexus-hub/mcp-hub28-server.mjs';$ghcArgument=$ghcConfig}else{$ghcArgument=$ghcPolicy}
 $ghcConnectExit=$null
-foreach($ghcFile in @($ghcClient,$ghcNode,$ghcServer,$ghcPolicy)){if(-not(Test-Path -LiteralPath $ghcFile -PathType Leaf)){throw 'Reviewed Nexus runtime input missing'}}
+if(-not(Test-Path -LiteralPath $ghcClient -PathType Leaf)){throw 'Reviewed tunnel client missing'}
 if($Action -eq 'Connect'){
+ foreach($ghcFile in @($ghcNode,$ghcServer,$ghcPolicy)){if(-not(Test-Path -LiteralPath $ghcFile -PathType Leaf)){throw 'Reviewed Nexus runtime input missing'}}
  $ghcIdentity=[Security.Principal.WindowsIdentity]::GetCurrent()
  $ghcPrincipal=[Security.Principal.WindowsPrincipal]::new($ghcIdentity)
  if(-not $ghcPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Start this operator script from the existing elevated Hub terminal'}
  $ghcBeforeRaw=& $ghcClient runtimes status $ghcAlias --json
  if($LASTEXITCODE -ne 0){throw 'Inspect the named runtime before another connection attempt'}
  $ghcBefore=$ghcBeforeRaw | ConvertFrom-Json
- if(-not $ghcBefore.process_running){
+ if(Test-GhcTunnelMayConnect -Snapshot $ghcBefore){
   # The credential is a reference only; this script never reads its contents.
   $ghcRaw=& $ghcClient runtimes connect --alias $ghcAlias --profile $ghcAlias --profile-dir 'D:/GHC-Archives/private/ghc-nexus/tunnel-profiles' --tunnel-id 'tunnel_6ac76521898c8191a0ef32cefeb6b7e2' --mcp-command "$ghcNode --max-old-space-size=128 $ghcServer $ghcArgument" --runtime-api-key 'file:D:/GHC-Archives/private/ghc-nexus/credentials/openai-api-key.txt' --json
   $ghcConnectExit=$LASTEXITCODE
