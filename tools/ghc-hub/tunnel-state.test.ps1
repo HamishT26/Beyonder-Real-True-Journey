@@ -30,4 +30,18 @@ foreach($running in @($true,$false)){
  if((Test-GhcTunnelMayConnect -Snapshot $s) -ne (-not $running)){throw 'Known process state admission mismatch'}
  $results+=@{name=('connect admission for known running='+$running);passed=$true}
 }
-[ordered]@{passed=$results.Count;failed=0;checks=@($results);realConnections=0} | ConvertTo-Json -Depth 4
+foreach($case in @(
+ @{config=$null;expected='file:D:\GHC-Archives\private\ghc-nexus\credentials\openai-api-key.txt'},
+ @{config=[pscustomobject]@{};expected='file:D:\GHC-Archives\private\ghc-nexus\credentials\openai-api-key.txt'},
+ @{config=[pscustomobject]@{runtimeApiKeyFile='D:/Private Key Folder/key.txt'};expected='file:D:\Private Key Folder\key.txt'}
+)){
+ if((Get-GhcTunnelCredentialReference -Config $case.config) -cne $case.expected){throw 'Credential file reference mismatch'}
+ $results+=@{name='local credential reference and backwards compatible default';passed=$true}
+}
+foreach($value in @($null,'','relative.txt','sk-SYNTHETIC_FIXTURE','env:OPENAI_API_KEY','\\remote\share\key.txt',42,"D:/private/key`n.txt")){
+ $denied=$false
+ try{Get-GhcTunnelCredentialReference -Config ([pscustomobject]@{runtimeApiKeyFile=$value}) | Out-Null}catch{$denied=$true}
+ if(-not $denied){throw 'Invalid credential reference accepted'}
+ $results+=@{name='invalid explicit credential reference refuses fallback';passed=$true}
+}
+[ordered]@{passed=$results.Count;failed=0;checks=@($results);realConnections=0;secretsRead=0} | ConvertTo-Json -Depth 4

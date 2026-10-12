@@ -4,7 +4,7 @@ import {BoundedStdioTransport} from './bounded-transport.mjs';
 import {TOOL_SPECS,copyRegistry,inputSchema,safeArguments,publicProjection,toolSuccess} from './contract.mjs';
 import {ADMIN_TOOLS,CommanderError} from '../../../admin-commander.mjs';
 
-export const ADMIN_SERVER_INFO=Object.freeze({name:'ghc-nexus-admin-desktop-commander',version:'3.0.0'});
+export const ADMIN_SERVER_INFO=Object.freeze({name:'ghc-nexus-admin-desktop-commander',version:'3.1.0'});
 const failure=code=>({isError:true,content:[{type:'text',text:JSON.stringify({ok:false,code})}]});
 export function serveAdminStdio({readOnly,commander,extensions=[],serverInfo=ADMIN_SERVER_INFO,input=process.stdin,output=process.stdout,limits={},signalSource=process,onEvent=()=>{}}){
  const registry=copyRegistry(readOnly.selectors);const abort=new AbortController();let active=null;

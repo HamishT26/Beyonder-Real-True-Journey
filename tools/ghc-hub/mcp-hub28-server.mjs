@@ -16,10 +16,10 @@ export async function main(configFile=process.argv[2]){
  if(config.schema!=='ghc.hub28.config.v1'||config.enabled!==true||!path.isAbsolute(config.adminPolicy)||!path.isAbsolute(config.tailscaleKeyFile))throw Error('Config refused');
  const policy=await loadAdminPolicy(config.adminPolicy);
  const c=context();
- const dispatch=createFabricDispatcher({tailscaleKeyFile:config.tailscaleKeyFile});
+ const dispatch=createFabricDispatcher({tailscaleKeyFile:config.tailscaleKeyFile,guiMinimumFreeMemoryMiB:config.guiMinimumFreeMemoryMiB});
  const relay=createMessageRelay(c);
  const extensions=[...FABRIC_TOOLS.map(spec=>({spec,dispatch})),...MESSAGE_TOOLS.map(spec=>({spec,dispatch:relay})),{spec:SKILL_LIBRARY_TOOL,dispatch:createSkillLibraryDispatcher()}];
- const server=serveAdminStdio({readOnly:createNexusBindings(c),commander:createAdminCommander(policy),extensions,serverInfo:{name:'ghc-nexus-admin-desktop-commander',version:'3.0.0'}});
+ const server=serveAdminStdio({readOnly:createNexusBindings(c),commander:createAdminCommander(policy),extensions,serverInfo:{name:'ghc-nexus-admin-desktop-commander',version:'3.1.0'}});
  await server.done;
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(()=>{console.error('Nexus 3.0 runtime unavailable; review its explicit private config.');process.exitCode=1;});
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(()=>{console.error('Nexus 3.1 runtime unavailable; review its explicit private config.');process.exitCode=1;});

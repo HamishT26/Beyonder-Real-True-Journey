@@ -14,6 +14,9 @@ if(-not(Test-Path -LiteralPath $ghcClient -PathType Leaf)){throw 'Reviewed tunne
 if($Action -eq 'Connect'){
  . (Join-Path $PSScriptRoot 'GhcToolEnvironment.ps1')
  $env:PATH = Get-GhcPreferredToolPath -RequiredTools @('node')
+ $ghcPrivateConfig=if(Test-Path -LiteralPath $ghcConfig -PathType Leaf){Get-Content -LiteralPath $ghcConfig -Raw | ConvertFrom-Json}else{$null}
+ $ghcCredentialReference=Get-GhcTunnelCredentialReference -Config $ghcPrivateConfig
+ if(-not(Test-Path -LiteralPath $ghcCredentialReference.Substring(5) -PathType Leaf)){throw 'Configured runtime key file is missing'}
  foreach($ghcFile in @($ghcNode,$ghcServer,$ghcPolicy)){if(-not(Test-Path -LiteralPath $ghcFile -PathType Leaf)){throw 'Reviewed Nexus runtime input missing'}}
  $ghcIdentity=[Security.Principal.WindowsIdentity]::GetCurrent()
  $ghcPrincipal=[Security.Principal.WindowsPrincipal]::new($ghcIdentity)
@@ -23,7 +26,7 @@ if($Action -eq 'Connect'){
  $ghcBefore=$ghcBeforeRaw | ConvertFrom-Json
  if(Test-GhcTunnelMayConnect -Snapshot $ghcBefore){
   # The credential is a reference only; this script never reads its contents.
-  $ghcRaw=& $ghcClient runtimes connect --alias $ghcAlias --profile $ghcAlias --profile-dir 'D:/GHC-Archives/private/ghc-nexus/tunnel-profiles' --tunnel-id 'tunnel_6ac76521898c8191a0ef32cefeb6b7e2' --mcp-command "$ghcNode --max-old-space-size=128 $ghcServer $ghcArgument" --runtime-api-key 'file:D:/GHC-Archives/private/ghc-nexus/credentials/openai-api-key.txt' --json
+  $ghcRaw=& $ghcClient runtimes connect --alias $ghcAlias --profile $ghcAlias --profile-dir 'D:/GHC-Archives/private/ghc-nexus/tunnel-profiles' --tunnel-id 'tunnel_6ac76521898c8191a0ef32cefeb6b7e2' --mcp-command "$ghcNode --max-old-space-size=128 $ghcServer $ghcArgument" --runtime-api-key $ghcCredentialReference --json
   $ghcConnectExit=$LASTEXITCODE
  }
 }elseif($Action -eq 'Stop'){

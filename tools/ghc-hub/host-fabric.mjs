@@ -15,6 +15,15 @@ export const FABRIC_TOOLS=Object.freeze([
 
 export function measureResources(){return {observedAt:new Date().toISOString(),platform:process.platform,architecture:process.arch,logicalCpus:os.availableParallelism(),totalMemoryMiB:Math.floor(os.totalmem()/1048576),freeMemoryMiB:Math.floor(os.freemem()/1048576),localConcurrencyLimit:1,reserveMemoryMiB:256,administrator:'not_measured_by_this_operation',gpu:'not_measured_by_this_operation'};}
 
+export function desktopReadiness(local,minimumFreeMemoryMiB=512){
+ need(Number.isSafeInteger(minimumFreeMemoryMiB)&&minimumFreeMemoryMiB>=16&&minimumFreeMemoryMiB<=65536,'invalid_gui_memory_guard');
+ need(object(local)&&Number.isFinite(local.freeMemoryMiB)&&local.freeMemoryMiB>=0,'invalid_resource_observation');
+ const windows=local.platform==='win32';
+ return {state:'unavailable',reason:windows?'no_verified_gui_backend':'unsupported_local_gui_platform',observedAt:local.observedAt,platform:local.platform,
+  freeMemoryMiB:local.freeMemoryMiB,minimumFreeMemoryMiB,resourceAdmitted:windows&&local.freeMemoryMiB>=minimumFreeMemoryMiB,
+  inputExposed:false,resourceAdmissionIsNotGuiVerification:true,nextStep:'verify a supported interactive backend before exposing input'};
+}
+
 export function deviceProjection(raw,now=Date.now()){
  need(object(raw)&&Array.isArray(raw.devices),'invalid_network_response');
  return {observedAt:new Date(now).toISOString(),source:'tailscale-api',operation:'GET devices',readOnly:true,truncated:raw.devices.length>128,devices:raw.devices.slice(0,128).map(d=>({hostname:cleanText(d.hostname),os:cleanText(d.os),authorized:d.authorized===true,clientVersion:cleanText(d.clientVersion),expires:cleanText(d.expires),lastSeen:cleanText(d.lastSeen),ephemeral:typeof d.ephemeral==='boolean'?d.ephemeral:null})),executionAuthority:'not_attested_by_network_membership'};
@@ -58,14 +67,16 @@ export function planWorkload(args,local,remote=[],gui={state:'unavailable'},now=
  return {...base,state:'held',reason:localCompatible?'insufficient_measured_capacity':'no_verified_compatible_executor',localAvailableMemoryMiB:available,wslStart:'never_automatic',cloudCpuPooling:false};
 }
 
-export function createFabricDispatcher({tailscaleKeyFile,resources=measureResources,network=readTailscaleDevices,guiStatus=()=>({state:'unavailable',reason:'no_verified_gui_backend'}),remoteExecutors=[]}){
+export function createFabricDispatcher({tailscaleKeyFile,resources=measureResources,network=readTailscaleDevices,guiStatus,guiMinimumFreeMemoryMiB=512,remoteExecutors=[]}){
+ need(Number.isSafeInteger(guiMinimumFreeMemoryMiB)&&guiMinimumFreeMemoryMiB>=16&&guiMinimumFreeMemoryMiB<=65536,'invalid_gui_memory_guard');
+ const desktop=local=>guiStatus?guiStatus():desktopReadiness(local,guiMinimumFreeMemoryMiB);
  return async(name,args={},options={})=>{
   if(name!=='nexus.workload.plan')need(object(args)&&Object.keys(args).length===0,'invalid_arguments');
   switch(name){
    case 'nexus.host.resources':return resources();
    case 'nexus.network.devices':need(typeof tailscaleKeyFile==='string','network_not_configured');return network(tailscaleKeyFile,options);
-   case 'nexus.desktop.status':return guiStatus();
-   case 'nexus.workload.plan':return planWorkload(args,resources(),remoteExecutors,await guiStatus());
+   case 'nexus.desktop.status':return desktop(resources());
+   case 'nexus.workload.plan':{const local=resources();return planWorkload(args,local,remoteExecutors,await desktop(local));}
    default:throw new CommanderError('unknown_tool');
   }
  };

@@ -1,3 +1,14 @@
+function Get-GhcTunnelCredentialReference {
+ param([object]$Config,[string]$DefaultPath='D:/GHC-Archives/private/ghc-nexus/credentials/openai-api-key.txt')
+ $property=if($null -ne $Config){$Config.PSObject.Properties['runtimeApiKeyFile']}else{$null}
+ $value=if($null -ne $property){$property.Value}else{$DefaultPath}
+ if($value -isnot [string] -or $value.Length -gt 4096 -or $value -notmatch '^[A-Za-z]:[\\/]' -or $value -match '[\x00-\x1f\x7f]'){
+  throw 'Runtime key must be an absolute local file path; no secret value is accepted here'
+ }
+ $resolved=[IO.Path]::GetFullPath($value)
+ return 'file:'+$resolved
+}
+
 function Test-GhcTunnelMayConnect {
  param([object]$Snapshot)
  $property=if($null -ne $Snapshot){$Snapshot.PSObject.Properties['process_running']}else{$null}

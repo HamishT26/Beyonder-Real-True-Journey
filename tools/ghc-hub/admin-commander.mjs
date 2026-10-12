@@ -6,7 +6,7 @@ import {spawn} from 'node:child_process';
 import {TextDecoder} from 'node:util';
 import {StringDecoder} from 'node:string_decoder';
 
-export const ADMIN_VERSION = '3.0.0';
+export const ADMIN_VERSION = '3.1.0';
 export const LIMITS = Object.freeze({file:8192, command:4096, output:8192, entries:64, requests:128, timeout:30000});
 const digest = data => crypto.createHash('sha256').update(data).digest('hex');
 const shaPattern = /^[a-f0-9]{64}$/;
