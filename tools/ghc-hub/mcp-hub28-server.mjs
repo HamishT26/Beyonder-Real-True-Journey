@@ -6,6 +6,7 @@ import {createNexusBindings} from './mcp-server.mjs';
 import {loadAdminPolicy,createAdminCommander} from './admin-commander.mjs';
 import {createFabricDispatcher,FABRIC_TOOLS} from './host-fabric.mjs';
 import {createMessageRelay,MESSAGE_TOOLS} from './message-relay.mjs';
+import {createSkillLibraryDispatcher,SKILL_LIBRARY_TOOL} from './skill-library.mjs';
 import {serveAdminStdio} from './mcp/sdk/src/admin-bridge.mjs';
 
 export async function main(configFile=process.argv[2]){
@@ -17,8 +18,8 @@ export async function main(configFile=process.argv[2]){
  const c=context();
  const dispatch=createFabricDispatcher({tailscaleKeyFile:config.tailscaleKeyFile});
  const relay=createMessageRelay(c);
- const extensions=[...FABRIC_TOOLS.map(spec=>({spec,dispatch})),...MESSAGE_TOOLS.map(spec=>({spec,dispatch:relay}))];
- const server=serveAdminStdio({readOnly:createNexusBindings(c),commander:createAdminCommander(policy),extensions,serverInfo:{name:'ghc-nexus-admin-desktop-commander',version:'2.9.0'}});
+ const extensions=[...FABRIC_TOOLS.map(spec=>({spec,dispatch})),...MESSAGE_TOOLS.map(spec=>({spec,dispatch:relay})),{spec:SKILL_LIBRARY_TOOL,dispatch:createSkillLibraryDispatcher()}];
+ const server=serveAdminStdio({readOnly:createNexusBindings(c),commander:createAdminCommander(policy),extensions,serverInfo:{name:'ghc-nexus-admin-desktop-commander',version:'3.0.0'}});
  await server.done;
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(()=>{console.error('Nexus 2.9 runtime unavailable; review its explicit private config.');process.exitCode=1;});
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(()=>{console.error('Nexus 3.0 runtime unavailable; review its explicit private config.');process.exitCode=1;});

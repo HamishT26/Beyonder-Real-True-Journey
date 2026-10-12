@@ -50,7 +50,7 @@ $ghcFiles=@(foreach($ghcRow in $ghcManifest.files){
  if((Get-Item -LiteralPath $ghcSource).Length -ne $ghcRow.bytes -or (Get-FileHash -LiteralPath $ghcSource -Algorithm SHA256).Hash.ToLowerInvariant() -ne $ghcRow.sha256){throw 'Release source digest mismatch'}
  [pscustomobject]@{relative=$ghcRow.path;source=$ghcSource;target=$ghcTarget;sha256=$ghcRow.sha256;bytes=$ghcRow.bytes}
 })
-if(-not $ghcSeen.Contains('hub.mjs') -or -not $ghcSeen.Contains('mcp/sdk/package-lock.json')){throw 'Required release entrypoint or pinned dependency lock absent'}
+foreach($ghcRequired in @('hub.mjs','mcp/sdk/package-lock.json','GhcToolEnvironment.ps1','skill-library.mjs')){if(-not $ghcSeen.Contains($ghcRequired)){throw 'Required release dependency absent'}}
 foreach($ghcTool in @($ghcNode,$ghcPwsh,$ghcNpm)){if(-not(Test-Path -LiteralPath $ghcTool -PathType Leaf)){throw 'Pinned installation tool missing'}}
 $ghcDesktop=[Environment]::GetFolderPath('Desktop')
 $ghcPrograms=[Environment]::GetFolderPath('Programs')
@@ -68,14 +68,14 @@ foreach($ghcShortcut in $ghcShortcutSpecs){
  Assert-GhcPlainPath $ghcShortcut.path -AllowKnownDesktopPlaceholder
  if(Test-Path -LiteralPath $ghcShortcut.path){$ghcOld=$ghcShell.CreateShortcut($ghcShortcut.path);if($ghcOld.TargetPath -ne $ghcPwsh -or ($ghcOld.Arguments -ne $ghcShortcut.arguments -and $ghcOld.Arguments -ne $ghcShortcut.allowedPreviousArguments)){throw 'An unrelated same-named shortcut exists'}}
 }
-foreach($ghcWrapper in @('ghc-nexus.cmd','ghc-nexus.ps1')){
+foreach($ghcWrapper in @('ghc-nexus.cmd','ghc-nexus.ps1','ghc-skills.cmd','ghc-openai.cmd','ghc-osv.cmd')){
  $ghcExisting=Join-Path $ghcBin $ghcWrapper
  Assert-GhcPlainPath $ghcExisting
  if(Test-Path -LiteralPath $ghcExisting){if((Get-Content -Raw -LiteralPath $ghcExisting) -notmatch 'GHC Nexus managed command'){throw 'An unrelated command wrapper exists'}}
 }
 $ghcOldAdminHash=if(Test-Path -LiteralPath $ghcAdminTarget){(Get-FileHash -LiteralPath $ghcAdminTarget).Hash.ToLowerInvariant()}else{$null}
 $ghcNewAdminHash=($ghcFiles | Where-Object relative -eq 'Start-GhcAdmin.ps1').sha256
-if($ghcOldAdminHash -and $ghcOldAdminHash -notin @('c8688e45833324fbfc44e3fec16ceba7526db78f4dd62160a69b3215d7184844','2566675572c07217972a8407c3537f0db81475e520fbb1d97d1de135b3b1e897',$ghcNewAdminHash)){throw 'Shared launcher changed since its reviewed baseline'}
+if($ghcOldAdminHash -and $ghcOldAdminHash -notin @('e076f1d70432f5ff61c3477a7e3ce61af41ac71b648ef618d782d4237f29574e','c8688e45833324fbfc44e3fec16ceba7526db78f4dd62160a69b3215d7184844','2566675572c07217972a8407c3537f0db81475e520fbb1d97d1de135b3b1e897',$ghcNewAdminHash)){throw 'Shared launcher changed since its reviewed baseline'}
 $ghcPlan=[ordered]@{schema='ghc.nexus.install-plan.v2';destination=$ghcDestination;files=$ghcFiles.Count;shortcuts=$ghcShortcutSpecs;wrappers=$ghcBin;dependencies='npm ci --omit=dev --ignore-scripts, pinned MCP SDK2 lock';appRestarted=$false;privateStateIncluded=$false;changesPerformed=$false}
 if($Check){$ghcPlan | ConvertTo-Json -Depth 5;return}
 $ghcBackup=Join-Path $ghcBank ('install-backup-'+[datetime]::UtcNow.ToString('yyyyMMddTHHmmssfffZ'))
@@ -102,8 +102,9 @@ try {
  Push-Location -LiteralPath (Join-Path $ghcDestination 'mcp/sdk')
  try {& $ghcNode $ghcNpm ci --omit=dev --ignore-scripts --no-audit --no-fund --prefer-offline --fetch-timeout=20000 --fetch-retries=1 --cache 'D:\GHC-Archives\tool-caches\npm-cache';if($LASTEXITCODE -ne 0){throw 'Pinned MCP dependency installation failed'}} finally {Pop-Location}
  Copy-GhcReviewed (Join-Path $PSScriptRoot 'GhcAppLaunchSelection.ps1') (Join-Path (Split-Path $ghcAdminTarget -Parent) 'GhcAppLaunchSelection.ps1') 'shared-launcher/GhcAppLaunchSelection.ps1'
+ Copy-GhcReviewed (Join-Path $PSScriptRoot 'GhcToolEnvironment.ps1') (Join-Path (Split-Path $ghcAdminTarget -Parent) 'GhcToolEnvironment.ps1') 'shared-launcher/GhcToolEnvironment.ps1'
  Copy-GhcReviewed (Join-Path $PSScriptRoot 'Start-GhcAdmin.ps1') $ghcAdminTarget 'shared-launcher/Start-GhcAdmin.ps1'
- foreach($ghcWrapper in @('ghc-nexus.cmd','ghc-nexus.ps1')){Copy-GhcReviewed (Join-Path $PSScriptRoot $ghcWrapper) (Join-Path $ghcBin $ghcWrapper) ('bin/'+$ghcWrapper)}
+ foreach($ghcWrapper in @('ghc-nexus.cmd','ghc-nexus.ps1','ghc-skills.cmd','ghc-openai.cmd','ghc-osv.cmd')){Copy-GhcReviewed (Join-Path $PSScriptRoot $ghcWrapper) (Join-Path $ghcBin $ghcWrapper) ('bin/'+$ghcWrapper)}
  foreach($ghcShortcut in $ghcShortcutSpecs){
   if(Test-Path -LiteralPath $ghcShortcut.path){$ghcShortcutBackup=Join-Path $ghcBackup ('shortcut-'+[guid]::NewGuid().ToString()+'.lnk');Copy-Item -LiteralPath $ghcShortcut.path -Destination $ghcShortcutBackup;$ghcBackups.Add([pscustomobject]@{target=$ghcShortcut.path;backup=$ghcShortcutBackup;sha256=(Get-FileHash -LiteralPath $ghcShortcutBackup).Hash.ToLowerInvariant()})}
   $ghcLink=$ghcShell.CreateShortcut($ghcShortcut.path);$ghcLink.TargetPath=$ghcPwsh;$ghcLink.Arguments=$ghcShortcut.arguments;$ghcLink.WorkingDirectory='D:\GHC-Family-Laboratory';$ghcLink.Description=$ghcShortcut.description;$ghcLink.IconLocation=$ghcPwsh+',0';$ghcLink.Save()

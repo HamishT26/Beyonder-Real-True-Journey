@@ -7,6 +7,8 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'GhcAppLaunchSelection.ps1')
+. (Join-Path $PSScriptRoot 'GhcToolEnvironment.ps1')
+$env:PATH = Get-GhcPreferredToolPath
 if (-not $PSBoundParameters.ContainsKey('AppActivation')) {
     # A raw package EXE can run without Windows package identity. Preserve the
     # registered activation route for Codex and the old shell/probe behavior.

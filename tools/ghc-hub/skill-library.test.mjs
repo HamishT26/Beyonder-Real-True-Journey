@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {createSkillLibraryDispatcher,SKILL_LIBRARY_TOOL} from './skill-library.mjs';
+const digest=b=>createHash('sha256').update(b).digest('hex');
+async function fixture(t,text='A bounded instruction guide.'){
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'ghc-library-test-'));
+ t.after(async()=>{const tempRoot=await fs.realpath(os.tmpdir());const actual=await fs.realpath(root);const relative=path.relative(tempRoot,actual);assert.ok(relative.startsWith('ghc-library-test-')&&!relative.includes(path.sep)&&!(await fs.lstat(root)).isSymbolicLink());await fs.rm(actual,{recursive:true,force:true});});
+ const folder=path.join(root,'guides','alpha');await fs.mkdir(folder,{recursive:true});
+ const file=path.join(folder,'SKILL.md');await fs.writeFile(file,text);
+ const indexFile=path.join(root,'index.json');
+ const data={schema:'ghc.skill-library.v1',state:'complete',entries:[{name:'alpha',active:false,path:file,sha256:digest(text)}]};
+ const save=()=>fs.writeFile(indexFile,JSON.stringify(data));await save();
+ const dispatch=createSkillLibraryDispatcher({indexFile,roots:[path.join(root,'guides')]});
+ return {root,file,indexFile,data,save,call:a=>dispatch(SKILL_LIBRARY_TOOL.name,a)};
+}
+test('query is bounded, case insensitive and returns no guide body by default',async t=>{const f=await fixture(t);const x=await f.call({query:'ALP'});assert.equal(x.matched,1);assert.equal(x.guide,undefined);assert.equal(x.executes,false);});
+test('exact read verifies hash and declares instruction authority boundary',async t=>{const f=await fixture(t);const x=await f.call({query:'alpha',includeGuide:true});assert.equal(x.guide.text,'A bounded instruction guide.');assert.equal(x.historicalInstructionsAreNotAuthority,true);assert.equal(x.guide.truncated,false);});
+test('partial query cannot select a guide for reading',async t=>{const f=await fixture(t);await assert.rejects(f.call({query:'alp',includeGuide:true}),{code:'exact_skill_name_required'});});
+test('changed guide is refused without returning content',async t=>{const f=await fixture(t);await fs.writeFile(f.file,'different');await assert.rejects(f.call({query:'alpha',includeGuide:true}),{code:'library_guide_changed'});});
+test('outside-root path is refused even with matching digest',async t=>{const f=await fixture(t);const p=path.join(f.root,'SKILL.md');await fs.writeFile(p,'outside');f.data.entries[0].path=p;f.data.entries[0].sha256=digest('outside');await f.save();await assert.rejects(f.call({query:'alpha',includeGuide:true}),{code:'library_path_refused'});});
+test('guide hardlinks are refused',async t=>{const f=await fixture(t);await fs.link(f.file,path.join(f.root,'second.md'));await assert.rejects(f.call({query:'alpha',includeGuide:true}),{code:'library_file_refused'});});
+test('symlink or junction ancestor is refused',async t=>{const f=await fixture(t);const p=path.join(f.root,'guides','link');await fs.symlink(path.dirname(f.file),p,process.platform==='win32'?'junction':'dir');f.data.entries[0].path=path.join(p,'SKILL.md');await f.save();await assert.rejects(f.call({query:'alpha',includeGuide:true}),{code:'library_redirect_refused'});});
+test('only SKILL.md is readable',async t=>{const f=await fixture(t);f.data.entries[0].path=path.join(path.dirname(f.file),'secret.txt');await f.save();await assert.rejects(f.call({query:'alpha',includeGuide:true}),{code:'library_path_refused'});});
+test('incomplete index is held',async t=>{const f=await fixture(t);f.data.state='cutover-in-progress';await f.save();await assert.rejects(f.call({query:''}),{code:'library_index_refused'});});
+test('duplicate names make index ambiguous and are refused',async t=>{const f=await fixture(t);f.data.entries.push({...f.data.entries[0]});await f.save();await assert.rejects(f.call({query:''}),{code:'library_index_refused'});});
+test('invalid arguments and excess result limits are refused',async t=>{const f=await fixture(t);for(const a of [{query:'',limit:11},{query:'',path:'x'},{query:'a\n'},{query:'',includeGuide:1}])await assert.rejects(f.call(a),{code:'invalid_arguments'});});
+test('large escaped content stays below MCP wire bound and truncates',async t=>{const f=await fixture(t,'\u0001"\\😀'.repeat(9000));const x=await f.call({query:'alpha',includeGuide:true});assert.equal(x.guide.truncated,true);assert.ok(Buffer.byteLength(JSON.stringify({content:[{type:'text',text:JSON.stringify(x)}],structuredContent:x,isError:false}))<=24000);assert.ok(!x.guide.text.includes('\ufffd'));});
+test('oversized guide is refused before full read',async t=>{const f=await fixture(t,'x'.repeat(262145));await assert.rejects(f.call({query:'alpha',includeGuide:true}),{code:'library_file_refused'});});
+test('invalid UTF-8 is refused after digest validation',async t=>{const f=await fixture(t);const b=Buffer.from([255,254]);await fs.writeFile(f.file,b);f.data.entries[0].sha256=digest(b);await f.save();await assert.rejects(f.call({query:'alpha',includeGuide:true}),{code:'library_encoding_refused'});});
+test('queries sort and limit a larger catalogue',async t=>{const f=await fixture(t);for(const name of ['zeta','beta','delta'])f.data.entries.push({...f.data.entries[0],name});await f.save();const x=await f.call({query:'',limit:2});assert.deepEqual(x.matches.map(e=>e.name),['alpha','beta']);assert.equal(x.matched,4);assert.equal(x.truncated,true);});
+test('oversized index is refused',async t=>{const f=await fixture(t);await fs.writeFile(f.indexFile,' '.repeat(4*1024*1024+1));await assert.rejects(f.call({query:''}),{code:'library_file_refused'});});

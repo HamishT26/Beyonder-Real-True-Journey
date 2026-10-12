@@ -25,7 +25,7 @@ for(const mode of ['legacy','modern']){
  let stderrBytes=0;transport.stderr.on('data',b=>stderrBytes+=b.length);
  try{
   await step('connect',async()=>{const start=performance.now();await client.connect(transport,{timeout:30000});timings.push({mode,discoveryMs:Math.round(performance.now()-start)});});
-  await step('twenty-five tools within the existing transport bound',async()=>{const r=await client.listTools({}, {timeout:10000});assert.equal(r.tools.length,25);assert.equal(new Set(r.tools.map(x=>x.name)).size,25);assert.ok(Buffer.byteLength(JSON.stringify(r))<28000);});
+  await step('twenty-six tools within the existing transport bound',async()=>{const r=await client.listTools({}, {timeout:10000});assert.equal(r.tools.length,26);assert.equal(new Set(r.tools.map(x=>x.name)).size,26);assert.ok(Buffer.byteLength(JSON.stringify(r))<28000);});
   await step('measured local resources',async()=>{const r=await call('nexus.host.resources');assert.equal(r.platform,process.platform);assert.ok(r.totalMemoryMiB>0);assert.equal(r.administrator,'not_measured_by_this_operation');});
   await step('GUI readiness not invented',async()=>{assert.equal((await call('nexus.desktop.status')).state,'unavailable');});
   await step('unverified Linux execution remains held on Windows',async()=>{const r=await call('nexus.workload.plan',{kind:process.platform==='win32'?'linux-cli':'windows-cli'});assert.equal(r.state,'held');assert.equal(r.executes,false);});
@@ -36,7 +36,7 @@ for(const mode of ['legacy','modern']){
   await step('single claim returns exact provider action',async()=>{const r=await call('nexus.messages.claim',{requestId,messageSha256:message.messageSha256});assert.equal(r.nativeAction.arguments.threadId,targetId);assert.equal(r.nativeAction.arguments.hostId,undefined);assert.equal(r.automaticDelivery,false);});
   await step('unknown native result retained without automatic retry',async()=>{const r=await call('nexus.messages.record',{requestId,messageSha256:message.messageSha256,outcome:'unknown',deliveryReference:'synthetic-timeout'});assert.equal(r.deliveryState,'unknown');assert.equal((await call('nexus.messages.claim',{requestId,messageSha256:message.messageSha256})).status,'held');});
   await step('receipt keeps completion and sender evidence separate',async()=>{const r=await call('nexus.messages.receipt',{requestId});assert.equal(r.recipientCompletion,'not_observed');assert.equal(r.receipt.evidenceType,'caller-reported-native-tool-result');assert.ok(!JSON.stringify(r).includes(targetId));});
-  await step('original admin status preserved',async()=>{assert.equal((await call('nexus.admin.status')).version,'2.9.0');});
+  await step('original admin status preserved',async()=>{assert.equal((await call('nexus.admin.status')).version,'3.0.0');});
  }catch{}finally{await client.close();}
  checks.push({name:mode+' no stderr',passed:stderrBytes===0,bytes:stderrBytes});
 }

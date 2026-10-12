@@ -12,6 +12,8 @@ if(Test-Path -LiteralPath $ghcConfig -PathType Leaf){$ghcServer='D:/GHC-Archives
 $ghcConnectExit=$null
 if(-not(Test-Path -LiteralPath $ghcClient -PathType Leaf)){throw 'Reviewed tunnel client missing'}
 if($Action -eq 'Connect'){
+ . (Join-Path $PSScriptRoot 'GhcToolEnvironment.ps1')
+ $env:PATH = Get-GhcPreferredToolPath -RequiredTools @('node')
  foreach($ghcFile in @($ghcNode,$ghcServer,$ghcPolicy)){if(-not(Test-Path -LiteralPath $ghcFile -PathType Leaf)){throw 'Reviewed Nexus runtime input missing'}}
  $ghcIdentity=[Security.Principal.WindowsIdentity]::GetCurrent()
  $ghcPrincipal=[Security.Principal.WindowsPrincipal]::new($ghcIdentity)

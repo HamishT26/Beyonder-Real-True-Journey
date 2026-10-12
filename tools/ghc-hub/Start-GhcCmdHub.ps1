@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param([switch]$CurrentUser,[switch]$Check)
 $ErrorActionPreference='Stop'
+. (Join-Path $PSScriptRoot 'GhcToolEnvironment.ps1')
+$env:PATH = Get-GhcPreferredToolPath -RequiredTools @('node')
 $ghcCmd=Join-Path ([Environment]::SystemDirectory) 'cmd.exe'
 $ghcEntry=Join-Path $PSScriptRoot 'Start-GhcCmdHub.cmd'
 $ghcNode='D:\GHC-Archives\global-tools\node\26.11.1\node-v26.11.1-win-x64\node.exe'
