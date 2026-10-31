@@ -9,7 +9,8 @@ This branch collects a narrow public contribution from the GHC project. It conta
 Use Node.js 24 or later:
 
 ```sh
-node check.cjs
+node check.cjs       # preserved x1 version and expected-field examples
+node check-x2.cjs    # versioned x2 module and full-output examples
 ```
 
 The checker compares the expected fields in 22 manually specified examples and verifies that inputs remain unchanged. For the three positive index examples, those assertions cover four top-level fields; they do not cover the complete returned records or trust notice. The source is compatible with CommonJS. No package installation, API key, account login, elevated permissions or cloud service is needed.
@@ -27,6 +28,14 @@ For example, baseline `10`, latest balance `1`, phase ceiling `100`, and zero bu
 Private source messages, account balances, local paths, credentials, launcher internals and native caches are excluded from this release. The fixtures are synthetic; no real account balance is included.
 
 The broader GMUT and THOS research programmes remain exploratory. These utilities do not validate a physical unification theory, demonstrate consciousness, establish portable personal identity or create a production operating system.
+
+## Versioned x2 decimal handling and coverage
+
+`kernels-x2.cjs` adds exact decimal inputs with up to 12 fractional digits when every digit after the sixth is zero. Inputs remain bounded to 31 characters and 18 integer digits. Nonzero excess precision, whitespace, signs, exponents and trailing line terminators are rejected; outputs remain exact six-place microcredits. The preserved `kernels.cjs` retains the earlier input contract, so old examples continue to refer to their original version.
+
+`cases-x2.json` contains 14 new synthetic examples: decimal boundaries, a full index-output assertion and finite Unique Games coverage. All 14 full results and 14 input-immutability assertions matched in one supervised execution of the exact x2 module. A draft parser was rejected during source review before execution because JavaScript `$` can match before a final newline; the released version checks the complete match. The public `check-x2.cjs` is a convenience checker for the same fixtures and was statically reviewed, not separately executed during publication. The earlier 22-case suite was not replayed against the x2 module.
+
+The full index example deliberately shows that a synthetic marker survives projection. This demonstrates why a separately reviewed public serializer is still required. Budget ceiling headroom remains distinct from an available account balance.
 
 ## Evidence and maintenance
 
