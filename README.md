@@ -2,6 +2,8 @@
 
 Small, dependency-free JavaScript examples for inspectable agent-workflow records.
 
+For maintainers who need a small, inspectable example of provenance boundaries and exact arithmetic, this branch provides runnable code, synthetic cases and explicit limitations. Start with [reproducibility](REPRODUCIBILITY.md), [verification](VERIFICATION.md), the [roadmap](ROADMAP.md), or the [Codex for Open Source application worksheet](APPLICATION.md).
+
 This branch collects a narrow public contribution from the GHC project. It contains an owner-scoped visible-message index, exact decimal credit-observation arithmetic, and a finite Unique Games solver. Each function has an explicit input bound and returns data without network access, process creation or filesystem changes.
 
 ## Run the examples
@@ -9,9 +11,12 @@ This branch collects a narrow public contribution from the GHC project. It conta
 Use Node.js 24 or later:
 
 ```sh
+npm run check        # integrity verification, verifier tests, then public examples
 node check.cjs       # preserved x1 version and expected-field examples
 node check-x2.cjs    # versioned x2 module and full-output examples
 ```
+
+No installation step is required. `verify-release.cjs` checks seven fixed evidence files against `RELEASE-MANIFEST.json`, with bounded reads and explicit failure results. Its tests use synthetic temporary directories. A manifest match establishes byte agreement, not authenticity. The GitHub Actions workflow runs the same checks with read-only permissions; see the run for the exact commit before treating CI as passed.
 
 The checker compares the expected fields in 22 manually specified examples and verifies that inputs remain unchanged. For the three positive index examples, those assertions cover four top-level fields; they do not cover the complete returned records or trust notice. The source is compatible with CommonJS. No package installation, API key, account login, elevated permissions or cloud service is needed.
 
@@ -44,6 +49,8 @@ The internal predecessor implementation passed 22 frozen literal cases and 22 in
 See `EVIDENCE.json` for exact source hashes and verification scope. `RESEARCH.md` explains the related mathematical claims. Changes should include a concrete use case, relevant boundary examples and retained first failures.
 
 This is an early contribution. Independent adoption, downstream use and sustained community maintenance have not been established. The Codex for Open Source application is prepared separately and has not been submitted.
+
+The 3 November 2026 maintainer update preserves both kernels, both fixture sets, both convenience checkers and the historical EVIDENCE.json exactly. New verification results are recorded separately in VERIFICATION.md. Reproducibility reruns do not add research or scientific completion credit. The wider GHC programme is summarized only at a bounded level in ROADMAP.md; private operational records are not part of this branch.
 
 ## Licence
 
