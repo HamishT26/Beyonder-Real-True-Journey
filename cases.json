@@ -1,0 +1,578 @@
+[
+  {
+    "id": "IDX01",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "m",
+          "id": "b",
+          "sequence": 2,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "assistant",
+          "origin": "agent",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "B"
+        },
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "human",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        }
+      ],
+      "verifiedHumanIds": [
+        "a"
+      ]
+    },
+    "expected": {
+      "status": "OK",
+      "orderedIds": [
+        "a",
+        "b"
+      ],
+      "sharedHumanIds": [
+        "a"
+      ],
+      "count": 2
+    }
+  },
+  {
+    "id": "IDX02",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "s",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "human",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        }
+      ],
+      "verifiedHumanIds": [
+        "a"
+      ]
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "OWNER"
+    }
+  },
+  {
+    "id": "IDX03",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "human",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        },
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 2,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "human",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        }
+      ],
+      "verifiedHumanIds": [
+        "a"
+      ]
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "DUPLICATE_ID"
+    }
+  },
+  {
+    "id": "IDX04",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "human",
+          "visible": false,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        }
+      ],
+      "verifiedHumanIds": [
+        "a"
+      ]
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "HIDDEN_CONTENT"
+    }
+  },
+  {
+    "id": "IDX05",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "human",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        }
+      ],
+      "verifiedHumanIds": []
+    },
+    "expected": {
+      "status": "OK",
+      "orderedIds": [
+        "a"
+      ],
+      "sharedHumanIds": [],
+      "count": 1
+    }
+  },
+  {
+    "id": "IDX06",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "agent",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        }
+      ],
+      "verifiedHumanIds": [
+        "a"
+      ]
+    },
+    "expected": {
+      "status": "OK",
+      "orderedIds": [
+        "a"
+      ],
+      "sharedHumanIds": [],
+      "count": 1
+    }
+  },
+  {
+    "id": "IDX07",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "user",
+          "origin": "human",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        },
+        {
+          "owner": "m",
+          "id": "b",
+          "sequence": 1,
+          "atUtc": "2026-10-31T08:00:00.000Z",
+          "role": "assistant",
+          "origin": "agent",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "B"
+        }
+      ],
+      "verifiedHumanIds": []
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "DUPLICATE_SEQUENCE"
+    }
+  },
+  {
+    "id": "IDX08",
+    "op": "index",
+    "input": {
+      "owner": "m",
+      "records": [
+        {
+          "owner": "m",
+          "id": "a",
+          "sequence": 1,
+          "atUtc": "yesterday",
+          "role": "user",
+          "origin": "human",
+          "visible": true,
+          "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "sourceBytes": 10,
+          "summary": "A"
+        }
+      ],
+      "verifiedHumanIds": [
+        "a"
+      ]
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "RECORD_SHAPE"
+    }
+  },
+  {
+    "id": "PUBLIC-BUD01",
+    "op": "budget",
+    "input": {
+      "baseline": "10000.250000",
+      "latest": "8765.125000",
+      "ceiling": "5000",
+      "buffer": "100"
+    },
+    "expected": {
+      "status": "OBSERVED",
+      "spent": "1235.125000",
+      "remaining": "3764.875000",
+      "dispatchAllowance": "3664.875000",
+      "ceilingReached": false
+    }
+  },
+  {
+    "id": "BUD02",
+    "op": "budget",
+    "input": {
+      "baseline": "1.000001",
+      "latest": "1",
+      "ceiling": "1",
+      "buffer": "0"
+    },
+    "expected": {
+      "status": "OBSERVED",
+      "spent": "0.000001",
+      "remaining": "0.999999",
+      "dispatchAllowance": "0.999999",
+      "ceilingReached": false
+    }
+  },
+  {
+    "id": "BUD03",
+    "op": "budget",
+    "input": {
+      "baseline": "1",
+      "latest": "2",
+      "ceiling": "5",
+      "buffer": "0"
+    },
+    "expected": {
+      "status": "UNKNOWN",
+      "reason": "CREDIT_INCREASE_REQUIRES_RECONCILIATION"
+    }
+  },
+  {
+    "id": "BUD04",
+    "op": "budget",
+    "input": {
+      "baseline": "10",
+      "latest": "0",
+      "ceiling": "5",
+      "buffer": "1"
+    },
+    "expected": {
+      "status": "OBSERVED",
+      "spent": "10.000000",
+      "remaining": "0.000000",
+      "dispatchAllowance": "0.000000",
+      "ceilingReached": true
+    }
+  },
+  {
+    "id": "BUD05",
+    "op": "budget",
+    "input": {
+      "baseline": "1e3",
+      "latest": "0",
+      "ceiling": "5",
+      "buffer": "0"
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "DECIMAL"
+    }
+  },
+  {
+    "id": "BUD06",
+    "op": "budget",
+    "input": {
+      "baseline": "1.0000001",
+      "latest": "0",
+      "ceiling": "5",
+      "buffer": "0"
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "DECIMAL"
+    }
+  },
+  {
+    "id": "UG01",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 2,
+      "labels": 2,
+      "edges": [
+        {
+          "u": 0,
+          "v": 1,
+          "permutation": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "status": "EXACT_FINITE",
+      "bestSatisfied": 1,
+      "totalEdges": 1,
+      "assignment": [
+        0,
+        0
+      ],
+      "evaluated": 4
+    }
+  },
+  {
+    "id": "UG02",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 2,
+      "labels": 2,
+      "edges": [
+        {
+          "u": 0,
+          "v": 1,
+          "permutation": [
+            0,
+            1
+          ]
+        },
+        {
+          "u": 0,
+          "v": 1,
+          "permutation": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "status": "EXACT_FINITE",
+      "bestSatisfied": 1,
+      "totalEdges": 2,
+      "assignment": [
+        0,
+        0
+      ],
+      "evaluated": 4
+    }
+  },
+  {
+    "id": "UG03",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 3,
+      "labels": 2,
+      "edges": [
+        {
+          "u": 0,
+          "v": 1,
+          "permutation": [
+            1,
+            0
+          ]
+        },
+        {
+          "u": 1,
+          "v": 2,
+          "permutation": [
+            1,
+            0
+          ]
+        },
+        {
+          "u": 2,
+          "v": 0,
+          "permutation": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "status": "EXACT_FINITE",
+      "bestSatisfied": 2,
+      "totalEdges": 3,
+      "assignment": [
+        0,
+        0,
+        1
+      ],
+      "evaluated": 8
+    }
+  },
+  {
+    "id": "UG04",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 1,
+      "labels": 2,
+      "edges": [
+        {
+          "u": 0,
+          "v": 0,
+          "permutation": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "status": "EXACT_FINITE",
+      "bestSatisfied": 0,
+      "totalEdges": 1,
+      "assignment": [
+        0
+      ],
+      "evaluated": 2
+    }
+  },
+  {
+    "id": "UG05",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 2,
+      "labels": 2,
+      "edges": [
+        {
+          "u": 0,
+          "v": 1,
+          "permutation": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "PERMUTATION"
+    }
+  },
+  {
+    "id": "UG06",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 8,
+      "labels": 4,
+      "edges": []
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "SEARCH_BOUND"
+    }
+  },
+  {
+    "id": "UG07",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 2,
+      "labels": 2,
+      "edges": []
+    },
+    "expected": {
+      "status": "EXACT_FINITE",
+      "bestSatisfied": 0,
+      "totalEdges": 0,
+      "assignment": [
+        0,
+        0
+      ],
+      "evaluated": 4
+    }
+  },
+  {
+    "id": "UG08",
+    "op": "uniqueGames",
+    "input": {
+      "vertices": 2,
+      "labels": 2,
+      "edges": [
+        {
+          "u": 0,
+          "v": 2,
+          "permutation": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "expected": {
+      "status": "REJECTED",
+      "reason": "EDGE"
+    }
+  }
+]
