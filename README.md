@@ -11,9 +11,10 @@ This branch collects a narrow public contribution from the GHC project. It conta
 Use Node.js 24 or later:
 
 ```sh
-npm run check        # integrity verification, verifier tests, then public examples
-node check.cjs       # preserved x1 version and expected-field examples
-node check-x2.cjs    # versioned x2 module and full-output examples
+npm run check                  # integrity verification, verifier tests, then public examples
+node check.cjs                 # preserved x1 version and expected-field examples
+node check-x2.cjs              # versioned x2 module and full-output examples
+node trinity-mandala-check.cjs # Trinity Mandala & Gemini Argon 4 continuity manifest verification
 ```
 
 No installation step is required. `verify-release.cjs` checks seven fixed evidence files against `RELEASE-MANIFEST.json`, with bounded reads and explicit failure results. Its tests use synthetic temporary directories. A manifest match establishes byte agreement, not authenticity. The GitHub Actions workflow runs the same checks with read-only permissions; see the run for the exact commit before treating CI as passed.
@@ -51,6 +52,10 @@ See `EVIDENCE.json` for exact source hashes and verification scope. `RESEARCH.md
 This is an early contribution. Independent adoption, downstream use and sustained community maintenance have not been established. The Codex for Open Source application is prepared separately and has not been submitted.
 
 The 3 November 2026 maintainer update preserves both kernels, both fixture sets, both convenience checkers and the historical EVIDENCE.json exactly. New verification results are recorded separately in VERIFICATION.md. Reproducibility reruns do not add research or scientific completion credit. The wider GHC programme is summarized only at a bounded level in ROADMAP.md; private operational records are not part of this branch.
+
+## Phase (13)–(14) Remastered Continuity: Antigravity & Gemini Argon 4 Cloud Helper
+
+The 7 November 2026 continuity update adds [GEMINI-ARGON-4-ONBOARDING.md](GEMINI-ARGON-4-ONBOARDING.md), [trinity-mandala-manifest.json](trinity-mandala-manifest.json), and [trinity-mandala-check.cjs](trinity-mandala-check.cjs) so that **Google Antigravity** (`antigravity`), our **Antigravity Subagent Helper** (`antigravity-subagent`), and the **Gemini Argon 4 Cloud Agent Helper** (`gemini-argon-4`) can coordinate with the GHC Nexus Hub and the three Trinity Mandala pillars (**GMUT**, **THOS**, and **Freed ID / CBR**) while the OpenAI/Codex weekly usage guard (`PAUSED_AT_USER_WEEKLY_5_PERCENT_GUARD`) is active. All seven fixed evidence files in `RELEASE-MANIFEST.json` remain byte-for-byte unchanged.
 
 ## Licence
 

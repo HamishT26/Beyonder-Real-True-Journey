@@ -6,6 +6,7 @@
 - Exact decimal observation arithmetic with explicit ceiling/balance limitations.
 - Exhaustive Unique Games examples within a small finite domain.
 - A fixed-file release verifier, synthetic verifier tests and a reproducible check command.
+- A bounded Trinity Mandala & multi-platform continuity manifest (`trinity-mandala-manifest.json`), checker (`trinity-mandala-check.cjs`), and onboarding guide (`GEMINI-ARGON-4-ONBOARDING.md`) for **Antigravity**, **Antigravity Subagent Helper**, and **Gemini Argon 4 Cloud Agent Helper**.
 
 ## Next useful maintainer work
 
