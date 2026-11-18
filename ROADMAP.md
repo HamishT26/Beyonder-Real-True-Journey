@@ -27,3 +27,9 @@ Freed ID and CBR concern identity and governance proposals. Byte integrity is no
 Sentinel-1 is a proposed orchestration and evidence layer, not a newly trained foundation model. Private cache exports and infrastructure remain outside this public release. Complete cross-client memory persistence and full-history recovery have not been established here.
 
 These distinctions are part of the roadmap: useful small software results must not be promoted into claims about the wider programme without the appropriate evidence.
+
+## 18 November integration priorities
+
+The [dated infrastructure note](INFRASTRUCTURE-STATUS-20261118.md) specifies five measurable milestones: independent reproducibility, explicit schema compatibility, deployment/restore evidence, one complete acceptance flow and an agreed public-interest pilot. The [Receipt Journey Lab](RECEIPT-JOURNEY.md) supports discussion of unknown effects and recovery; it is an illustrative model, not an implemented enforcement layer.
+
+A future Docker or Kubernetes package needs image and dependency custody, effective limits, a defined storage/restore method, documented authority and failure-domain evidence. No live deployment is introduced by this branch update.

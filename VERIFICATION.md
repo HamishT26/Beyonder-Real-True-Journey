@@ -39,3 +39,20 @@ Local success is not remote CI success. Inspect [workflow runs](https://github.c
 - `npm run examples`: `{"cases":22,"literalMatches":22,"unchangedInputs":22}` (`check.cjs`) and `{"cases":14,"fullLiteralMatches":14,"unchangedInputs":14}` (`check-x2.cjs`).
 - `node trinity-mandala-check.cjs`: verified `trinity-mandala-manifest.json`, `GEMINI-ARGON-4-ONBOARDING.md`, and the 7 preserved release payloads (`ok: true`, `releaseVerified: true`, `checkedEvidenceFiles: 7`).
 - Remote CI qualification: commit `46978e46800850f3b35a470fe35cf0a1f66474ca` reported a GitHub Actions job-start failure (`runner_name: ""`, annotation: hosted runner billing lock on the GitHub account) before any workflow step ran. Local verification passed completely and is recorded distinctly from remote GitHub-hosted runner execution.
+
+## Application preparation verification: 18 November 2026
+
+- Base branch head: `34c8cc40b86fbffb59262bd41afd891267a9bf5a`.
+- All 25 materialized source files matched their Git blob identities before editing. No `AGENTS.md` was present in the recursively inspected branch tree.
+- Environment: Linux; bundled Node.js v24.22.3.
+- Before-edit verification: all seven frozen payloads matched; 32 verifier tests passed with zero failures or skips; preserved x1 examples reported 22 literal matches and 22 unchanged inputs; x2 examples reported 14 full literal matches and 14 unchanged inputs. The Trinity checker passed.
+- The three application draft answers contain 430, 441 and 436 characters, below the current form's 500-character limits.
+- The new Receipt Journey HTML passed JavaScript syntax validation. A temporary DOM-adapter check traversed the five authored scenarios (18 step positions, 13 forward clicks), verified all five terminal states, and checked Previous/Restart controls plus the unknown-effect and storage-failure distinctions. This is presentation-logic verification, not browser-layout acceptance or a real Nexus test.
+- A local headless Chromium screenshot attempt failed before rendering because the host denied its process-singleton socket. No successful screenshot or browser-layout result is claimed from that attempt.
+- npm emitted the host's existing `http-proxy` configuration warning; no account or environment setting was changed to suppress it.
+
+The inspected prior commit's remote run [42353060372](https://github.com/HamishT26/Beyonder-Real-True-Journey/actions/runs/42353060372) concluded failure with no job steps and no runner name. The connector did not expose the annotations endpoint, so this inspection does not establish its specific current failure reason. The 7 November billing-lock finding above remains historical. Check the actual run for the new commit rather than treating local success as remote success.
+
+The new work consists of documentation and an authored teaching interface. It does not replay private research cases, deploy infrastructure, modify account permissions, start model jobs or submit a programme application. Implementation-author review is recorded; independent external review remains pending.
+
+After-edit checks also passed: release integrity 7/7, verifier tests 32/32 with no skips, x1 expected-field matches 22/22 and x2 full-output matches 14/14, plus both input-immutability selections and the Trinity checker. These repeat the public examples for maintenance verification; they add no unique research-case credit.

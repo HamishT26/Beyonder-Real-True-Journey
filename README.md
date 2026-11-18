@@ -6,6 +6,12 @@ For maintainers who need a small, inspectable example of provenance boundaries a
 
 This branch collects a narrow public contribution from the GHC project. It contains an owner-scoped visible-message index, exact decimal credit-observation arithmetic, and a finite Unique Games solver. Each function has an explicit input bound and returns data without network access, process creation or filesystem changes.
 
+## 18 November application preparation
+
+The [updated application worksheet](APPLICATION.md) uses current repository metadata and concise form drafts. The [infrastructure status note](INFRASTRUCTURE-STATUS-20261118.md) explains Nexus, Sentinel orchestration, CLI, Docker, Kubernetes, the Trinity Mandala and a proposed New Zealand pilot with current primary sources. The [Receipt Journey Lab](RECEIPT-JOURNEY.md) is a self-contained interactive explanation of five synthetic outcomes; open `receipt-journey.html` locally. It executes no real task.
+
+The 7 November continuity material below is retained as a dated historical snapshot. Its guard and participant states are not a current operational instruction. The seven frozen release payloads remain unchanged.
+
 ## Run the examples
 
 Use Node.js 24 or later:

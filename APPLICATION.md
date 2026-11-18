@@ -1,12 +1,12 @@
 # Codex for Open Source application worksheet
 
-Prepared for maintainer review, 3 November 2026 (New Zealand). This worksheet is not a submitted application and does not imply selection, funding, endorsement or a fixed approval score.
+Updated for maintainer review, 18 November 2026 (New Zealand), for the intended 19 November submission. This worksheet is not a submitted application and does not imply selection, funding, endorsement or a fixed approval score.
 
 ## Current programme
 
 The [official programme](https://developers.openai.com/community/codex-for-oss) supports open-source maintainers. Its [application form](https://openai.com/form/codex-for-oss/) asks about the maintainer role and repository significance. Published selection signals include active maintenance, actual usage and ecosystem importance. Benefits may include a time-limited ChatGPT Pro benefit, API credits for eligible maintainer work and conditional Codex Security access. Selection and benefits are discretionary; no cash award or fixed credit amount is assumed here.
 
-The form has 500-character limits for the repository rationale, API-credit use and additional notes. Review the current form and [programme terms](https://learn.chatgpt.com/docs/codex-for-oss-terms) before submitting. The repository and GitHub profile must be public. Account details and any required organization ID belong in the private application, not this repository.
+The form has 500-character limits for the repository rationale, API-credit use and additional notes. Review the current form and its linked programme terms before submitting. The repository and GitHub profile must be public. Account details and any required organization ID belong in the private application, not this repository.
 
 ## Evidence available to reviewers
 
@@ -16,10 +16,12 @@ The form has 500-character limits for the repository rationale, API-credit use a
 - A fixed-file integrity verifier, fault tests and one-command reproducibility instructions.
 - Retained historical evidence, first-failure descriptions and explicit comparison scopes.
 - Contributor guidance, security limitations and a bounded roadmap.
+- A self-contained [Receipt Journey Lab](RECEIPT-JOURNEY.md), showing five synthetic workflow outcomes without an account or API call.
+- A dated [infrastructure and NZ pilot note](INFRASTRUCTURE-STATUS-20261118.md) that separates publicly runnable code, private prototype reports and future deployment work.
 
-At the 2 November 2026 UTC repository observation, GitHub reported 0 stars and 0 forks. No package-download or independent downstream-adoption evidence was established. Do not present planned use, AI collaborator counts, private reviews, document length or repeated tests as community adoption.
+At the 18 November 2026 repository observation, GitHub reported 0 stars, 0 forks and 3 open issues. Open issue count does not establish independent usage or adoption. No package-download or independent downstream-adoption evidence was established. Do not present planned use, AI collaborator counts, private reviews, document length or repeated tests as community adoption.
 
-GitHub's repository metadata did not recognize a licence for the default branch at that observation, even though this branch contains an MIT LICENSE. That is a discoverability and scope distinction. Do not relicense historical or third-party material merely to change the badge. Direct reviewers to the licensed branch and explain the scope.
+The 18 November repository metadata recognizes MIT. The scope qualification in README still matters: this branch's licence does not automatically relicense historical or third-party material. Direct reviewers to the exact branch and commit.
 
 ## Suggested draft answers
 
@@ -48,3 +50,11 @@ The public branch is intentionally smaller than the wider GHC research archive. 
 - Review the terms and all final answers. Submission is a separate human action.
 
 Improving this branch makes the application easier to assess. It cannot guarantee acceptance; early adoption remains the most material evidence gap.
+
+## Preparation record for 19 November
+
+The 18 November update refreshes the public metadata, documents the current infrastructure boundaries and adds a reproducible teaching interface. The wider four-day GHC report is separate from this public submission. Private review totals are not evidence of public adoption.
+
+The inspected prior branch head was `34c8cc40b86fbffb59262bd41afd891267a9bf5a`. Its latest remote workflow failed before any job steps ran. The current local verification and new commit result must be read from VERIFICATION.md and the actual workflow run; an existing workflow file does not establish a pass.
+
+The three draft paragraphs above were checked against the form's 500-character limit during this update. The maintainer should confirm the final text, personal account details and organization ID privately and submit the form directly. No application or agreement has been submitted on the maintainer's behalf.
