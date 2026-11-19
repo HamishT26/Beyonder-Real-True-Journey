@@ -56,3 +56,14 @@ The inspected prior commit's remote run [42353060372](https://github.com/HamishT
 The new work consists of documentation and an authored teaching interface. It does not replay private research cases, deploy infrastructure, modify account permissions, start model jobs or submit a programme application. Implementation-author review is recorded; independent external review remains pending.
 
 After-edit checks also passed: release integrity 7/7, verifier tests 32/32 with no skips, x1 expected-field matches 22/22 and x2 full-output matches 14/14, plus both input-immutability selections and the Trinity checker. These repeat the public examples for maintenance verification; they add no unique research-case credit.
+
+## Evidence-review documentation: 19 November 2026
+
+- Base branch head inspected: `93d6d6ded174e8f7f63137c911e12ea9fffeb89e`.
+- The complete recursive tree was inspected; no AGENTS.md was present. Contributor and reproducibility instructions, the release manifest and verifier were read before preparing the change.
+- The change adds REVIEW-METHODS-20261119.md and updates README.md, APPLICATION.md and this verification record. It changes no runnable source, fixtures, workflow, manifest or frozen evidence payload.
+- Local document checks verify the intended four-file change set, relative Markdown link targets and preservation of the existing file content outside the stated additions.
+- No public runtime suite was rerun for this documentation-only change. Earlier local results above remain historical. No private candidate test bank was replayed.
+- Remote verification must use the actual new commit and its workflow result. A successful branch update or matching Git tree does not establish a CI pass.
+
+The new note is a proposed maintenance contract, not a claim that unpublished private prototypes are part of this public release. The maintainer application remains unsubmitted by this update.

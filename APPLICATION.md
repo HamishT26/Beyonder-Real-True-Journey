@@ -58,3 +58,7 @@ The 18 November update refreshes the public metadata, documents the current infr
 The inspected prior branch head was `34c8cc40b86fbffb59262bd41afd891267a9bf5a`. Its latest remote workflow failed before any job steps ran. The current local verification and new commit result must be read from VERIFICATION.md and the actual workflow run; an existing workflow file does not establish a pass.
 
 The three draft paragraphs above were checked against the form's 500-character limit during this update. The maintainer should confirm the final text, personal account details and organization ID privately and submit the form directly. No application or agreement has been submitted on the maintainer's behalf.
+
+## 19 November evidence-review follow-up
+
+The [new methods note](REVIEW-METHODS-20261119.md) documents concrete lessons for a future versioned evidence consumer: per-case receipt binding, retained failed attempts, bounded file handling and verifiable signed review history. It is a documentation contribution; its proposed contracts are not newly shipped runtime features. The existing runnable scope and seven frozen evidence payloads remain unchanged. Private programme activity does not fill the independent-adoption gap. This update does not submit the application or accept programme terms.

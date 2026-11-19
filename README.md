@@ -12,6 +12,10 @@ The [updated application worksheet](APPLICATION.md) uses current repository meta
 
 The 7 November continuity material below is retained as a dated historical snapshot. Its guard and participant states are not a current operational instruction. The seven frozen release payloads remain unchanged.
 
+## 19 November evidence-review update
+
+The [evidence review methods note](REVIEW-METHODS-20261119.md) sets out a proposed contract for individual case receipts, retained failures, source-reference checks, bounded file handling and signed review records. It distinguishes these proposed next steps from the runnable utilities already in this branch. Private programme totals are not public adoption evidence. The application worksheet remains a draft for the maintainer.
+
 ## Run the examples
 
 Use Node.js 24 or later:
