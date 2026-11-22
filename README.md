@@ -20,6 +20,10 @@ The [evidence review methods note](REVIEW-METHODS-20261119.md) sets out a propos
 
 The [new workflow note](CD30-WORKFLOW-20261122.md) explains typed progress counts, evidence binding, unknown-effect reconciliation and the limited offline ledger and synthetic-model milestones. It distinguishes inspected development results from the thirty-project proposal register and from future integrations. No private operational records or runtime payloads are added by this documentation update.
 
+## 23 November cross-platform continuation
+
+The [continuation and numbered-agent onboarding note](CD30-RESUME-20261123.md) describes three proposed CLI task lanes, evidence-preserving resumption, identity and encryption boundaries, and current research-status distinctions. The ninety-item backlog remains a plan. This documentation introduces no operational adapter or private records.
+
 ## Run the examples
 
 Use Node.js 24 or later:
