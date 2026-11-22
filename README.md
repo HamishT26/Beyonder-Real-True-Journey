@@ -16,6 +16,10 @@ The 7 November continuity material below is retained as a dated historical snaps
 
 The [evidence review methods note](REVIEW-METHODS-20261119.md) sets out a proposed contract for individual case receipts, retained failures, source-reference checks, bounded file handling and signed review records. It distinguishes these proposed next steps from the runnable utilities already in this branch. Private programme totals are not public adoption evidence. The application worksheet remains a draft for the maintainer.
 
+## 22 November ChatGPT and Dots workflow
+
+The [new workflow note](CD30-WORKFLOW-20261122.md) explains typed progress counts, evidence binding, unknown-effect reconciliation and the limited offline ledger and synthetic-model milestones. It distinguishes inspected development results from the thirty-project proposal register and from future integrations. No private operational records or runtime payloads are added by this documentation update.
+
 ## Run the examples
 
 Use Node.js 24 or later:
