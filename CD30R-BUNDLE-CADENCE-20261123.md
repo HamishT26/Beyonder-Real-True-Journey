@@ -1,3 +1,43 @@
+# CD30R coordinated x1/x2 workflow through Phase 100
+
+Current amendment: 23 November 2026 (Pacific/Auckland). Programme CD30R-20261123. This amendment supersedes the seven-phase cadence and Phase 30 endpoint in the historical record below.
+
+## Current instruction
+
+Plan two or three consecutive phases per consolidated owner message, with both x1 and x2 in every phase, through the final Phase 100 x2 wrap. Continue from each owner's actual checkpoint. B01's scoped Phases 01–07 remain preserved; the next selected bundle is Phases 08–10. A selected range is a work assignment, not proof of phase completion.
+
+Every active owner, including both coordination leads, produces substantive owned work. Peer review is an additional contribution, not a substitute for the owner's implementation, investigation or other assigned deliverable.
+
+1. Each owner performs x1 work and supplies the actual artifacts, findings and exact x2 proposal.
+2. Both leads compare all available proposals with their own x1 work, resolve overlaps and record a named synthesis with each lead's actual disposition.
+3. Publish refined, owner-specific x2 assignments. Separate ordinary authorized work from exact-gated operations; a missing prerequisite stays attached to the affected task.
+4. Owners execute the selected x2 scope and preserve complete results, failures, limits and remaining work.
+5. Both leads reconcile the x2 wrap and recommend the next x1 scope. A multi-phase message does not skip either joint boundary.
+
+Bind dispositions and subsequent evidence to the exact immutable selected scope, source version and dependency resolutions. Matching names, an unchanged original proposal, or a structurally valid record alone does not establish that both leads accepted an amended assignment. Documentary selection never impersonates human approval or runtime admission.
+
+## Workload and accounting
+
+The governing Base phase run flow targets remain in force. Maintain 30–50 projects per owner per phase and at least 30 substantive tasks in each x1 and x2, with the study, research, model, report and advancement targets recorded separately. A two-phase span therefore targets at least 120 substantive substage tasks per owner; a three-phase span targets at least 180. Keep actual completed scope, prepared work, blocked work and shortfalls distinct.
+
+Case counts, repeated regression observations, underlying component calls, files, project rows and task completions are different units. A repeated scenario against a changed source can be useful evidence but is not another distinct scenario. Source review does not establish independent runtime reproduction. Retain the first failures even after a successor succeeds.
+
+The minimum of ten exact-gated candidate packets per owner/substage remains a planning target; incomplete candidates are not ready approvals. Do not invent executable commands or permissions merely to fill a quota.
+
+## Coordination and continuity
+
+Use the current bundle discussion and existing liaison mailbox at each x1/x2 boundary, material blocker and peer dependency. The original Hub discussion reached its capacity; preserve that history and use the designated current bundle discussion. A new ordinary Page thread is not a new agent or replacement conversation.
+
+Reconcile the original conversation, drafts, delivery receipts and active response before any follow-up. Preserve active work. Existing Gemini conversations remain available for scoped local assistance; no automatic mode can substitute for a human-only decision.
+
+Historical UNRUN cases, same-ID corrections, failures, unknown effects, consumed approvals, held banks, owner holds, Windows qualifications and publication review remain unchanged. No historical operation is replayed by this amendment. The programme endpoint is a goal, not a claim of unattended execution or completed work.
+
+## Historical B01 policy
+
+The following text records the superseded B01 Revision03 instruction. Its seven-phase cadence and Phase 30 endpoint are historical only; they do not override the amendment above.
+
+---
+
 # CD30R seven-phase coordination cadence
 
 Updated: 23 November 2026 (Pacific/Auckland). Programme: CD30R-20261123. Governing bundle policy: B01 Revision03.
