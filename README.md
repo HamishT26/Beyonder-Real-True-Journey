@@ -1,5 +1,7 @@
 # GHC evidence utilities
 
+The [provider source references](PROVIDER-SOURCE-REFERENCES.md) pin six upstream interfaces and describe two proposed adapter fixtures for receipt association and request rates.
+
 Small, dependency-free JavaScript examples for inspectable agent-workflow records.
 
 For maintainers who need a small, inspectable example of provenance boundaries and exact arithmetic, this branch provides runnable code, synthetic cases and explicit limitations. Start with [reproducibility](REPRODUCIBILITY.md), [verification](VERIFICATION.md), the [roadmap](ROADMAP.md), or the [Codex for Open Source application worksheet](APPLICATION.md).
